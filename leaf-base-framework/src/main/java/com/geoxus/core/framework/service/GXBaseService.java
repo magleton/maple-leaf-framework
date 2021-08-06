@@ -6,7 +6,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -84,11 +83,12 @@ public interface GXBaseService<T> extends IService<T> {
      * @return R
      */
     default <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition, R defaultValue) {
+        String fieldSeparator = "::";
         Object removeObject = condition.remove("remove");
         boolean remove = null != removeObject;
-        if (StrUtil.contains(path, "::")) {
-            String[] fields = StrUtil.split(path, "::");
-            path = StrUtil.format("{}::{}", fields[0].replace("'", ""), fields[1].replace("'", ""));
+        if (CharSequenceUtil.contains(path, fieldSeparator)) {
+            String[] fields = CharSequenceUtil.splitToArray(path, fieldSeparator);
+            path = CharSequenceUtil.format("{}{}{}", fields[0].replace("'", ""), fieldSeparator, fields[1].replace("'", ""));
         }
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySQL(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
@@ -115,16 +115,18 @@ public interface GXBaseService<T> extends IService<T> {
      */
     @SuppressWarnings("unused")
     default Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition) {
+        String fieldSeparator = "::";
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         final Set<String> fieldSet = CollUtil.newHashSet();
         final Dict dataKey = Dict.create();
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
             String key = entry.getKey();
             String aliasName = key;
-            if (CharSequenceUtil.contains(key, "::")) {
-                String[] keys = CharSequenceUtil.split(key, "::");
-                aliasName = CharSequenceUtil.format("{}::{}",
+            if (CharSequenceUtil.contains(key, fieldSeparator)) {
+                String[] keys = CharSequenceUtil.splitToArray(key, fieldSeparator);
+                aliasName = CharSequenceUtil.format("{}{}{}",
                         keys[0].replace("'", ""),
+                        fieldSeparator,
                         keys[1].replace("'", ""));
                 fieldSet.add(CharSequenceUtil.format("{}", aliasName));
             } else {
@@ -238,7 +240,7 @@ public interface GXBaseService<T> extends IService<T> {
             if (Objects.isNull(value)) {
                 continue;
             }
-            final String[] strings = CharSequenceUtil.split(key, "::");
+            final String[] strings = CharSequenceUtil.splitToArray(key, "::");
             Object o = data.get(strings[0]);
             if (strings.length > 1) {
                 if (null != o) {
@@ -463,13 +465,14 @@ public interface GXBaseService<T> extends IService<T> {
      * @return Dict
      */
     default Dict handleSamePrefixDict(Dict dict) {
+        String fieldSeparator = "::";
         final Set<Map.Entry<String, Object>> entries = dict.entrySet();
         final Dict retDict = Dict.create();
         for (Map.Entry<String, Object> entry : entries) {
             final String key = entry.getKey();
             final Object object = entry.getValue();
-            if (CharSequenceUtil.contains(key, "::")) {
-                String[] keys = CharSequenceUtil.splitToArray(key, "::");
+            if (CharSequenceUtil.contains(key, fieldSeparator)) {
+                String[] keys = CharSequenceUtil.splitToArray(key, fieldSeparator);
                 Dict data = Convert.convert(Dict.class, Optional.ofNullable(retDict.getObj(keys[0])).orElse(Dict.create()));
                 retDict.set(keys[0], data.set(keys[1], object));
             } else {
