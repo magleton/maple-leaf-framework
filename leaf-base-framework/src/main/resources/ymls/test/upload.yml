@@ -1,0 +1,5 @@
+upload:
+  #图片存放路径
+  depositPath: /home/britton/upload
+  #图片返回路径
+  returnPath: http://xx.xx.xx.xx/img

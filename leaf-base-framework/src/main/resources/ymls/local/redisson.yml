@@ -1,0 +1,6 @@
+redission:
+  config:
+    singleServerConfig:
+      address: "redis://192.168.0.125:6379"
+      password: britton
+      database: 10

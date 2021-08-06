@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd">
+    <diskStore path="java.io.tmpdir/ehcache_data"/> <!-- java -Dehcache.disk.store.dir=/u01/myapp/diskdir -->
+    <!--MyBatis 二级缓存-->
+    <cache name="com.geoxus.modules.contents.mapper.AdminMapper"
+           maxEntriesLocalHeap="5000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="200"
+           timeToLiveSeconds="500"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+
+    <!-- Spring Boot 缓存-->
+    <cache name="adminPermissions"
+           maxEntriesLocalHeap="5000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="200"
+           timeToLiveSeconds="500"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+
+
+    <!-- Test Cache 缓存-->
+    <cache name="testCache"
+           maxEntriesLocalHeap="5000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="200"
+           timeToLiveSeconds="500"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+
+    <cache name="FRAMEWORK-CACHE"
+           maxEntriesLocalHeap="5000"
+           maxEntriesLocalDisk="1000"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="200"
+           timeToLiveSeconds="500"
+           memoryStoreEvictionPolicy="LFU">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+
+    <cache name="__DEFAULT__"
+           maxEntriesLocalHeap="5000"
+           maxEntriesLocalDisk="1000"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="200"
+           timeToLiveSeconds="500"
+           memoryStoreEvictionPolicy="LFU">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+</ehcache>

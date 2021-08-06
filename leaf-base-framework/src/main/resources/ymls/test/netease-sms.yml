@@ -1,0 +1,21 @@
+netease-sms:
+  #网易云分配的账号
+  secretId:
+  #私钥
+  secretKey:
+  #验证码
+  bussinessId:
+  #通知类短信
+  informUrl:
+  #运营类短信
+  opertingClass:
+  #短信接口地址
+  apiUrl: https://sms.dun.163yun.com/v2/sendsms
+  #模板ID
+  templateId:
+  #短信参数(签名):
+  params:
+  #验证码长度
+  codeLen: 6
+  #当前版本
+  version: v2

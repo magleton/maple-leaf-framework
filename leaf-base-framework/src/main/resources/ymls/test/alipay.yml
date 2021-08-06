@@ -1,0 +1,23 @@
+alipay:
+  # 开发者的应用ID
+  appId:
+  # 商户UID
+  pid:
+  # 开发者在支付配置的私有秘钥
+  merchantPrivateKey:
+  # 开发者在支付配置的公有秘钥
+  merchantPublicKey:
+  # 支付宝在商户给出的共有秘钥
+  resAlipayPublicKey:
+  # HTTPS请求地址(固定)
+  gatewayUrl: https://openapi.alipaydev.com/gateway.do
+  # 商户服务器里指定的页面http/https路径。
+  notifyUrl:
+  # 前支持RSA2和RSA，推荐使用RSA2
+  signType: RSA2
+  # 编码格式，如utf-8,gbk,gb2312等	推荐utf-8
+  charset: UTF-8
+  # 订单支付Subject
+  subject: 订单支付Subject
+  # 支付订单内容Body
+  body: 支付订单内容Body

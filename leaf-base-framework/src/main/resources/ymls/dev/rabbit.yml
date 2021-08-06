@@ -1,0 +1,15 @@
+rabbit:
+  default-queue-name: geoxus
+  rpc-server:
+    local:
+      default-server-name: geoxus.server
+    remote:
+      servers:
+        rpc-server1:
+          server-name: xxxx
+          server-ip: xx.xx.xx.xx
+          desc: 服务一
+        rpc-server2:
+          server-name: bbbb
+          server-ip: xx.xx.xx.xx
+          desc: 服务二

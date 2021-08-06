@@ -1,0 +1,5 @@
+eth:
+  websocketClientUrl: ws://xx.xx.xx.xxx
+  httpClientUrl: http://xxx.xxx.xx.xxx
+  contractAddress: "0x7e795b7c77c018b29917f2cb8cccbf0ad237f297"
+  targetDirectory: /home/britton/eth/walletData
