@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-dynamic-datasource</artifactId>
-            <version>${project.version}</version>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
