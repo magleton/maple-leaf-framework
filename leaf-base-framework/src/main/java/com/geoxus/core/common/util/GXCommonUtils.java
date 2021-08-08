@@ -21,8 +21,6 @@ import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXBaseBuilderConstants;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.event.GXBaseEvent;
-import com.geoxus.core.rpc.config.GXRabbitMQRPCRemoteServersConfig;
-import com.geoxus.core.rpc.service.GXRabbitMQRPCClientService;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import org.redisson.api.RedissonClient;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
@@ -564,28 +562,6 @@ public class GXCommonUtils {
      */
     public static void removeJSONObjectAnyPath(JSONObject parse, String path) {
         removeJSONObjectAnyPath(parse, path, Object.class);
-    }
-
-    /**
-     * 获取RPC远程服务的名字
-     *
-     * @param serverName 服务器名字
-     * @param key        key
-     * @return String
-     */
-    public static String getRemoteRPCServerValueByKey(String serverName, String key) {
-        final GXRabbitMQRPCRemoteServersConfig serverConfigBean = GXSpringContextUtils.getBean(GXRabbitMQRPCRemoteServersConfig.class);
-        assert serverConfigBean != null;
-        final Map<String, Map<String, Object>> servers = serverConfigBean.getServers();
-        final Map<String, Object> server = servers.get(serverName);
-        if (null == server) {
-            GXRabbitMQRPCClientService.LOG.error("{} 远程RPC服务不存在", serverName);
-            return "";
-        }
-        if (null != server.get(key)) {
-            return (String) server.get(key);
-        }
-        return "";
     }
 
     /**

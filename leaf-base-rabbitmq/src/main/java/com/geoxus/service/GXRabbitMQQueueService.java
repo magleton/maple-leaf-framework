@@ -1,4 +1,4 @@
-package com.geoxus.core.common.service;
+package com.geoxus.service;
 
 import org.springframework.amqp.core.Message;
 

@@ -1,7 +1,8 @@
-package com.geoxus.core.common.config;
+package com.geoxus.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 @Configuration
 @Slf4j
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
+@EnableRabbit
 public class GXRabbitMQConfig {
     @Resource
     private ConnectionFactory connectionFactory;
