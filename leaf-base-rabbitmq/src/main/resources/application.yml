@@ -1,0 +1,10 @@
+spring:
+  rabbitmq:
+    host: 192.168.56.101
+    port: 5672
+    username: britton
+    password: britton
+    publisher-returns: true
+    template:
+      mandatory: true
+    publisher-confirm-type: simple

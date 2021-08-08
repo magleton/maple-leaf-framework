@@ -1,4 +1,4 @@
-package com.geoxus.core.rpc.service.impl;
+package com.geoxus.rpc.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
@@ -6,16 +6,16 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.rpc.service.GXRabbitMQRPCClientService;
+import com.geoxus.rpc.service.GXRabbitMQRPCClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.ListenerExecutionFailedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public class GXRabbitMQRPCClientServiceImpl implements GXRabbitMQRPCClientServic
     @GXFieldCommentAnnotation(zhDesc = "Direct Reply-To")
     private static final String REPLY_TO = "amq.rabbitmq.reply-to";
 
-    @Autowired
+    @Resource
     private RabbitTemplate rpcRabbitTemplate;
 
     @Override

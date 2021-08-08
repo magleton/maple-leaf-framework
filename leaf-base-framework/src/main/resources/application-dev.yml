@@ -1,10 +1,12 @@
 server:
   tomcat:
     uri-encoding: UTF-8
-    max-threads: 1000
-    min-spare-threads: 30
-    remote-ip-header: X-Real-IP
-    protocol-header: X-Forwarded-Proto
+    threads:
+      max: 1000
+      min-spare: 30
+    remoteip:
+      remote-ip-header: X-Real-IP
+      protocol-header: X-Forwarded-Proto
   servlet:
     context-path: /gx
   port: 8089
@@ -50,7 +52,7 @@ spring:
   # redis参数
   redis:
     redisson:
-      config: classpath:redission.yml
+      config: classpath:/ymls/${spring.profiles.active}/redission.yml
     database: 0
     host: 192.168.56.101
     port: 6379
@@ -71,36 +73,5 @@ spring:
     cache-names:
       - __DEFAULT__
       - common
-  rabbitmq:
-    host: 192.168.56.101
-    port: 5672
-    username: britton
-    password: britton
-    publisher-returns: true
-    template:
-      mandatory: true
-    publisher-confirm-type: simple
 
 debug: false
-
-# 短信发送服务提供商
-sms-provider: netease-sms
-
-# 是否启用以太坊
-eth-enable: false
-
-# 是否启用RabbitMQ
-enable-rabbitmq: false
-
-# 是否启用RabbitMQ RPC
-enable-rabbitmq-rpc: false
-
-# 是否启用Quartz
-enable-quartz: false
-
-# 响应返回的字段是否下划线转驼峰
-use-camel-case-mapping: false
-
-# 文件上传进度监控
-enable-fileupload-progress: false
-

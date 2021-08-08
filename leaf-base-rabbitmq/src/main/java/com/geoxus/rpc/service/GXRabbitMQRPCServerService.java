@@ -1,4 +1,4 @@
-package com.geoxus.core.rpc.service;
+package com.geoxus.rpc.service;
 
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.util.GXSpringContextUtils;

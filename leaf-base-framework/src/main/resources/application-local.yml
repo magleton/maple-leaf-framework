@@ -51,7 +51,6 @@ spring:
 
   # redis参数
   redis:
-    open: true  # 是否开启redis缓存  true开启   false关闭
     database: 0
     host: 127.0.0.1
     port: 6379
@@ -69,36 +68,5 @@ spring:
       config: classpath:ehcache.xml
     redis:
       key-prefix: redisCache
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: britton
-    password: britton
-    publisher-returns: true
-    template:
-      mandatory: true
-    publisher-confirm-type: simple
 
 debug: false
-
-
-# 短信发送服务提供商
-sms-provider: netease-sms
-
-# 是否启用以太坊
-eth-enable: false
-
-# 是否启用RabbitMQ
-enable-rabbitmq: true
-
-# 是否启用RabbitMQ RPC
-enable-rabbitmq-rpc: true
-
-# 是否启用Quartz
-enable-quartz: false
-
-# 响应返回的字段是否下划线转驼峰
-use-camel-case-mapping: false
-
-# 文件上传进度监控
-enable-fileupload-progress: false

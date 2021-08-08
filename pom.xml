@@ -16,6 +16,7 @@
         <module>leaf-base-shiro</module>
         <module>leaf-base-commons</module>
         <module>leaf-framework</module>
+        <module>leaf-base-rabbitmq</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

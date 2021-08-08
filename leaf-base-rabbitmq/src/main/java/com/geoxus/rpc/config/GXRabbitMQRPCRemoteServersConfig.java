@@ -1,4 +1,4 @@
-package com.geoxus.core.rpc.config;
+package com.geoxus.rpc.config;
 
 import com.geoxus.core.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;

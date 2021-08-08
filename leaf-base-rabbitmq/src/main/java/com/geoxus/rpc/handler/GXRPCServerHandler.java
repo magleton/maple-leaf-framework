@@ -1,4 +1,4 @@
-package com.geoxus.core.rpc.handler;
+package com.geoxus.rpc.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
@@ -16,8 +16,8 @@ public interface GXRPCServerHandler {
     /**
      * 默认的RPC处理器
      *
-     * @param param
-     * @return
+     * @param param 参数
+     * @return JSONObject
      */
     default JSONObject rpcHandler(Dict param) {
         final Dict rpcInfo = getRPCCallInfo(param);
@@ -36,8 +36,8 @@ public interface GXRPCServerHandler {
     /**
      * 获取请求RPC的信息
      *
-     * @param param
-     * @return
+     * @param param 参数
+     * @return Dict
      */
     default Dict getRPCCallInfo(Dict param) {
         return Optional.ofNullable(Convert.convert(Dict.class, JSONUtil.parse(param.getStr("rpc"))))

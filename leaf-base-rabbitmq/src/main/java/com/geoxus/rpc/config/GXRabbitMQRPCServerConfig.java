@@ -1,4 +1,4 @@
-package com.geoxus.core.rpc.config;
+package com.geoxus.rpc.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
