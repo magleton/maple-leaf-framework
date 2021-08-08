@@ -13,57 +13,6 @@ server:
   forward-headers-strategy: framework
 
 spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-      url: jdbc:p6spy:mysql://xx.xx.xx.xx:3306/xx?useSSL=false&useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false
-      #driver-class-name: com.mysql.jdbc.Driver
-      #url: jdbc:mysql://xx.xx.xx.xx:3306/xx?useSSL=false&useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false
-      username: xx
-      password: xx
-      initial-size: 10
-      max-active: 100
-      min-idle: 10
-      max-wait: 60000
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      #Oracle需要打开注释
-      #validation-query: SELECT 1 FROM DUAL
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        login-username: britton
-        login-password: britton
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: false
-        wall:
-          config:
-            multi-statement-allow: true
-
-  # redis参数
-  redis:
-    redisson:
-      config: classpath:/ymls/${spring.profiles.active}/redission.yml
-    database: 0
-    host: xx.xx.xx.xx
-    port: 6379
-    password:    # 密码（默认为空）
-    timeout: 6000ms  # 连接超时时长（毫秒）
-    jedis:
-      pool:
-        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
-        max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-idle: 10      # 连接池中的最大空闲连接
-        min-idle: 5       # 连接池中的最小空闲连接
   cache:
     type: redis
     ehcache:
@@ -73,14 +22,5 @@ spring:
     cache-names:
       - __DEFAULT__
       - common
-  rabbitmq:
-    host: xx.xx.xx.xx
-    port: 5672
-    username: xx
-    password: xx
-    publisher-returns: true
-    template:
-      mandatory: true
-    publisher-confirm-type: simple
 
 debug: false

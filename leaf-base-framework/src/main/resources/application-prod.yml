@@ -13,44 +13,10 @@ server:
   forward-headers-strategy: framework
 
 spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://xxx.xxx.xx.xxx:3306/xx?useSSL=false&useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false
-      username: xx
-      password: xx
-      initial-size: 10
-      max-active: 100
-      min-idle: 10
-      max-wait: 60000
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      #Oracle需要打开注释
-      #validation-query: SELECT 1 FROM DUAL
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        login-username: britton
-        login-password: britton
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: false
-        wall:
-          config:
-            multi-statement-allow: true
-
   # redis参数
   redis:
     redisson:
-      config: classpath:/ymls/${spring.profiles.active}/redission.yml
+      file: classpath:/ymls/${spring.profiles.active}/redission.yml
     database: 10
     host: xx.xx.xx.xxx
     port: 6379
