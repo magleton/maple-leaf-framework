@@ -14,9 +14,7 @@ server:
 
 spring:
   cache:
-    type: redis
-    ehcache:
-      config: classpath:ehcache.xml
+    type: caffeine
     redis:
       key-prefix: redisCache
 
