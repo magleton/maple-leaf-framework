@@ -21,7 +21,7 @@ import java.util.Map;
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)
-@ConfigurationProperties(prefix = "redission")
-public class GXRedissionCacheManagerConfig {
+@ConfigurationProperties(prefix = "redisson")
+public class GXRedissonCacheManagerConfig {
     private Map<String, CacheConfig> config = new LinkedHashMap<>();
 }

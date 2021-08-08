@@ -19,23 +19,23 @@ import java.util.Map;
 @ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonSpringDataConfig {
     @Resource
-    private GXRedissionConfig gxRedissionConfig;
+    private GXRedissonConfig redissonConfig;
 
     @Resource
-    private GXRedissionCacheManagerConfig gxRedissionCacheManagerConfig;
+    private GXRedissonCacheManagerConfig redissonCacheManagerConfig;
 
     @Bean(destroyMethod = "shutdown")
-    public RedissonClient redission() {
-        final Config config = JSONUtil.toBean(JSONUtil.toJsonStr(gxRedissionConfig.getConfig()), Config.class);
+    public RedissonClient redisson() {
+        final Config config = JSONUtil.toBean(JSONUtil.toJsonStr(redissonConfig.getConfig()), Config.class);
         return Redisson.create(config);
     }
 
     @Bean("redissonSpringCacheManager")
-    public RedissonSpringCacheManager cacheManager(RedissonClient redission) {
-        final Map<String, CacheConfig> config = gxRedissionCacheManagerConfig.getConfig();
+    public RedissonSpringCacheManager cacheManager(RedissonClient redisson) {
+        final Map<String, CacheConfig> config = redissonCacheManagerConfig.getConfig();
         if (config.isEmpty()) {
-            return new RedissonSpringCacheManager(redission);
+            return new RedissonSpringCacheManager(redisson);
         }
-        return new RedissonSpringCacheManager(redission, config);
+        return new RedissonSpringCacheManager(redisson, config);
     }
 }

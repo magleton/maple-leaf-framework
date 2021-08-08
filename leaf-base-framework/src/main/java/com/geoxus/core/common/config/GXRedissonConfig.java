@@ -23,7 +23,7 @@ import java.util.Map;
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)
-@ConfigurationProperties(prefix = "redission")
-public class GXRedissionConfig {
+@ConfigurationProperties(prefix = "redisson")
+public class GXRedissonConfig {
     private Map<String, GXRedissonProperties> config = new LinkedHashMap<>();
 }
