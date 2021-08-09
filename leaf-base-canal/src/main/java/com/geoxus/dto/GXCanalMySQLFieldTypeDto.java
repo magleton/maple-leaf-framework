@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CanalMySQLFieldTypeDto extends GXBaseDto {
+public class GXCanalMySQLFieldTypeDto extends GXBaseDto {
 }

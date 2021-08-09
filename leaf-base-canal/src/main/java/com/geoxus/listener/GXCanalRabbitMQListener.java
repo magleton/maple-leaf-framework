@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
-public class CanalRabbitMQListener {
+public class GXCanalRabbitMQListener {
     @RabbitListener(bindings = {
             @QueueBinding(
                     value = @Queue(value = "example", durable = "true"),

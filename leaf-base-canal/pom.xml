@@ -14,9 +14,15 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <canal.version>1.1.5</canal.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>${canal.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-rabbitmq</artifactId>
