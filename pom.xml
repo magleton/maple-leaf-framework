@@ -18,6 +18,7 @@
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
         <module>leaf-base-canal</module>
+        <module>leaf-dynamic-datasource-mongodb</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

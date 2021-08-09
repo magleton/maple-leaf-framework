@@ -1,0 +1,10 @@
+mongodb:
+  hosts:
+    - 192.168.56.101
+    - 192.168.56.101
+  ports:
+    - 27017
+    - 27018
+  replica-set: mgset-3590061
+  connections-per-host: 20
+  min-connections-per-host: 20
