@@ -31,10 +31,13 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
         }
         final GXCanalDataDto canalDataDto = JSONUtil.toBean(message, GXCanalDataDto.class);
         final String serviceName = CharSequenceUtil.toCamelCase(CharSequenceUtil.format("{}_{}_Service", canalDataDto.getDatabase(), canalDataDto.getTable()));
-        final Object bean = GXSpringContextUtils.getBean(serviceName);
+        Object bean = GXSpringContextUtils.getBean(serviceName);
         if (Objects.isNull(bean)) {
-            log.info("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
-            return dict;
+            bean = GXSpringContextUtils.getBean("defaultProcessCanalDataService");
+            if (Objects.isNull(bean)) {
+                log.info("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
+                return dict;
+            }
         }
         if (!(bean instanceof GXProcessCanalDataService)) {
             log.info("{}必须是{}的子类", serviceName, GXProcessCanalDataService.class.getSimpleName());
