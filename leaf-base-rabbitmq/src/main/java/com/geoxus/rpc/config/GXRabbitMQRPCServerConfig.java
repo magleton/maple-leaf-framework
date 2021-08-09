@@ -1,6 +1,6 @@
 package com.geoxus.rpc.config;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -13,13 +13,13 @@ import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.DirectRabbitListenerContainerFactoryConfigurer;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,7 +35,7 @@ public class GXRabbitMQRPCServerConfig {
 
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
 
-    @Autowired
+    @Resource
     private ConnectionFactory connectionFactory;
 
     @Bean(value = "rpcRabbitTemplate")
@@ -69,7 +69,7 @@ public class GXRabbitMQRPCServerConfig {
         factory.setTaskExecutor(executorService);
         factory.setConcurrentConsumers(AVAILABLE_PROCESSORS);
         factory.setMaxConcurrentConsumers(THREAD_POOL_NUMBER);
-        factory.setErrorHandler(throwable -> log.error(StrUtil.format("simpleRabbitListenerContainerFactory : {}", throwable.getMessage()), throwable));
+        factory.setErrorHandler(throwable -> log.error(CharSequenceUtil.format("simpleRabbitListenerContainerFactory : {}", throwable.getMessage()), throwable));
         factory.setPrefetchCount(AVAILABLE_PROCESSORS);
         factory.setDefaultRequeueRejected(false);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
@@ -94,7 +94,7 @@ public class GXRabbitMQRPCServerConfig {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_NUMBER);
         factory.setTaskExecutor(executorService);
         factory.setConsumersPerQueue(AVAILABLE_PROCESSORS);
-        factory.setErrorHandler(throwable -> log.error(StrUtil.format("directRabbitListenerContainerFactory : {}", throwable.getMessage()), throwable));
+        factory.setErrorHandler(throwable -> log.error(CharSequenceUtil.format("directRabbitListenerContainerFactory : {}", throwable.getMessage()), throwable));
         factory.setPrefetchCount(AVAILABLE_PROCESSORS);
         factory.setAcknowledgeMode(AcknowledgeMode.NONE);
         factory.setDefaultRequeueRejected(false);
