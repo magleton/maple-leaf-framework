@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.net.InetSocketAddress;
 
 @Configuration
 @EnableConfigurationProperties
 public class GXCanalConfig {
-    @Autowired
+    @Resource
     private CanalConfig canalConfig;
 
     @Bean
