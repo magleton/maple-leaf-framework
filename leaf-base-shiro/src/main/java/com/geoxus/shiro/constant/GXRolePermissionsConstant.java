@@ -21,4 +21,7 @@ public class GXRolePermissionsConstant {
 
     @GXFieldCommentAnnotation("核心模型ID")
     public static final int CORE_MODEL_ID = GXCommonUtils.getEnvironmentValue("app.core-model-id.role_permissions", Integer.class, 100);
+
+    private GXRolePermissionsConstant() {
+    }
 }

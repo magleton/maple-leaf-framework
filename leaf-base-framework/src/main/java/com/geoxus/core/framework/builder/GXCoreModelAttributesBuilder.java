@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.constant.GXCoreModelAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXCoreModelAttributesBuilder implements GXBaseBuilder {
@@ -12,12 +13,12 @@ public class GXCoreModelAttributesBuilder implements GXBaseBuilder {
         return "";
     }
 
-    public String getModelAttributesByModelId(Dict param) {
+    public String getModelAttributesByCondition(Dict param) {
         final SQL sql = new SQL().SELECT("" +
-                "ca.ext as c_ext, ca.attribute_name, ca.attribute_id, ca.show_name, ca.category, ca.data_type,\n" +
-                "ca.front_type, ca.validation_desc, ca.validation_expression, cmaa.error_tips, cmaa.force_validation, cmaa.default_value, \n" +
-                "cmaa.fixed_value, cmaa.table_field_name, cmaa.required, cmaa.ext as cm_ext , cmaa.is_auto_generation")
-                .FROM("core_model_attributes as cmaa");
+                        "ca.ext as c_ext, ca.attribute_name, ca.attribute_id, ca.show_name, ca.category, ca.data_type,\n" +
+                        "ca.front_type, ca.validation_desc, ca.validation_expression, cmaa.error_tips, cmaa.force_validation, cmaa.default_value, \n" +
+                        "cmaa.fixed_value, cmaa.table_field_name, cmaa.required, cmaa.ext as cm_ext , cmaa.is_auto_generation")
+                .FROM(CharSequenceUtil.format("{} as cmaa", GXCoreModelAttributesConstant.TABLE_NAME));
         sql.INNER_JOIN("core_model_table_field as cmtf on cmaa.core_model_table_field_id=cmtf.core_model_table_field_id");
         sql.LEFT_OUTER_JOIN("core_attributes ca on cmaa.attribute_id = ca.attribute_id");
         sql.INNER_JOIN("core_model on  core_model.model_id = cmaa.core_model_id");
@@ -49,11 +50,11 @@ public class GXCoreModelAttributesBuilder implements GXBaseBuilder {
 
     @Override
     public Dict getDefaultSearchField() {
-        return null;
+        return Dict.create();
     }
 
     @Override
     public String getModelIdentificationValue() {
-        return null;
+        return GXCoreModelAttributesConstant.MODEL_IDENTIFICATION_VALUE;
     }
 }

@@ -21,4 +21,7 @@ public class GXAdminRoleConstant {
 
     @GXFieldCommentAnnotation("核心模型ID")
     public static final int CORE_MODEL_ID = GXCommonUtils.getEnvironmentValue("app.core-model-id.admin_role", Integer.class, 100);
+
+    private GXAdminRoleConstant() {
+    }
 }

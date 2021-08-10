@@ -17,7 +17,7 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @RequestMapping("/cache/backend")
-public class CacheManagerController {
+public class GXCacheManagerController {
     @Resource
     private CacheManager caffeineCache;
 

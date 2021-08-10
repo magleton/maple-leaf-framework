@@ -1,8 +1,10 @@
 package com.geoxus.core.framework.builder;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.constant.GXCoreModelAttributesPermissionsConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXCoreModelAttributesPermissionsBuilder implements GXBaseBuilder {
@@ -13,12 +15,13 @@ public class GXCoreModelAttributesPermissionsBuilder implements GXBaseBuilder {
 
     /**
      * 根据条件获取数据
+     *
      * @param param 条件
      * @return String
      */
-    public String getModelAttributePermissionByModelId(Dict param) {
+    public String getModelAttributePermissionByCondition(Dict param) {
         final SQL sql = new SQL().SELECT("cmap.roles,cmap.users,cma.table_field_name,ca.attribute_name,cma.attribute_id,cma.default_value")
-                .FROM("core_model_attributes_permission cmap");
+                .FROM(CharSequenceUtil.format("{} as cmap", GXCoreModelAttributesPermissionsConstant.TABLE_NAME));
         sql.INNER_JOIN("core_model_attributes cma ON cma.model_attributes_id=cmap.model_attributes_id");
         sql.LEFT_OUTER_JOIN("core_attributes ca ON ca.attribute_id = cma.attribute_id");
         sql.WHERE(StrUtil.format("cma.core_model_id = {core_model_id}", param));
@@ -35,11 +38,11 @@ public class GXCoreModelAttributesPermissionsBuilder implements GXBaseBuilder {
 
     @Override
     public Dict getDefaultSearchField() {
-        return null;
+        return Dict.create();
     }
 
     @Override
     public String getModelIdentificationValue() {
-        return null;
+        return GXCoreModelAttributesPermissionsConstant.MODEL_IDENTIFICATION_VALUE;
     }
 }

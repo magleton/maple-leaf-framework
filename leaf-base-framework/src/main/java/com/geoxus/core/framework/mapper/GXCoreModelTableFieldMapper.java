@@ -13,6 +13,6 @@ import java.util.List;
 @Mapper
 @Component
 public interface GXCoreModelTableFieldMapper extends GXBaseMapper<GXCoreModelTableFieldEntity> {
-    @SelectProvider(type = GXCoreModelTableFieldBuilder.class, method = "getModelAttributesByModelId")
-    List<Dict> getModelAttributesByModelId(Dict condition);
+    @SelectProvider(type = GXCoreModelTableFieldBuilder.class, method = "getModelAttributesByCondition")
+    List<Dict> getModelAttributesByCondition(Dict condition);
 }

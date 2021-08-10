@@ -59,7 +59,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
         if (null == param.getInt(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME)) {
             param.set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, 0);
         }
-        return baseMapper.getModelAttributesByModelId(param);
+        return baseMapper.getModelAttributesByCondition(param);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                 .set("table_field_name", tableField);
         try {
             final Dict retDict = Dict.create();
-            final List<Dict> list = LIST_DICT_CACHE.get(cacheKey, () -> baseMapper.getModelAttributesByModelId(condition));
+            final List<Dict> list = LIST_DICT_CACHE.get(cacheKey, () -> baseMapper.getModelAttributesByCondition(condition));
             Dict errorsDict = Dict.create();
             for (Dict dict : list) {
                 final String attributeName = CharSequenceUtil.toCamelCase(dict.getStr("attribute_name"));

@@ -3,6 +3,8 @@ package com.geoxus.core.framework.builder;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.constant.GXCoreModelAttributesConstant;
+import com.geoxus.core.framework.constant.GXCoreModelTableFieldConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXCoreModelTableFieldBuilder implements GXBaseBuilder {
@@ -12,10 +14,10 @@ public class GXCoreModelTableFieldBuilder implements GXBaseBuilder {
      * @param param 条件
      * @return String
      */
-    public String getModelAttributesByModelId(Dict param) {
+    public String getModelAttributesByCondition(Dict param) {
         final SQL sql = new SQL().SELECT("cma.model_attributes_id ,cma.core_model_table_field_id , cma.table_field_name , cma.attribute_id," +
-                "cma.required , cma.validation_expression, cma.force_validation, cma.fixed_value , ca.attribute_name")
-                .FROM("core_model_attributes cma")
+                        "cma.required , cma.validation_expression, cma.force_validation, cma.fixed_value , ca.attribute_name")
+                .FROM(CharSequenceUtil.format("{} as cma", GXCoreModelAttributesConstant.TABLE_NAME))
                 .INNER_JOIN("core_model_table_field cmtf ON cma.core_model_table_field_id=cmtf.core_model_table_field_id")
                 .INNER_JOIN("core_attributes ca ON cma.attribute_id = ca.attribute_id");
         sql.WHERE(CharSequenceUtil.format("cmtf.core_model_id = {} AND cmtf.table_field_name = '{}'", param.getInt("core_model_id"), param.getStr("table_field_name")));
@@ -51,6 +53,6 @@ public class GXCoreModelTableFieldBuilder implements GXBaseBuilder {
      */
     @Override
     public String getModelIdentificationValue() {
-        return "core_model_table_field";
+        return GXCoreModelTableFieldConstant.MODEL_IDENTIFICATION_VALUE;
     }
 }

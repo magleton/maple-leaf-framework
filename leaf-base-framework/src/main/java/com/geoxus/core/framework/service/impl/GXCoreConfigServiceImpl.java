@@ -8,7 +8,7 @@ import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
-import com.geoxus.core.framework.constant.GXCoreConfigConstants;
+import com.geoxus.core.framework.constant.GXCoreConfigConstant;
 import com.geoxus.core.framework.entity.GXCoreConfigEntity;
 import com.geoxus.core.framework.mapper.GXCoreConfigMapper;
 import com.geoxus.core.framework.service.GXCoreConfigService;
@@ -30,7 +30,7 @@ public class GXCoreConfigServiceImpl extends ServiceImpl<GXCoreConfigMapper, GXC
     }
 
     public boolean delete(Dict param) {
-        final long id = param.getLong(GXCoreConfigConstants.PRIMARY_KEY);
+        final long id = param.getLong(GXCoreConfigConstant.PRIMARY_KEY);
         final GXCoreConfigEntity entity = getById(id);
         entity.setStatus(GXBusinessStatusCode.DELETED.getCode());
         updateById(entity);

@@ -28,7 +28,7 @@ public class GXCoreModelAttributePermissionServiceImpl extends ServiceImpl<GXCor
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")
     public Dict getModelAttributePermissionByCoreModelId(int coreModelId, Dict param) {
         GXSessionService sessionService = GXSpringContextUtils.getBean(GXSessionService.class);
-        final List<Dict> attributes = baseMapper.getModelAttributePermissionByModelId(Dict.create().set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
+        final List<Dict> attributes = baseMapper.getModelAttributePermissionByCondition(Dict.create().set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
         final Dict data = Dict.create();
         final Dict jsonFieldDict = Dict.create();
         final Dict dbFieldDict = Dict.create();

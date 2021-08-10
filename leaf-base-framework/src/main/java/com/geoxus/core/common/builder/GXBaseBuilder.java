@@ -59,17 +59,17 @@ public interface GXBaseBuilder {
                     final String entryKey = entry.getKey();
                     Object entryValue = entry.getValue();
                     if (entryKey.startsWith("-")) {
-                        sql.SET(StrUtil.format("{} = JSON_REMOVE({} , '$.{}')", dataKey, dataKey, entryKey.substring(1)));
+                        sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", dataKey, dataKey, entryKey.substring(1)));
                     } else {
                         if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
-                            sql.SET(StrUtil.format("{} = JSON_SET({} , '$.{}' , {})", dataKey, dataKey, entryKey, entryValue));
+                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", dataKey, dataKey, entryKey, entryValue));
                         } else {
                             if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass())
                                     && !ClassUtil.equals(entryValue.getClass(), "String", true)
                                     && (entryValue instanceof Map || entryValue instanceof GXBaseEntity)) {
                                 entryValue = JSONUtil.toJsonStr(entryValue);
                             }
-                            sql.SET(StrUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", dataKey, dataKey, entryKey, entryValue));
+                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", dataKey, dataKey, entryKey, entryValue));
                         }
                     }
                 }

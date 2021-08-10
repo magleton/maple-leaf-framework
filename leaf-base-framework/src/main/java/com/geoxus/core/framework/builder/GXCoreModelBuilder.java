@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.framework.constant.GXCoreModelConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public class GXCoreModelBuilder implements GXBaseBuilder {
     }
 
     public String getSearchCondition(Dict param) {
-        final SQL sql = new SQL().SELECT("model_id , search_condition").FROM("core_model");
+        final SQL sql = new SQL().SELECT("model_id , search_condition").FROM(GXCoreModelConstant.TABLE_NAME);
         final Set<Map.Entry<String, Object>> entrySet = getDefaultSearchField().entrySet();
         if (entrySet.isEmpty()) {
             return sql.WHERE("1 = 0").toString();
@@ -51,6 +52,6 @@ public class GXCoreModelBuilder implements GXBaseBuilder {
 
     @Override
     public String getModelIdentificationValue() {
-        return "core_model";
+        return GXCoreModelConstant.MODEL_IDENTIFICATION_VALUE;
     }
 }

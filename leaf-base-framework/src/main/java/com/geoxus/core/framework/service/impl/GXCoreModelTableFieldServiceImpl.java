@@ -37,6 +37,6 @@ public class GXCoreModelTableFieldServiceImpl extends ServiceImpl<GXCoreModelTab
      */
     @Override
     public List<Dict> getModelAttributesByModelId(Dict condition) {
-        return baseMapper.getModelAttributesByModelId(condition);
+        return baseMapper.getModelAttributesByCondition(condition);
     }
 }
