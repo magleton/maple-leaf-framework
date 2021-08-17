@@ -146,7 +146,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                     errorTips = CharSequenceUtil.format("{}.{}为必填字段", tableField, attributeName);
                 }
                 if (required == 1 && null == sourceDict.getObj(attributeName) && null == dict.getObj("default_value")) {
-                    errorsDict.set(CharSequenceUtil.toCamelCase(attributeName), errorTips);
+                    errorsDict.set(attributeName, errorTips);
                     continue;
                 }
                 Object value = dict.getStr("fixed_value");
@@ -158,13 +158,13 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                             if (null != dict.getObj("is_auto_generation") && dict.getInt("is_auto_generation") == 1) {
                                 value = RandomUtil.randomString(5);
                             } else {
-                                errorsDict.set(CharSequenceUtil.toCamelCase(attributeName), errorTips);
+                                errorsDict.set(attributeName, errorTips);
                                 continue;
                             }
                         }
                     }
                 }
-                retDict.set(CharSequenceUtil.toCamelCase(attributeName), value);
+                retDict.set(attributeName, value);
             }
             if (!errorsDict.isEmpty()) {
                 throw new GXException("属性必填错误", HttpStatus.HTTP_INTERNAL_ERROR, errorsDict);

@@ -38,7 +38,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cn.hutool.core.map.MapUtil.filter;
 
@@ -51,7 +50,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
     private static final Logger LOGGER = GXCommonUtils.getLogger(GXRequestToBeanHandlerMethodArgumentResolver.class);
 
     @Resource
-    private GXCoreModelAttributesService gxCoreModelAttributesService;
+    private GXCoreModelAttributesService coreModelAttributesService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -117,10 +116,10 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         if (validateCoreModelId && null != coreModelId) {
             for (String jsonField : jsonFields) {
                 final String json = Optional.ofNullable(dict.getStr(jsonField)).orElse("{}");
-                final Dict dbFieldDict = gxCoreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
+                final Dict dbFieldDict = coreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
                 Dict tmpDict = JSONUtil.toBean(json, Dict.class);
                 GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
-                final Set<String> tmpDictKey = tmpDict.keySet().stream().map(CharSequenceUtil::toCamelCase).collect(Collectors.toSet());
+                final Set<String> tmpDictKey = tmpDict.keySet();//.stream().map(CharSequenceUtil::toCamelCase).collect(Collectors.toSet());
                 if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
                     throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
                 }
