@@ -111,11 +111,8 @@ public class GXValidateExtDataServiceImpl implements GXValidateExtDataService {
             if (CharSequenceUtil.isBlank(currentRule)) {
                 currentRule = Convert.toStr(parentAttributeValidateRule.get(attributeName));
             }
-            if (CharSequenceUtil.isBlank(currentRule) && modelAttributesData.getInt("force_validation") == 0) {
+            if (CharSequenceUtil.isBlank(currentRule) || modelAttributesData.getInt("force_validation") == 0) {
                 // 不验证当前数据
-                return false;
-            }
-            if (CharSequenceUtil.isBlank(currentRule)) {
                 return true;
             }
             final String value = Convert.toStr(validateDataMap.get(attributeName));
