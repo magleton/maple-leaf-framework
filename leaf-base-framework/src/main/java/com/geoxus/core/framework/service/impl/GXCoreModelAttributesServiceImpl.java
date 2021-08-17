@@ -123,7 +123,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
             final List<Dict> list = LIST_DICT_CACHE.get(cacheKey, () -> baseMapper.getModelAttributesByCondition(condition));
             Dict errorsDict = Dict.create();
             for (Dict dict : list) {
-                final String attributeName = CharSequenceUtil.toCamelCase(dict.getStr("attribute_name"));
+                final String attributeName = dict.getStr("attribute_name");
                 final String cmExt = dict.getStr("cm_ext");
                 final String cExt = dict.getStr("c_ext");
                 // 特定模型中的属性的元数据
@@ -146,7 +146,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                     errorTips = CharSequenceUtil.format("{}.{}为必填字段", tableField, attributeName);
                 }
                 if (required == 1 && null == sourceDict.getObj(attributeName) && null == dict.getObj("default_value")) {
-                    errorsDict.set(attributeName, errorTips);
+                    errorsDict.set(CharSequenceUtil.toCamelCase(attributeName), errorTips);
                     continue;
                 }
                 Object value = dict.getStr("fixed_value");
@@ -158,13 +158,13 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                             if (null != dict.getObj("is_auto_generation") && dict.getInt("is_auto_generation") == 1) {
                                 value = RandomUtil.randomString(5);
                             } else {
-                                errorsDict.set(attributeName, errorTips);
+                                errorsDict.set(CharSequenceUtil.toCamelCase(attributeName), errorTips);
                                 continue;
                             }
                         }
                     }
                 }
-                retDict.set(attributeName, value);
+                retDict.set(CharSequenceUtil.toCamelCase(attributeName), value);
             }
             if (!errorsDict.isEmpty()) {
                 throw new GXException("属性必填错误", HttpStatus.HTTP_INTERNAL_ERROR, errorsDict);

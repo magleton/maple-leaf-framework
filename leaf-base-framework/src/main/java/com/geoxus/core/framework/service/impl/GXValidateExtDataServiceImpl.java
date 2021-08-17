@@ -49,7 +49,7 @@ public class GXValidateExtDataServiceImpl implements GXValidateExtDataService {
     private GXCoreModelAttributesService coreModelAttributeService;
 
     @Override
-    public boolean validateExtData(Object o, String modelIdentification, String tableFiled, boolean isFullMatchAttribute, ConstraintValidatorContext context) throws UnsupportedOperationException {
+    public boolean validateExtData(Object o, String modelIdentification, String tableField, boolean isFullMatchAttribute, ConstraintValidatorContext context) throws UnsupportedOperationException {
         final String jsonStr = JSONUtil.toJsonStr(o);
         if (!JSONUtil.isJson(jsonStr)) {
             return false;
@@ -59,12 +59,12 @@ public class GXValidateExtDataServiceImpl implements GXValidateExtDataService {
             throw new GXException(CharSequenceUtil.format(MODEL_SETTING_NOT_EXISTS, modelIdentification));
         }
         if (isFullMatchAttribute && !CharSequenceUtil.equals(jsonStr, "{}")) {
-            final boolean b = coreModelAttributeService.checkCoreModelFieldAttributes(coreModelId, tableFiled, jsonStr);
+            final boolean b = coreModelAttributeService.checkCoreModelFieldAttributes(coreModelId, tableField, jsonStr);
             if (!b) {
-                throw new GXException(CharSequenceUtil.format("{}字段提交的属性与数据库配置的字段属性不匹配!", tableFiled));
+                throw new GXException(CharSequenceUtil.format("{}字段提交的属性与数据库配置的字段属性不匹配!", tableField));
             }
         }
-        final GXCoreModelEntity coreModelEntity = coreModelService.getCoreModelByModelId(coreModelId, tableFiled);
+        final GXCoreModelEntity coreModelEntity = coreModelService.getCoreModelByModelId(coreModelId, tableField);
         final List<Dict> attributesList = coreModelEntity.getCoreAttributes();
         final Dict validateRule = Dict.create();
         for (Dict dict : attributesList) {
@@ -107,13 +107,13 @@ public class GXValidateExtDataServiceImpl implements GXValidateExtDataService {
             }
             final GXCoreAttributesEntity attribute = coreAttributesService.getAttributeByAttributeName(attributeName);
             Dict modelAttributesData = coreModelAttributeService.getModelAttributeByModelIdAndAttributeId(coreModelId, attribute.getAttributeId());
-            String currentRule = modelAttributesData.getStr("validation_expression");
+            String currentRule = modelAttributesData.getStr("validationExpression");
             if (CharSequenceUtil.isBlank(currentRule)) {
                 currentRule = Convert.toStr(parentAttributeValidateRule.get(attributeName));
             }
-            if (CharSequenceUtil.isBlank(currentRule) || modelAttributesData.getInt("force_validation") == 0) {
+            if (CharSequenceUtil.isBlank(currentRule) && modelAttributesData.getInt("forceValidation") == 0) {
                 // 不验证当前数据
-                return true;
+                return false;
             }
             final String value = Convert.toStr(validateDataMap.get(attributeName));
             final boolean isMatch = Pattern.matches(currentRule, value);

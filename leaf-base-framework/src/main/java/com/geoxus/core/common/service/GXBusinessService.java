@@ -103,7 +103,14 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         if (Objects.nonNull(searchReqDto.getRemoveField())) {
             param.set("removeField", searchReqDto.getRemoveField());
         }
-        return listOrSearch(param);
+        List<Dict> list = listOrSearch(param);
+        ArrayList<Dict> dictList = new ArrayList<>();
+        list.forEach(dict -> {
+            Dict tmpDict = Dict.create();
+            dict.forEach((key, value) -> tmpDict.set(CharSequenceUtil.toCamelCase(key), value));
+            dictList.add(tmpDict);
+        });
+        return dictList;
     }
 
     /**
@@ -338,7 +345,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
             final String key = entry.getKey();
             Object value = entry.getValue();
             final Object o = removeField.get(key);
-            if (null == o) {
+            if (Objects.isNull(o)) {
                 if (!(value instanceof Dict)) {
                     if (CollUtil.contains(phoneNumberFields, key)) {
                         String str = decryptedPhoneNumber(value.toString());
@@ -346,7 +353,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
                             value = str;
                         }
                     }
-                    retDict.set(key, value);
+                    retDict.set(CharSequenceUtil.toCamelCase(key), value);
                     continue;
                 }
                 final Dict convert = Convert.convert(Dict.class, value);
@@ -361,9 +368,9 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
                             enValue = str;
                         }
                     }
-                    tmpDict.set(enKey, enValue);
+                    tmpDict.set(CharSequenceUtil.toCamelCase(enKey), enValue);
                 }
-                retDict.set(key, tmpDict);
+                retDict.set(CharSequenceUtil.toCamelCase(key), tmpDict);
             } else {
                 if (value instanceof Dict) {
                     final Dict removeDict = Convert.convert(Dict.class, o);
@@ -379,10 +386,10 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
                                     enValue = str;
                                 }
                             }
-                            tmpDict.set(enKey, enValue);
+                            tmpDict.set(CharSequenceUtil.toCamelCase(enKey), enValue);
                         }
                     }
-                    retDict.set(key, tmpDict);
+                    retDict.set(CharSequenceUtil.toCamelCase(key), tmpDict);
                 }
             }
         }

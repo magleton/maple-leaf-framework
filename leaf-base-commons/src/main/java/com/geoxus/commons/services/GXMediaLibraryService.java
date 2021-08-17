@@ -131,7 +131,8 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
     default Collection<GXMediaLibraryEntity> getMedia(int targetId, int coreModelId, Dict param) {
         final GXMediaLibraryService mediaLibraryService = GXSpringContextUtils.getBean(GXMediaLibraryService.class);
         assert mediaLibraryService != null;
-        return mediaLibraryService.listByMap(param.set("target_id", targetId).set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
+        Dict condition = param.set("target_id", targetId).set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+        return mediaLibraryService.listByMap(condition);
     }
 
     /**

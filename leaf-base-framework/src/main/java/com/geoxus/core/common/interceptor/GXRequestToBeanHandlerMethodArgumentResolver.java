@@ -38,6 +38,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cn.hutool.core.map.MapUtil.filter;
 
@@ -72,7 +73,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         }
         final GXRequestBodyToTargetAnnotation gxRequestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXRequestBodyToTargetAnnotation.class);
         final String value = Objects.requireNonNull(gxRequestBodyToTargetAnnotation).value();
-        List<String> jsonFields = new ArrayList<>(16);
+        Set<String> jsonFields = new HashSet<>(16);
         boolean fillJSONField = gxRequestBodyToTargetAnnotation.fillJSONField();
         boolean validateTarget = gxRequestBodyToTargetAnnotation.validateTarget();
         boolean validateCoreModelId = gxRequestBodyToTargetAnnotation.validateCoreModelId();
@@ -119,11 +120,11 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
                 final Dict dbFieldDict = gxCoreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
                 Dict tmpDict = JSONUtil.toBean(json, Dict.class);
                 GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
-                final Set<String> tmpDictKey = tmpDict.keySet();
+                final Set<String> tmpDictKey = tmpDict.keySet().stream().map(CharSequenceUtil::toCamelCase).collect(Collectors.toSet());
                 if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
                     throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
                 }
-                Map<String, Object> filter = filter(dbFieldDict, (Map.Entry<String, Object> t) -> null != tmpDict.getStr(t.getKey()));
+                Map<String, Object> filter = filter(dbFieldDict, (Map.Entry<String, Object> t) -> null != tmpDict.getStr(CharSequenceUtil.toUnderlineCase(t.getKey())));
                 if (fillJSONField && !dbFieldDict.isEmpty()) {
                     dict.set(jsonField, JSONUtil.toJsonStr(dbFieldDict));
                 } else if (!filter.isEmpty()) {

@@ -474,9 +474,9 @@ public interface GXBaseService<T> extends IService<T> {
             if (CharSequenceUtil.contains(key, fieldSeparator)) {
                 String[] keys = CharSequenceUtil.splitToArray(key, fieldSeparator);
                 Dict data = Convert.convert(Dict.class, Optional.ofNullable(retDict.getObj(keys[0])).orElse(Dict.create()));
-                retDict.set(keys[0], data.set(keys[1], object));
+                retDict.set(CharSequenceUtil.toCamelCase(keys[0]), data.set(CharSequenceUtil.toCamelCase(keys[1]), object));
             } else {
-                retDict.set(key, object);
+                retDict.set(CharSequenceUtil.toCamelCase(key), object);
             }
         }
         return retDict;

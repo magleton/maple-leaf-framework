@@ -70,7 +70,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
         final Dict condition = Dict.create().set(GXBaseBuilderConstants.MODEL_IDENTIFICATION_NAME, modelName);
         HashSet<String> field = CollUtil.newHashSet("model_id");
         final Dict dict = getFieldValueBySQL(GXCoreModelEntity.class, field, condition, false);
-        return null == dict ? 0 : dict.getInt("model_id");
+        return null == dict ? 0 : Optional.ofNullable(dict.getInt("modelId")).orElse(dict.getInt("model_id"));
     }
 
     @Override
