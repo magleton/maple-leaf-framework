@@ -288,7 +288,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
     default GXPagination<Dict> generatePage(Dict param) {
         final Set<String> removeFields = Convert.convert(new TypeReference<Set<String>>() {
         }, Optional.ofNullable(param.getObj("removeField")).orElse(CollUtil.newHashSet()));
-        Map<String, Object> removeField = CollUtil.newHashMap();
+        Map<String, Object> removeField = new HashMap<>();
         for (final String s : removeFields) {
             if (CharSequenceUtil.contains(s, "::")) {
                 final String[] strings = CharSequenceUtil.splitToArray(s, "::");

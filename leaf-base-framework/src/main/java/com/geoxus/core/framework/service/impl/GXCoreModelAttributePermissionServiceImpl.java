@@ -48,13 +48,13 @@ public class GXCoreModelAttributePermissionServiceImpl extends ServiceImpl<GXCor
         }
         for (Dict dict : attributes) {
             final String dbFieldName = dict.getStr("db_field_name");
-            final String[] tmpRoles = CharSequenceUtil.split(dict.getStr("roles"), ",");
-            final String[] tmpUsers = CharSequenceUtil.split(dict.getStr("users"), ",");
+            final String[] tmpRoles = CharSequenceUtil.split(dict.getStr("roles"), ",").toArray(new String[0]);
+            final String[] tmpUsers = CharSequenceUtil.split(dict.getStr("users"), ",").toArray(new String[0]);
             if (!CollUtil.containsAny(Arrays.asList(tmpUsers), users) && !CollUtil.containsAny(Arrays.asList(tmpRoles), roles)) {
                 continue;
             }
             if (CharSequenceUtil.contains(dbFieldName, "::")) {
-                final String[] strings = CharSequenceUtil.split(dbFieldName, "::");
+                final String[] strings = CharSequenceUtil.split(dbFieldName, "::").toArray(new String[0]);
                 final Dict convertDict = Convert.convert(Dict.class, jsonFieldDict.getOrDefault(strings[0], Dict.create()));
                 convertDict.set(CharSequenceUtil.format("{}", strings[1]), CharSequenceUtil.format("{}", String.join("::", strings)));
                 jsonFieldDict.set(strings[0], convertDict);

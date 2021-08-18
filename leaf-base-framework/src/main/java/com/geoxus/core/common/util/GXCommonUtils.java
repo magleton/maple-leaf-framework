@@ -423,7 +423,7 @@ public class GXCommonUtils {
         try {
             assert objectMapper != null;
             Dict data = objectMapper.readValue(jsonStr, Dict.class);
-            String[] paths = CharSequenceUtil.split(path, ".");
+            String[] paths = CharSequenceUtil.split(path, ".").toArray(new String[0]);
             final Object firstObj = data.getObj(paths[0]);
             if (null == firstObj) {
                 return getClassDefaultValue(clazz);
