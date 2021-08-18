@@ -32,7 +32,7 @@
         <lombok.version>1.18.20</lombok.version>
         <mysql.version>8.0.25</mysql.version>
         <druid.spring.boot.version>1.2.6</druid.spring.boot.version>
-        <hutool.version>5.6.7</hutool.version>
+        <hutool.version>5.7.9</hutool.version>
         <mybatis.plus.boot.version>3.4.3.1</mybatis.plus.boot.version>
         <redisson.spring.boot.version>3.15.6</redisson.spring.boot.version>
         <aspectjweaver.version>1.9.6</aspectjweaver.version>
@@ -51,7 +51,6 @@
     <!-- 子模块继承之后，提供作用：锁定版本+子module不用写groupId和version  -->
     <dependencyManagement>
         <dependencies>
-            <!--spring boot 2.3.12-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -59,19 +58,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--spring cloud Hoxton.SR11-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR11</version>
+                <version>Hoxton.SR12</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--spring cloud alibaba 2.2.5.RELEASE-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.5.RELEASE</version>
+                <version>2.2.6.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
