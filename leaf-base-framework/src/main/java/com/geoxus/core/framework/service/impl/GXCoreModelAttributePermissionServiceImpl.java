@@ -16,7 +16,6 @@ import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -48,9 +47,9 @@ public class GXCoreModelAttributePermissionServiceImpl extends ServiceImpl<GXCor
         }
         for (Dict dict : attributes) {
             final String dbFieldName = dict.getStr("db_field_name");
-            final String[] tmpRoles = CharSequenceUtil.split(dict.getStr("roles"), ",").toArray(new String[0]);
-            final String[] tmpUsers = CharSequenceUtil.split(dict.getStr("users"), ",").toArray(new String[0]);
-            if (!CollUtil.containsAny(Arrays.asList(tmpUsers), users) && !CollUtil.containsAny(Arrays.asList(tmpRoles), roles)) {
+            final List<String> tmpRoles = CharSequenceUtil.split(dict.getStr("roles"), ",");
+            final List<String> tmpUsers = CharSequenceUtil.split(dict.getStr("users"), ",");
+            if (!CollUtil.containsAny(tmpUsers, users) && !CollUtil.containsAny(tmpRoles, roles)) {
                 continue;
             }
             if (CharSequenceUtil.contains(dbFieldName, "::")) {
