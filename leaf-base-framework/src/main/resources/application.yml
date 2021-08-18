@@ -69,8 +69,9 @@ mybatis-plus:
       #数据库大写下划线转换
       capital-mode: true
       #逻辑删除配置
-      logic-delete-value: 0
-      logic-not-delete-value: 1
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
       column-format: "%s"
     #刷新mapper 调试神器
     refresh: true
