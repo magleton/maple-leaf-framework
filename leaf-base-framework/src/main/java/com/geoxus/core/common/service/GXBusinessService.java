@@ -56,7 +56,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @return boolean
      */
     default boolean delete(Dict param) {
-        return batchSoftDelete(param);
+        return batchUpdateStatus(param);
     }
 
     /**
@@ -141,17 +141,17 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         final String fields = (String) Optional.ofNullable(param.remove("fields")).orElse("*");
         final boolean remove = (boolean) Optional.ofNullable(param.remove("remove")).orElse(false);
         Set<String> lastFields = Arrays.stream(CharSequenceUtil.replace(fields, " ", "").split(",")).collect(Collectors.toSet());
-        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(CharSequenceUtil.toCamelCase(GXBaseBuilderConstants.SEARCH_CONDITION_NAME))).orElse(Dict.create()));
+        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(GXBaseBuilderConstants.SEARCH_CONDITION_NAME)).orElse(Dict.create()));
         return getFieldValueBySQL(tableName, lastFields, condition, remove);
     }
 
     /**
-     * 批量删除
+     * 批量更新status字段
      *
      * @param param 参数
      * @return boolean
      */
-    default boolean batchSoftDelete(Dict param) {
+    default boolean batchUpdateStatus(Dict param) {
         final List<Long> ids = Convert.convert(new TypeReference<List<Long>>() {
         }, param.getObj(getPrimaryKey()));
         if (null == ids) {
