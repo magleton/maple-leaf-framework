@@ -83,7 +83,10 @@ public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>>
         from = CharSequenceUtil.isEmpty(from) ? "{}" : from;
         if (coreModelId == 0) {
             if (JSONUtil.isJson(from)) {
-                return JSONUtil.toBean(from, Dict.class);
+                Dict dict = JSONUtil.toBean(from, Dict.class);
+                Dict retDict = Dict.create();
+                dict.forEach((key, value) -> retDict.set(CharSequenceUtil.toCamelCase(key), value));
+                return retDict;
             }
             return Dict.create();
         }
@@ -99,7 +102,9 @@ public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>>
         for (String attribute : dict.keySet()) {
             map.remove(attribute);
         }
-        return map;
+        Dict retDict = Dict.create();
+        map.forEach((key, value) -> retDict.set(CharSequenceUtil.toCamelCase(key), value));
+        return retDict;
     }
 
     private String mapToJson(Map<String, Object> from) {
