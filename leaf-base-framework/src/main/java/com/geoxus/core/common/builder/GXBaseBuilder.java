@@ -9,7 +9,6 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.constant.GXBaseBuilderConstants;
@@ -291,10 +290,10 @@ public interface GXBaseBuilder {
         final Dict timeFields = getTimeFields();
         Set<String> keySet = requestSearchCondition.keySet();
         for (String key : keySet) {
-            key = CharSequenceUtil.toUnderlineCase(key);
             Object value = requestSearchCondition.getObj(key);
+            key = CharSequenceUtil.toUnderlineCase(key);
             if (Objects.isNull(value)) {
-                value = requestSearchCondition.getObj(CharSequenceUtil.toCamelCase(key));
+                value = requestSearchCondition.getObj(key);
             }
             if (key.equals(GXCommonConstants.CUSTOMER_SEARCH_MIXED_FIELD_CONDITION)
                     && searchField.getStr(GXCommonConstants.CUSTOMER_SEARCH_MIXED_FIELD_CONDITION) != null) {
