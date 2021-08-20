@@ -12,7 +12,7 @@ public class GXCoreAttributesBuilder implements GXBaseBuilder {
     @Override
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("ca.*").FROM(CharSequenceUtil.format("{} as ca", GXCoreAttributesConstant.TABLE_NAME));
-        mergeSearchConditionToSQL(sql, param, "");
+        mergeSearchConditionToSQL(sql, param);
         return sql.toString();
     }
 

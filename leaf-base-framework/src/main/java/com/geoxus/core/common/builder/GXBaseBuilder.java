@@ -247,10 +247,9 @@ public interface GXBaseBuilder {
      * @param fieldName    字段名字
      * @param conditionStr 查询条件
      * @param param        参数
-     * @param aliasPrefix  表的别名
      * @return String
      */
-    default String processTimeField(String fieldName, String conditionStr, Object param, String aliasPrefix) {
+    default String processTimeField(String fieldName, String conditionStr, Object param) {
         final String today = DateUtil.today();
         String startDate = CharSequenceUtil.format("{} 0:0:0", today);
         String endDate = CharSequenceUtil.format("{} 23:59:59", today);
@@ -260,9 +259,6 @@ public interface GXBaseBuilder {
         }
         if (null != dict.getStr("end")) {
             endDate = dict.getStr("end");
-        }
-        if (!CharSequenceUtil.contains(fieldName, ".") && CharSequenceUtil.isNotBlank(aliasPrefix)) {
-            fieldName = CharSequenceUtil.format("{}.{}", aliasPrefix, fieldName);
         }
         final long start = DateUtil.parse(startDate).getTime() / 1000;
         final long end = DateUtil.parse(endDate).getTime() / 1000;
@@ -274,11 +270,10 @@ public interface GXBaseBuilder {
      *
      * @param sql          SQL对象
      * @param requestParam 请求参数
-     * @param aliasPrefix  别名
-     * @return Dict
      */
+    @SuppressWarnings("all")
     @GXDataSourceAnnotation("framework")
-    default Dict mergeSearchConditionToSQL(SQL sql, Dict requestParam, String aliasPrefix) {
+    default void mergeSearchConditionToSQL(SQL sql, Dict requestParam) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
             throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstants.MODEL_IDENTIFICATION_NAME));
@@ -290,69 +285,36 @@ public interface GXBaseBuilder {
         final Dict timeFields = getTimeFields();
         Set<String> keySet = requestSearchCondition.keySet();
         for (String key : keySet) {
-            Object value = requestSearchCondition.getObj(key);
-            key = CharSequenceUtil.toUnderlineCase(key);
-            if (Objects.isNull(value)) {
-                value = requestSearchCondition.getObj(key);
-            }
-            if (key.equals(GXCommonConstants.CUSTOMER_SEARCH_MIXED_FIELD_CONDITION)
-                    && searchField.getStr(GXCommonConstants.CUSTOMER_SEARCH_MIXED_FIELD_CONDITION) != null) {
-                sql.WHERE(CharSequenceUtil.indexedFormat(searchField.getStr(GXCommonConstants.CUSTOMER_SEARCH_MIXED_FIELD_CONDITION), "'" + value + "%'"));
-                continue;
-            }
-            String lastKey = ReUtil.replaceAll(key, "[!<>*^$@#%&]", "");
-            if (null == value || (value.getClass().getName().equalsIgnoreCase("java.lang.String") && CharSequenceUtil.isBlank(value.toString()))) {
-                continue;
-            }
-            String operator = searchField.getStr(key);
-            if (null == operator) {
-                if (CharSequenceUtil.isNotBlank(aliasPrefix)) {
-                    key = CharSequenceUtil.concat(true, aliasPrefix, ".", key);
-                    operator = searchField.getStr(key);
+            boolean timeFieldFlag = false;
+            String underLineKey = CharSequenceUtil.toUnderlineCase(key);
+            Object value = Optional.ofNullable(requestSearchCondition.getObj(key)).orElse(requestSearchCondition.getObj(underLineKey));
+            if (Objects.nonNull(value) && CharSequenceUtil.isNotBlank(value.toString())) {
+                String operator = Optional.ofNullable(searchField.getStr(key)).orElse(searchField.getStr(underLineKey));
+                if (Objects.isNull(operator)) {
+                    operator = Optional.ofNullable(timeFields.getStr(key)).orElse(timeFields.getStr(underLineKey));
+                    timeFieldFlag = true;
                 }
-                if (null == operator && CharSequenceUtil.isNotBlank(timeFields.getStr(key))) {
-                    operator = timeFields.getStr(key);
-                    if (null == operator && CharSequenceUtil.isNotBlank(aliasPrefix)) {
-                        key = CharSequenceUtil.concat(true, aliasPrefix, ".", key);
-                        operator = timeFields.getStr(key);
-                    }
+                if (Objects.isNull(operator)) {
+                    GXCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
+                    continue;
                 }
-            }
-            if (null == operator) {
-                GXCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", key);
-            } else {
-                if (CharSequenceUtil.isNotBlank(timeFields.getStr(key))) {
-                    final String s = processTimeField(key, operator, value, aliasPrefix);
+                if (timeFieldFlag) {
+                    final String s = processTimeField(underLineKey, operator, value);
                     sql.WHERE(s);
-                } else {
-                    if (value instanceof Collection) {
-                        value = CollUtil.join((Collection<?>) value, ",");
-                    }
-                    if (CharSequenceUtil.isNotBlank(aliasPrefix) && !CharSequenceUtil.contains(key, ".")) {
-                        sql.WHERE(CharSequenceUtil.format("`{}`.`{}` ".concat(operator), aliasPrefix, lastKey, value));
-                    } else {
-                        if (CharSequenceUtil.contains(key, ".")) {
-                            sql.WHERE(CharSequenceUtil.format("{} ".concat(operator), lastKey, value));
-                        } else {
-                            sql.WHERE(CharSequenceUtil.format("`{}` ".concat(operator), lastKey, value));
-                        }
-                    }
+                    continue;
                 }
+                if (value instanceof Collection) {
+                    value = CollUtil.join((Collection<?>) value, ",");
+                }
+                String lastKey = ReUtil.replaceAll(underLineKey, "[!<>*^$@#%&]", "");
+                if (CharSequenceUtil.contains(underLineKey, ".")) {
+                    sql.WHERE(CharSequenceUtil.format("{} ".concat(operator), lastKey, value));
+                    continue;
+                }
+                sql.WHERE(CharSequenceUtil.format("`{}` ".concat(operator), lastKey, value));
+
             }
         }
-        return Dict.create();
-    }
-
-    /**
-     * 合并搜索条件到SQL对象中
-     *
-     * @param sql          SQL对象
-     * @param requestParam 请求参数
-     * @return Dict
-     */
-    @GXDataSourceAnnotation("framework")
-    default Dict mergeSearchConditionToSQL(SQL sql, Dict requestParam) {
-        return mergeSearchConditionToSQL(sql, requestParam, "");
     }
 
     /**
