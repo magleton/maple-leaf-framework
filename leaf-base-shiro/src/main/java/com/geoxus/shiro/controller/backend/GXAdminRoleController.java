@@ -2,7 +2,7 @@ package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.core.common.controller.GXControllerDTO;
+import com.geoxus.core.common.controller.GXBaseController;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminRoleReqDto;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/admin-role/backend")
-public class GXAdminRoleController implements GXControllerDTO<GXAdminRoleReqDto> {
+public class GXAdminRoleController implements GXBaseController {
     @Resource
     private GXAdminRoleService<GXAdminRoleEntity> adminRoleService;
 
@@ -33,7 +33,6 @@ public class GXAdminRoleController implements GXControllerDTO<GXAdminRoleReqDto>
      * @param target 请求参数
      * @return GXResultUtils
      */
-    @Override
     @PostMapping("create")
     public GXResultUtils<Dict> create(@GXRequestBodyToTargetAnnotation @Validated GXAdminRoleReqDto target) {
         GXAdminRoleEntity entity = adminRoleMapStruct.dtoToEntity(target);

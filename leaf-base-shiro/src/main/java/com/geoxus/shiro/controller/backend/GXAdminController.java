@@ -1,10 +1,9 @@
 package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.controller.GXControllerDTO;
+import com.geoxus.core.common.controller.GXBaseController;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
-import com.geoxus.shiro.dto.req.GXAdminReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 import com.geoxus.shiro.services.GXAdminService;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +19,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/admin/backend")
-public class GXAdminController implements GXControllerDTO<GXAdminReqDto> {
+public class GXAdminController implements GXBaseController {
     @Resource
     private GXAdminService<GXAdminEntity> adminService;
 

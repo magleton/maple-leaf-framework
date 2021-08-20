@@ -2,7 +2,7 @@ package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.core.common.controller.GXControllerDTO;
+import com.geoxus.core.common.controller.GXBaseController;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminPermissionsReqDto;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/admin-permissions/backend")
-public class GXAdminPermissionsController implements GXControllerDTO<GXAdminPermissionsReqDto> {
+public class GXAdminPermissionsController implements GXBaseController {
     @Resource
     private GXAdminPermissionsService<GXAdminPermissionsEntity> adminPermissionsService;
 
@@ -34,7 +34,6 @@ public class GXAdminPermissionsController implements GXControllerDTO<GXAdminPerm
      * @param target 请求参数
      * @return GXResultUtils
      */
-    @Override
     @RequiresRoles("super_admin")
     @PostMapping("create")
     public GXResultUtils<Dict> create(@GXRequestBodyToTargetAnnotation @Validated GXAdminPermissionsReqDto target) {
