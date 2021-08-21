@@ -8,6 +8,7 @@ import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;
 import com.geoxus.core.framework.service.GXCoreModelTableFieldService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class GXCoreModelTableFieldServiceImpl extends ServiceImpl<GXCoreModelTab
      * @return List
      */
     @Override
+    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('core_model_id') + #p0.getStr('table_field_name')")
     public List<Dict> getModelAttributesByModelId(Dict condition) {
         return baseMapper.getModelAttributesByCondition(condition);
     }

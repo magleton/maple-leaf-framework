@@ -50,10 +50,18 @@ public interface GXCoreModelAttributesService extends GXBaseService<GXCoreModelA
     /**
      * 获取指定模型指定字段的默认值列表
      *
-     * @param coreModelId         核心模型ID
-     * @param tableField 模型字段名字
-     * @param jsonStr             JSON字符串
+     * @param coreModelId 核心模型ID
+     * @param tableField  模型字段名字
+     * @param jsonStr     JSON字符串
      * @return Dict
      */
     Dict getModelAttributesDefaultValue(int coreModelId, String tableField, String jsonStr);
+
+    /**
+     * 通过条件获取模型的属性列表
+     *
+     * @param condition 条件
+     * @return List
+     */
+    List<Dict> getModelAttributesByCondition(Dict condition);
 }
