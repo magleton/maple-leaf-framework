@@ -91,9 +91,9 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             jsonFields.add(dbJSONFieldName);
             String currentFieldName = field.getName();
             Object fieldValue = Optional.ofNullable(dict.get(currentFieldName)).orElse(dict.getObj(CharSequenceUtil.toUnderlineCase(dbFieldName)));
-            if (Objects.isNull(fieldValue)) {
+            /*if (Objects.isNull(fieldValue)) {
                 fieldValue = GXCommonUtils.getClassDefaultValue(field.getType());
-            }
+            }*/
             Map<String, Object> tmpMap = new HashMap<>();
             if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJSONFieldName)) {
                 tmpMap = jsonMergeFieldMap.get(dbJSONFieldName);
