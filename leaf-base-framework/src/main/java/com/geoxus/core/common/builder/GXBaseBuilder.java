@@ -206,7 +206,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String listOrSearchPage(IPage<Dict> page, Dict param) {
-        throw new GXException("请实现自定义listOrSearchPage方法");
+        throw new GXException("请实现自定义的listOrSearchPage方法");
     }
 
     /**
