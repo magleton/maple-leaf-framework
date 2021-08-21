@@ -1,4 +1,4 @@
-package com.geoxus.shiro.services.impl;
+package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -11,7 +11,7 @@ import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 import com.geoxus.shiro.mapper.GXAdminMapper;
-import com.geoxus.shiro.services.GXAdminService;
+import com.geoxus.shiro.service.GXAdminService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

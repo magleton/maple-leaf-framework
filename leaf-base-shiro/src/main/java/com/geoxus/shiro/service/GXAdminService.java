@@ -1,4 +1,4 @@
-package com.geoxus.shiro.services;
+package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;

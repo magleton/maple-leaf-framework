@@ -1,12 +1,12 @@
-package com.geoxus.shiro.services.impl;
+package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.shiro.services.GXAdminRoleService;
-import com.geoxus.shiro.services.GXAdminService;
-import com.geoxus.shiro.services.GXPermissionsService;
-import com.geoxus.shiro.services.GXShiroService;
+import com.geoxus.shiro.service.GXAdminRoleService;
+import com.geoxus.shiro.service.GXAdminService;
+import com.geoxus.shiro.service.GXPermissionsService;
+import com.geoxus.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

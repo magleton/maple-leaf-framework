@@ -7,7 +7,7 @@ import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminRoleReqDto;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import com.geoxus.shiro.mapstruct.GXAdminRoleMapStruct;
-import com.geoxus.shiro.services.GXAdminRoleService;
+import com.geoxus.shiro.service.GXAdminRoleService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

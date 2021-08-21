@@ -58,7 +58,6 @@ public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMap
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
-    @Override
     public long create(GXCoreAttributesEntity target, Dict param) {
         boolean save = save(target);
         if (save) {
@@ -67,7 +66,6 @@ public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMap
         return 0;
     }
 
-    @Override
     public long update(GXCoreAttributesEntity target, Dict param) {
         String newExt = target.getExt();
         if (null != newExt && JSONUtil.isJson(newExt)) {

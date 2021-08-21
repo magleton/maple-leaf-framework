@@ -28,38 +28,6 @@ import java.util.stream.Collectors;
 
 public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExists, GXValidateDBUnique {
     /**
-     * 创建数据
-     *
-     * @param target 目标实体
-     * @param param  额外参数
-     * @return long
-     */
-    default long create(T target, Dict param) {
-        return 0;
-    }
-
-    /**
-     * 更新数据
-     *
-     * @param target 目标实体
-     * @param param  额外参数
-     * @return long
-     */
-    default long update(T target, Dict param) {
-        return 0;
-    }
-
-    /**
-     * 删除数据
-     *
-     * @param param 参数
-     * @return boolean
-     */
-    default boolean delete(Dict param) {
-        return batchUpdateStatus(param);
-    }
-
-    /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数

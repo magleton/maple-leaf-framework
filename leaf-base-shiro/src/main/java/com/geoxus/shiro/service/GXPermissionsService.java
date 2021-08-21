@@ -1,4 +1,4 @@
-package com.geoxus.shiro.services;
+package com.geoxus.shiro.service;
 
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.shiro.entities.GXPermissionsEntity;

@@ -1,10 +1,10 @@
-package com.geoxus.shiro.services.impl;
+package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import com.geoxus.shiro.mapper.GXAdminRoleMapper;
-import com.geoxus.shiro.services.GXAdminRoleService;
+import com.geoxus.shiro.service.GXAdminRoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -17,7 +17,6 @@ public class GXAdminRoleServiceImpl extends ServiceImpl<GXAdminRoleMapper, GXAdm
         return baseMapper.getAdminRoles(condition);
     }
 
-    @Override
     public long create(GXAdminRoleEntity target, Dict param) {
         save(target);
         return target.getId();

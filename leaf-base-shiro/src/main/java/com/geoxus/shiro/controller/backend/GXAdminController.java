@@ -5,7 +5,7 @@ import com.geoxus.core.common.controller.GXBaseController;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
-import com.geoxus.shiro.services.GXAdminService;
+import com.geoxus.shiro.service.GXAdminService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

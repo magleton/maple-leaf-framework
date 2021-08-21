@@ -308,10 +308,10 @@ public interface GXBaseBuilder {
                 }
                 String lastKey = ReUtil.replaceAll(underLineKey, "[!<>*^$@#%&]", "");
                 if (CharSequenceUtil.contains(underLineKey, ".")) {
-                    sql.WHERE(CharSequenceUtil.format("{} ".concat(operator), lastKey, value));
+                    sql.WHERE(CharSequenceUtil.format("({} ".concat(operator) + ")", lastKey, value));
                     continue;
                 }
-                sql.WHERE(CharSequenceUtil.format("`{}` ".concat(operator), lastKey, value));
+                sql.WHERE(CharSequenceUtil.format("(`{}` ".concat(operator) + ")", lastKey, value));
 
             }
         }

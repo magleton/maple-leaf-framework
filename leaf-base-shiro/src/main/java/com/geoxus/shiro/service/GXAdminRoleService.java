@@ -1,5 +1,6 @@
-package com.geoxus.shiro.services;
+package com.geoxus.shiro.service;
 
+import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 
@@ -16,4 +17,13 @@ public interface GXAdminRoleService<T extends GXAdminRoleEntity> extends GXBusin
     default Set<String> getAdminRoles(Long adminId) {
         return new HashSet<>(0);
     }
+
+    /**
+     * 创建数据
+     *
+     * @param target 目标实体
+     * @param param  额外参数
+     * @return long
+     */
+    long create(T target, Dict param);
 }

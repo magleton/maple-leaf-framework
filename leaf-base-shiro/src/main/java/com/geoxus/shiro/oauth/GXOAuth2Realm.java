@@ -5,7 +5,7 @@ import com.geoxus.core.common.constant.GXTokenConstants;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
-import com.geoxus.shiro.services.GXShiroService;
+import com.geoxus.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

@@ -1,9 +1,9 @@
-package com.geoxus.shiro.services.impl;
+package com.geoxus.shiro.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import com.geoxus.shiro.mapper.GXRolePermissionsMapper;
-import com.geoxus.shiro.services.GXRolePermissionsService;
+import com.geoxus.shiro.service.GXRolePermissionsService;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;

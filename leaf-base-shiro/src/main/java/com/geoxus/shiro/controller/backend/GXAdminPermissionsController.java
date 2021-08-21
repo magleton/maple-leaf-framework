@@ -7,7 +7,7 @@ import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.shiro.dto.req.GXAdminPermissionsReqDto;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import com.geoxus.shiro.mapstruct.GXAdminPermissionsMapStruct;
-import com.geoxus.shiro.services.GXAdminPermissionsService;
+import com.geoxus.shiro.service.GXAdminPermissionsService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

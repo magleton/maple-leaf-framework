@@ -1,4 +1,4 @@
-package com.geoxus.shiro.services.impl;
+package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -6,9 +6,9 @@ import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import com.geoxus.shiro.mapper.GXPermissionsMapper;
-import com.geoxus.shiro.services.GXAdminPermissionsService;
-import com.geoxus.shiro.services.GXPermissionsService;
-import com.geoxus.shiro.services.GXRolePermissionsService;
+import com.geoxus.shiro.service.GXAdminPermissionsService;
+import com.geoxus.shiro.service.GXPermissionsService;
+import com.geoxus.shiro.service.GXRolePermissionsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
