@@ -8,7 +8,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
@@ -67,7 +67,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0")
     public Integer getModelIdByModelIdentification(String modelName) {
-        final Dict condition = Dict.create().set(GXBaseBuilderConstants.MODEL_IDENTIFICATION_NAME, modelName);
+        final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelName);
         HashSet<String> field = CollUtil.newHashSet("model_id");
         final Dict dict = getFieldValueBySQL(GXCoreModelEntity.class, field, condition, false);
         return null == dict ? 0 : Optional.ofNullable(dict.getInt("modelId")).orElse(dict.getInt("model_id"));
@@ -92,7 +92,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
         if (null == searchCondition) {
             return Dict.create();
         }
-        final String searchConditionName = CharSequenceUtil.toUnderlineCase(GXBaseBuilderConstants.SEARCH_CONDITION_NAME);
+        final String searchConditionName = CharSequenceUtil.toUnderlineCase(GXBaseBuilderConstant.SEARCH_CONDITION_NAME);
         return Convert.convert(new TypeReference<Dict>() {
         }, JSONUtil.parse(Optional.ofNullable(searchCondition.getObj(searchConditionName)).orElse("{}")));
     }

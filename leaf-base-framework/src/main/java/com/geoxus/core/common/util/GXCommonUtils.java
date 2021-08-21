@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.github.benmanes.caffeine.cache.CacheLoader;
@@ -656,14 +656,14 @@ public class GXCommonUtils {
      * @return Dict
      */
     public static Dict addSearchCondition(Dict requestParam, String key, Object value, boolean returnRequestParam) {
-        final Object obj = requestParam.getObj(GXBaseBuilderConstants.SEARCH_CONDITION_NAME);
+        final Object obj = requestParam.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME);
         if (null == obj) {
             return requestParam;
         }
         final Dict data = Convert.convert(Dict.class, obj);
         data.set(key, value);
         if (returnRequestParam) {
-            requestParam.put(GXBaseBuilderConstants.SEARCH_CONDITION_NAME, data);
+            requestParam.put(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, data);
             return requestParam;
         }
         return data;
@@ -678,14 +678,14 @@ public class GXCommonUtils {
      * @return Dict
      */
     public static Dict addSearchCondition(Dict requestParam, Dict sourceData, boolean returnRequestParam) {
-        final Object obj = requestParam.getObj(GXBaseBuilderConstants.SEARCH_CONDITION_NAME);
+        final Object obj = requestParam.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME);
         if (null == obj) {
             return requestParam;
         }
         final Dict data = Convert.convert(Dict.class, obj);
         data.putAll(sourceData);
         if (returnRequestParam) {
-            requestParam.put(GXBaseBuilderConstants.SEARCH_CONDITION_NAME, data);
+            requestParam.put(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, data);
             return requestParam;
         }
         return data;

@@ -2,7 +2,7 @@ package com.geoxus.core.common.constant;
 
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 
-public class GXBaseBuilderConstants {
+public class GXBaseBuilderConstant {
     @GXFieldCommentAnnotation(zhDesc = "搜索条件的名字")
     public static final String SEARCH_CONDITION_NAME = "searchCondition";
 
@@ -60,6 +60,6 @@ public class GXBaseBuilderConstants {
     @GXFieldCommentAnnotation(zhDesc = "NOT IN条件")
     public static final String NOT_IN = " NOT IN ({})";
 
-    private GXBaseBuilderConstants() {
+    private GXBaseBuilderConstant() {
     }
 }

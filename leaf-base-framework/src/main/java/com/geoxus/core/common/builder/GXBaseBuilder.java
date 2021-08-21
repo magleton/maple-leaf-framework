@@ -11,7 +11,7 @@ import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
@@ -78,16 +78,16 @@ public interface GXBaseBuilder {
                 value = JSONUtil.toJsonStr(value);
             }
             if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.NUMBER_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.NUMBER_EQ, fieldName, value));
             } else {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.STR_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.STR_EQ, fieldName, value));
             }
         }
         whereData.keySet().forEach(conditionKey -> {
-            String template = "{} " + GXBaseBuilderConstants.STR_EQ;
+            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = whereData.getStr(conditionKey);
             if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstants.NUMBER_EQ;
+                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
         });
@@ -118,10 +118,10 @@ public interface GXBaseBuilder {
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         final Set<String> conditionKeys = condition.keySet();
         for (String conditionKey : conditionKeys) {
-            String template = "{} " + GXBaseBuilderConstants.STR_EQ;
+            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = condition.getStr(conditionKey);
             if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstants.NUMBER_EQ;
+                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
         }
@@ -155,10 +155,10 @@ public interface GXBaseBuilder {
         final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
         final Set<String> conditionKeys = condition.keySet();
         for (String conditionKey : conditionKeys) {
-            String template = "{} " + GXBaseBuilderConstants.STR_EQ;
+            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = condition.getStr(conditionKey);
             if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstants.NUMBER_EQ;
+                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
         }
@@ -216,7 +216,7 @@ public interface GXBaseBuilder {
      * @return Dict
      */
     default Dict getRequestSearchCondition(Dict param) {
-        return Optional.ofNullable(Convert.convert(Dict.class, param.getObj(GXBaseBuilderConstants.SEARCH_CONDITION_NAME))).orElse(Dict.create());
+        return Optional.ofNullable(Convert.convert(Dict.class, param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME))).orElse(Dict.create());
     }
 
     /**
@@ -257,9 +257,9 @@ public interface GXBaseBuilder {
     default void mergeSearchConditionToSQL(SQL sql, Dict requestParam) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
-            throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstants.MODEL_IDENTIFICATION_NAME));
+            throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
         }
-        final Dict condition = Dict.create().set(GXBaseBuilderConstants.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
+        final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
         Dict searchField = Objects.requireNonNull(GXSpringContextUtils.getBean(GXCoreModelService.class)).getSearchCondition(condition);
         searchField.putAll(getDefaultSearchField());
         Dict requestSearchCondition = getRequestSearchCondition(requestParam);
@@ -372,11 +372,11 @@ public interface GXBaseBuilder {
      */
     default Dict getTimeFields() {
         return Dict.create()
-                .set("createdAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("updatedAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("cancelAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("payAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("completeAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ);
+                .set("createdAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
+                .set("updatedAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
+                .set("cancelAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
+                .set("payAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
+                .set("completeAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ);
     }
 
     /**

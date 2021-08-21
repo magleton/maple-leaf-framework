@@ -3,7 +3,7 @@ package com.geoxus.core.framework.builder;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreModelConstant;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -33,11 +33,11 @@ public class GXCoreModelBuilder implements GXBaseBuilder {
     @Override
     public Dict getDefaultSearchField() {
         return Dict.create()
-                .set("model_id", GXBaseBuilderConstants.NUMBER_EQ)
-                .set("model_name", GXBaseBuilderConstants.RIGHT_LIKE)
-                .set("model_identification", GXBaseBuilderConstants.STR_EQ)
-                .set("model_type", GXBaseBuilderConstants.RIGHT_LIKE)
-                .set("table_name", GXBaseBuilderConstants.STR_EQ);
+                .set("model_id", GXBaseBuilderConstant.NUMBER_EQ)
+                .set("model_name", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("model_identification", GXBaseBuilderConstant.STR_EQ)
+                .set("model_type", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("table_name", GXBaseBuilderConstant.STR_EQ);
     }
 
     @Override

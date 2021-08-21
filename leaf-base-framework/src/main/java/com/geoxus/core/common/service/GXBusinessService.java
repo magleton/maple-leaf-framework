@@ -10,7 +10,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.dto.GXBaseSearchReqDto;
 import com.geoxus.core.common.exception.GXException;
@@ -39,7 +39,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
             param.set("pagingInfo", searchReqDto.getPagingInfo());
         }
         if (Objects.nonNull(searchReqDto.getSearchCondition())) {
-            param.set(GXBaseBuilderConstants.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
+            param.set(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
         }
         if (Objects.nonNull(searchReqDto.getRemoveField())) {
             param.set("removeField", searchReqDto.getRemoveField());
@@ -71,7 +71,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         final String fields = (String) Optional.ofNullable(param.remove("fields")).orElse("*");
         final boolean remove = (boolean) Optional.ofNullable(param.remove("remove")).orElse(false);
         Set<String> lastFields = Arrays.stream(CharSequenceUtil.replace(fields, " ", "").split(",")).collect(Collectors.toSet());
-        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(GXBaseBuilderConstants.SEARCH_CONDITION_NAME)).orElse(Dict.create()));
+        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME)).orElse(Dict.create()));
         return getFieldValueBySQL(tableName, lastFields, condition, remove);
     }
 

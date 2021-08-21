@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
-import com.geoxus.core.common.constant.GXBaseBuilderConstants;
+import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -24,9 +24,9 @@ public class GXCoreAttributesBuilder implements GXBaseBuilder {
     @Override
     public Dict getDefaultSearchField() {
         return Dict.create()
-                .set("ca.attribute_name", GXBaseBuilderConstants.RIGHT_LIKE)
-                .set("ca.show_name", GXBaseBuilderConstants.RIGHT_LIKE)
-                .set("ca.category", GXBaseBuilderConstants.RIGHT_LIKE);
+                .set("ca.attribute_name", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("ca.show_name", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("ca.category", GXBaseBuilderConstant.RIGHT_LIKE);
     }
 
     @Override
