@@ -44,31 +44,31 @@ public interface GXBaseBuilder {
      * @param whereData 条件
      * @return String
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("all")
     static String updateFieldByCondition(String tableName, Dict data, Dict whereData) {
         final SQL sql = new SQL().UPDATE(tableName);
-        final Set<String> dataKeys = data.keySet();
-        for (String dataKey : dataKeys) {
-            Object value = data.getObj(dataKey);
+        final Set<String> fieldNames = data.keySet();
+        for (String fieldName : fieldNames) {
+            Object value = data.getObj(fieldName);
             if (value instanceof Table) {
                 Table<String, String, Object> table = Convert.convert(new TypeReference<Table<String, String, Object>>() {
                 }, value);
-                final Map<String, Object> row = table.row(dataKey);
+                final Map<String, Object> row = table.row(fieldName);
                 for (Map.Entry<String, Object> entry : row.entrySet()) {
                     final String entryKey = entry.getKey();
                     Object entryValue = entry.getValue();
                     if (entryKey.startsWith("-")) {
-                        sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", dataKey, dataKey, entryKey.substring(1)));
+                        sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", fieldName, fieldName, entryKey.substring(1)));
                     } else {
                         if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
-                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", dataKey, dataKey, entryKey, entryValue));
+                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
                         } else {
                             if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass())
                                     && !ClassUtil.equals(entryValue.getClass(), "String", true)
                                     && (entryValue instanceof Map || entryValue instanceof GXBaseEntity)) {
                                 entryValue = JSONUtil.toJsonStr(entryValue);
                             }
-                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", dataKey, dataKey, entryKey, entryValue));
+                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", fieldName, fieldName, entryKey, entryValue));
                         }
                     }
                 }
@@ -78,9 +78,9 @@ public interface GXBaseBuilder {
                 value = JSONUtil.toJsonStr(value);
             }
             if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.NUMBER_EQ, dataKey, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.NUMBER_EQ, fieldName, value));
             } else {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.STR_EQ, dataKey, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.STR_EQ, fieldName, value));
             }
         }
         whereData.keySet().forEach(conditionKey -> {
@@ -91,7 +91,7 @@ public interface GXBaseBuilder {
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
         });
-        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
+        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.current()));
         return sql.toString();
     }
 

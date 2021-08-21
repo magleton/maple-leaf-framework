@@ -420,7 +420,7 @@ public interface GXBaseService<T> extends IService<T> {
      * @param dataList 数据集合
      * @return int
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("all")
     default Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         return baseMapper.batchInsertBySQL(getTableName(clazz), fieldSet, dataList);
@@ -451,7 +451,7 @@ public interface GXBaseService<T> extends IService<T> {
     default Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySQL(tableName, fieldSet, condition, remove);
-        if (null == dict) {
+        if (Objects.isNull(dict)) {
             GXCommonUtils.getLogger(GXBaseService.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
             return Dict.create();
         }
@@ -491,7 +491,7 @@ public interface GXBaseService<T> extends IService<T> {
      * @param appendData       附加信息
      * @return boolean
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
     default boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
@@ -538,8 +538,8 @@ public interface GXBaseService<T> extends IService<T> {
                 tableValues.set(key, value);
             }
         }
-        tableValues.set("updated_at", tableValues.getInt("created_at"));
-        tableValues.set("created_at", DateUtil.currentSeconds());
+        tableValues.set("updated_at", tableValues.getLong("created_at"));
+        tableValues.set("created_at", DateUtil.current());
         final Integer insert = baseMapper.batchInsertBySQL(historyTableName, lastTableField, CollUtil.newArrayList(tableValues));
         return insert > 0;
     }
