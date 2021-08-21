@@ -6,10 +6,12 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.annotation.GXMergeSingleFieldToJSONFieldAnnotation;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
+import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.event.GXMethodArgumentResolverEvent;
@@ -62,28 +64,25 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         final String body = getRequestBody(webRequest);
         final Dict dict = Convert.convert(Dict.class, JSONUtil.toBean(body, Dict.class));
         final Class<?> parameterType = parameter.getParameterType();
-        Integer coreModelId = null;
+        Integer coreModelId;
         try {
-            final Field coreModelIdField = parameterType.getDeclaredField("CORE_MODEL_ID");
-            coreModelIdField.setAccessible(true);
-            coreModelId = Convert.toInt(coreModelIdField.get(null));
+            String upperCase = GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME.toUpperCase(Locale.ROOT);
+            final Field coreModelIdField = parameterType.getDeclaredField(upperCase);
+            coreModelId = Convert.toInt(ReflectUtil.getFieldValue(null, coreModelIdField));
         } catch (NoSuchFieldException e) {
             throw new GXException(CharSequenceUtil.format("{}类中请添加CORE_MODEL_ID静态常量字段", parameterType.getSimpleName()));
         }
-        final GXRequestBodyToTargetAnnotation gxRequestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXRequestBodyToTargetAnnotation.class);
-        final String value = Objects.requireNonNull(gxRequestBodyToTargetAnnotation).value();
+        final GXRequestBodyToTargetAnnotation requestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXRequestBodyToTargetAnnotation.class);
+        final String value = Objects.requireNonNull(requestBodyToTargetAnnotation).value();
         Set<String> jsonFields = new HashSet<>(16);
-        boolean fillJSONField = gxRequestBodyToTargetAnnotation.fillJSONField();
-        boolean validateTarget = gxRequestBodyToTargetAnnotation.validateTarget();
-        boolean validateCoreModelId = gxRequestBodyToTargetAnnotation.validateCoreModelId();
-     /*   if (null == dict.getInt(GXCommonConstants.CORE_MODEL_PRIMARY_NAME) && validateCoreModelId) {
-            throw new GXException(CharSequenceUtil.format("请传递{}参数", GXCommonConstants.CORE_MODEL_PRIMARY_NAME));
-        }*/
+        boolean fillJSONField = requestBodyToTargetAnnotation.fillJSONField();
+        boolean validateTarget = requestBodyToTargetAnnotation.validateTarget();
+        boolean validateCoreModelId = requestBodyToTargetAnnotation.validateCoreModelId();
 
         Map<String, Map<String, Object>> jsonMergeFieldMap = new HashMap<>();
         for (Field field : parameterType.getDeclaredFields()) {
             GXMergeSingleFieldToJSONFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldToJSONFieldAnnotation.class);
-            if (annotation == null) {
+            if (Objects.isNull(annotation)) {
                 continue;
             }
             String dbJSONFieldName = annotation.dbJSONFieldName();
@@ -93,12 +92,9 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             }
             jsonFields.add(dbJSONFieldName);
             String currentFieldName = field.getName();
-            Object fieldValue = dict.get(currentFieldName);
+            Object fieldValue = Optional.ofNullable(dict.get(currentFieldName)).orElse(dict.getObj(CharSequenceUtil.toUnderlineCase(dbFieldName)));
             if (Objects.isNull(fieldValue)) {
-                fieldValue = dict.getObj(CharSequenceUtil.toSymbolCase(dbFieldName, '_'));
-                if (Objects.isNull(fieldValue)) {
-                    fieldValue = GXCommonUtils.getClassDefaultValue(field.getType());
-                }
+                fieldValue = GXCommonUtils.getClassDefaultValue(field.getType());
             }
             Map<String, Object> tmpMap = new HashMap<>();
             if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJSONFieldName)) {
@@ -112,14 +108,13 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             dict.set(jsonField, JSONUtil.toJsonStr(jsonMergeFieldMap.get(jsonField)));
         }
 
-        //final Integer coreModelId = dict.getInt(GXCommonConstants.CORE_MODEL_PRIMARY_NAME);
         if (validateCoreModelId && null != coreModelId) {
             for (String jsonField : jsonFields) {
                 final String json = Optional.ofNullable(dict.getStr(jsonField)).orElse("{}");
                 final Dict dbFieldDict = coreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
                 Dict tmpDict = JSONUtil.toBean(json, Dict.class);
                 GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
-                final Set<String> tmpDictKey = tmpDict.keySet();//.stream().map(CharSequenceUtil::toCamelCase).collect(Collectors.toSet());
+                final Set<String> tmpDictKey = tmpDict.keySet();
                 if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
                     throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
                 }
@@ -132,7 +127,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             }
         }
         Object bean = Convert.convert(parameterType, dict);
-        Class<?>[] groups = gxRequestBodyToTargetAnnotation.groups();
+        Class<?>[] groups = requestBodyToTargetAnnotation.groups();
         if (validateTarget) {
             if (parameter.hasParameterAnnotation(Valid.class)) {
                 GXValidatorUtils.validateEntity(bean, value, groups);
@@ -142,8 +137,8 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             }
         }
 
-        Class<?> mapstructClazz = gxRequestBodyToTargetAnnotation.mapstructClazz();
-        boolean isConvertToEntity = gxRequestBodyToTargetAnnotation.isConvertToEntity();
+        Class<?> mapstructClazz = requestBodyToTargetAnnotation.mapstructClazz();
+        boolean isConvertToEntity = requestBodyToTargetAnnotation.isConvertToEntity();
         if (mapstructClazz != Void.class && isConvertToEntity) {
             GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
             }, GXSpringContextUtils.getBean(mapstructClazz));

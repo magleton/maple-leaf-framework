@@ -1,33 +1,11 @@
 package com.geoxus.shiro.builder;
 
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.shiro.constant.GXRolePermissionsConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXRolePermissionsBuilder implements GXBaseBuilder {
-    /**
-     * 列表
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
-    /**
-     * 详情
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String detail(Dict param) {
-        return null;
-    }
-
     /**
      * 数据配置的模型标识
      *
@@ -35,7 +13,7 @@ public class GXRolePermissionsBuilder implements GXBaseBuilder {
      */
     @Override
     public String getModelIdentificationValue() {
-        return "role_permissions";
+        return GXRolePermissionsConstant.MODEL_IDENTIFICATION_VALUE;
     }
 
     /**

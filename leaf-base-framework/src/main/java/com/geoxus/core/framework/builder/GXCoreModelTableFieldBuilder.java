@@ -1,11 +1,14 @@
 package com.geoxus.core.framework.builder;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.framework.constant.GXCoreModelAttributesConstant;
 import com.geoxus.core.framework.constant.GXCoreModelTableFieldConstant;
 import org.apache.ibatis.jdbc.SQL;
+
+import java.util.HashSet;
 
 public class GXCoreModelTableFieldBuilder implements GXBaseBuilder {
     /**
@@ -15,35 +18,24 @@ public class GXCoreModelTableFieldBuilder implements GXBaseBuilder {
      * @return String
      */
     public String getModelAttributesByCondition(Dict param) {
-        final SQL sql = new SQL().SELECT("cma.model_attributes_id ,cma.core_model_table_field_id , cma.table_field_name , cma.attribute_id," +
-                        "cma.required , cma.validation_expression, cma.force_validation, cma.fixed_value , ca.attribute_name")
+        HashSet<String> selectColumns = CollUtil.newHashSet();
+        selectColumns.add("cma.model_attributes_id");
+        selectColumns.add("cma.core_model_table_field_id");
+        selectColumns.add("cma.table_field_name");
+        selectColumns.add("cma.attribute_id");
+        selectColumns.add("cma.required");
+        selectColumns.add("cma.validation_expression");
+        selectColumns.add("cma.force_validation");
+        selectColumns.add("cma.fixed_value");
+        selectColumns.add("ca.attribute_name");
+        Integer coreModelId = param.getInt("core_model_id");
+        String tableFieldName = param.getStr("table_field_name");
+        final SQL sql = new SQL().SELECT(String.join(",", selectColumns))
                 .FROM(CharSequenceUtil.format("{} as cma", GXCoreModelAttributesConstant.TABLE_NAME))
-                .INNER_JOIN("core_model_table_field cmtf ON cma.core_model_table_field_id=cmtf.core_model_table_field_id")
+                .INNER_JOIN("core_model_table_field ON cma.core_model_table_field_id=core_model_table_field.core_model_table_field_id")
                 .INNER_JOIN("core_attributes ca ON cma.attribute_id = ca.attribute_id");
-        sql.WHERE(CharSequenceUtil.format("cmtf.core_model_id = {} AND cmtf.table_field_name = '{}'", param.getInt("core_model_id"), param.getStr("table_field_name")));
+        sql.WHERE(CharSequenceUtil.format("core_model_table_field.core_model_id = {} AND core_model_table_field.table_field_name = '{}'", coreModelId, tableFieldName));
         return sql.toString();
-    }
-
-    /**
-     * 列表
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
-    /**
-     * 详情
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String detail(Dict param) {
-        return null;
     }
 
     /**

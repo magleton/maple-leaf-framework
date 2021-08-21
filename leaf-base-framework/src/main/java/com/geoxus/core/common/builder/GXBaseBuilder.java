@@ -83,15 +83,14 @@ public interface GXBaseBuilder {
                 sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstants.STR_EQ, dataKey, value));
             }
         }
-        final Set<String> conditionKeys = whereData.keySet();
-        for (String conditionKey : conditionKeys) {
+        whereData.keySet().forEach(conditionKey -> {
             String template = "{} " + GXBaseBuilderConstants.STR_EQ;
             final String value = whereData.getStr(conditionKey);
             if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
                 template = "{} " + GXBaseBuilderConstants.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
-        }
+        });
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
         return sql.toString();
     }
@@ -201,30 +200,14 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 列表
-     *
-     * @param param 参数
-     * @return String
-     */
-    String listOrSearch(Dict param);
-
-    /**
      * 分页列表
      *
      * @param param 参数
      * @return String
      */
     default String listOrSearchPage(IPage<Dict> page, Dict param) {
-        return "";
+        throw new GXException("请实现自定义listOrSearchPage方法");
     }
-
-    /**
-     * 详情
-     *
-     * @param param 参数
-     * @return String
-     */
-    String detail(Dict param);
 
     /**
      * 获取请求对象中的搜索条件数据
@@ -391,10 +374,11 @@ public interface GXBaseBuilder {
      */
     default Dict getTimeFields() {
         return Dict.create()
-                .set("created_at", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("updated_at", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("cancel_at", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
-                .set("complete_at", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ);
+                .set("createdAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
+                .set("updatedAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
+                .set("cancelAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
+                .set("payAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ)
+                .set("completeAt", GXBaseBuilderConstants.TIME_RANGE_WITH_EQ);
     }
 
     /**

@@ -11,16 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class GXCoreModelBuilder implements GXBaseBuilder {
-    @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
-    @Override
-    public String detail(Dict param) {
-        return null;
-    }
-
     public String getSearchCondition(Dict param) {
         final SQL sql = new SQL().SELECT("model_id , search_condition").FROM(GXCoreModelConstant.TABLE_NAME);
         final Set<Map.Entry<String, Object>> entrySet = getDefaultSearchField().entrySet();

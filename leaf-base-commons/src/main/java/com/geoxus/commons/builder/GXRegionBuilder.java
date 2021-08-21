@@ -11,16 +11,6 @@ import java.util.ArrayList;
 
 public class GXRegionBuilder implements GXBaseBuilder {
     @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
-    @Override
-    public String detail(Dict param) {
-        return null;
-    }
-
-    @Override
     public String getModelIdentificationValue() {
         return GXRegionConstant.MODEL_IDENTIFICATION_VALUE;
     }

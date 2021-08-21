@@ -58,44 +58,6 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
     }
 
     /**
-     * 列表或者搜索 (不分页)
-     *
-     * @param searchReqDto 参数
-     * @return List
-     */
-    default <U extends GXBaseSearchReqDto> List<Dict> listOrSearch(U searchReqDto) {
-        final Dict param = Dict.create();
-        if (Objects.nonNull(searchReqDto.getSearchCondition())) {
-            param.set(GXBaseBuilderConstants.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
-        }
-        if (Objects.nonNull(searchReqDto.getRemoveField())) {
-            param.set("removeField", searchReqDto.getRemoveField());
-        }
-        List<Dict> list = listOrSearch(param);
-        ArrayList<Dict> dictList = new ArrayList<>();
-        list.forEach(dict -> {
-            Dict tmpDict = Dict.create();
-            dict.forEach((key, value) -> tmpDict.set(CharSequenceUtil.toCamelCase(key), value));
-            dictList.add(tmpDict);
-        });
-        return dictList;
-    }
-
-    /**
-     * 列表或者搜索 (不分页)
-     *
-     * @param param 参数
-     * @return List
-     */
-    default List<Dict> listOrSearch(Dict param) {
-        final String profile = GXCommonUtils.getActiveProfile();
-        if ("prod".equals(profile)) {
-            return Collections.emptyList();
-        }
-        throw new GXException("请实现自定义的listOrSearch方法");
-    }
-
-    /**
      * 内容详情
      *
      * @param param 参数

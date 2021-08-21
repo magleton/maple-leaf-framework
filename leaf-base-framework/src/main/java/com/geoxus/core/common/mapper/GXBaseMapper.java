@@ -30,12 +30,6 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     })
     Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearch")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
-    })
-    List<Dict> listOrSearch(Dict param);
-
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(String tableName, Dict condition);
 

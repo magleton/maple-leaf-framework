@@ -45,13 +45,13 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
     }
 
     @Resource
-    private GXCacheKeysUtils gxCacheKeysUtils;
+    private GXCacheKeysUtils cacheKeysUtils;
 
     @Resource
-    private GXCoreModelTableFieldService gxCoreModelTableFieldService;
+    private GXCoreModelTableFieldService coreModelTableFieldService;
 
     @Resource
-    private GXCoreAttributesService gxCoreAttributesService;
+    private GXCoreAttributesService coreAttributesService;
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('core_model_id') + #p0.getStr('table_field_name')")
@@ -87,10 +87,10 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
         for (Map.Entry<String, Object> entry : paramData.entrySet()) {
             paramSet.add(entry.getKey());
         }
-        final String cacheKey = gxCacheKeysUtils.getCacheKey("", CharSequenceUtil.format("{}.{}.{}", coreModelId, modelAttributeField, String.join(".", paramSet)));
+        final String cacheKey = cacheKeysUtils.getCacheKey("", CharSequenceUtil.format("{}.{}.{}", coreModelId, modelAttributeField, String.join(".", paramSet)));
         final Dict condition = Dict.create().set("core_model_id", coreModelId).set("table_field_name", modelAttributeField);
         try {
-            final List<Dict> list = LIST_DICT_CACHE.get(cacheKey, () -> gxCoreModelTableFieldService.getModelAttributesByModelId(condition));
+            final List<Dict> list = LIST_DICT_CACHE.get(cacheKey, () -> coreModelTableFieldService.getModelAttributesByModelId(condition));
             if (list.isEmpty()) {
                 return false;
             }
@@ -114,7 +114,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
             return Dict.create();
         }
         final Dict sourceDict = JSONUtil.toBean(jsonStr, Dict.class);
-        final String cacheKey = gxCacheKeysUtils.getCacheKey("", CharSequenceUtil.format("{}.{}", coreModelId, tableField));
+        final String cacheKey = cacheKeysUtils.getCacheKey("", CharSequenceUtil.format("{}.{}", coreModelId, tableField));
         final Dict condition = Dict.create()
                 .set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId)
                 .set("table_field_name", tableField);

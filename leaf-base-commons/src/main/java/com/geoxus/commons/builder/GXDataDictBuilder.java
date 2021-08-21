@@ -13,7 +13,6 @@ public class GXDataDictBuilder implements GXBaseBuilder {
      * @param param 参数
      * @return String
      */
-    @Override
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("*").FROM(GXDataDictConstant.TABLE_NAME);
         mergeSearchConditionToSQL(sql, param);
@@ -25,17 +24,6 @@ public class GXDataDictBuilder implements GXBaseBuilder {
         final SQL sql = new SQL().SELECT("*").FROM(GXDataDictConstant.TABLE_NAME);
         mergeSearchConditionToSQL(sql, param);
         return sql.toString();
-    }
-
-    /**
-     * 详情
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String detail(Dict param) {
-        return null;
     }
 
     /**

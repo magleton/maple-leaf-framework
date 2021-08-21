@@ -1,5 +1,6 @@
 package com.geoxus.core.framework.builder;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,31 +8,38 @@ import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.framework.constant.GXCoreModelAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 
-public class GXCoreModelAttributesBuilder implements GXBaseBuilder {
-    @Override
-    public String listOrSearch(Dict param) {
-        return "";
-    }
+import java.util.HashSet;
 
+public class GXCoreModelAttributesBuilder implements GXBaseBuilder {
     public String getModelAttributesByCondition(Dict param) {
-        final SQL sql = new SQL().SELECT("" +
-                        "ca.ext as c_ext, ca.attribute_name, ca.attribute_id, ca.show_name, ca.category, ca.data_type,\n" +
-                        "ca.front_type, ca.validation_desc, ca.validation_expression, cmaa.error_tips, cmaa.force_validation, cmaa.default_value, \n" +
-                        "cmaa.fixed_value, cmaa.table_field_name, cmaa.required, cmaa.ext as cm_ext , cmaa.is_auto_generation")
-                .FROM(CharSequenceUtil.format("{} as cmaa", GXCoreModelAttributesConstant.TABLE_NAME));
-        sql.INNER_JOIN("core_model_table_field as cmtf on cmaa.core_model_table_field_id=cmtf.core_model_table_field_id");
-        sql.LEFT_OUTER_JOIN("core_attributes ca on cmaa.attribute_id = ca.attribute_id");
-        sql.INNER_JOIN("core_model on  core_model.model_id = cmaa.core_model_id");
-        sql.WHERE(StrUtil.format("cmaa.core_model_id={core_model_id}", param));
+        HashSet<String> selectColumns = CollUtil.newHashSet();
+        selectColumns.add("core_attributes.ext as c_ext");
+        selectColumns.add("core_attributes.attribute_name");
+        selectColumns.add("core_attributes.attribute_id");
+        selectColumns.add("core_attributes.show_name");
+        selectColumns.add("core_attributes.category");
+        selectColumns.add("core_attributes.data_type");
+        selectColumns.add("core_attributes.front_type");
+        selectColumns.add("core_attributes.validation_desc");
+        selectColumns.add("core_attributes.validation_expression");
+        selectColumns.add("core_model_attributes.error_tips");
+        selectColumns.add("core_model_attributes.force_validation");
+        selectColumns.add("core_model_attributes.default_value");
+        selectColumns.add("core_model_attributes.fixed_value");
+        selectColumns.add("core_model_attributes.table_field_name");
+        selectColumns.add("core_model_attributes.required");
+        selectColumns.add("core_model_attributes.ext as cm_ext");
+        selectColumns.add("core_model_attributes.is_auto_generation");
+        final SQL sql = new SQL().SELECT(String.join(",", selectColumns))
+                .FROM(CharSequenceUtil.format("{}", GXCoreModelAttributesConstant.TABLE_NAME));
+        sql.INNER_JOIN("core_model_table_field on core_model_attributes.core_model_table_field_id=core_model_table_field.core_model_table_field_id");
+        sql.LEFT_OUTER_JOIN("core_attributes on core_model_attributes.attribute_id=core_attributes.attribute_id");
+        sql.INNER_JOIN("core_model on core_model.model_id=core_model_attributes.core_model_id");
+        sql.WHERE(StrUtil.format("core_model_attributes.core_model_id={core_model_id}", param));
         if (CharSequenceUtil.isNotBlank(param.getStr("table_field_name"))) {
-            sql.WHERE(StrUtil.format("cmtf.table_field_name = '{table_field_name}'", param));
+            sql.WHERE(StrUtil.format("core_model_table_field.table_field_name = '{table_field_name}'", param));
         }
         return sql.toString();
-    }
-
-    @Override
-    public String detail(Dict param) {
-        return null;
     }
 
     /**

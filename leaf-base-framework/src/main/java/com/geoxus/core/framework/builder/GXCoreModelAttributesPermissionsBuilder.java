@@ -8,11 +8,6 @@ import com.geoxus.core.framework.constant.GXCoreModelAttributesPermissionsConsta
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXCoreModelAttributesPermissionsBuilder implements GXBaseBuilder {
-    @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
     /**
      * 根据条件获取数据
      *
@@ -29,11 +24,6 @@ public class GXCoreModelAttributesPermissionsBuilder implements GXBaseBuilder {
             sql.WHERE(StrUtil.format("cma.parent_id = {parent_id}", param));
         }
         return sql.toString();
-    }
-
-    @Override
-    public String detail(Dict param) {
-        return null;
     }
 
     @Override

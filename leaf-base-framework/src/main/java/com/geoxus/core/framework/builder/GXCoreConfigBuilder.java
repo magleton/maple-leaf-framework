@@ -7,7 +7,6 @@ import com.geoxus.core.framework.constant.GXCoreConfigConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXCoreConfigBuilder implements GXBaseBuilder {
-    @Override
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("*").FROM(GXCoreConfigConstant.TABLE_NAME);
         if (null != param.getStr("type")) {

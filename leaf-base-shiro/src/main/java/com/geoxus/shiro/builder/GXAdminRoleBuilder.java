@@ -7,31 +7,10 @@ import cn.hutool.core.util.ReUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.common.constant.GXBaseBuilderConstants;
 import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.shiro.constant.GXAdminRoleConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXAdminRoleBuilder implements GXBaseBuilder {
-    /**
-     * 列表
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String listOrSearch(Dict param) {
-        return null;
-    }
-
-    /**
-     * 详情
-     *
-     * @param param 参数
-     * @return String
-     */
-    @Override
-    public String detail(Dict param) {
-        return null;
-    }
-
     /**
      * 数据配置的模型标识
      *
@@ -39,7 +18,7 @@ public class GXAdminRoleBuilder implements GXBaseBuilder {
      */
     @Override
     public String getModelIdentificationValue() {
-        return "admin_role";
+        return GXAdminRoleConstant.MODEL_IDENTIFICATION_VALUE;
     }
 
     /**
@@ -49,7 +28,7 @@ public class GXAdminRoleBuilder implements GXBaseBuilder {
      * @return SQL语句
      */
     public String getAdminRoles(Dict condition) {
-        final SQL sql = new SQL().SELECT("role.code").FROM("admin_role")
+        final SQL sql = new SQL().SELECT("role.code").FROM(GXAdminRoleConstant.TABLE_NAME)
                 .INNER_JOIN("role ON role.id = admin_role.role_id");
         condition.forEach((column, value1) -> {
             final String value = Convert.toStr(value1);

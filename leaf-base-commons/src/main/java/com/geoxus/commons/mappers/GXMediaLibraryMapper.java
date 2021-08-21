@@ -26,9 +26,6 @@ public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity>
     })
     Dict detail(Dict param);
 
-    @SelectProvider(type = GXCoreMediaLibraryBuilder.class, method = "baseInfoDetail")
-    Dict baseInfoDetail(Dict param);
-
     @DeleteProvider(type = GXCoreMediaLibraryBuilder.class, method = "deleteByCondition")
     boolean deleteByCondition(Dict param);
 
