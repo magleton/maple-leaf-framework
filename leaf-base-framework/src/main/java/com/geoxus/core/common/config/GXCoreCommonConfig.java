@@ -82,7 +82,7 @@ public class GXCoreCommonConfig {
                         return;
                     }
                 } catch (NoSuchFieldException noSuchFieldException) {
-                    LOG.info(noSuchFieldException.getMessage());
+                    //LOG.info(noSuchFieldException.getMessage());
                 }
                 jsonGenerator.writeString("");
             }
