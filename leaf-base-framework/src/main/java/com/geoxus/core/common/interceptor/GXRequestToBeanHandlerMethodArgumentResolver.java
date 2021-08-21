@@ -41,8 +41,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static cn.hutool.core.map.MapUtil.filter;
-
 @Component
 public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @GXFieldCommentAnnotation(zhDesc = "请求中的参数名字")
@@ -118,11 +116,8 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
                 if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
                     throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
                 }
-                Map<String, Object> filter = filter(dbFieldDict, (Map.Entry<String, Object> t) -> null != tmpDict.getStr(CharSequenceUtil.toUnderlineCase(t.getKey())));
                 if (fillJSONField && !dbFieldDict.isEmpty()) {
                     dict.set(jsonField, JSONUtil.toJsonStr(dbFieldDict));
-                } else if (!filter.isEmpty()) {
-                    dict.set(jsonField, JSONUtil.toJsonStr(filter));
                 }
             }
         }

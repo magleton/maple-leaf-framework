@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,7 +11,6 @@ import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstants;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXCacheKeysUtils;
-import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
@@ -27,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -109,6 +104,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
     }
 
     @Override
+    @SuppressWarnings("all")
     public Dict getModelAttributesDefaultValue(int coreModelId, String tableField, String jsonStr) {
         if (!JSONUtil.isJson(jsonStr)) {
             return Dict.create();
@@ -138,32 +134,27 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
                 }
                 cExtDict.putAll(cmExtDict);
                 if (!cExtDict.isEmpty()) {
-                    // 根据属性的特定元数据处理不同的情况
+                    // 根据属性的特定元数据处理不同的情况, 此处可以派发事件 , 供扩展使用
                 }
-                Integer required = dict.getInt("required");
+                int required = Optional.ofNullable(dict.getInt("required")).orElse(0);
                 String errorTips = dict.getStr("error_tips");
                 if (CharSequenceUtil.isBlank(errorTips)) {
                     errorTips = CharSequenceUtil.format("{}.{}为必填字段", tableField, attributeName);
                 }
-                if (required == 1 && null == sourceDict.getObj(attributeName) && null == dict.getObj("default_value")) {
+                Object sourceValue = Optional.ofNullable(sourceDict.getObj(attributeName)).orElse(sourceDict.getObj(CharSequenceUtil.toCamelCase(attributeName)));
+                Object defaultValue = dict.getObj("default_value");
+                int isAutoGeneration = Optional.ofNullable(dict.getInt("is_auto_generation")).orElse(0);
+                if (Objects.isNull(sourceValue) && Objects.isNull(defaultValue) && isAutoGeneration == 1) {
+                    defaultValue = RandomUtil.randomString(5);
+                }
+                if (required == 1 && Objects.isNull(sourceValue) && Objects.isNull(defaultValue)) {
                     errorsDict.set(attributeName, errorTips);
                     continue;
                 }
-                Object value = dict.getStr("fixed_value");
-                if (StrUtil.isBlankIfStr(value)) {
-                    value = sourceDict.getObj(attributeName);
-                    if (StrUtil.isBlankIfStr(value) || GXCommonUtils.getClassDefaultValue(sourceDict.getObj(attributeName).getClass()).equals(value)) {
-                        value = dict.getObj("default_value");
-                        if (StrUtil.isBlankIfStr(value) || GXCommonUtils.getClassDefaultValue(sourceDict.getObj(attributeName).getClass()).equals(value)) {
-                            if (null != dict.getObj("is_auto_generation") && dict.getInt("is_auto_generation") == 1) {
-                                value = RandomUtil.randomString(5);
-                            } else {
-                                errorsDict.set(attributeName, errorTips);
-                                continue;
-                            }
-                        }
-                    }
+                if (Objects.isNull(sourceValue)) {
+                    sourceValue = defaultValue;
                 }
+                Object value = Optional.ofNullable(sourceValue).orElse(dict.getObj("fixed_value"));
                 retDict.set(attributeName, value);
             }
             if (!errorsDict.isEmpty()) {
