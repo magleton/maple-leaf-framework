@@ -9,8 +9,8 @@ import java.io.Serializable;
 @Data
 public class GXBaseEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT)
-    private Integer createdAt;
+    private Long createdAt;
 
     @TableField(fill = FieldFill.UPDATE)
-    private Integer updatedAt;
+    private Long updatedAt;
 }

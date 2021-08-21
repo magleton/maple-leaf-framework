@@ -234,17 +234,15 @@ public interface GXBaseBuilder {
      */
     default String processTimeField(String fieldName, String conditionStr, Object param) {
         final String today = DateUtil.today();
-        String startDate = CharSequenceUtil.format("{} 0:0:0", today);
-        String endDate = CharSequenceUtil.format("{} 23:59:59", today);
+        Long start = DateUtil.parse(CharSequenceUtil.format("{} 0:0:0", today)).getTime();
+        Long end = DateUtil.parse(CharSequenceUtil.format("{} 23:59:59", today)).getTime();
         final Dict dict = Convert.convert(Dict.class, param);
-        if (null != dict.getStr("start")) {
-            startDate = dict.getStr("start");
+        if (null != dict.getLong("start")) {
+            start = dict.getLong("start");
         }
-        if (null != dict.getStr("end")) {
-            endDate = dict.getStr("end");
+        if (null != dict.getLong("end")) {
+            end = dict.getLong("end");
         }
-        final long start = DateUtil.parse(startDate).getTime() / 1000;
-        final long end = DateUtil.parse(endDate).getTime() / 1000;
         return CharSequenceUtil.format(conditionStr, fieldName, start, fieldName, end);
     }
 
