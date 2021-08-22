@@ -25,10 +25,10 @@ public class GXCoreAttributeEnumsBuilder implements GXBaseBuilder {
     @Override
     public Dict getDefaultSearchField() {
         return Dict.create()
-                .set("cae.core_model_id", GXBaseBuilderConstant.NUMBER_EQ)
-                .set("cae.attribute_id", GXBaseBuilderConstant.NUMBER_EQ)
-                .set("ca.attribute_name", GXBaseBuilderConstant.RIGHT_LIKE)
-                .set("ca.show_name", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("cae.coreModelId", GXBaseBuilderConstant.NUMBER_EQ)
+                .set("cae.attributeId", GXBaseBuilderConstant.NUMBER_EQ)
+                .set("ca.attributeName", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("ca.showName", GXBaseBuilderConstant.RIGHT_LIKE)
                 .set("ca.category", GXBaseBuilderConstant.RIGHT_LIKE);
     }
 
@@ -51,7 +51,7 @@ public class GXCoreAttributeEnumsBuilder implements GXBaseBuilder {
      * @return String
      */
     public String getAttributeEnumsByAttributeIdAndCoreModelId(Integer attributeId, Integer coreModelId) {
-        final SQL sql = new SQL().SELECT("cae.*").FROM(CharSequenceUtil.format("{} as cae", GXCoreAttributeEnumsConstant.TABLE_ALIAS_NAME));
+        final SQL sql = new SQL().SELECT("cae.*").FROM(CharSequenceUtil.format("{} as cae", GXCoreAttributeEnumsConstant.TABLE_NAME));
         sql.INNER_JOIN("core_attributes ca on cae.attribute_id = ca.attribute_id");
         sql.WHERE(CharSequenceUtil.format("cae.attribute_id = {} AND cae.core_model_id = {}", attributeId, coreModelId));
         return sql.toString();

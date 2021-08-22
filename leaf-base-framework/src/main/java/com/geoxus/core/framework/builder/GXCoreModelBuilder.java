@@ -33,11 +33,11 @@ public class GXCoreModelBuilder implements GXBaseBuilder {
     @Override
     public Dict getDefaultSearchField() {
         return Dict.create()
-                .set("model_id", GXBaseBuilderConstant.NUMBER_EQ)
-                .set("model_name", GXBaseBuilderConstant.RIGHT_LIKE)
-                .set("model_identification", GXBaseBuilderConstant.STR_EQ)
-                .set("model_type", GXBaseBuilderConstant.RIGHT_LIKE)
-                .set("table_name", GXBaseBuilderConstant.STR_EQ);
+                .set("modelId", GXBaseBuilderConstant.NUMBER_EQ)
+                .set("modelName", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("modelIdentification", GXBaseBuilderConstant.STR_EQ)
+                .set("modelType", GXBaseBuilderConstant.RIGHT_LIKE)
+                .set("tableName", GXBaseBuilderConstant.STR_EQ);
     }
 
     @Override
