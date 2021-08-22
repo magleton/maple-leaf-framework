@@ -321,7 +321,6 @@ public interface GXBaseBuilder {
                     continue;
                 }
                 sql.WHERE(CharSequenceUtil.format("(`{}` ".concat(operator) + ")", lastKey, value));
-
             }
         }
     }
