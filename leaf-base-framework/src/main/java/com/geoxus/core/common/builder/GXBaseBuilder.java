@@ -215,8 +215,36 @@ public interface GXBaseBuilder {
      * @param param 参数
      * @return Dict
      */
+    @SuppressWarnings("all")
     default Dict getRequestSearchCondition(Dict param) {
-        return Optional.ofNullable(Convert.convert(Dict.class, param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME))).orElse(Dict.create());
+        Dict searchConditionDict = Convert.convert(Dict.class, param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME));
+        Dict retDict = Dict.create();
+        if (Objects.isNull(searchConditionDict)) {
+            return retDict;
+        }
+        searchConditionDict.forEach((key, value) -> {
+            if (Objects.nonNull(value)) {
+                String className = value.getClass().getName();
+                if (CharSequenceUtil.containsIgnoreCase(className, "java.util.ArrayList")) {
+                    List<Object> list = Convert.toList(Object.class, value);
+                    if (!list.isEmpty()) {
+                        retDict.set(key, value);
+                    }
+                } else if (CharSequenceUtil.containsIgnoreCase(className, "java.util.LinkedHashMap")) {
+                    Map<String, Object> map = Convert.toMap(String.class, Object.class, value);
+                    if (!map.isEmpty()) {
+                        retDict.set(key, value);
+                    }
+                } else if (CharSequenceUtil.containsIgnoreCase(className, "java.lang.String")
+                        && CharSequenceUtil.isNotBlank(value.toString())) {
+                    retDict.set(key, value);
+                } else {
+                    retDict.set(key, value);
+                }
+            }
+        });
+
+        return retDict;
     }
 
     /**

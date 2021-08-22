@@ -277,27 +277,14 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
             final Object o = removeField.get(key);
             if (Objects.isNull(o)) {
                 if (!(value instanceof Dict)) {
-                    if (CollUtil.contains(phoneNumberFields, key)) {
-                        String str = decryptedPhoneNumber(value.toString());
-                        if (!str.equals("{}")) {
-                            value = str;
-                        }
-                    }
                     retDict.set(CharSequenceUtil.toCamelCase(key), value);
                     continue;
                 }
-                final Dict convert = Convert.convert(Dict.class, value);
                 final Set<Map.Entry<String, Object>> entrySet = Convert.convert(Dict.class, value).entrySet();
                 final Dict tmpDict = Dict.create();
                 for (Map.Entry<String, Object> en : entrySet) {
                     final String enKey = en.getKey();
                     Object enValue = en.getValue();
-                    if (null != convert.get(enKey) && CollUtil.contains(phoneNumberFields, enKey)) {
-                        String str = decryptedPhoneNumber(enValue.toString());
-                        if (!str.equals("{}")) {
-                            enValue = str;
-                        }
-                    }
                     tmpDict.set(CharSequenceUtil.toCamelCase(enKey), enValue);
                 }
                 retDict.set(CharSequenceUtil.toCamelCase(key), tmpDict);
@@ -310,12 +297,6 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
                         final String enKey = en.getKey();
                         Object enValue = en.getValue();
                         if (null == removeDict.get(enKey)) {
-                            if (CollUtil.contains(phoneNumberFields, enKey)) {
-                                String str = decryptedPhoneNumber(enValue.toString());
-                                if (!str.equals("{}")) {
-                                    enValue = str;
-                                }
-                            }
                             tmpDict.set(CharSequenceUtil.toCamelCase(enKey), enValue);
                         }
                     }
