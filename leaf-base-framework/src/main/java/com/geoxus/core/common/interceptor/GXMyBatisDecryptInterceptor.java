@@ -25,7 +25,7 @@ import java.util.Properties;
 })
 public class GXMyBatisDecryptInterceptor implements Interceptor {
     @Resource
-    private GXSensitiveDataDecryptService gxSensitiveDataDecryptService;
+    private GXSensitiveDataDecryptService sensitiveDataDecryptService;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -40,13 +40,13 @@ public class GXMyBatisDecryptInterceptor implements Interceptor {
             }, resultObject);
             if (!CollectionUtils.isEmpty(resultList) && Objects.nonNull(resultList.get(0)) && needToDecrypt(resultList.get(0))) {
                 for (Object result : resultList) {
-                    gxSensitiveDataDecryptService.decrypt(result);
+                    sensitiveDataDecryptService.decrypt(result);
                 }
             }
             //基于selectOne
         } else {
             if (needToDecrypt(resultObject)) {
-                gxSensitiveDataDecryptService.decrypt(resultObject);
+                sensitiveDataDecryptService.decrypt(resultObject);
             }
         }
         return resultObject;
