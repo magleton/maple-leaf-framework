@@ -39,14 +39,12 @@ import java.io.Serializable;
  */
 public class GXJsonNodeValue implements Serializable {
 
-    private static final long serialVersionUID = 745861884668365334L;
-
     /**
      * Value container without any content.
      * You will not be able to call get() methods on this object.
      */
     public static final GXJsonNodeValue EMPTY = new GXJsonNodeValue();
-
+    private static final long serialVersionUID = 745861884668365334L;
     private String source;
 
     private boolean dbSource;

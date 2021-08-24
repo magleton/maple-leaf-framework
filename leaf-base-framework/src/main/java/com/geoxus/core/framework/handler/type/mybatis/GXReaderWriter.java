@@ -48,6 +48,9 @@ final class GXReaderWriter {
         READER = mapper.reader();
     }
 
+    private GXReaderWriter() {
+    }
+
     static JsonNode readTree(String json) throws IOException {
         return READER.readTree(json);
     }
