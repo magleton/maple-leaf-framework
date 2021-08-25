@@ -44,7 +44,7 @@
         <ehcache.version>3.3.0</ehcache.version>
         <caffeine.version>3.0.2</caffeine.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
     </properties>
 
