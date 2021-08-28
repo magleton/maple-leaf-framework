@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity> {
+public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity, Dict> {
     @Override
     @SelectProvider(type = GXCoreMediaLibraryBuilder.class, method = "listOrSearch")
     @ResultMap("mediaResult")

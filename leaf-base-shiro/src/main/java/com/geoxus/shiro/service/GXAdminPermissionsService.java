@@ -6,7 +6,7 @@ import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 
 import java.util.Set;
 
-public interface GXAdminPermissionsService<T extends GXAdminPermissionsEntity> extends GXBusinessService<T> {
+public interface GXAdminPermissionsService<T extends GXAdminPermissionsEntity> extends GXBusinessService<T, Dict> {
     /**
      * 通过管理员ID获取权限集
      *

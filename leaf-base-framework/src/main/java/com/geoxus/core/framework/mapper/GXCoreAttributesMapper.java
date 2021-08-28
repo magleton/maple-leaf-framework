@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.util.List;
 
 @Mapper
-public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEntity> {
+public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEntity, Dict> {
     @Override
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "listOrSearch")
     @Results(value = {

@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Component
 @Mapper
-public interface GXAdminRoleMapper extends GXBaseMapper<GXAdminRoleEntity> {
+public interface GXAdminRoleMapper extends GXBaseMapper<GXAdminRoleEntity, Dict> {
     @SelectProvider(type = GXAdminRoleBuilder.class, method = "getAdminRoles")
     Set<String> getAdminRoles(Dict condition);
 }

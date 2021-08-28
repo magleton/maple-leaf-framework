@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.util.List;
 
 @Mapper
-public interface GXCoreConfigMapper extends GXBaseMapper<GXCoreConfigEntity> {
+public interface GXCoreConfigMapper extends GXBaseMapper<GXCoreConfigEntity, Dict> {
     @Override
     @SelectProvider(type = GXCoreConfigBuilder.class, method = "listOrSearch")
     List<Dict> listOrSearchPage(IPage<Dict> page, Dict param);

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 
 @Mapper
-public interface GXRegionMapper extends GXBaseMapper<GXRegionEntity> {
+public interface GXRegionMapper extends GXBaseMapper<GXRegionEntity, Dict> {
     @SelectProvider(type = GXRegionBuilder.class, method = "areaInfo")
     Dict areaInfo(Dict param);
 }

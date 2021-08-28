@@ -6,7 +6,7 @@ import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
 
 import java.util.List;
 
-public interface GXCoreModelTableFieldService extends GXBusinessService<GXCoreModelTableFieldEntity> {
+public interface GXCoreModelTableFieldService extends GXBusinessService<GXCoreModelTableFieldEntity, Dict> {
     /**
      * 通过条件获取数据
      *

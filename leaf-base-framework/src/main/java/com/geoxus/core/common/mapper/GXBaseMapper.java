@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper
-public interface GXBaseMapper<T> extends BaseMapper<T> {
+public interface GXBaseMapper<T, R> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     boolean updateFieldByCondition(String tableName, Dict data, Dict whereData);
 
@@ -19,7 +19,7 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    List<Dict> listOrSearchPage(IPage<Dict> page, Dict param);
+    List<R> listOrSearchPage(IPage<R> page, Dict param);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateStatusByCondition")
     boolean updateStatusByCondition(String tableName, int status, Dict condition);
