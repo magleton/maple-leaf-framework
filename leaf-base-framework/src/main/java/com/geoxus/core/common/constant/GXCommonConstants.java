@@ -30,17 +30,14 @@ public class GXCommonConstants {
     @GXFieldCommentAnnotation(zhDesc = "手机号码加密的KEY")
     public static final String PHONE_ENCRYPT_KEY = "B78D32BTR1CHEN15AC1F19C46A9B533986";
 
-    @GXFieldCommentAnnotation(zhDesc = "永久存储缓存的KEY")
-    public static final String PERMANENT_CACHE_MAP_KEY = "permanent_cache_map";
-
     @GXFieldCommentAnnotation(zhDesc = "状态字段的名字")
     public static final String STATUS_FIELD_NAME = "status";
 
     @GXFieldCommentAnnotation("请求参数中的多媒体字段名字")
-    public static final String MEDIA_INFO_FIELD_NAME = "media_info";
+    public static final String MEDIA_FIELD_NAME = "media";
 
     @GXFieldCommentAnnotation("自定义搜索条件的字段名字")
-    public static final String CUSTOMER_SEARCH_MIXED_FIELD_CONDITION = "mixed";
+    public static final String SEARCH_MIXED_FIELD_CONDITION = "mixed";
 
     private GXCommonConstants() {
     }
