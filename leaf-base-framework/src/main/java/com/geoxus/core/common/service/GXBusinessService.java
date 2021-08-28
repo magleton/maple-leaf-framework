@@ -205,7 +205,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         final IPage<Dict> riPage = constructPageObjectFromParam(param);
         GXBaseMapper<Dict> baseMapper = (GXBaseMapper<Dict>) getBaseMapper();
         final List<Dict> list = baseMapper.listOrSearchPage(riPage, param);
-        riPage.setRecords(processingListData(list, removeField));
+        riPage.setRecords(processingData(list, removeField));
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
@@ -216,27 +216,28 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @return GXPagination
      */
     default GXPagination<Dict> generatePage(Dict param) {
+        String fieldSeparator = "::";
         final Set<String> removeFields = Convert.convert(new TypeReference<Set<String>>() {
         }, Optional.ofNullable(param.getObj("removeField")).orElse(CollUtil.newHashSet()));
-        Map<String, Object> removeField = new HashMap<>();
+        Dict removeField = Dict.create();
         for (final String s : removeFields) {
-            if (CharSequenceUtil.contains(s, "::")) {
-                final String[] strings = CharSequenceUtil.splitToArray(s, "::");
+            if (CharSequenceUtil.contains(s, fieldSeparator)) {
+                final String[] strings = CharSequenceUtil.splitToArray(s, fieldSeparator);
                 String mainKey = strings[0];
                 String subKey = strings[1];
                 final Object o = removeField.get(mainKey);
                 if (null != o) {
                     final Dict dict = Convert.convert(Dict.class, o).set(subKey, subKey);
-                    removeField.put(mainKey, dict);
+                    removeField.set(mainKey, dict);
                 } else {
-                    removeField.put(mainKey, Dict.create().set(subKey, subKey));
+                    removeField.set(mainKey, Dict.create().set(subKey, subKey));
                 }
             } else {
-                removeField.put(s, s);
+                removeField.set(s, s);
             }
         }
 
-        return generatePage(param, Convert.convert(Dict.class, removeField));
+        return generatePage(param, removeField);
     }
 
     /**
@@ -246,7 +247,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @param removeField 需要移除的数据
      * @return List
      */
-    default List<Dict> processingListData(List<Dict> list, Dict removeField) {
+    default List<Dict> processingData(List<Dict> list, Dict removeField) {
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -256,8 +257,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         final List<Dict> retList = CollUtil.newArrayList();
         for (Dict dict : list) {
             Dict handleDict = handleDict(dict, removeField);
-            Dict samePrefixDict = handleSamePrefixDict(handleDict);
-            retList.add(samePrefixDict);
+            retList.add(handleDict);
         }
         return retList;
     }
@@ -269,6 +269,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @param removeField 需要移除的数据
      * @return Dict
      */
+    @SuppressWarnings("all")
     default Dict handleDict(Dict dict, Dict removeField) {
         final Set<Map.Entry<String, Object>> entries = dict.entrySet();
         final Dict retDict = Dict.create();
@@ -315,7 +316,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @return GXPagination
      */
     default GXPagination<Dict> generatePage(IPage<Dict> iPage, Dict removeField) {
-        final List<Dict> records = processingListData(iPage.getRecords(), removeField);
+        final List<Dict> records = processingData(iPage.getRecords(), removeField);
         return new GXPagination<>(records, iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
     }
 
@@ -331,7 +332,7 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         final Dict pageParam = getPageInfoFromParam(param);
         final IPage<Dict> iPage = new Page<>(pageParam.getInt("page"), pageParam.getInt("pageSize"));
         final List<Dict> list = ReflectUtil.invoke(getBaseMapper(), mapperMethodName, iPage, param);
-        iPage.setRecords(processingListData(list, removeField));
+        iPage.setRecords(processingData(list, removeField));
         return new GXPagination<>(iPage.getRecords(), iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
     }
 
