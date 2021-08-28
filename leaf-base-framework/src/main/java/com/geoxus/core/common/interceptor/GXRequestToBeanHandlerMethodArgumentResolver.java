@@ -110,7 +110,9 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             for (String jsonField : jsonFields) {
                 final String json = Optional.ofNullable(dict.getStr(jsonField)).orElse("{}");
                 final Dict dbFieldDict = coreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
-                Dict tmpDict = JSONUtil.toBean(json, Dict.class);
+                Dict oDict = JSONUtil.toBean(json, Dict.class);
+                Dict tmpDict = Dict.create();
+                oDict.forEach((key, value1) -> tmpDict.set(CharSequenceUtil.toUnderlineCase(key), value1));
                 GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
                 final Set<String> tmpDictKey = tmpDict.keySet();
                 if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
