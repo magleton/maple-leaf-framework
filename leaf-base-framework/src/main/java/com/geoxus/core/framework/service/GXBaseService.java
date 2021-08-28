@@ -91,7 +91,7 @@ public interface GXBaseService<T> extends IService<T> {
             path = CharSequenceUtil.format("{}{}{}", fields[0].replace("'", ""), fieldSeparator, fields[1].replace("'", ""));
         }
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
-        final Dict dict = baseMapper.getFieldValueBySQL(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
+        final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
         if (null == dict) {
             return defaultValue;
         }
@@ -134,7 +134,7 @@ public interface GXBaseService<T> extends IService<T> {
             }
             dataKey.set(aliasName, key);
         }
-        final Dict dict = baseMapper.getFieldValueBySQL(getTableName(clazz), fieldSet, condition, false);
+        final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), fieldSet, condition, false);
         dict.remove(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME);
         return handleSamePrefixDict(dict);
     }
@@ -423,7 +423,7 @@ public interface GXBaseService<T> extends IService<T> {
     @SuppressWarnings("all")
     default Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
-        return baseMapper.batchInsertBySQL(getTableName(clazz), fieldSet, dataList);
+        return baseMapper.batchInsertBySql(getTableName(clazz), fieldSet, dataList);
     }
 
     /**
@@ -450,7 +450,7 @@ public interface GXBaseService<T> extends IService<T> {
      */
     default Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
-        final Dict dict = baseMapper.getFieldValueBySQL(tableName, fieldSet, condition, remove);
+        final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
         if (Objects.isNull(dict)) {
             GXCommonUtils.getLogger(GXBaseService.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
             return Dict.create();
@@ -496,7 +496,7 @@ public interface GXBaseService<T> extends IService<T> {
     default boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
         GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         assert baseMapper != null;
-        final Dict targetDict = baseMapper.getFieldValueBySQL(originTableName, CollUtil.newHashSet("*"), condition, true);
+        final Dict targetDict = baseMapper.getFieldValueBySql(originTableName, CollUtil.newHashSet("*"), condition, true);
         if (targetDict.isEmpty()) {
             return false;
         }
@@ -540,7 +540,7 @@ public interface GXBaseService<T> extends IService<T> {
         }
         tableValues.set("updated_at", tableValues.getLong("created_at"));
         tableValues.set("created_at", DateUtil.current());
-        final Integer insert = baseMapper.batchInsertBySQL(historyTableName, lastTableField, CollUtil.newArrayList(tableValues));
+        final Integer insert = baseMapper.batchInsertBySql(historyTableName, lastTableField, CollUtil.newArrayList(tableValues));
         return insert > 0;
     }
 

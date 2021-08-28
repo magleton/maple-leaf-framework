@@ -148,7 +148,7 @@ public interface GXBaseBuilder {
      * @param condition 条件
      * @return String
      */
-    static String getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
+    static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
         final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
@@ -173,7 +173,7 @@ public interface GXBaseBuilder {
      * @param dataList  需要插入的数据列表
      * @return String
      */
-    static String batchInsertBySQL(String tableName, Set<String> fieldSet, List<Dict> dataList) {
+    static String batchInsertBySql(String tableName, Set<String> fieldSet, List<Dict> dataList) {
         if (dataList.isEmpty()) {
             return "";
         }
@@ -282,7 +282,7 @@ public interface GXBaseBuilder {
      */
     @SuppressWarnings("all")
     @GXDataSourceAnnotation("framework")
-    default void mergeSearchConditionToSQL(SQL sql, Dict requestParam) {
+    default void mergeSearchConditionToSql(SQL sql, Dict requestParam) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
             throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
@@ -334,7 +334,7 @@ public interface GXBaseBuilder {
      * @param remove     是否移除
      * @return String
      */
-    default String getSelectFieldStr(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
+    default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
         final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove, saveJSONField);
@@ -349,7 +349,7 @@ public interface GXBaseBuilder {
      * @param remove     是否移除
      * @return String
      */
-    default String getSelectFieldStr(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
+    default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
         final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove);
@@ -363,7 +363,7 @@ public interface GXBaseBuilder {
      * @param remove    是否移除
      * @return String
      */
-    default String getSelectFieldStr(String tableName, Set<String> targetSet, boolean remove) {
+    default String getSelectField(String tableName, Set<String> targetSet, boolean remove) {
         final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
@@ -377,7 +377,7 @@ public interface GXBaseBuilder {
      * @param value        value
      * @return Dict
      */
-    default Dict addConditionToSearchCondition(Dict requestParam, String key, Object value) {
+    default Dict addSearchCondition(Dict requestParam, String key, Object value) {
         return GXCommonUtils.addSearchCondition(requestParam, key, value, false);
     }
 
@@ -388,7 +388,7 @@ public interface GXBaseBuilder {
      * @param sourceData   数据源
      * @return Dict
      */
-    default Dict addConditionToSearchCondition(Dict requestParam, Dict sourceData) {
+    default Dict addSearchCondition(Dict requestParam, Dict sourceData) {
         return GXCommonUtils.addSearchCondition(requestParam, sourceData, false);
     }
 

@@ -24,17 +24,17 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateStatusByCondition")
     boolean updateStatusByCondition(String tableName, int status, Dict condition);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySQL")
+    @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySql")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
+    Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(String tableName, Dict condition);
 
-    @InsertProvider(type = GXBaseBuilder.class, method = "batchInsertBySQL")
-    Integer batchInsertBySQL(String tableName, Set<String> fieldSet, List<Dict> dataList);
+    @InsertProvider(type = GXBaseBuilder.class, method = "batchInsertBySql")
+    Integer batchInsertBySql(String tableName, Set<String> fieldSet, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsUnique")
     Integer checkRecordIsUnique(String tableName, Dict condition);

@@ -12,7 +12,7 @@ public class GXCoreAttributeEnumsBuilder implements GXBaseBuilder {
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("cae.*").FROM(CharSequenceUtil.format("{} as cae", GXCoreAttributeEnumsConstant.TABLE_NAME));
         sql.INNER_JOIN("core_attributes ca on cae.attribute_id = ca.attribute_id");
-        mergeSearchConditionToSQL(sql, param);
+        mergeSearchConditionToSql(sql, param);
         return sql.toString();
     }
 

@@ -255,7 +255,9 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
         }
         final List<Dict> retList = CollUtil.newArrayList();
         for (Dict dict : list) {
-            retList.add(handleSamePrefixDict(handleDict(dict, removeField)));
+            Dict handleDict = handleDict(dict, removeField);
+            Dict samePrefixDict = handleSamePrefixDict(handleDict);
+            retList.add(samePrefixDict);
         }
         return retList;
     }
@@ -268,7 +270,6 @@ public interface GXBusinessService<T> extends GXBaseService<T>, GXValidateDBExis
      * @return Dict
      */
     default Dict handleDict(Dict dict, Dict removeField) {
-        final HashSet<String> phoneNumberFields = CollUtil.newHashSet("phone", "mobile");
         final Set<Map.Entry<String, Object>> entries = dict.entrySet();
         final Dict retDict = Dict.create();
         for (Map.Entry<String, Object> entry : entries) {
