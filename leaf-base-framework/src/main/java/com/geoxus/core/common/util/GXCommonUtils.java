@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import org.redisson.api.RedissonClient;
@@ -730,7 +730,7 @@ public class GXCommonUtils {
     public static String encryptedPhoneNumber(String phoneNumber) {
         final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
         final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
-        final String key = prefix + GXCommonConstants.PHONE_ENCRYPT_KEY + suffix;
+        final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return encryptedPhoneNumber(phoneNumber, key);
     }
 
@@ -743,7 +743,7 @@ public class GXCommonUtils {
     public static String decryptedPhoneNumber(String encryptPhoneNumber) {
         final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
         final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
-        final String key = prefix + GXCommonConstants.PHONE_ENCRYPT_KEY + suffix;
+        final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return decryptedPhoneNumber(encryptPhoneNumber, key);
     }
 

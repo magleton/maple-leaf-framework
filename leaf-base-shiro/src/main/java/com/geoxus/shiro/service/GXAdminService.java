@@ -5,7 +5,7 @@ import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 
-public interface GXAdminService<T extends GXAdminEntity> extends GXBusinessService<T> {
+public interface GXAdminService<T extends GXAdminEntity> extends GXBusinessService<T, Dict> {
     /**
      * 获取当前登录管理员的状态
      *

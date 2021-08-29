@@ -8,7 +8,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
 import org.apache.ibatis.type.BaseTypeHandler;
@@ -24,7 +24,7 @@ import java.util.Map;
 @MappedTypes({List.class})
 public class GXJsonToListTypeHandler extends BaseTypeHandler<List<Map<String, Object>>> {
     @GXFieldCommentAnnotation(zhDesc = "标识核心模型主键名字")
-    private static final String CORE_MODEL_PRIMARY_NAME = GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME;
+    private static final String CORE_MODEL_PRIMARY_NAME = GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME;
 
     @GXFieldCommentAnnotation(zhDesc = "当前字段的名字")
     private String columnName;

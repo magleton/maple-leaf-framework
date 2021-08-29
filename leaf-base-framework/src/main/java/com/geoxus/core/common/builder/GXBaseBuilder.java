@@ -12,7 +12,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXCommonUtils;
@@ -60,7 +60,7 @@ public interface GXBaseBuilder {
                     if (entryKey.startsWith("-")) {
                         sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", fieldName, fieldName, entryKey.substring(1)));
                     } else {
-                        if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
+                        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
                             sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
                         } else {
                             if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass())
@@ -77,7 +77,7 @@ public interface GXBaseBuilder {
             if (value instanceof Map) {
                 value = JSONUtil.toJsonStr(value);
             }
-            if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
+            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
                 sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.NUMBER_EQ, fieldName, value));
             } else {
                 sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.STR_EQ, fieldName, value));
@@ -86,7 +86,7 @@ public interface GXBaseBuilder {
         whereData.keySet().forEach(conditionKey -> {
             String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = whereData.getStr(conditionKey);
-            if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
+            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
                 template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
@@ -120,7 +120,7 @@ public interface GXBaseBuilder {
         for (String conditionKey : conditionKeys) {
             String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = condition.getStr(conditionKey);
-            if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
+            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
                 template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
@@ -157,7 +157,7 @@ public interface GXBaseBuilder {
         for (String conditionKey : conditionKeys) {
             String template = "{} " + GXBaseBuilderConstant.STR_EQ;
             final String value = condition.getStr(conditionKey);
-            if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
+            if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
                 template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));

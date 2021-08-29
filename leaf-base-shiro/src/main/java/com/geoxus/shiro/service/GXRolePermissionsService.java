@@ -1,11 +1,12 @@
 package com.geoxus.shiro.service;
 
+import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 
 import java.util.Set;
 
-public interface GXRolePermissionsService<T extends GXRolePermissionsEntity> extends GXBusinessService<T> {
+public interface GXRolePermissionsService<T extends GXRolePermissionsEntity> extends GXBusinessService<T, Dict> {
     /**
      * 通过管理员ID获取权限集
      *

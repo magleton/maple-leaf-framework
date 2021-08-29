@@ -1,6 +1,6 @@
 package com.geoxus.commons.annotation;
 
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 
 import java.lang.annotation.*;
 
@@ -14,5 +14,5 @@ import java.lang.annotation.*;
 public @interface GXCheckCaptchaAnnotation {
     boolean value() default true;
 
-    int verifyType() default GXCommonConstants.CAPTCHA_VERIFY;
+    int verifyType() default GXCommonConstant.CAPTCHA_VERIFY;
 }

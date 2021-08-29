@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.commons.annotation.GXCheckCaptchaAnnotation;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.service.GXSendSMSService;
@@ -57,12 +57,12 @@ public class GXCheckCaptchaAspect {
         }
         if (null == verifyCode) {
             String msg = "请传递手机验证码";
-            if (verifyType == GXCommonConstants.CAPTCHA_VERIFY) {
+            if (verifyType == GXCommonConstant.CAPTCHA_VERIFY) {
                 msg = "请传递图形验证码";
             }
             throw new GXException(msg);
         }
-        if (verifyType == GXCommonConstants.SMS_VERIFY) {
+        if (verifyType == GXCommonConstant.SMS_VERIFY) {
             String phone = param.getStr("phone");
             if (null == phone) {
                 throw new GXException("请传递手机号码");
@@ -76,7 +76,7 @@ public class GXCheckCaptchaAspect {
             if (!getSendSMSService().verification(phone, verifyCode)) {
                 throw new GXException(GXResultCode.SMS_CAPTCHA_ERROR);
             }
-        } else if (verifyType == GXCommonConstants.CAPTCHA_VERIFY) {
+        } else if (verifyType == GXCommonConstant.CAPTCHA_VERIFY) {
             String uuid = param.getStr("uuid");
             if (null == uuid) {
                 uuid = GXHttpContextUtils.getHttpParam("uuid", String.class);

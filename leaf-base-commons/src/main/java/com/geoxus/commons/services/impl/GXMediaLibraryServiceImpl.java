@@ -14,7 +14,7 @@ import com.geoxus.commons.constant.GXMediaLibraryConstant;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.commons.services.GXMediaLibraryService;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
@@ -55,7 +55,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
         }
         final ArrayList<GXMediaLibraryEntity> newMediaList = new ArrayList<>();
         QueryWrapper<GXMediaLibraryEntity> oldConditionQuery = new QueryWrapper<>();
-        Dict oldCondition = Dict.create().set(CharSequenceUtil.toUnderlineCase(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME), targetId).set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+        Dict oldCondition = Dict.create().set(CharSequenceUtil.toUnderlineCase(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME), targetId).set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
         if (null != condition.getObj(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME)) {
             oldCondition.set(CharSequenceUtil.toUnderlineCase(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME), condition.getStr(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME));
         }
@@ -65,7 +65,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
             Integer mediaId = media.getInt("id");
             if (null != mediaId) {
                 targetId = media.getLong(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME, targetId);
-                final long itemCoreModelId = media.getLong(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+                final long itemCoreModelId = media.getLong(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
                 final String resourceType = media.getStr(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME, "defaultResourceType");
                 final GXMediaLibraryEntity entity = getOne(new QueryWrapper<GXMediaLibraryEntity>().eq("id", mediaId));
                 String customProperties = media.getStr("customProperties", "{}");
@@ -117,7 +117,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
             entity.setResourceType((String) param.getOrDefault(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME, "defaultResourceType"));
             entity.setModelType((String) param.getOrDefault("modelType", "defaultModelType"));
             entity.setTargetId((Long) param.getOrDefault(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME, 0L));
-            entity.setCoreModelId((Long) param.getOrDefault(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, 0L));
+            entity.setCoreModelId((Long) param.getOrDefault(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, 0L));
             entity.setCustomProperties((String) param.getOrDefault("customProperties", "{}"));
             save(entity);
             return entity;
@@ -142,7 +142,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
     @Transactional(rollbackFor = Exception.class)
     public void updateOldFile(Dict param) {
         Long objectId = Optional.ofNullable(param.getLong(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME)).orElse(0L);
-        Long coreModelId = Optional.ofNullable(param.getLong(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME)).orElse(0L);
+        Long coreModelId = Optional.ofNullable(param.getLong(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME)).orElse(0L);
         Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj("condition")).orElse(Dict.create()));
         List<JSONObject> objectList = Convert.convert(new TypeReference<List<JSONObject>>() {
         }, Optional.ofNullable(param.getObj("data")).orElse(Collections.emptyList()));

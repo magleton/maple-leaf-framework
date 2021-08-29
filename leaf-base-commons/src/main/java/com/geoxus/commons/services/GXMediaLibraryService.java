@@ -7,7 +7,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONObject;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.events.GXMediaLibraryEvent;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.vo.response.GXPagination;
@@ -131,7 +131,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
     default Collection<GXMediaLibraryEntity> getMedia(int targetId, int coreModelId, Dict param) {
         final GXMediaLibraryService mediaLibraryService = GXSpringContextUtils.getBean(GXMediaLibraryService.class);
         assert mediaLibraryService != null;
-        Dict condition = Dict.create().set("target_id", targetId).set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+        Dict condition = Dict.create().set("target_id", targetId).set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
         condition.putAll(param);
         return mediaLibraryService.listByMap(condition);
     }
@@ -154,8 +154,8 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      * @param param    参数
      */
     default void handleMedia(GXMediaLibraryEntity target, @NotNull long targetId, @NotNull Dict param) {
-        if (param.getInt(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME) == null) {
-            throw new GXException(CharSequenceUtil.format("请在param参数中传递{}字段", GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME));
+        if (param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME) == null) {
+            throw new GXException(CharSequenceUtil.format("请在param参数中传递{}字段", GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME));
         }
         final String mediaFieldName = "media";
         Object mediaObj = param.getObj(mediaFieldName);
@@ -170,7 +170,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
             Dict data = Dict.create()
                     .set("media", media)
                     .set("target_id", targetId)
-                    .set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, param.getInt(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME));
+                    .set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME));
             final GXMediaLibraryEvent<GXMediaLibraryEntity> event = new GXMediaLibraryEvent<>(target, data);
             publishEvent(event);
         }
@@ -195,7 +195,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
             final Long coreModelId = o.getLong("coreModelId");
             final Dict condition = Dict.create()
                     .set("target_id", targetId)
-                    .set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+                    .set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
             assert coreMediaLibraryService != null;
             final List<Dict> mediaList = coreMediaLibraryService.getMediaByCondition(condition);
             o.set("media", mediaList);
@@ -222,7 +222,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
             final Long coreModelId = o.getLong("coreModelId");
             final Dict condition = Dict.create()
                     .set("target_id", targetId)
-                    .set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
+                    .set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
             assert coreMediaLibraryService != null;
             final List<Dict> mediaList = coreMediaLibraryService.getMediaByCondition(condition);
             o.set("media", mediaList);

@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.service.GXSessionService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
@@ -27,7 +27,7 @@ public class GXCoreModelAttributePermissionServiceImpl extends ServiceImpl<GXCor
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")
     public Dict getModelAttributePermissionByCoreModelId(int coreModelId, Dict param) {
         GXSessionService sessionService = GXSpringContextUtils.getBean(GXSessionService.class);
-        final List<Dict> attributes = baseMapper.getModelAttributePermissionByCondition(Dict.create().set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
+        final List<Dict> attributes = baseMapper.getModelAttributePermissionByCondition(Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
         final Dict data = Dict.create();
         final Dict jsonFieldDict = Dict.create();
         final Dict dbFieldDict = Dict.create();

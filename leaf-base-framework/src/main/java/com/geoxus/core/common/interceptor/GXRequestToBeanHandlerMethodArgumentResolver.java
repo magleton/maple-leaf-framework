@@ -11,7 +11,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.annotation.GXMergeSingleFieldToJSONFieldAnnotation;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.event.GXMethodArgumentResolverEvent;
@@ -64,7 +64,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         final Class<?> parameterType = parameter.getParameterType();
         Integer coreModelId;
         try {
-            String upperCase = GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME.toUpperCase(Locale.ROOT);
+            String upperCase = GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME.toUpperCase(Locale.ROOT);
             final Field coreModelIdField = parameterType.getDeclaredField(upperCase);
             coreModelId = Convert.toInt(ReflectUtil.getFieldValue(null, coreModelIdField));
         } catch (NoSuchFieldException e) {

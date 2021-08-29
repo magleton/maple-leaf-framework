@@ -9,7 +9,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelMapper;
@@ -40,7 +40,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
         if (CharSequenceUtil.isBlank(modelAttributeField)) {
             modelAttributeField = "";
         }
-        final List<Dict> attributes = coreModelAttributeService.getModelAttributesByModelId(Dict.create().set(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("db_field_name", modelAttributeField));
+        final List<Dict> attributes = coreModelAttributeService.getModelAttributesByModelId(Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("db_field_name", modelAttributeField));
         entity.setCoreAttributes(attributes);
         return entity;
     }

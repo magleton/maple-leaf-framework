@@ -2,7 +2,7 @@ package com.geoxus.core.common.constant;
 
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 
-public class GXCommonConstants {
+public class GXCommonConstant {
     @GXFieldCommentAnnotation(zhDesc = "手机验证码标识")
     public static final int SMS_VERIFY = 1;
 
@@ -39,6 +39,6 @@ public class GXCommonConstants {
     @GXFieldCommentAnnotation("自定义搜索条件的字段名字")
     public static final String SEARCH_MIXED_FIELD_CONDITION = "mixed";
 
-    private GXCommonConstants() {
+    private GXCommonConstant() {
     }
 }

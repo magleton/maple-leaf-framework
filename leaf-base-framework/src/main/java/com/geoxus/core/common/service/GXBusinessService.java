@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dto.GXBaseSearchReqDto;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
@@ -177,8 +177,8 @@ public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBE
      * @return Dict
      */
     default Dict getPageInfoFromParam(Dict param) {
-        int currentPage = GXCommonConstants.DEFAULT_CURRENT_PAGE;
-        int pageSize = GXCommonConstants.DEFAULT_PAGE_SIZE;
+        int currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
+        int pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
         final Dict pagingInfo = Convert.convert(Dict.class, param.getObj("pagingInfo"));
         if (null != pagingInfo) {
             if (null != pagingInfo.getInt("page")) {

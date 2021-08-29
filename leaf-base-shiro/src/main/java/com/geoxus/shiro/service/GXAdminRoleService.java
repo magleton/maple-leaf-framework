@@ -7,7 +7,7 @@ import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService<T extends GXAdminRoleEntity> extends GXBusinessService<T> {
+public interface GXAdminRoleService<T extends GXAdminRoleEntity> extends GXBusinessService<T, Dict> {
     /**
      * 获取当前人的角色列表
      *

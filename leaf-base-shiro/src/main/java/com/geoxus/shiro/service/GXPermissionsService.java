@@ -1,5 +1,6 @@
 package com.geoxus.shiro.service;
 
+import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
 
@@ -8,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public interface GXPermissionsService<T extends GXPermissionsEntity> extends GXBusinessService<T> {
+public interface GXPermissionsService<T extends GXPermissionsEntity> extends GXBusinessService<T, Dict> {
     /**
      * 获取管理员的所有权限列表
      * 权限包括:

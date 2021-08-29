@@ -9,7 +9,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
@@ -135,7 +135,7 @@ public interface GXBaseService<T> extends IService<T> {
             dataKey.set(aliasName, key);
         }
         final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), fieldSet, condition, false);
-        dict.remove(GXCommonConstants.CORE_MODEL_PRIMARY_FIELD_NAME);
+        dict.remove(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
         return handleSamePrefixDict(dict);
     }
 

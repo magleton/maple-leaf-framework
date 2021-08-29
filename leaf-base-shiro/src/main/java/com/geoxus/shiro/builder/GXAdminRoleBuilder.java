@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReUtil;
 import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstants;
+import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.shiro.constant.GXAdminRoleConstant;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -33,7 +33,7 @@ public class GXAdminRoleBuilder implements GXBaseBuilder {
         condition.forEach((column, value1) -> {
             final String value = Convert.toStr(value1);
             String template = "{} " + GXBaseBuilderConstant.STR_EQ;
-            if (ReUtil.isMatch(GXCommonConstants.DIGITAL_REGULAR_EXPRESSION, value)) {
+            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
                 template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
             }
             sql.WHERE(CharSequenceUtil.format(template, column, value));
