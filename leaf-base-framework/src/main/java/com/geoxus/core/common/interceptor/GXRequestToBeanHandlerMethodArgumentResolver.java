@@ -78,51 +78,16 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         boolean validateCoreModelId = requestBodyToTargetAnnotation.validateCoreModelId();
 
         Map<String, Map<String, Object>> jsonMergeFieldMap = new HashMap<>();
-        for (Field field : parameterType.getDeclaredFields()) {
-            GXMergeSingleFieldToJSONFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldToJSONFieldAnnotation.class);
-            if (Objects.isNull(annotation)) {
-                continue;
-            }
-            String dbJSONFieldName = annotation.dbJSONFieldName();
-            String dbFieldName = annotation.dbFieldName();
-            if (CharSequenceUtil.isBlank(dbFieldName)) {
-                dbFieldName = field.getName();
-            }
-            jsonFields.add(dbJSONFieldName);
-            String currentFieldName = field.getName();
-            Object fieldValue = Optional.ofNullable(dict.get(currentFieldName)).orElse(dict.getObj(CharSequenceUtil.toUnderlineCase(dbFieldName)));
-            /*if (Objects.isNull(fieldValue)) {
-                fieldValue = GXCommonUtils.getClassDefaultValue(field.getType());
-            }*/
-            Map<String, Object> tmpMap = new HashMap<>();
-            if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJSONFieldName)) {
-                tmpMap = jsonMergeFieldMap.get(dbJSONFieldName);
-            }
-            tmpMap.put(dbFieldName, fieldValue);
-            jsonMergeFieldMap.put(dbJSONFieldName, tmpMap);
-        }
+        dealDeclaredFields(dict, parameterType, jsonFields, jsonMergeFieldMap);
 
         for (String jsonField : jsonFields) {
             dict.set(jsonField, JSONUtil.toJsonStr(jsonMergeFieldMap.get(jsonField)));
         }
 
         if (validateCoreModelId && null != coreModelId) {
-            for (String jsonField : jsonFields) {
-                final String json = Optional.ofNullable(dict.getStr(jsonField)).orElse("{}");
-                final Dict dbFieldDict = coreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
-                Dict oDict = JSONUtil.toBean(json, Dict.class);
-                Dict tmpDict = Dict.create();
-                oDict.forEach((key, value1) -> tmpDict.set(CharSequenceUtil.toUnderlineCase(key), value1));
-                GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
-                final Set<String> tmpDictKey = tmpDict.keySet();
-                if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
-                    throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
-                }
-                if (fillJSONField && !dbFieldDict.isEmpty()) {
-                    dict.set(jsonField, JSONUtil.toJsonStr(dbFieldDict));
-                }
-            }
+            dealJsonFields(dict, coreModelId, jsonFields, fillJSONField);
         }
+
         Object bean = Convert.convert(parameterType, dict);
         Class<?>[] groups = requestBodyToTargetAnnotation.groups();
         if (validateTarget) {
@@ -149,6 +114,70 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         return bean;
     }
 
+    /**
+     * 处理JSON字段信息
+     *
+     * @param dict
+     * @param coreModelId
+     * @param jsonFields
+     * @param fillJSONField
+     */
+    private void dealJsonFields(Dict dict, Integer coreModelId, Set<String> jsonFields, boolean fillJSONField) {
+        for (String jsonField : jsonFields) {
+            final String json = Optional.ofNullable(dict.getStr(jsonField)).orElse("{}");
+            final Dict dbFieldDict = coreModelAttributesService.getModelAttributesDefaultValue(coreModelId, jsonField, json);
+            Dict oDict = JSONUtil.toBean(json, Dict.class);
+            Dict tmpDict = Dict.create();
+            oDict.forEach((key, val) -> tmpDict.set(CharSequenceUtil.toUnderlineCase(key), val));
+            GXCommonUtils.publishEvent(new GXMethodArgumentResolverEvent<>(tmpDict, dbFieldDict, "", Dict.create(), ""));
+            final Set<String> tmpDictKey = tmpDict.keySet();
+            if (!tmpDict.isEmpty() && !CollUtil.containsAll(dbFieldDict.keySet(), tmpDictKey)) {
+                throw new GXException(CharSequenceUtil.format("{}字段参数不匹配(系统预置: {} , 实际请求: {})", jsonField, dbFieldDict.keySet(), tmpDictKey), GXResultCode.PARSE_REQUEST_JSON_ERROR.getCode());
+            }
+            if (fillJSONField && !dbFieldDict.isEmpty()) {
+                dict.set(jsonField, JSONUtil.toJsonStr(dbFieldDict));
+            }
+        }
+    }
+
+    /**
+     * 处理声明的字段
+     *
+     * @param dict
+     * @param parameterType
+     * @param jsonFields
+     * @param jsonMergeFieldMap
+     */
+    private void dealDeclaredFields(Dict dict, Class<?> parameterType, Set<String> jsonFields, Map<String, Map<String, Object>> jsonMergeFieldMap) {
+        for (Field field : parameterType.getDeclaredFields()) {
+            GXMergeSingleFieldToJSONFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldToJSONFieldAnnotation.class);
+            if (Objects.isNull(annotation)) {
+                continue;
+            }
+            String dbJSONFieldName = annotation.dbJSONFieldName();
+            String dbFieldName = annotation.dbFieldName();
+            if (CharSequenceUtil.isBlank(dbFieldName)) {
+                dbFieldName = field.getName();
+            }
+            jsonFields.add(dbJSONFieldName);
+            String currentFieldName = field.getName();
+            Object fieldValue = Optional.ofNullable(dict.get(currentFieldName)).orElse(dict.getObj(CharSequenceUtil.toUnderlineCase(dbFieldName)));
+
+            Map<String, Object> tmpMap = new HashMap<>();
+            if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJSONFieldName)) {
+                tmpMap = jsonMergeFieldMap.get(dbJSONFieldName);
+            }
+            tmpMap.put(dbFieldName, fieldValue);
+            jsonMergeFieldMap.put(dbJSONFieldName, tmpMap);
+        }
+    }
+
+    /**
+     * 获取请求的数据
+     *
+     * @param webRequest NativeWebRequest对象
+     * @return String
+     */
     private String getRequestBody(NativeWebRequest webRequest) {
         HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         assert servletRequest != null;

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @GXDataSourceAnnotation("framework")
 public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper, GXMediaLibraryEntity> implements GXMediaLibraryService {
     @Resource
-    private GXUploadConfig gxUploadConfig;
+    private GXUploadConfig uploadConfig;
 
     @Resource
     private GXCoreModelService coreModelService;
@@ -103,7 +103,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public GXMediaLibraryEntity saveFileInfo(MultipartFile file, Dict param) {
-        String filePath = gxUploadConfig.getDepositPath().trim();
+        String filePath = uploadConfig.getDepositPath().trim();
         try {
             String fileName = GXUploadUtils.singleUpload(file, filePath);
             GXMediaLibraryEntity entity = new GXMediaLibraryEntity();
