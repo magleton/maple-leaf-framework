@@ -22,5 +22,10 @@
             <artifactId>leaf-base-framework</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-dynamic-datasource</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

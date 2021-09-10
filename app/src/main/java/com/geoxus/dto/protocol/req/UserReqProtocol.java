@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class UserReqProtocol implements GXBaseReqProtocol {
-    private static final Integer CORE_MODEL_ID = 1;
+    private Long id;
 
     @NotEmpty
     private String username;
@@ -25,7 +25,7 @@ public class UserReqProtocol implements GXBaseReqProtocol {
     @GXSingleFieldToDbJsonFieldAnnotation(dbFieldName = "author")
     private String author;
 
-    @GXSingleFieldToDbJsonFieldAnnotation(dbFieldName = "sub_title")
+    @GXSingleFieldToDbJsonFieldAnnotation()
     private String subTitle;
 
     @Override

@@ -9,8 +9,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
+import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
@@ -62,7 +62,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         Set<String> jsonFields = new HashSet<>(16);
         boolean validateTarget = requestBodyToTargetAnnotation.validateTarget();
 
-        callCustomerMethod(parameterType, bean);
+        callUserDefinedMethod(parameterType, bean);
         dealDeclaredJsonFields(bean, parameterType, jsonFields);
         Class<?>[] groups = requestBodyToTargetAnnotation.groups();
         if (validateTarget) {
@@ -95,7 +95,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
      * @param parameterType 参数的类型
      * @param bean          对象的名字
      */
-    private void callCustomerMethod(Class<?> parameterType, Object bean) {
+    private void callUserDefinedMethod(Class<?> parameterType, Object bean) {
         Arrays.asList("verify", "repair").forEach(methodName -> {
             Method method = ReflectUtil.getMethodByName(parameterType, methodName);
             if (Objects.nonNull(method)) {
@@ -119,7 +119,7 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
             if (Objects.isNull(annotation)) {
                 continue;
             }
-            String dbJSONFieldName = annotation.dbJSONFieldName();
+            String dbJsonFieldName = annotation.dbJSONFieldName();
             String dbFieldName = annotation.dbFieldName();
             if (CharSequenceUtil.isBlank(dbFieldName)) {
                 dbFieldName = field.getName();
@@ -132,14 +132,14 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
                 GXValidateJsonFieldService bean = GXSpringContextUtils.getBean(service);
                 fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, dbFieldName);
             }
-            jsonFields.add(dbJSONFieldName);
+            jsonFields.add(dbJsonFieldName);
             Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(dbFieldName))).orElse(fieldDefaultValue);
             Map<String, Object> tmpMap = new HashMap<>();
-            if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJSONFieldName)) {
-                tmpMap = jsonMergeFieldMap.get(dbJSONFieldName);
+            if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJsonFieldName)) {
+                tmpMap = jsonMergeFieldMap.get(dbJsonFieldName);
             }
             tmpMap.put(dbFieldName, fieldValue);
-            jsonMergeFieldMap.put(dbJSONFieldName, tmpMap);
+            jsonMergeFieldMap.put(dbJsonFieldName, tmpMap);
         }
         jsonMergeFieldMap.forEach((key, value) -> {
             Field field = ReflectUtil.getField(parameterType, key);

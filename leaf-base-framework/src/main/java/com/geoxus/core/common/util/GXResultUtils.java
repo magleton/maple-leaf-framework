@@ -1,9 +1,14 @@
 package com.geoxus.core.common.util;
 
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.geoxus.core.common.vo.common.GXResultCode;
 import lombok.Data;
+
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -50,6 +55,7 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> ok(GXResultCode resultCode, T data) {
+        callUserDefinedMethod(data);
         return ok(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
@@ -66,6 +72,7 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> ok(T data) {
+        callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, SUCCESS_MSG, data);
     }
 
@@ -75,6 +82,14 @@ public class GXResultUtils<T> {
         r.setMsg(msg);
         r.setData(data);
         return r;
+    }
+
+    private static <T> void callUserDefinedMethod(T data) {
+        Class<?> aClass = TypeUtil.getClass(data.getClass());
+        Method method = ReflectUtil.getMethodByName(aClass, "processResValue");
+        if (Objects.nonNull(method)) {
+            ReflectUtil.invoke(data, method);
+        }
     }
 
     public static <T> GXResultUtils<T> ok() {
