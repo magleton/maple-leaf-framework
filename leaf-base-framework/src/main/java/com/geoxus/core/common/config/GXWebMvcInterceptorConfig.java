@@ -2,7 +2,7 @@ package com.geoxus.core.common.config;
 
 import com.geoxus.core.common.interceptor.GXAuthorizationInterceptor;
 import com.geoxus.core.common.interceptor.GXLoginUserHandlerMethodArgumentResolver;
-import com.geoxus.core.common.interceptor.GXRequestToBeanHandlerMethodArgumentResolver;
+import com.geoxus.core.common.interceptor.GXRequestHandlerMethodArgumentResolver;
 import com.geoxus.core.common.interceptor.GXTraceIdInterceptor;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.util.Objects;
 @Slf4j
 public class GXWebMvcInterceptorConfig implements WebMvcConfigurer {
     @Resource
-    private GXRequestToBeanHandlerMethodArgumentResolver requestToBeanHandlerMethodArgumentResolver;
+    private GXRequestHandlerMethodArgumentResolver requestToBeanHandlerMethodArgumentResolver;
 
     @Resource
     private GXLoginUserHandlerMethodArgumentResolver loginUserHandlerMethodArgumentResolver;

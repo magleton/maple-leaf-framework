@@ -14,7 +14,7 @@ import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.mapstruct.GXBaseMapStruct;
+import com.geoxus.core.common.mapstruct.GXBaseDtoMapStruct;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
@@ -40,12 +40,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
-public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @GXFieldCommentAnnotation(zhDesc = "请求中的参数名字")
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
     @GXFieldCommentAnnotation("日志对象")
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXRequestToBeanHandlerMethodArgumentResolver.class);
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXRequestHandlerMethodArgumentResolver.class);
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -62,8 +62,13 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         Set<String> jsonFields = new HashSet<>(16);
         boolean validateTarget = requestBodyToTargetAnnotation.validateTarget();
 
-        callUserDefinedMethod(parameterType, bean);
+        // 对请求数据进行修复处理
+        callUserDefinedRepairMethod(parameterType, bean);
+
+        // 填充目标bean的扩展字段属性
         dealDeclaredJsonFields(bean, parameterType, jsonFields);
+
+        // 数据验证
         Class<?>[] groups = requestBodyToTargetAnnotation.groups();
         if (validateTarget) {
             if (parameter.hasParameterAnnotation(Valid.class)) {
@@ -73,11 +78,14 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
                 GXValidatorUtils.validateEntity(bean, value, groups);
             }
         }
+        // 调用目标bean对象的验证方法对数据进行额外的验证
+        callUserDefinedVerifyMethod(parameterType, bean);
 
+        // 将对象转换为指定的entity
         Class<?> mapstructClazz = requestBodyToTargetAnnotation.mapstructClazz();
         boolean isConvertToEntity = requestBodyToTargetAnnotation.isConvertToEntity();
         if (mapstructClazz != Void.class && isConvertToEntity) {
-            GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
+            GXBaseDtoMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseDtoMapStruct<GXBaseDto, GXBaseEntity>>() {
             }, GXSpringContextUtils.getBean(mapstructClazz));
             if (null == convert) {
                 LOGGER.error("DTO转换为Entity失败!请提供正确的MapStruct转换Class");
@@ -90,18 +98,29 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
     }
 
     /**
-     * 调用补充的方法对当前对象进行额外的处理
+     * 调用补充的修复数据方法对当前对象进行额外数据修复处理
      *
      * @param parameterType 参数的类型
      * @param bean          对象的名字
      */
-    private void callUserDefinedMethod(Class<?> parameterType, Object bean) {
-        Arrays.asList("verify", "repair").forEach(methodName -> {
-            Method method = ReflectUtil.getMethodByName(parameterType, methodName);
-            if (Objects.nonNull(method)) {
-                ReflectUtil.invoke(bean, method);
-            }
-        });
+    private void callUserDefinedRepairMethod(Class<?> parameterType, Object bean) {
+        Method method = ReflectUtil.getMethodByName(parameterType, "repair");
+        if (Objects.nonNull(method)) {
+            ReflectUtil.invoke(bean, method);
+        }
+    }
+
+    /**
+     * 调用补充的验证数据方法对当前对象进行额外数据验证处理
+     *
+     * @param parameterType 参数的类型
+     * @param bean          对象的名字
+     */
+    private void callUserDefinedVerifyMethod(Class<?> parameterType, Object bean) {
+        Method method = ReflectUtil.getMethodByName(parameterType, "verify");
+        if (Objects.nonNull(method)) {
+            ReflectUtil.invoke(bean, method);
+        }
     }
 
     /**

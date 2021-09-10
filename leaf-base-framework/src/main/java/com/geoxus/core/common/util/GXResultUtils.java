@@ -77,6 +77,7 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> ok(int code, String msg, T data) {
+        callUserDefinedMethod(data);
         GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
@@ -101,6 +102,7 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> error(T data) {
+        callUserDefinedMethod(data);
         return error(FAIL_CODE, FAIL_MSG, data);
     }
 
@@ -121,10 +123,12 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> error(GXResultCode resultCode, T data) {
+        callUserDefinedMethod(data);
         return error(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
     public static <T> GXResultUtils<T> error(int code, String msg, T data) {
+        callUserDefinedMethod(data);
         GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
