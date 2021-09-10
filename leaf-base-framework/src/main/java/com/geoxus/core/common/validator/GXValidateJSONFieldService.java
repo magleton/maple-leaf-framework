@@ -18,4 +18,13 @@ public interface GXValidateJSONFieldService {
      * @throws UnsupportedOperationException
      */
     boolean validateJSONFieldData(Object o, String modelIdentification, String tableField, boolean isFullMatchAttribute, ConstraintValidatorContext context) throws UnsupportedOperationException;
+
+    /**
+     * 在DB中获取字段的值
+     *
+     * @param tableName 表名
+     * @param fieldName 字段名字
+     * @return Object
+     */
+    Object getFieldValueByCondition(String tableName, String fieldName);
 }
