@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.handlers.MybatisMapWrapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
-import com.baomidou.mybatisplus.extension.plugins.inner.*;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
@@ -18,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -59,14 +60,16 @@ public class GXMyBatisPlusConfig {
         // 乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // sql性能规范插件
-       // interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        // interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         // 多租户插件(请在相应的表中新增tenant_id字段)
         // interceptor.addInnerInterceptor(new TenantLineInnerInterceptor());
         // 动态表名插件
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
-        Map<String, TableNameHandler> tableNameHandlerMap = new HashMap<>();
+        /* mybatis-plus-boot-starter  3.4.3.3 以下的版本需要如下配置*/
+        /* Map<String, TableNameHandler> tableNameHandlerMap = new HashMap<>();
         tableNameHandlerMap.put("tableName", (sql, tableName) -> tableName);
-        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(tableNameHandlerMap);
+        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(tableNameHandlerMap);*/
+        dynamicTableNameInnerInterceptor.setTableNameHandler((sql, tableName) -> tableName);
         interceptor.addInnerInterceptor(dynamicTableNameInnerInterceptor);
         return interceptor;
     }
