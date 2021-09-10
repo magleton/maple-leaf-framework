@@ -5,19 +5,18 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * 验证模型的扩展数据
  */
-public interface GXValidateJSONFieldService {
+public interface GXValidateJsonFieldService {
     /**
      * Checks whether or not a given value exists for a given field
      *
-     * @param o                    The value to check for
-     * @param modelIdentification  The name of the model
-     * @param tableField           Table Field
-     * @param isFullMatchAttribute is full Match
-     * @param context              context
+     * @param o             The value to check for
+     * @param tableName     The name of the model
+     * @param jsonFieldName JSON Field Name
+     * @param context       context
      * @return True if the value exists for the field; false otherwise
      * @throws UnsupportedOperationException
      */
-    boolean validateJSONFieldData(Object o, String modelIdentification, String tableField, boolean isFullMatchAttribute, ConstraintValidatorContext context) throws UnsupportedOperationException;
+    boolean validateJsonFieldData(Object o, String tableName, String jsonFieldName, ConstraintValidatorContext context) throws UnsupportedOperationException;
 
     /**
      * 在DB中获取字段的值

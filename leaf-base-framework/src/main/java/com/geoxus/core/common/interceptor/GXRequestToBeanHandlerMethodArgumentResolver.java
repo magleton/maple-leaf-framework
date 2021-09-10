@@ -9,7 +9,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.annotation.GXMergeSingleFieldToJSONFieldAnnotation;
+import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
@@ -17,7 +17,7 @@ import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapstruct.GXBaseMapStruct;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.core.common.validator.GXValidateJSONFieldService;
+import com.geoxus.core.common.validator.GXValidateJsonFieldService;
 import com.geoxus.core.common.validator.impl.GXValidatorUtils;
 import com.geoxus.core.common.vo.common.GXResultCode;
 import org.slf4j.Logger;
@@ -115,21 +115,21 @@ public class GXRequestToBeanHandlerMethodArgumentResolver implements HandlerMeth
         Dict dict = Convert.convert(Dict.class, obj);
         Map<String, Map<String, Object>> jsonMergeFieldMap = new HashMap<>();
         for (Field field : parameterType.getDeclaredFields()) {
-            GXMergeSingleFieldToJSONFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldToJSONFieldAnnotation.class);
+            GXSingleFieldToDbJsonFieldAnnotation annotation = field.getAnnotation(GXSingleFieldToDbJsonFieldAnnotation.class);
             if (Objects.isNull(annotation)) {
                 continue;
             }
-            Class<? extends GXValidateJSONFieldService> service = annotation.service();
             String dbJSONFieldName = annotation.dbJSONFieldName();
             String dbFieldName = annotation.dbFieldName();
             if (CharSequenceUtil.isBlank(dbFieldName)) {
                 dbFieldName = field.getName();
             }
-            Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             String tableName = annotation.tableName();
             Object fieldDefaultValue = null;
+            Class<? extends GXValidateJsonFieldService> service = annotation.service();
+            Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
-                GXValidateJSONFieldService bean = GXSpringContextUtils.getBean(service);
+                GXValidateJsonFieldService bean = GXSpringContextUtils.getBean(service);
                 fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, dbFieldName);
             }
             jsonFields.add(dbJSONFieldName);

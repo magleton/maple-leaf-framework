@@ -1,6 +1,6 @@
 package com.geoxus.shiro.dto.req;
 
-import com.geoxus.core.common.annotation.GXMergeSingleFieldToJSONFieldAnnotation;
+import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.annotation.GXValidateExtDataAnnotation;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXRolePermissionsConstant;
@@ -37,6 +37,6 @@ public class GXRolePermissionsReqDto extends GXBaseDto {
     /**
      * 作者
      */
-    @GXMergeSingleFieldToJSONFieldAnnotation
+    @GXSingleFieldToDbJsonFieldAnnotation
     private String author;
 }

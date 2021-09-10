@@ -1,9 +1,8 @@
 package com.geoxus.dto.protocol.req;
 
-import com.geoxus.core.common.annotation.GXMergeSingleFieldToJSONFieldAnnotation;
+import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.dto.protocol.GXBaseReqProtocol;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -20,13 +19,13 @@ public class UserReqProtocol implements GXBaseReqProtocol {
     @NotEmpty
     private String address;
 
+    //@GXValidateExtDataAnnotation(tableName = "users")
     private String ext;
 
-    @GXMergeSingleFieldToJSONFieldAnnotation(dbFieldName = "author")
-    @Length(min = 20, message = "不能少于20个字符")
+    @GXSingleFieldToDbJsonFieldAnnotation(dbFieldName = "author")
     private String author;
 
-    @GXMergeSingleFieldToJSONFieldAnnotation(dbFieldName = "sub_title")
+    @GXSingleFieldToDbJsonFieldAnnotation(dbFieldName = "sub_title")
     private String subTitle;
 
     @Override

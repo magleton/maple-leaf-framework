@@ -1,15 +1,17 @@
 package com.geoxus.core.framework.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.validator.GXValidateJSONFieldService;
+import com.geoxus.core.common.validator.GXValidateJsonFieldService;
+import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintValidatorContext;
 
 @Service
-public class GXValidateJSONFieldServiceImpl implements GXValidateJSONFieldService {
+@GXDataSourceAnnotation("framework")
+public class GXValidateJsonFieldServiceImpl implements GXValidateJsonFieldService {
     @Override
-    public boolean validateJSONFieldData(Object o, String modelIdentification, String tableField, boolean isFullMatchAttribute, ConstraintValidatorContext context) throws UnsupportedOperationException {
+    public boolean validateJsonFieldData(Object o, String tableName, String jsonFieldName, ConstraintValidatorContext context) throws UnsupportedOperationException {
         return false;
     }
 

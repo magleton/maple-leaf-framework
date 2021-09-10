@@ -1,7 +1,9 @@
 package com.geoxus.core.common.annotation;
 
-import com.geoxus.core.common.validator.GXValidateJSONFieldService;
+import com.geoxus.core.common.validator.GXValidateJsonFieldService;
+import com.geoxus.core.common.validator.impl.GXValidateSingleJsonFieldValidator;
 
+import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
@@ -13,14 +15,15 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXMergeSingleFieldToJSONFieldAnnotation {
+@Constraint(validatedBy = GXValidateSingleJsonFieldValidator.class)
+public @interface GXSingleFieldToDbJsonFieldAnnotation {
     String message() default "{fieldName}数据验证出错";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    Class<? extends GXValidateJSONFieldService> service() default GXValidateJSONFieldService.class;
+    Class<? extends GXValidateJsonFieldService> service() default GXValidateJsonFieldService.class;
 
     String tableName() default "";
 
