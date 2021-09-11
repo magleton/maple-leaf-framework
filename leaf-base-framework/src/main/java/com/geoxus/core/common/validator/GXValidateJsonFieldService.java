@@ -18,7 +18,7 @@ public interface GXValidateJsonFieldService {
      * @throws UnsupportedOperationException
      */
     default boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException {
-        return false;
+        return true;
     }
 
     /**
