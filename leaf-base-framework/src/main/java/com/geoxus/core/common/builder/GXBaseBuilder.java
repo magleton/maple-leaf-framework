@@ -22,7 +22,6 @@ import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
-import org.checkerframework.checker.regex.RegexUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
