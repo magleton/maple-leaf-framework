@@ -1,4 +1,4 @@
-package com.geoxus.core.common.dto.protocol;
+package com.geoxus.core.common.dto.protocol.req;
 
 import com.geoxus.core.common.dto.GXBaseDto;
 

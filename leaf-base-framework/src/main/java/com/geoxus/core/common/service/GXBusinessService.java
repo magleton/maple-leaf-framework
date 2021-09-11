@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.core.common.dto.GXBaseSearchReqDto;
+import com.geoxus.core.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.util.GXCommonUtils;
@@ -33,7 +33,7 @@ public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBE
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    default GXPagination<R> listOrSearchPage(GXBaseSearchReqDto searchReqDto) {
+    default GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());

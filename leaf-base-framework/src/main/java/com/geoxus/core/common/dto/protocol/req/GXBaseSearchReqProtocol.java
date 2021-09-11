@@ -1,14 +1,13 @@
-package com.geoxus.core.common.dto;
+package com.geoxus.core.common.dto.protocol.req;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.core.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXBaseSearchReqDto extends GXBaseDto {
+public class GXBaseSearchReqProtocol extends GXBaseDto {
     /**
      * 分页信息
      * eg:
@@ -28,12 +27,4 @@ public class GXBaseSearchReqDto extends GXBaseDto {
      * }
      */
     protected Dict searchCondition;
-
-    /**
-     * 需要移除的字段
-     * ext::username,ext::password
-     * eg:
-     * "removeField":["password" , "ext::username" , "info::password"]
-     */
-    protected Set<String> removeField;
 }
