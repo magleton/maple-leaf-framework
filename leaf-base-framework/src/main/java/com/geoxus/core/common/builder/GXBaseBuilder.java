@@ -297,7 +297,8 @@ public interface GXBaseBuilder {
             boolean timeFieldFlag = false;
             String underLineKey = CharSequenceUtil.toUnderlineCase(key);
             Object value = Optional.ofNullable(requestSearchCondition.getObj(key)).orElse(requestSearchCondition.getObj(underLineKey));
-            if (Objects.nonNull(value) && CharSequenceUtil.isNotBlank(value.toString())) {
+            boolean flag = (value instanceof Collection) && !((Collection<?>) value).isEmpty();
+            if (Objects.nonNull(value) && (flag || CharSequenceUtil.isNotBlank(value.toString()))) {
                 String operator = Optional.ofNullable(searchField.getStr(key)).orElse(searchField.getStr(underLineKey));
                 if (Objects.isNull(operator)) {
                     operator = Optional.ofNullable(timeFields.getStr(key)).orElse(timeFields.getStr(underLineKey));
@@ -312,7 +313,7 @@ public interface GXBaseBuilder {
                     sql.WHERE(s);
                     continue;
                 }
-                if (value instanceof Collection) {
+                if (flag) {
                     value = CollUtil.join((Collection<?>) value, ",");
                 }
                 String lastKey = ReUtil.replaceAll(underLineKey, "[!<>*^$@#%&]", "");
