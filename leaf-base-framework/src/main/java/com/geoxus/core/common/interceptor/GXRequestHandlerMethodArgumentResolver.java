@@ -14,7 +14,7 @@ import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.mapstruct.GXBaseDtoMapStruct;
+import com.geoxus.core.common.mapstruct.GXBaseMapStruct;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
@@ -85,7 +85,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         Class<?> mapstructClazz = requestBodyToTargetAnnotation.mapstructClazz();
         boolean isConvertToEntity = requestBodyToTargetAnnotation.isConvertToEntity();
         if (mapstructClazz != Void.class && isConvertToEntity) {
-            GXBaseDtoMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseDtoMapStruct<GXBaseDto, GXBaseEntity>>() {
+            GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
             }, GXSpringContextUtils.getBean(mapstructClazz));
             if (null == convert) {
                 LOGGER.error("DTO转换为Entity失败!请提供正确的MapStruct转换Class");
@@ -138,10 +138,10 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             if (Objects.isNull(annotation)) {
                 continue;
             }
-            String dbJsonFieldName = annotation.dbJSONFieldName();
-            String dbFieldName = annotation.dbFieldName();
-            if (CharSequenceUtil.isBlank(dbFieldName)) {
-                dbFieldName = field.getName();
+            String parentFieldName = annotation.parentFieldName();
+            String fieldName = annotation.fieldName();
+            if (CharSequenceUtil.isBlank(fieldName)) {
+                fieldName = field.getName();
             }
             String tableName = annotation.tableName();
             Object fieldDefaultValue = null;
@@ -149,16 +149,16 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
                 GXValidateJsonFieldService bean = GXSpringContextUtils.getBean(service);
-                fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, dbFieldName);
+                fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, parentFieldName, fieldName);
             }
-            jsonFields.add(dbJsonFieldName);
-            Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(dbFieldName))).orElse(fieldDefaultValue);
+            jsonFields.add(parentFieldName);
+            Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(fieldName))).orElse(fieldDefaultValue);
             Map<String, Object> tmpMap = new HashMap<>();
-            if (CollUtil.contains(jsonMergeFieldMap.keySet(), dbJsonFieldName)) {
-                tmpMap = jsonMergeFieldMap.get(dbJsonFieldName);
+            if (CollUtil.contains(jsonMergeFieldMap.keySet(), parentFieldName)) {
+                tmpMap = jsonMergeFieldMap.get(parentFieldName);
             }
-            tmpMap.put(dbFieldName, fieldValue);
-            jsonMergeFieldMap.put(dbJsonFieldName, tmpMap);
+            tmpMap.put(fieldName, fieldValue);
+            jsonMergeFieldMap.put(parentFieldName, tmpMap);
         }
         jsonMergeFieldMap.forEach((key, value) -> {
             Field field = ReflectUtil.getField(parameterType, key);

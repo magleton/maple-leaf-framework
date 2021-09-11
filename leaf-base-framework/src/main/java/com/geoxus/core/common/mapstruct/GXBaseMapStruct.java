@@ -1,7 +1,6 @@
 package com.geoxus.core.common.mapstruct;
 
-import com.geoxus.core.common.dto.protocol.GXBaseReqProtocol;
-import com.geoxus.core.common.entity.GXBaseEntity;
+import com.geoxus.core.common.dto.GXBaseDto;
 
 import java.util.List;
 
@@ -10,14 +9,14 @@ import java.util.List;
  * @version 1.0
  * @since 2020-09-26
  */
-public interface GXBaseProtocolMapStruct<D extends GXBaseReqProtocol, E extends GXBaseEntity> {
+public interface GXBaseMapStruct<D extends GXBaseDto, E> {
     /**
      * DTO转换为Entity
      *
-     * @param protocol WEB请求对象
+     * @param dto WEB请求对象
      * @return E
      */
-    E protocolToEntity(D protocol);
+    E dtoToEntity(D dto);
 
     /**
      * Entity转换为DTO
@@ -25,15 +24,15 @@ public interface GXBaseProtocolMapStruct<D extends GXBaseReqProtocol, E extends 
      * @param entity Entity对象
      * @return DTO
      */
-    D entityToProtocol(E entity);
+    D entityToDto(E entity);
 
     /**
      * DTO列表转换为Entity列表
      *
-     * @param protocolList WEB请求对象列表
+     * @param dtoList WEB请求对象列表
      * @return List
      */
-    List<E> protocolListToEntities(List<D> protocolList);
+    List<E> dtoListToEntities(List<D> dtoList);
 
     /**
      * Entity列表转换为DTO列表
@@ -41,5 +40,5 @@ public interface GXBaseProtocolMapStruct<D extends GXBaseReqProtocol, E extends 
      * @param entities Entity列表
      * @return List
      */
-    List<D> entitiesToProtocolList(List<E> entities);
+    List<D> entitiesToDtoList(List<E> entities);
 }

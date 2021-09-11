@@ -9,21 +9,25 @@ public interface GXValidateJsonFieldService {
     /**
      * Checks whether or not a given value exists for a given field
      *
-     * @param o             The value to check for
-     * @param tableName     The name of the model
-     * @param jsonFieldName JSON Field Name
-     * @param context       context
+     * @param o               The value to check for
+     * @param tableName       The name of the model
+     * @param parentFieldName JSON Field Name
+     * @param fieldName       fieldName
+     * @param context         context
      * @return True if the value exists for the field; false otherwise
      * @throws UnsupportedOperationException
      */
-    boolean validateJsonFieldData(Object o, String tableName, String jsonFieldName, ConstraintValidatorContext context) throws UnsupportedOperationException;
+    boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException;
 
     /**
      * 在DB中获取字段的值
      *
-     * @param tableName 表名
-     * @param fieldName 字段名字
+     * @param tableName       表名
+     * @param parentFieldName 父级字段名字
+     * @param fieldName       字段名字
      * @return Object
      */
-    Object getFieldValueByCondition(String tableName, String fieldName);
+    default Object getFieldValueByCondition(String tableName, String parentFieldName, String fieldName) {
+        return null;
+    }
 }

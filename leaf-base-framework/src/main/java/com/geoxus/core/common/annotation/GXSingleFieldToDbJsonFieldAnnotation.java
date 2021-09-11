@@ -27,7 +27,7 @@ public @interface GXSingleFieldToDbJsonFieldAnnotation {
 
     String tableName() default "";
 
-    String dbJSONFieldName() default "ext";
+    String parentFieldName() default "ext";
 
-    String dbFieldName() default "";
+    String fieldName();
 }

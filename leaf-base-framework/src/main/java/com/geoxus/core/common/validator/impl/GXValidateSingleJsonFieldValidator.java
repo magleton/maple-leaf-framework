@@ -22,18 +22,21 @@ public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<G
      * 数据库表中扩展字段中的字段名字
      * {"ext":{"author":"枫叶思源"}}
      */
-    private String dbJsonFieldName;
+    private String parentFieldName;
+
+    private String fieldName;
 
     @Override
     public void initialize(GXSingleFieldToDbJsonFieldAnnotation annotation) {
         Class<? extends GXValidateJsonFieldService> serviceClazz = annotation.service();
-        String tableName = annotation.tableName();
-        String dbJSONFieldName = annotation.dbJSONFieldName();
+        tableName = annotation.tableName();
+        parentFieldName = annotation.parentFieldName();
+        fieldName = annotation.fieldName();
         validateJsonFieldService = GXSpringContextUtils.getBean(serviceClazz);
     }
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext context) {
-        return validateJsonFieldService.validateJsonFieldData(o, tableName, dbJsonFieldName, context);
+        return validateJsonFieldService.validateJsonFieldData(o, tableName, parentFieldName, fieldName, context);
     }
 }

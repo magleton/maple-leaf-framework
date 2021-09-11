@@ -2,12 +2,15 @@ package com.geoxus.dto.protocol.req;
 
 import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.dto.protocol.GXBaseReqProtocol;
+import com.geoxus.service.impl.MyGXValidateJsonFieldServiceImpl;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotEmpty;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserReqProtocol implements GXBaseReqProtocol {
+public class UserReqProtocol extends GXBaseReqProtocol {
     private Long id;
 
     @NotEmpty
@@ -22,10 +25,10 @@ public class UserReqProtocol implements GXBaseReqProtocol {
     //@GXValidateExtDataAnnotation(tableName = "users")
     private String ext;
 
-    @GXSingleFieldToDbJsonFieldAnnotation(dbFieldName = "author")
+    @GXSingleFieldToDbJsonFieldAnnotation(fieldName = "author", service = MyGXValidateJsonFieldServiceImpl.class)
     private String author;
 
-    @GXSingleFieldToDbJsonFieldAnnotation()
+    @GXSingleFieldToDbJsonFieldAnnotation(fieldName = "sub_title")
     private String subTitle;
 
     @Override
