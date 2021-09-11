@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 public class GXValidateJsonFieldServiceImpl implements GXValidateJsonFieldService {
     @Override
     public boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException {
-        return false;
+        return true;
     }
 
     @Override

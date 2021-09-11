@@ -17,7 +17,9 @@ public interface GXValidateJsonFieldService {
      * @return True if the value exists for the field; false otherwise
      * @throws UnsupportedOperationException
      */
-    boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException;
+    default boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException {
+        return false;
+    }
 
     /**
      * 在DB中获取字段的值

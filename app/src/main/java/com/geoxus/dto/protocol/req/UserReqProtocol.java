@@ -11,7 +11,10 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserReqProtocol extends GXBaseReqProtocol {
-    private Long id;
+    /**
+     * 主键ID
+     */
+    private Integer id;
 
     @NotEmpty
     private String username;

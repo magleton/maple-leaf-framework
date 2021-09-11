@@ -2,6 +2,7 @@ package com.geoxus.core.common.annotation;
 
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
 import com.geoxus.core.common.validator.impl.GXValidateSingleJsonFieldValidator;
+import com.geoxus.core.framework.service.impl.GXValidateJsonFieldServiceImpl;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -23,7 +24,7 @@ public @interface GXSingleFieldToDbJsonFieldAnnotation {
 
     Class<? extends Payload>[] payload() default {};
 
-    Class<? extends GXValidateJsonFieldService> service() default GXValidateJsonFieldService.class;
+    Class<? extends GXValidateJsonFieldService> service() default GXValidateJsonFieldServiceImpl.class;
 
     String tableName() default "";
 
