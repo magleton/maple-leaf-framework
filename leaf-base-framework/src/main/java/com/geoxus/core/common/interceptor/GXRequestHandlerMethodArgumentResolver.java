@@ -163,7 +163,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         jsonMergeFieldMap.forEach((key, value) -> {
             Field field = ReflectUtil.getField(parameterType, key);
             if (Objects.nonNull(field)) {
-                ReflectUtil.setFieldValue(obj, field, value);
+                ReflectUtil.setFieldValue(obj, field, JSONUtil.toJsonStr(value));
             }
         });
     }

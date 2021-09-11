@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Set;
-import java.util.TreeSet;
 
 @RestController
 public class IndexController {
@@ -22,13 +20,7 @@ public class IndexController {
 
     @PostMapping("/hello")
     public GXResultUtils<Dict> hello(@GXRequestBodyToTargetAnnotation @Validated UserReqProtocol userReqProtocol) {
-        Set<String> strings = new TreeSet<>();
-        strings.add("MMMM");
-        strings.add("KKKK");
-        strings.add("AAAA");
-        strings.add("BBBB");
-        strings.add("KKKKK");
-        System.out.println(strings);
+        userService.createOrUpdate(userReqProtocol);
         return GXResultUtils.ok("Hello World");
     }
 
