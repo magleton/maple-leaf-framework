@@ -22,8 +22,10 @@ import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
+import org.checkerframework.checker.regex.RegexUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public interface GXBaseBuilder {
     /**
@@ -314,7 +316,12 @@ public interface GXBaseBuilder {
                     continue;
                 }
                 if (flag) {
-                    value = CollUtil.join((Collection<?>) value, ",");
+                    value = CollUtil.join(((Collection<?>) value).stream().map(d -> {
+                        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, d.toString())) {
+                            return d;
+                        }
+                        return "\"" + d + "\"";
+                    }).collect(Collectors.toSet()), ",");
                 }
                 String lastKey = ReUtil.replaceAll(underLineKey, "[!<>*^$@#%&]", "");
                 if (CharSequenceUtil.contains(underLineKey, ".")) {
