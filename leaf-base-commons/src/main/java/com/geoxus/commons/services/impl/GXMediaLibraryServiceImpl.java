@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service(value = "mediaLibraryService")
 @GXDataSourceAnnotation("framework")
-public class GXMediaLibraryServiceImpl extends GXBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao, Dict> implements GXMediaLibraryService {
+public class GXMediaLibraryServiceImpl extends GXBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> implements GXMediaLibraryService {
     @Resource
     private GXUploadConfig uploadConfig;
 

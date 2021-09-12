@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminRoleServiceImpl extends GXBusinessServiceImpl<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao, Dict> implements GXAdminRoleService {
+public class GXAdminRoleServiceImpl extends GXBusinessServiceImpl<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> implements GXAdminRoleService {
     @Override
     public Set<String> getAdminRoles(Long adminId) {
         final Dict condition = Dict.create().set("admin_id", adminId);

@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao, Dict> {
+public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> {
     /**
      * 保存数据
      *

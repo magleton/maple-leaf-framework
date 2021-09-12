@@ -9,7 +9,7 @@ import com.geoxus.core.framework.mapper.GXCoreModelMapper;
 
 import java.util.Set;
 
-public interface GXCoreModelService extends GXBaseService<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao, Dict>, GXValidateDBExists {
+public interface GXCoreModelService extends GXBaseService<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao>, GXValidateDBExists {
     /**
      * 通过模型ID获取模型的相关信息
      *

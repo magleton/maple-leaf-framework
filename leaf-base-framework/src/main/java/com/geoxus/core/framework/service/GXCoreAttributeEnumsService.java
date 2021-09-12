@@ -8,7 +8,7 @@ import com.geoxus.core.framework.mapper.GXCoreAttributeEnumsMapper;
 
 import java.util.List;
 
-public interface GXCoreAttributeEnumsService extends GXBaseService<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao, Dict>, GXValidateDBExists {
+public interface GXCoreAttributeEnumsService extends GXBaseService<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao>, GXValidateDBExists {
     /**
      * 检测属性的值是否存在
      *

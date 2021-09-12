@@ -31,7 +31,7 @@ import java.util.*;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
+public interface GXBaseService<T, M extends GXBaseMapper<T>, D> {
     /**
      * 日志对象
      */
@@ -106,7 +106,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
             String[] fields = CharSequenceUtil.splitToArray(path, fieldSeparator);
             path = CharSequenceUtil.format("{}{}{}", fields[0].replace("'", ""), fieldSeparator, fields[1].replace("'", ""));
         }
-        GXBaseMapper<T, R> baseMapper = (GXBaseMapper<T, R>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
         if (null == dict) {
             return defaultValue;
@@ -132,7 +132,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
     @SuppressWarnings("unused")
     default Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition) {
         String fieldSeparator = "::";
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Set<String> fieldSet = CollUtil.newHashSet();
         final Dict dataKey = Dict.create();
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
@@ -284,7 +284,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      */
     @Transactional(rollbackFor = Exception.class)
     default boolean updateSingleField(Class<T> clazz, String path, Object value, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         String mainPath = CharSequenceUtil.sub(path, 0, index);
         String subPath = CharSequenceUtil.sub(path, index + 1, path.length());
@@ -302,7 +302,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      */
     @Transactional(rollbackFor = Exception.class)
     default boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
@@ -338,7 +338,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return int
      */
     default Integer checkRecordIsExists(Class<T> clazz, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsExists(getTableName(clazz), condition);
     }
 
@@ -350,7 +350,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return int
      */
     default Integer checkRecordIsExists(String tableName, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsExists(tableName, condition);
     }
 
@@ -362,7 +362,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return int
      */
     default Integer checkRecordIsUnique(Class<T> clazz, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsUnique(getTableName(clazz), condition);
     }
 
@@ -374,7 +374,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return int
      */
     default Integer checkRecordIsUnique(String tableName, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsUnique(tableName, condition);
     }
 
@@ -411,7 +411,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return boolean
      */
     default boolean updateFieldByCondition(Class<T> clazz, Dict data, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
@@ -424,7 +424,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return boolean
      */
     default boolean updateStatusByCondition(Class<T> clazz, int status, Dict condition) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateStatusByCondition(getTableName(clazz), status, condition);
     }
 
@@ -438,7 +438,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      */
     @SuppressWarnings("all")
     default Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         return baseMapper.batchInsertBySql(getTableName(clazz), fieldSet, dataList);
     }
 
@@ -465,7 +465,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
      * @return Dict
      */
     default Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
         if (Objects.isNull(dict)) {
             GXCommonUtils.getLogger(GXBaseService.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
@@ -510,7 +510,7 @@ public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
     default boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
-        GXBaseMapper<T, Dict> baseMapper = (GXBaseMapper<T, Dict>) getBaseMapper();
+        GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         assert baseMapper != null;
         final Dict targetDict = baseMapper.getFieldValueBySql(originTableName, CollUtil.newHashSet("*"), condition, true);
         if (targetDict.isEmpty()) {

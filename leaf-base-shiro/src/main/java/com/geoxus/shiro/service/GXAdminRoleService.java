@@ -9,7 +9,7 @@ import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService extends GXBusinessService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao, Dict> {
+public interface GXAdminRoleService extends GXBusinessService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> {
     /**
      * 获取当前人的角色列表
      *

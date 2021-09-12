@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class GXPermissionsServiceImpl extends GXBusinessServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao, Dict> implements GXPermissionsService {
+public class GXPermissionsServiceImpl extends GXBusinessServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> implements GXPermissionsService {
     @Resource
     private GXAdminPermissionsService adminPermissionsService;
 

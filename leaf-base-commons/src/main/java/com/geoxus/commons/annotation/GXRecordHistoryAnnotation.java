@@ -15,5 +15,5 @@ public @interface GXRecordHistoryAnnotation {
 
     String[] conditionalParameterName() default {};
 
-    Class<? extends GXBaseService<?, ?, ?, ?>> service() default GXCoreModelServiceImpl.class;
+    Class<? extends GXBaseService<?, ?, ?>> service() default GXCoreModelServiceImpl.class;
 }

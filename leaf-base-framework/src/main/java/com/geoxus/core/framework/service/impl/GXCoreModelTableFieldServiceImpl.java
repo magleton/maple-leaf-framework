@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelTableFieldServiceImpl extends GXBusinessServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao, Dict> implements GXCoreModelTableFieldService {
+public class GXCoreModelTableFieldServiceImpl extends GXBusinessServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> implements GXCoreModelTableFieldService {
     /**
      * 通过条件获取数据
      *

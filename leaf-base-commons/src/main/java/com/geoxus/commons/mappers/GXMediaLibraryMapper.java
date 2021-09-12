@@ -12,11 +12,11 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity, Dict> {
+public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity> {
     @Override
     @SelectProvider(type = GXMediaLibraryBuilder.class, method = "listOrSearch")
     @ResultMap("mediaResult")
-    List<Dict> listOrSearchPage(IPage<Dict> page, Dict param);
+    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
 
     @SelectProvider(type = GXMediaLibraryBuilder.class, method = "detail")
     @Results(id = "mediaResult", value = {

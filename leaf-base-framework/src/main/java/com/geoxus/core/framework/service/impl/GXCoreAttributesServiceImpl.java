@@ -25,7 +25,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao, Dict> implements GXCoreAttributesService {
+public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> implements GXCoreAttributesService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0")
     public List<GXCoreAttributesEntity> getAttributesByCategory(String category) {

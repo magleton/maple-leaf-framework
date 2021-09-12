@@ -9,5 +9,5 @@ import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GXDataDictServiceImpl extends GXBusinessServiceImpl<GXDataDictEntity, GXDataDictMapper, GXDataDictDao, Dict> implements GXDataDictService {
+public class GXDataDictServiceImpl extends GXBusinessServiceImpl<GXDataDictEntity, GXDataDictMapper, GXDataDictDao> implements GXDataDictService {
 }

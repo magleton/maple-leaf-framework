@@ -23,14 +23,14 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T>, R> extends GXBaseService<T, M, D, R>, GXValidateDBExists, GXValidateDBUnique {
+public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExists, GXValidateDBUnique {
     /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    default GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
+    default <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -47,7 +47,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GX
      * @param param 参数
      * @return GXPagination
      */
-    default GXPagination<R> listOrSearchPage(Dict param) {
+    default <R> GXPagination<R> listOrSearchPage(Dict param) {
         return generatePage(param);
     }
 
@@ -127,7 +127,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GX
      * @param param 参数
      * @return IPage
      */
-    default IPage<R> constructPageObjectFromParam(Dict param) {
+    default <R> IPage<R> constructPageObjectFromParam(Dict param) {
         final Dict pageInfo = getPageInfoFromParam(param);
         return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
     }
@@ -159,9 +159,9 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GX
      * @param param 查询参数
      * @return GXPagination
      */
-    default GXPagination<R> generatePage(Dict param) {
+    default <R> GXPagination<R> generatePage(Dict param) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
-        GXBaseMapper<T, R> baseMapper = getBaseMapper();
+        GXBaseMapper<T> baseMapper = getBaseMapper();
         final List<R> list = baseMapper.listOrSearchPage(riPage, param);
         riPage.setRecords(list);
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
@@ -174,10 +174,10 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GX
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    default GXPagination<Dict> generatePage(Dict param, String mapperMethodName) {
+    default <R> GXPagination<R> generatePage(Dict param, String mapperMethodName) {
         final Dict pageParam = getPageInfoFromParam(param);
-        final IPage<Dict> iPage = new Page<>(pageParam.getInt("page"), pageParam.getInt("pageSize"));
-        final List<Dict> list = ReflectUtil.invoke(getBaseMapper(), mapperMethodName, iPage, param);
+        final IPage<R> iPage = new Page<>(pageParam.getInt("page"), pageParam.getInt("pageSize"));
+        final List<R> list = ReflectUtil.invoke(getBaseMapper(), mapperMethodName, iPage, param);
         iPage.setRecords(list);
         return new GXPagination<>(iPage.getRecords(), iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
     }

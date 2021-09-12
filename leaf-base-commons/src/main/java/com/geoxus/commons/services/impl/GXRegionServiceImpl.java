@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GXRegionServiceImpl extends GXBaseServiceImpl<GXRegionEntity, GXRegionMapper, GXRegionDao, Dict> implements GXRegionService {
+public class GXRegionServiceImpl extends GXBaseServiceImpl<GXRegionEntity, GXRegionMapper, GXRegionDao> implements GXRegionService {
     private static final String NAME_TAG = "name";
 
     private static final String PARENT_TAG = "parent_id";

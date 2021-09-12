@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesPermissionEntity, GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionDao, Dict> implements GXCoreModelAttributePermissionService {
+public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesPermissionEntity, GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionDao> implements GXCoreModelAttributePermissionService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")
     public Dict getModelAttributePermissionByCoreModelId(int coreModelId, Dict param) {

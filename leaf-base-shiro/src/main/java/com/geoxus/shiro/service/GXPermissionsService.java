@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public interface GXPermissionsService extends GXBusinessService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao, Dict> {
+public interface GXPermissionsService extends GXBusinessService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> {
     /**
      * 获取管理员的所有权限列表
      * 权限包括:

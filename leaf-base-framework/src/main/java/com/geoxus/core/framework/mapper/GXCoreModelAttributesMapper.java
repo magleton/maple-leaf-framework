@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.util.List;
 
 @Mapper
-public interface GXCoreModelAttributesMapper extends GXBaseMapper<GXCoreModelAttributesEntity, Dict> {
+public interface GXCoreModelAttributesMapper extends GXBaseMapper<GXCoreModelAttributesEntity> {
     @SelectProvider(type = GXCoreModelAttributesBuilder.class, method = "getModelAttributesByCondition")
     List<Dict> getModelAttributesByCondition(Dict param);
 

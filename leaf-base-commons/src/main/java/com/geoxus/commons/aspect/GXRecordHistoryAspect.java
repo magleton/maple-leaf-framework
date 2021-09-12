@@ -32,7 +32,7 @@ public class GXRecordHistoryAspect {
             MethodSignature signature = (MethodSignature) point.getSignature();
             Method method = signature.getMethod();
             final GXRecordHistoryAnnotation gxRecordHistoryAnnotation = method.getAnnotation(GXRecordHistoryAnnotation.class);
-            GXBaseService<?, ?, ?, ?> service = GXSpringContextUtils.getBean(gxRecordHistoryAnnotation.service());
+            GXBaseService<?, ?, ?> service = GXSpringContextUtils.getBean(gxRecordHistoryAnnotation.service());
             if (Objects.nonNull(service)) {
                 String[] paramNames = gxRecordHistoryAnnotation.conditionalParameterName();
                 String originTableName = gxRecordHistoryAnnotation.originTableName();

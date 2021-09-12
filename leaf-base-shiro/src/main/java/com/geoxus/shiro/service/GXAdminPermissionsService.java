@@ -8,7 +8,7 @@ import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 
 import java.util.Set;
 
-public interface GXAdminPermissionsService extends GXBusinessService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao, Dict> {
+public interface GXAdminPermissionsService extends GXBusinessService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao> {
     /**
      * 通过管理员ID获取权限集
      *

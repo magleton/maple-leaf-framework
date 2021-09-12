@@ -8,7 +8,7 @@ import com.geoxus.dto.protocol.res.UserResProtocol;
 import com.geoxus.entity.UserEntity;
 import com.geoxus.mapper.UserMapper;
 
-public interface UserService extends GXBusinessService<UserEntity, UserMapper, UserDao, Dict> {
+public interface UserService extends GXBusinessService<UserEntity, UserMapper, UserDao> {
     UserResProtocol getUserInfo(Long userId);
 
     void createOrUpdate(UserReqProtocol userReqProtocol);

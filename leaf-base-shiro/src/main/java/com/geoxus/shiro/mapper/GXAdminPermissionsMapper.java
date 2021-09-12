@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Mapper
 @Component
-public interface GXAdminPermissionsMapper extends GXBaseMapper<GXAdminPermissionsEntity, Dict> {
+public interface GXAdminPermissionsMapper extends GXBaseMapper<GXAdminPermissionsEntity> {
     @SelectProvider(type = GXAdminPermissionsBuilder.class, method = "getPermissionsByAdminId")
     Set<String> getPermissionsByAdminId(Long adminId);
 }

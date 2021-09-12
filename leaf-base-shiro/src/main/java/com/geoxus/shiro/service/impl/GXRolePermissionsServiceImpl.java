@@ -1,7 +1,5 @@
 package com.geoxus.shiro.service.impl;
 
-import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXRolePermissionsDao;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXRolePermissionsServiceImpl extends GXBusinessServiceImpl<GXRolePermissionsEntity, GXRolePermissionsMapper, GXRolePermissionsDao, Dict> implements GXRolePermissionsService {
+public class GXRolePermissionsServiceImpl extends GXBusinessServiceImpl<GXRolePermissionsEntity, GXRolePermissionsMapper, GXRolePermissionsDao> implements GXRolePermissionsService {
     /**
      * 通过管理员ID获取权限集
      *

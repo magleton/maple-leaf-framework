@@ -8,7 +8,7 @@ import com.geoxus.core.framework.service.GXBaseService;
 
 import java.util.List;
 
-public interface GXRegionService extends GXBaseService<GXRegionEntity, GXRegionMapper, GXRegionDao, Dict> {
+public interface GXRegionService extends GXBaseService<GXRegionEntity, GXRegionMapper, GXRegionDao> {
     /**
      * 获取所有区域树
      *

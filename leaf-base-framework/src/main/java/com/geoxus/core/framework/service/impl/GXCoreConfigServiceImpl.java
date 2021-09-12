@@ -19,7 +19,7 @@ import java.util.Collections;
 
 @Service
 @GXDataSourceAnnotation("framework")
-public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao, Dict> implements GXCoreConfigService {
+public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao> implements GXCoreConfigService {
     public long create(GXCoreConfigEntity target, Dict param) {
         baseDao.save(target);
         return target.getConfigId();

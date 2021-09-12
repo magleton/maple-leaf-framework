@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 
 @Service
-public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao, Dict> implements GXAdminService {
+public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao> implements GXAdminService {
     /**
      * 获取当前登录管理员的状态
      *

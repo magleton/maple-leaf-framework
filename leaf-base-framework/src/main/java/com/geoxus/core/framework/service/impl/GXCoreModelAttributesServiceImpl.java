@@ -25,7 +25,7 @@ import java.util.*;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao, Dict> implements GXCoreModelAttributesService {
+public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> implements GXCoreModelAttributesService {
     @Resource
     private GXCoreModelTableFieldService coreModelTableFieldService;
 

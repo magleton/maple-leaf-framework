@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectProvider;
 
 @Mapper
-public interface GXCoreModelMapper extends GXBaseMapper<GXCoreModelEntity, Dict> {
+public interface GXCoreModelMapper extends GXBaseMapper<GXCoreModelEntity> {
     @SelectProvider(type = GXCoreModelBuilder.class, method = "getSearchCondition")
     @Results({
             @Result(column = "model_id", property = "model_id"),

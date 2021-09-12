@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Mapper
-public interface GXPermissionsMapper extends GXBaseMapper<GXPermissionsEntity, Dict> {
+public interface GXPermissionsMapper extends GXBaseMapper<GXPermissionsEntity> {
 }

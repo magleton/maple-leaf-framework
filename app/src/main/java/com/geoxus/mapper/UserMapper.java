@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Mapper
 @Component
-public interface UserMapper extends GXBaseMapper<UserEntity, Dict> {
+public interface UserMapper extends GXBaseMapper<UserEntity> {
     @SelectProvider(type = UserBuilder.class, method = "getUserInfo")
     UserResProtocol getUserInfo(Long userId);
 }

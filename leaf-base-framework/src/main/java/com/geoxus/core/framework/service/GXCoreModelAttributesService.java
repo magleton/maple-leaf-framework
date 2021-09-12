@@ -7,7 +7,7 @@ import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
 
 import java.util.List;
 
-public interface GXCoreModelAttributesService extends GXBaseService<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao, Dict> {
+public interface GXCoreModelAttributesService extends GXBaseService<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> {
     /**
      * 通过模型ID获取模型的属性
      *

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminPermissionsServiceImpl extends GXBusinessServiceImpl<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao, Dict> implements GXAdminPermissionsService {
+public class GXAdminPermissionsServiceImpl extends GXBusinessServiceImpl<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao> implements GXAdminPermissionsService {
     /**
      * 通过管理员ID获取权限集
      *

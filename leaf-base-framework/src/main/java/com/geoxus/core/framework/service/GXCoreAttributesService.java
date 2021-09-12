@@ -9,7 +9,7 @@ import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;
 
 import java.util.List;
 
-public interface GXCoreAttributesService extends GXBusinessService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao, Dict>, GXValidateDBExists {
+public interface GXCoreAttributesService extends GXBusinessService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao>, GXValidateDBExists {
     /**
      * 通过类型获取属性的列表
      *

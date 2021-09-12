@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.util.List;
 
 @Mapper
-public interface GXDataDictMapper extends GXBaseMapper<GXDataDictEntity, Dict> {
+public interface GXDataDictMapper extends GXBaseMapper<GXDataDictEntity> {
     @SelectProvider(type = GXDataDictBuilder.class, method = "listOrSearchPage")
     List<Dict> listOrSearchPage(Dict condition);
 }

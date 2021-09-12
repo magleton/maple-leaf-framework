@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class UserServiceImpl extends GXBusinessServiceImpl<UserEntity, UserMapper, UserDao, Dict> implements UserService {
+public class UserServiceImpl extends GXBusinessServiceImpl<UserEntity, UserMapper, UserDao> implements UserService {
     @Resource
     private UserProtocolMapstruct userProtocolMapstruct;
 

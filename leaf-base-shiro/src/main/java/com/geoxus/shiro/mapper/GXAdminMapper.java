@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Mapper
-public interface GXAdminMapper extends GXBaseMapper<GXAdminEntity, Dict> {
+public interface GXAdminMapper extends GXBaseMapper<GXAdminEntity> {
 }

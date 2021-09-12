@@ -14,13 +14,13 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.util.List;
 
 @Mapper
-public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEntity, Dict> {
+public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEntity> {
     @Override
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "listOrSearch")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    List<Dict> listOrSearchPage(IPage<Dict> page, Dict param);
+    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
 
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "detail")
     @Results({
