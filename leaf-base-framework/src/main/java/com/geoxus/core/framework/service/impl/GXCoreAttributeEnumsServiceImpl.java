@@ -3,7 +3,6 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
@@ -11,7 +10,6 @@ import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributeEnumsMapper;
-import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreAttributeEnumsService;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +41,6 @@ public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAtt
             }
         }
         return false;
-    }
-
-    @Override
-    @Cacheable(value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('attribute_name')")
-    public List<Dict> getAttributeEnumsByCondition(Dict condition) {
-        final Page<Dict> page = new Page<>(1, 500);
-        return getBaseMapper().listOrSearchPage(page, condition);
     }
 
     @Override

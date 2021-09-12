@@ -1,45 +1,25 @@
 package com.geoxus.core.common.service;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.core.common.dto.protocol.res.GXBaseResProtocol;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
-
-import javax.validation.ConstraintValidatorContext;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExists, GXValidateDBUnique {
     /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数
+     * @param clazz          元素类型
      * @return GXPagination
      */
-    default <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
-        final Dict param = Dict.create();
-        if (Objects.nonNull(searchReqDto.getPagingInfo())) {
-            param.set("pagingInfo", searchReqDto.getPagingInfo());
-        }
-        if (Objects.nonNull(searchReqDto.getSearchCondition())) {
-            param.set(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
-        }
-        return generatePage(param);
-    }
+    <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz);
 
     /**
      * 列表或者搜索(分页)
@@ -47,9 +27,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return GXPagination
      */
-    default <R> GXPagination<R> listOrSearchPage(Dict param) {
-        return generatePage(param);
-    }
+    <R> GXPagination<R> listOrSearchPage(Dict param, Class<R> clazz);
 
     /**
      * 内容详情
@@ -57,17 +35,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return Dict
      */
-    default Dict detail(Dict param) {
-        final String tableName = (String) param.remove("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException("请提供表名!");
-        }
-        final String fields = (String) Optional.ofNullable(param.remove("fields")).orElse("*");
-        final boolean remove = (boolean) Optional.ofNullable(param.remove("remove")).orElse(false);
-        Set<String> lastFields = Arrays.stream(CharSequenceUtil.replace(fields, " ", "").split(",")).collect(Collectors.toSet());
-        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME)).orElse(Dict.create()));
-        return getFieldValueBySQL(tableName, lastFields, condition, remove);
-    }
+    Dict detail(Dict param);
 
     /**
      * 批量更新status字段
@@ -86,51 +54,12 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
     Dict getDataByCondition(Dict condition, String... fields);
 
     /**
-     * 实现验证注解(返回true表示数据已经存在)
-     *
-     * @param value                      The value to check for
-     * @param fieldName                  The name of the field for which to check if the value exists
-     * @param constraintValidatorContext The ValidatorContext
-     * @param param                      param
-     * @return boolean
-     */
-    @Override
-    default boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
-        String tableName = param.getStr("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
-        }
-        return 1 == checkRecordIsExists(tableName, Dict.create().set(fieldName, value));
-    }
-
-    /**
-     * 验证数据的唯一性 (返回true表示数据已经存在)
-     *
-     * @param value                      值
-     * @param fieldName                  字段名字
-     * @param constraintValidatorContext 验证上下文对象
-     * @param param                      参数
-     * @return boolean
-     */
-    @Override
-    default boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        String tableName = param.getStr("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
-        }
-        return checkRecordIsUnique(tableName, Dict.create().set(fieldName, value)) > 1;
-    }
-
-    /**
      * 获取分页对象信息
      *
      * @param param 参数
      * @return IPage
      */
-    default <R> IPage<R> constructPageObjectFromParam(Dict param) {
-        final Dict pageInfo = getPageInfoFromParam(param);
-        return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
-    }
+    <R> IPage<R> constructPageObjectFromParam(Dict param);
 
     /**
      * 从请求参数中获取分页的信息
@@ -138,20 +67,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return Dict
      */
-    default Dict getPageInfoFromParam(Dict param) {
-        int currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
-        int pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
-        final Dict pagingInfo = Convert.convert(Dict.class, param.getObj("pagingInfo"));
-        if (null != pagingInfo) {
-            if (null != pagingInfo.getInt("page")) {
-                currentPage = pagingInfo.getInt("page");
-            }
-            if (null != pagingInfo.getInt("pageSize")) {
-                pageSize = pagingInfo.getInt("pageSize");
-            }
-        }
-        return Dict.create().set("page", currentPage).set("pageSize", pageSize);
-    }
+    Dict getPageInfoFromParam(Dict param);
 
     /**
      * 获取分页信息
@@ -159,13 +75,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 查询参数
      * @return GXPagination
      */
-    default <R> GXPagination<R> generatePage(Dict param) {
-        final IPage<R> riPage = constructPageObjectFromParam(param);
-        GXBaseMapper<T> baseMapper = getBaseMapper();
-        final List<R> list = baseMapper.listOrSearchPage(riPage, param);
-        riPage.setRecords(list);
-        return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
-    }
+    <R> GXPagination<R> generatePage(Dict param, Class<R> clazz);
 
     /**
      * 分页  返回实体对象
@@ -174,13 +84,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    default <R> GXPagination<R> generatePage(Dict param, String mapperMethodName) {
-        final Dict pageParam = getPageInfoFromParam(param);
-        final IPage<R> iPage = new Page<>(pageParam.getInt("page"), pageParam.getInt("pageSize"));
-        final List<R> list = ReflectUtil.invoke(getBaseMapper(), mapperMethodName, iPage, param);
-        iPage.setRecords(list);
-        return new GXPagination<>(iPage.getRecords(), iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
-    }
+    <R> GXPagination<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz);
 
     /**
      * 获取记录的父级path
@@ -189,17 +93,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param appendSelf 　是否将parentId附加到返回结果上面
      * @return String
      */
-    default String getParentPath(Class<T> clazz, Long parentId, boolean appendSelf) {
-        Dict condition = Dict.create().set(getPrimaryKey(), parentId);
-        final Dict dict = getFieldValueBySQL(clazz, CollUtil.newHashSet("path"), condition, false);
-        if (null == dict || dict.isEmpty()) {
-            return "0";
-        }
-        if (appendSelf) {
-            return CharSequenceUtil.format("{}-{}", dict.getStr("path"), parentId);
-        }
-        return dict.getStr("path");
-    }
+    String getParentPath(Class<T> clazz, Long parentId, boolean appendSelf);
 
     /**
      * 加密手机号码
@@ -207,9 +101,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param phoneNumber 明文手机号
      * @return String
      */
-    default String encryptedPhoneNumber(String phoneNumber) {
-        return GXCommonUtils.encryptedPhoneNumber(phoneNumber);
-    }
+    String encryptedPhoneNumber(String phoneNumber);
 
     /**
      * 解密手机号码
@@ -217,9 +109,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param encryptPhoneNumber 加密手机号
      * @return String
      */
-    default String decryptedPhoneNumber(String encryptPhoneNumber) {
-        return GXCommonUtils.decryptedPhoneNumber(encryptPhoneNumber);
-    }
+    String decryptedPhoneNumber(String encryptPhoneNumber);
 
     /**
      * 隐藏手机号码的指定几位为指定的字符
@@ -230,7 +120,5 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param replacedChar 替换为的字符
      * @return String
      */
-    default String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar) {
-        return GXCommonUtils.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
-    }
+    String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar);
 }

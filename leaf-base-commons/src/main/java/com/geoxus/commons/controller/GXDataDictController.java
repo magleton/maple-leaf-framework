@@ -24,7 +24,7 @@ public class GXDataDictController {
      */
     @PostMapping("/list-or-search")
     public GXResultUtils<GXPagination<Dict>> listOrSearchPage(@RequestBody Dict condition) {
-        final GXPagination<Dict> pagination = dataDictService.listOrSearchPage(condition);
+        final GXPagination<Dict> pagination = dataDictService.listOrSearchPage(condition, Dict.class);
         return GXResultUtils.ok(pagination);
     }
 }

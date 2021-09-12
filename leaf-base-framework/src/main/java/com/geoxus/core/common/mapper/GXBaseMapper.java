@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.common.dto.protocol.res.GXBaseResProtocol;
 import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;
 import org.apache.ibatis.annotations.*;
 
@@ -15,11 +16,11 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     boolean updateFieldByCondition(String tableName, Dict data, Dict whereData);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
+/*    @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
+    <R> List<?> listOrSearchPage(IPage<?> page, Dict param);*/
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateStatusByCondition")
     boolean updateStatusByCondition(String tableName, int status, Dict condition);

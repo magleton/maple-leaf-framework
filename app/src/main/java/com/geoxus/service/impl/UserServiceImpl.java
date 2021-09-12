@@ -1,6 +1,5 @@
 package com.geoxus.service.impl;
 
-import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.dao.UserDao;
 import com.geoxus.dto.protocol.req.UserReqProtocol;

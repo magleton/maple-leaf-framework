@@ -15,12 +15,11 @@ import java.util.List;
 
 @Mapper
 public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEntity> {
-    @Override
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "listOrSearch")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
+    <R> List<R> listOrSearchPage(IPage<R> page, Dict param, Class<R> clazz);
 
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "detail")
     @Results({

@@ -25,6 +25,7 @@ import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 
 import javax.validation.ConstraintValidatorContext;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,8 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    public <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
+    @Override
+    public <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -43,7 +45,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
         if (Objects.nonNull(searchReqDto.getSearchCondition())) {
             param.set(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
         }
-        return generatePage(param);
+        return generatePage(param, clazz);
     }
 
     /**
@@ -52,8 +54,9 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return GXPagination
      */
-    public <R> GXPagination<R> listOrSearchPage(Dict param) {
-        return generatePage(param);
+    @Override
+    public <R> GXPagination<R> listOrSearchPage(Dict param, Class<R> clazz) {
+        return generatePage(param, clazz);
     }
 
     /**
@@ -62,6 +65,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return Dict
      */
+    @Override
     public Dict detail(Dict param) {
         final String tableName = (String) param.remove("tableName");
         if (CharSequenceUtil.isBlank(tableName)) {
@@ -80,6 +84,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return boolean
      */
+    @Override
     public boolean batchUpdateStatus(Dict param) {
         final List<Long> ids = Convert.convert(new TypeReference<List<Long>>() {
         }, param.getObj(getPrimaryKey()));
@@ -108,6 +113,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param condition 条件
      * @return Dict
      */
+    @Override
     public Dict getDataByCondition(Dict condition, String... fields) {
         Dict retData = Dict.create();
         final T entity = baseDao.getOne(new QueryWrapper<T>().select(fields).allEq(condition));
@@ -167,6 +173,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return IPage
      */
+    @Override
     public <R> IPage<R> constructPageObjectFromParam(Dict param) {
         final Dict pageInfo = getPageInfoFromParam(param);
         return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
@@ -178,6 +185,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return Dict
      */
+    @Override
     public Dict getPageInfoFromParam(Dict param) {
         int currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
         int pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
@@ -199,12 +207,10 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 查询参数
      * @return GXPagination
      */
-    public <R> GXPagination<R> generatePage(Dict param) {
-        final IPage<R> riPage = constructPageObjectFromParam(param);
-        GXBaseMapper<T> baseMapper = getBaseMapper();
-        final List<R> list = baseMapper.listOrSearchPage(riPage, param);
-        riPage.setRecords(list);
-        return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
+    @Override
+    public <R> GXPagination<R> generatePage(Dict param, Class<R> clazz) {
+        String mapperMethodName = "listOrSearchPage";
+        return generatePage(param, mapperMethodName, clazz);
     }
 
     /**
@@ -214,12 +220,16 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    public <R> GXPagination<R> generatePage(Dict param, String mapperMethodName) {
-        final Dict pageParam = getPageInfoFromParam(param);
-        final IPage<R> iPage = new Page<>(pageParam.getInt("page"), pageParam.getInt("pageSize"));
-        final List<R> list = ReflectUtil.invoke(getBaseMapper(), mapperMethodName, iPage, param);
-        iPage.setRecords(list);
-        return new GXPagination<>(iPage.getRecords(), iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
+    @Override
+    public <R> GXPagination<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz) {
+        final IPage<R> riPage = constructPageObjectFromParam(param);
+        Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
+        if (Objects.isNull(mapperMethod)) {
+            return new GXPagination<>(Collections.emptyList(), 0, riPage.getSize(), riPage.getCurrent());
+        }
+        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
+        riPage.setRecords(list);
+        return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     /**
@@ -229,6 +239,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param appendSelf 　是否将parentId附加到返回结果上面
      * @return String
      */
+    @Override
     public String getParentPath(Class<T> clazz, Long parentId, boolean appendSelf) {
         Dict condition = Dict.create().set(getPrimaryKey(), parentId);
         final Dict dict = getFieldValueBySQL(clazz, CollUtil.newHashSet("path"), condition, false);
@@ -247,6 +258,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param phoneNumber 明文手机号
      * @return String
      */
+    @Override
     public String encryptedPhoneNumber(String phoneNumber) {
         return GXCommonUtils.encryptedPhoneNumber(phoneNumber);
     }
@@ -257,6 +269,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param encryptPhoneNumber 加密手机号
      * @return String
      */
+    @Override
     public String decryptedPhoneNumber(String encryptPhoneNumber) {
         return GXCommonUtils.decryptedPhoneNumber(encryptPhoneNumber);
     }
@@ -270,6 +283,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param replacedChar 替换为的字符
      * @return String
      */
+    @Override
     public String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar) {
         return GXCommonUtils.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
     }

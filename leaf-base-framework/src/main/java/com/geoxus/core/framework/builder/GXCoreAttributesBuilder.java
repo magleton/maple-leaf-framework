@@ -11,7 +11,7 @@ import org.apache.ibatis.jdbc.SQL;
 public class GXCoreAttributesBuilder implements GXBaseBuilder {
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("ca.*").FROM(CharSequenceUtil.format("{} as ca", GXCoreAttributesConstant.TABLE_NAME));
-        mergeSearchConditionToSql(sql, param);
+        mergeSearchConditionToSql(sql, param, false);
         return sql.toString();
     }
 

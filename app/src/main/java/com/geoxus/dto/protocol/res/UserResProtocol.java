@@ -11,6 +11,8 @@ public class UserResProtocol extends GXBaseResProtocol {
 
     private String ext;
 
+    private String name;
+
     @Override
     public void processResValue() {
         username = "Tommy-Tank";

@@ -15,14 +15,14 @@ public class GXDataDictBuilder implements GXBaseBuilder {
      */
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("*").FROM(GXDataDictConstant.TABLE_NAME);
-        mergeSearchConditionToSql(sql, param);
+        mergeSearchConditionToSql(sql, param, false);
         return sql.toString();
     }
 
     @Override
-    public String listOrSearchPage(IPage<Dict> page, Dict param) {
+    public <R> String listOrSearchPage(IPage<R> page, Dict param) {
         final SQL sql = new SQL().SELECT("*").FROM(GXDataDictConstant.TABLE_NAME);
-        mergeSearchConditionToSql(sql, param);
+        mergeSearchConditionToSql(sql, param, false);
         return sql.toString();
     }
 

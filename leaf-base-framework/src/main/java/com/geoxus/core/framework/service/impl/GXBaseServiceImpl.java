@@ -39,9 +39,11 @@ import java.util.*;
  */
 public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> implements GXBaseService<T, M, D> {
     @Autowired
+    @SuppressWarnings("all")
     protected D baseDao;
 
     @Autowired
+    @SuppressWarnings("all")
     protected M baseMapper;
 
     /**
@@ -75,6 +77,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @return Dict
      */
     @SuppressWarnings("unused")
+    @Override
     public Dict getConstantsFields() {
         final Dict data = Dict.create();
         final List<Class<?>> clazzInterfaces = new ArrayList<>();
@@ -103,6 +106,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return R
      */
+    @Override
     public <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition) {
         return getSingleFieldValueByDB(clazz, path, type, condition, GXCommonUtils.getClassDefaultValue(type));
     }
@@ -116,6 +120,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param defaultValue 默认值
      * @return R
      */
+    @Override
     public <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition, R defaultValue) {
         String fieldSeparator = "::";
         Object removeObject = condition.remove("remove");
@@ -148,9 +153,9 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @return Dict
      */
     @SuppressWarnings("unused")
+    @Override
     public Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition) {
         String fieldSeparator = "::";
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Set<String> fieldSet = CollUtil.newHashSet();
         final Dict dataKey = Dict.create();
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
@@ -189,6 +194,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param path   路径
      * @return R
      */
+    @Override
     public <R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, int coreModelId) {
         return getSingleFieldValueByEntity(entity, path, type, GXCommonUtils.getClassDefaultValue(type), coreModelId);
     }
@@ -211,6 +217,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param defaultValue 默认值
      * @return R
      */
+    @Override
     public <R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue, int coreModelId) {
         GXCoreModelAttributePermissionService permissionService = GXSpringContextUtils.getBean(GXCoreModelAttributePermissionService.class);
         assert permissionService != null;
@@ -266,6 +273,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param dict   需要获取的数据
      * @return Dict
      */
+    @Override
     public Dict getMultiFieldsValueByEntity(T entity, Dict dict, int coreModelId) {
         final Set<String> keySet = dict.keySet();
         final Dict data = Dict.create();
@@ -300,9 +308,9 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return boolean
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSingleField(Class<T> clazz, String path, Object value, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         String mainPath = CharSequenceUtil.sub(path, 0, index);
         String subPath = CharSequenceUtil.sub(path, index + 1, path.length());
@@ -319,8 +327,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @return boolean
      */
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
@@ -330,6 +338,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param cacheName 缓存名字
      * @return Cache
      */
+    @Override
     public Cache getSpringCache(String cacheName) {
         return GXCommonUtils.getSpringCache(cacheName);
     }
@@ -344,6 +353,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @return Dict
      */
     @SuppressWarnings("unused")
+    @Override
     public Dict getOneByCondition(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove) {
         return getFieldValueBySQL(clazz, fieldSet, condition, remove);
     }
@@ -355,8 +365,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return int
      */
+    @Override
     public Integer checkRecordIsExists(Class<T> clazz, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsExists(getTableName(clazz), condition);
     }
 
@@ -367,8 +377,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return int
      */
+    @Override
     public Integer checkRecordIsExists(String tableName, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsExists(tableName, condition);
     }
 
@@ -379,8 +389,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return int
      */
+    @Override
     public Integer checkRecordIsUnique(Class<T> clazz, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsUnique(getTableName(clazz), condition);
     }
 
@@ -391,8 +401,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return int
      */
+    @Override
     public Integer checkRecordIsUnique(String tableName, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.checkRecordIsUnique(tableName, condition);
     }
 
@@ -402,6 +412,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param clazz Class对象
      * @return String
      */
+    @Override
     public String getTableName(Class<T> clazz) {
         return GXCommonUtils.getTableName(clazz);
     }
@@ -413,6 +424,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 条件
      * @return boolean
      */
+    @Override
     public boolean modifyStatus(int status, Dict condition) {
         final Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
         Class<T> clazz = Convert.convert(new TypeReference<Class<T>>() {
@@ -428,8 +440,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 更新条件
      * @return boolean
      */
+    @Override
     public boolean updateFieldByCondition(Class<T> clazz, Dict data, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
@@ -441,8 +453,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 更新条件
      * @return boolean
      */
+    @Override
     public boolean updateStatusByCondition(Class<T> clazz, int status, Dict condition) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         return baseMapper.updateStatusByCondition(getTableName(clazz), status, condition);
     }
 
@@ -455,8 +467,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @return int
      */
     @SuppressWarnings("all")
+    @Override
     public Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
-        GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
         return baseMapper.batchInsertBySql(getTableName(clazz), fieldSet, dataList);
     }
 
@@ -468,6 +480,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param condition 查询条件
      * @return Dict
      */
+    @Override
     public Dict getFieldValueBySQL(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove) {
         final String tableName = getTableName(clazz);
         return getFieldValueBySQL(tableName, fieldSet, condition, remove);
@@ -482,8 +495,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param remove    是否移除
      * @return Dict
      */
+    @Override
     public Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
         if (Objects.isNull(dict)) {
             GXCommonUtils.getLogger(GXBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
@@ -498,6 +511,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param dict 要处理的Dict
      * @return Dict
      */
+    @Override
     public Dict handleSamePrefixDict(Dict dict) {
         String fieldSeparator = "::";
         final Set<Map.Entry<String, Object>> entries = dict.entrySet();
@@ -527,9 +541,8 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
-        GXBaseMapper<T> baseMapper = (GXBaseMapper<T>) getBaseMapper();
-        assert baseMapper != null;
         final Dict targetDict = baseMapper.getFieldValueBySql(originTableName, CollUtil.newHashSet("*"), condition, true);
         if (targetDict.isEmpty()) {
             return false;
@@ -584,6 +597,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      * @param clazz 实体的Class
      * @return int
      */
+    @Override
     public int getCoreModelIdByTableName(Class<T> clazz) {
         String tableName = getTableName(clazz);
         return getSingleFieldValueByDB(clazz, "model_id", Integer.class, Dict.create().set("table_name", tableName));
@@ -594,6 +608,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      *
      * @param event ApplicationEvent对象
      */
+    @Override
     public <R> void publishEvent(GXBaseEvent<R> event) {
         GXCommonUtils.publishEvent(event);
     }
@@ -603,6 +618,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      *
      * @return String
      */
+    @Override
     public String getPrimaryKey() {
         return "id";
     }

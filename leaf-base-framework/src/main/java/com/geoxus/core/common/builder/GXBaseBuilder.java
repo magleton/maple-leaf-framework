@@ -206,7 +206,7 @@ public interface GXBaseBuilder {
      * @param param 参数
      * @return String
      */
-    default String listOrSearchPage(IPage<Dict> page, Dict param) {
+    default <R> String listOrSearchPage(IPage<R> page, Dict param) {
         throw new GXException("请实现自定义的listOrSearchPage方法");
     }
 
@@ -278,19 +278,24 @@ public interface GXBaseBuilder {
     /**
      * 合并搜索条件到SQL对象中
      *
-     * @param sql          SQL对象
-     * @param requestParam 请求参数
+     * @param sql                      SQL对象
+     * @param requestParam             请求参数
+     * @param isMergeDBSearchCondition 是否合并数据库配置的搜索条件
      */
     @SuppressWarnings("all")
     @GXDataSourceAnnotation("framework")
-    default void mergeSearchConditionToSql(SQL sql, Dict requestParam) {
+    default void mergeSearchConditionToSql(SQL sql, Dict requestParam, Boolean isMergeDBSearchCondition) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
             throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
         }
-        final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
-        Dict searchField = Objects.requireNonNull(GXSpringContextUtils.getBean(GXCoreModelService.class)).getSearchCondition(condition);
-        searchField.putAll(getDefaultSearchField());
+        Dict searchField = getDefaultSearchField();
+        if (isMergeDBSearchCondition) {
+            final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
+            Dict dbSearchCondition = Objects.requireNonNull(GXSpringContextUtils.getBean(GXCoreModelService.class)).getSearchCondition(condition);
+            searchField.putAll(dbSearchCondition);
+        }
+        //searchField.putAll(getDefaultSearchField());
         Dict requestSearchCondition = getRequestSearchCondition(requestParam);
         final Dict timeFields = getTimeFields();
         Set<String> keySet = requestSearchCondition.keySet();

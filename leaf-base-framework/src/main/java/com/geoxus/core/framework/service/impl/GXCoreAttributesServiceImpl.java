@@ -6,10 +6,9 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
-import com.geoxus.core.framework.dao.GXCoreAttributesDao;
-import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
@@ -53,9 +52,9 @@ public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAtt
     }
 
     @Override
-    public GXPagination<Dict> listOrSearchPage(Dict param) {
-        final IPage<Dict> riPage = constructPageObjectFromParam(param);
-        final List<Dict> list = getBaseMapper().listOrSearchPage(riPage, param);
+    public <R> GXPagination<R> listOrSearchPage(Dict param, Class<R> clazz) {
+        final IPage<R> riPage = constructPageObjectFromParam(param);
+        final List<R> list = getBaseMapper().listOrSearchPage(riPage, param, clazz);
         riPage.setRecords(list);
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }

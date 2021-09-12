@@ -18,12 +18,4 @@ public interface GXCoreAttributeEnumsService extends GXBaseService<GXCoreAttribu
      * @return　　boolean
      */
     boolean isExistsAttributeValue(int attributeId, Object value, int coreModelId);
-
-    /**
-     * 根据属性名字获取属性的枚举列表
-     *
-     * @param condition 　条件
-     * @return　List
-     */
-    List<Dict> getAttributeEnumsByCondition(Dict condition);
 }
