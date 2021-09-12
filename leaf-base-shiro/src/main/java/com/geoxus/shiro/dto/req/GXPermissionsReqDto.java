@@ -34,6 +34,6 @@ public class GXPermissionsReqDto extends GXBaseDto {
     /**
      * 作者
      */
-    @GXSingleFieldToDbJsonFieldAnnotation
+    @GXSingleFieldToDbJsonFieldAnnotation(fieldName = "author")
     private String author;
 }

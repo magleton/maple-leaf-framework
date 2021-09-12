@@ -6,12 +6,13 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreModelAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
+import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelTableFieldService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import java.util.*;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAttributesMapper, GXCoreModelAttributesEntity> implements GXCoreModelAttributesService {
+public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao, Dict> implements GXCoreModelAttributesService {
     @Resource
     private GXCoreModelTableFieldService coreModelTableFieldService;
 
@@ -34,7 +35,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
         if (null == param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME)) {
             param.set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, 0);
         }
-        return baseMapper.getModelAttributesByCondition(param);
+        return getBaseMapper().getModelAttributesByCondition(param);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId + #attributeName")
     public Integer checkCoreModelHasAttribute(Integer coreModelId, String attributeName) {
         final Dict condition = Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("attribute_name", attributeName);
-        return baseMapper.checkCoreModelHasAttribute(condition);
+        return getBaseMapper().checkCoreModelHasAttribute(condition);
     }
 
     @Override
@@ -145,6 +146,6 @@ public class GXCoreModelAttributesServiceImpl extends ServiceImpl<GXCoreModelAtt
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('core_model_id') + #p0.getStr('table_field_name')")
     public List<Dict> getModelAttributesByCondition(Dict condition) {
-        return baseMapper.getModelAttributesByCondition(condition);
+        return getBaseMapper().getModelAttributesByCondition(condition);
     }
 }

@@ -1,7 +1,8 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.shiro.dao.GXAdminPermissionsDao;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 import com.geoxus.shiro.service.GXAdminPermissionsService;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminPermissionsServiceImpl extends ServiceImpl<GXAdminPermissionsMapper, GXAdminPermissionsEntity> implements GXAdminPermissionsService<GXAdminPermissionsEntity> {
+public class GXAdminPermissionsServiceImpl extends GXBusinessServiceImpl<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao, Dict> implements GXAdminPermissionsService {
     /**
      * 通过管理员ID获取权限集
      *
@@ -19,11 +20,11 @@ public class GXAdminPermissionsServiceImpl extends ServiceImpl<GXAdminPermission
      */
     @Override
     public Set<String> getPermissionsByAdminId(Long adminId) {
-        return baseMapper.getPermissionsByAdminId(adminId);
+        return getBaseMapper().getPermissionsByAdminId(adminId);
     }
 
     public long create(GXAdminPermissionsEntity target, Dict param) {
-        save(target);
+        baseDao.save(target);
         return target.getId();
     }
 }

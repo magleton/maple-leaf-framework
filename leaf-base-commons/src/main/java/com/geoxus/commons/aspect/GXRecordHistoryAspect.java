@@ -2,7 +2,7 @@ package com.geoxus.commons.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.annotation.GXRecordHistoryAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
@@ -32,7 +32,7 @@ public class GXRecordHistoryAspect {
             MethodSignature signature = (MethodSignature) point.getSignature();
             Method method = signature.getMethod();
             final GXRecordHistoryAnnotation gxRecordHistoryAnnotation = method.getAnnotation(GXRecordHistoryAnnotation.class);
-            GXBaseService<?> service = GXSpringContextUtils.getBean(gxRecordHistoryAnnotation.service());
+            GXBaseService<?, ?, ?, ?> service = GXSpringContextUtils.getBean(gxRecordHistoryAnnotation.service());
             if (Objects.nonNull(service)) {
                 String[] paramNames = gxRecordHistoryAnnotation.conditionalParameterName();
                 String originTableName = gxRecordHistoryAnnotation.originTableName();
@@ -45,7 +45,7 @@ public class GXRecordHistoryAspect {
                     dict = (Dict) args[0];
                 }
                 for (Map.Entry<String, Object> entry : dict.entrySet()) {
-                    String key = StrUtil.toSymbolCase(entry.getKey(), '_');
+                    String key = CharSequenceUtil.toSymbolCase(entry.getKey(), '_');
                     boolean contains = CollUtil.contains(Arrays.asList(paramNames), key);
                     if (contains) {
                         condition.set(key, entry.getValue());

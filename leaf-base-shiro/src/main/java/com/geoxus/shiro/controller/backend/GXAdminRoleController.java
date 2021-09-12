@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 @RequestMapping("/admin-role/backend")
 public class GXAdminRoleController implements GXBaseController {
     @Resource
-    private GXAdminRoleService<GXAdminRoleEntity> adminRoleService;
+    private GXAdminRoleService adminRoleService;
 
     @Resource
     private GXAdminRoleMapStruct adminRoleMapStruct;

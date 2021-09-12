@@ -2,8 +2,9 @@ package com.geoxus.core.framework.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreModelTableFieldDao;
 import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;
 import com.geoxus.core.framework.service.GXCoreModelTableFieldService;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelTableFieldServiceImpl extends ServiceImpl<GXCoreModelTableFieldMapper, GXCoreModelTableFieldEntity> implements GXCoreModelTableFieldService {
+public class GXCoreModelTableFieldServiceImpl extends GXBusinessServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao, Dict> implements GXCoreModelTableFieldService {
     /**
      * 通过条件获取数据
      *
@@ -27,7 +28,7 @@ public class GXCoreModelTableFieldServiceImpl extends ServiceImpl<GXCoreModelTab
     public GXCoreModelTableFieldEntity getCoreModelDbFieldByCondition(Dict condition) {
         final QueryWrapper<GXCoreModelTableFieldEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.allEq(condition);
-        return getOne(queryWrapper);
+        return baseDao.getOne(queryWrapper);
     }
 
     /**
@@ -39,6 +40,6 @@ public class GXCoreModelTableFieldServiceImpl extends ServiceImpl<GXCoreModelTab
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('core_model_id') + #p0.getStr('table_field_name')")
     public List<Dict> getModelAttributesByModelId(Dict condition) {
-        return baseMapper.getModelAttributesByCondition(condition);
+        return getBaseMapper().getModelAttributesByCondition(condition);
     }
 }

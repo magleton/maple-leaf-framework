@@ -4,18 +4,20 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.geoxus.commons.dao.GXRegionDao;
 import com.geoxus.commons.entities.GXRegionEntity;
 import com.geoxus.commons.mappers.GXRegionMapper;
 import com.geoxus.commons.services.GXRegionService;
 import com.geoxus.core.common.util.GXChineseToPinYinUtils;
+import com.geoxus.core.framework.service.GXBaseService;
+import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GXRegionServiceImpl extends ServiceImpl<GXRegionMapper, GXRegionEntity> implements GXRegionService {
+public class GXRegionServiceImpl extends GXBaseServiceImpl<GXRegionEntity, GXRegionMapper, GXRegionDao, Dict> implements GXRegionService {
     private static final String NAME_TAG = "name";
 
     private static final String PARENT_TAG = "parent_id";
@@ -24,7 +26,7 @@ public class GXRegionServiceImpl extends ServiceImpl<GXRegionMapper, GXRegionEnt
 
     @Override
     public List<GXRegionEntity> getRegionTree() {
-        List<GXRegionEntity> list = list(new QueryWrapper<>());
+        List<GXRegionEntity> list = baseDao.list(new QueryWrapper<>());
         //把根分类区分出来
         List<GXRegionEntity> rootList = list.stream().filter(root -> root.getParentId() == 100000).collect(Collectors.toList());
         //把非根分类区分出来
@@ -65,18 +67,18 @@ public class GXRegionServiceImpl extends ServiceImpl<GXRegionMapper, GXRegionEnt
             }
             queryWrapper.eq("type", type == null ? 1 : type);
         }
-        return list(queryWrapper);
+        return baseDao.list(queryWrapper);
     }
 
     @Override
     public boolean convertNameToPinYin() {
-        final List<GXRegionEntity> list = list(new QueryWrapper<>());
+        final List<GXRegionEntity> list = baseDao.list(new QueryWrapper<>());
         for (GXRegionEntity entity : list) {
             final String firstLetter = GXChineseToPinYinUtils.getFirstLetter(entity.getName());
             final String fullLetter = GXChineseToPinYinUtils.getFullLetter(entity.getName());
             entity.setFirstLetter(firstLetter);
             entity.setPinyin(fullLetter);
-            updateById(entity);
+            baseDao.updateById(entity);
         }
         return false;
     }

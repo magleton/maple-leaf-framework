@@ -1,7 +1,7 @@
 package com.geoxus.commons.annotation;
 
 import com.geoxus.core.framework.service.GXBaseService;
-import com.geoxus.core.framework.service.GXCoreModelService;
+import com.geoxus.core.framework.service.impl.GXCoreModelServiceImpl;
 
 import java.lang.annotation.*;
 
@@ -15,5 +15,5 @@ public @interface GXRecordHistoryAnnotation {
 
     String[] conditionalParameterName() default {};
 
-    Class<? extends GXBaseService<?>> service() default GXCoreModelService.class;
+    Class<? extends GXBaseService<?, ?, ?, ?>> service() default GXCoreModelServiceImpl.class;
 }

@@ -5,7 +5,9 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.core.framework.dao.GXCoreAttributesDao;
+import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
@@ -23,18 +25,18 @@ import java.util.Optional;
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMapper, GXCoreAttributesEntity> implements GXCoreAttributesService {
+public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao, Dict> implements GXCoreAttributesService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0")
     public List<GXCoreAttributesEntity> getAttributesByCategory(String category) {
-        return Optional.ofNullable(list(new QueryWrapper<GXCoreAttributesEntity>().eq("category", category))).orElse(new ArrayList<>());
+        return Optional.ofNullable(baseDao.list(new QueryWrapper<GXCoreAttributesEntity>().eq("category", category))).orElse(new ArrayList<>());
     }
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #attributeName")
     public GXCoreAttributesEntity getAttributeByAttributeName(String attributeName) {
         attributeName = CharSequenceUtil.toUnderlineCase(attributeName);
-        return getOne(new QueryWrapper<GXCoreAttributesEntity>().eq("attribute_name", attributeName));
+        return baseDao.getOne(new QueryWrapper<GXCoreAttributesEntity>().eq("attribute_name", attributeName));
     }
 
     @Override
@@ -53,13 +55,13 @@ public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMap
     @Override
     public GXPagination<Dict> listOrSearchPage(Dict param) {
         final IPage<Dict> riPage = constructPageObjectFromParam(param);
-        final List<Dict> list = baseMapper.listOrSearchPage(riPage, param);
+        final List<Dict> list = getBaseMapper().listOrSearchPage(riPage, param);
         riPage.setRecords(list);
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     public long create(GXCoreAttributesEntity target, Dict param) {
-        boolean save = save(target);
+        boolean save = baseDao.save(target);
         if (save) {
             return target.getAttributeId();
         }
@@ -77,7 +79,7 @@ public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMap
                 target.setExt(JSONUtil.toJsonStr(oldExtData));
             }
         }
-        boolean update = updateById(target);
+        boolean update = baseDao.updateById(target);
         if (update) {
             return target.getAttributeId();
         }
@@ -86,6 +88,6 @@ public class GXCoreAttributesServiceImpl extends ServiceImpl<GXCoreAttributesMap
 
     @Override
     public Dict detail(Dict param) {
-        return baseMapper.detail(param);
+        return getBaseMapper().detail(param);
     }
 }

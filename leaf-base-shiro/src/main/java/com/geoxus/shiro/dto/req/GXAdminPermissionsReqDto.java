@@ -39,6 +39,6 @@ public class GXAdminPermissionsReqDto extends GXBaseDto {
     /**
      * 作者
      */
-    @GXSingleFieldToDbJsonFieldAnnotation
+    @GXSingleFieldToDbJsonFieldAnnotation(fieldName = "author")
     private String author;
 }

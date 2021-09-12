@@ -1,12 +1,14 @@
 package com.geoxus.commons.services;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.commons.dao.GXRegionDao;
 import com.geoxus.commons.entities.GXRegionEntity;
+import com.geoxus.commons.mappers.GXRegionMapper;
 import com.geoxus.core.framework.service.GXBaseService;
 
 import java.util.List;
 
-public interface GXRegionService extends GXBaseService<GXRegionEntity> {
+public interface GXRegionService extends GXBaseService<GXRegionEntity, GXRegionMapper, GXRegionDao, Dict> {
     /**
      * 获取所有区域树
      *

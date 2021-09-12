@@ -8,9 +8,9 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.commons.config.GXUploadConfig;
 import com.geoxus.commons.constant.GXMediaLibraryConstant;
+import com.geoxus.commons.dao.GXMediaLibraryDao;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.commons.services.GXMediaLibraryService;
@@ -18,7 +18,9 @@ import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelService;
+import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service(value = "mediaLibraryService")
 @GXDataSourceAnnotation("framework")
-public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper, GXMediaLibraryEntity> implements GXMediaLibraryService {
+public class GXMediaLibraryServiceImpl extends GXBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao, Dict> implements GXMediaLibraryService {
     @Resource
     private GXUploadConfig uploadConfig;
 
@@ -43,7 +45,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
     @Transactional(rollbackFor = Exception.class)
     public int save(Dict dict) {
         final GXMediaLibraryEntity entity = dict.toBean(GXMediaLibraryEntity.class);
-        save(entity);
+        baseDao.save(entity);
         return entity.getId();
     }
 
@@ -59,7 +61,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
         if (null != condition.getObj(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME)) {
             oldCondition.set(CharSequenceUtil.toUnderlineCase(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME), condition.getStr(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME));
         }
-        final List<GXMediaLibraryEntity> oldMediaList = list(oldConditionQuery.allEq(oldCondition));
+        final List<GXMediaLibraryEntity> oldMediaList = baseDao.list(oldConditionQuery.allEq(oldCondition));
         Set<Integer> saveOldData = CollUtil.newHashSet();
         for (JSONObject media : mediaList) {
             Integer mediaId = media.getInt("id");
@@ -67,7 +69,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
                 targetId = media.getLong(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME, targetId);
                 final long itemCoreModelId = media.getLong(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
                 final String resourceType = media.getStr(GXMediaLibraryConstant.RESOURCE_TYPE_FIELD_NAME, "defaultResourceType");
-                final GXMediaLibraryEntity entity = getOne(new QueryWrapper<GXMediaLibraryEntity>().eq("id", mediaId));
+                final GXMediaLibraryEntity entity = baseDao.getOne(new QueryWrapper<GXMediaLibraryEntity>().eq("id", mediaId));
                 String customProperties = media.getStr("customProperties", "{}");
                 Integer updateOld = media.getInt("updateOld");
                 if (null != updateOld) {
@@ -93,10 +95,10 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
         if (!deleteMedia.isEmpty()) {
             // TODO : 此处可以加入删除策略
             // TODO : 例如 : 软删除  硬删除等...
-            removeByIds(deleteMedia.stream().map(GXMediaLibraryEntity::getId).collect(Collectors.toList()));
+            baseDao.removeByIds(deleteMedia.stream().map(GXMediaLibraryEntity::getId).collect(Collectors.toList()));
         }
         if (!newMediaList.isEmpty()) {
-            updateBatchById(newMediaList);
+            baseDao.updateBatchById(newMediaList);
         }
     }
 
@@ -119,7 +121,7 @@ public class GXMediaLibraryServiceImpl extends ServiceImpl<GXMediaLibraryMapper,
             entity.setTargetId((Long) param.getOrDefault(GXMediaLibraryConstant.TARGET_ID_FIELD_NAME, 0L));
             entity.setCoreModelId((Long) param.getOrDefault(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, 0L));
             entity.setCustomProperties((String) param.getOrDefault("customProperties", "{}"));
-            save(entity);
+            baseDao.save(entity);
             return entity;
         } catch (IOException e) {
             log.error(e.getMessage(), e);

@@ -23,7 +23,7 @@ import java.util.Set;
 @Slf4j
 public class GXOAuth2Realm extends AuthorizingRealm {
     @Resource
-    private GXShiroService gxShiroService;
+    private GXShiroService shiroService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -39,9 +39,9 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         Dict dict = (Dict) principals.getPrimaryPrincipal();
         Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstants.ADMIN_ID)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstants.ADMIN_ID)));
         // 获取用户权限列表
-        Set<String> permsSet = gxShiroService.getAdminAllPermissions(adminId);
+        Set<String> permsSet = shiroService.getAdminAllPermissions(adminId);
         // 获取用户角色列表
-        Set<String> rolesSet = gxShiroService.getAdminRoles(adminId);
+        Set<String> rolesSet = shiroService.getAdminRoles(adminId);
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setStringPermissions(permsSet);
         info.addRoles(rolesSet);
@@ -67,7 +67,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
             throw new IncorrectCredentialsException("请提供正确的字段");
         }
         // 根据用户ID查询用户信息
-        Dict admin = gxShiroService.getAdminById(adminId);
+        Dict admin = shiroService.getAdminById(adminId);
         // 判断账号状态
         Integer userStatus = admin.getInt("status");
         // 用户账户为锁定状态
@@ -80,12 +80,12 @@ public class GXOAuth2Realm extends AuthorizingRealm {
     @Override
     public boolean isPermitted(PrincipalCollection principals, String permission) {
         Dict admin = (Dict) principals.getPrimaryPrincipal();
-        return gxShiroService.isSuperAdmin(admin) || super.isPermitted(principals, permission);
+        return shiroService.isSuperAdmin(admin) || super.isPermitted(principals, permission);
     }
 
     @Override
     public boolean hasRole(PrincipalCollection principals, String roleIdentifier) {
         Dict admin = (Dict) principals.getPrimaryPrincipal();
-        return gxShiroService.isSuperAdmin(admin) || super.hasRole(principals, roleIdentifier);
+        return shiroService.isSuperAdmin(admin) || super.hasRole(principals, roleIdentifier);
     }
 }

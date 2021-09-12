@@ -2,11 +2,13 @@ package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.validator.GXValidateDBExists;
+import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
+import com.geoxus.core.framework.mapper.GXCoreAttributeEnumsMapper;
 
 import java.util.List;
 
-public interface GXCoreAttributeEnumsService extends GXBaseService<GXCoreAttributesEnumsEntity>, GXValidateDBExists {
+public interface GXCoreAttributeEnumsService extends GXBaseService<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao, Dict>, GXValidateDBExists {
     /**
      * 检测属性的值是否存在
      *

@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.entity.GXUUserEntity;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 
-public interface GXUUserService<T extends GXUUserEntity> extends GXBusinessService<T, Dict>, GXValidateDBExists {
+public interface GXUUserService<T extends GXUUserEntity> extends GXValidateDBExists {
     /**
      * 验证前端用户的Token是否有效
      *
@@ -23,6 +23,16 @@ public interface GXUUserService<T extends GXUUserEntity> extends GXBusinessServi
      */
     default String login(Dict loginParam) {
         return "";
+    }
+
+    /**
+     * 通过用户ID获取用户信息
+     *
+     * @param userId 用户ID
+     * @return T
+     */
+    default T getUserByUserId(Long userId) {
+        return null;
     }
 
     /**

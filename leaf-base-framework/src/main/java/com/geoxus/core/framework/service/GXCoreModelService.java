@@ -3,11 +3,13 @@ package com.geoxus.core.framework.service;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.validator.GXValidateDBExists;
+import com.geoxus.core.framework.dao.GXCoreModelDao;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
+import com.geoxus.core.framework.mapper.GXCoreModelMapper;
 
 import java.util.Set;
 
-public interface GXCoreModelService extends GXBaseService<GXCoreModelEntity>, GXValidateDBExists {
+public interface GXCoreModelService extends GXBaseService<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao, Dict>, GXValidateDBExists {
     /**
      * 通过模型ID获取模型的相关信息
      *

@@ -8,7 +8,6 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.geoxus.core.common.exception.GXException;
@@ -32,8 +31,25 @@ import java.util.*;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public interface GXBaseService<T> extends IService<T> {
+public interface GXBaseService<T, M extends GXBaseMapper<T, E>, D, E> {
+    /**
+     * 日志对象
+     */
     Logger logger = GXCommonUtils.getLogger(GXBaseService.class);
+
+    /**
+     * 获取BaseMapper对象
+     *
+     * @return M
+     */
+    M getBaseMapper();
+
+    /**
+     * 获取BaseDao对象
+     *
+     * @return D
+     */
+    D getBaseDao();
 
     /**
      * 获取当前接口的常量字段信息

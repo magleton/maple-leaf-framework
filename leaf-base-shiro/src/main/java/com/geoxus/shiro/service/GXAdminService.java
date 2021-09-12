@@ -2,10 +2,12 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
+import com.geoxus.shiro.mapper.GXAdminMapper;
 
-public interface GXAdminService<T extends GXAdminEntity> extends GXBusinessService<T, Dict> {
+public interface GXAdminService extends GXBusinessService<GXAdminEntity, GXAdminMapper, GXAdminDao, Dict> {
     /**
      * 获取当前登录管理员的状态
      *

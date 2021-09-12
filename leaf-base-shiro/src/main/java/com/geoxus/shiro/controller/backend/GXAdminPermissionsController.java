@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 @RequestMapping("/admin-permissions/backend")
 public class GXAdminPermissionsController implements GXBaseController {
     @Resource
-    private GXAdminPermissionsService<GXAdminPermissionsEntity> adminPermissionsService;
+    private GXAdminPermissionsService adminPermissionsService;
 
     @Resource
     private GXAdminPermissionsMapStruct adminPermissionsMapStruct;

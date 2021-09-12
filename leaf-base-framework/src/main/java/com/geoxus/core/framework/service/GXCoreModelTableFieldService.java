@@ -2,11 +2,13 @@ package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.framework.dao.GXCoreModelTableFieldDao;
 import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
+import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;
 
 import java.util.List;
 
-public interface GXCoreModelTableFieldService extends GXBusinessService<GXCoreModelTableFieldEntity, Dict> {
+public interface GXCoreModelTableFieldService extends GXBusinessService<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao, Dict> {
     /**
      * 通过条件获取数据
      *

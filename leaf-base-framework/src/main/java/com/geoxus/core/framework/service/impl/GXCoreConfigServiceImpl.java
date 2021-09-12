@@ -3,14 +3,15 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.constant.GXCoreConfigConstant;
+import com.geoxus.core.framework.dao.GXCoreConfigDao;
 import com.geoxus.core.framework.entity.GXCoreConfigEntity;
 import com.geoxus.core.framework.mapper.GXCoreConfigMapper;
+import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreConfigService;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +19,22 @@ import java.util.Collections;
 
 @Service
 @GXDataSourceAnnotation("framework")
-public class GXCoreConfigServiceImpl extends ServiceImpl<GXCoreConfigMapper, GXCoreConfigEntity> implements GXCoreConfigService {
+public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao, Dict> implements GXCoreConfigService {
     public long create(GXCoreConfigEntity target, Dict param) {
-        save(target);
+        baseDao.save(target);
         return target.getConfigId();
     }
 
     public long update(GXCoreConfigEntity target, Dict param) {
-        updateById(target);
+        baseDao.updateById(target);
         return target.getConfigId();
     }
 
     public boolean delete(Dict param) {
         final long id = param.getLong(GXCoreConfigConstant.PRIMARY_KEY);
-        final GXCoreConfigEntity entity = getById(id);
+        final GXCoreConfigEntity entity = baseDao.getById(id);
         entity.setStatus(GXBusinessStatusCode.DELETED.getCode());
-        updateById(entity);
+        baseDao.updateById(entity);
         return false;
     }
 
@@ -48,7 +49,7 @@ public class GXCoreConfigServiceImpl extends ServiceImpl<GXCoreConfigMapper, GXC
     @Override
     public <T> T getConfigObject(String key, Class<T> clazz) {
         QueryWrapper<GXCoreConfigEntity> conditionWrapper = new QueryWrapper<GXCoreConfigEntity>().allEq(Dict.create().set("param_key", key));
-        GXCoreConfigEntity entity = getOne(conditionWrapper);
+        GXCoreConfigEntity entity = baseDao.getOne(conditionWrapper);
         if (null != entity) {
             String paramValue = entity.getParamValue();
             if (null != paramValue && JSONUtil.isJson(paramValue)) {

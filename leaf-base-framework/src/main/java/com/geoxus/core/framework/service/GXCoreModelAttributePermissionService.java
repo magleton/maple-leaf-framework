@@ -1,9 +1,11 @@
 package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
+import com.geoxus.core.framework.mapper.GXCoreModelAttributesPermissionMapper;
 
-public interface GXCoreModelAttributePermissionService extends GXBaseService<GXCoreModelAttributesPermissionEntity> {
+public interface GXCoreModelAttributePermissionService extends GXBaseService<GXCoreModelAttributesPermissionEntity, GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionDao, Dict> {
     /**
      * 通过核心模型Id获取模型属性的权限
      *

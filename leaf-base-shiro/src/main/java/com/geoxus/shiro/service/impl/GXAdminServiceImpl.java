@@ -4,10 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.constant.GXTokenConstants;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.oauth.GXTokenManager;
+import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 import com.geoxus.shiro.mapper.GXAdminMapper;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 
 @Service
-public class GXAdminServiceImpl extends ServiceImpl<GXAdminMapper, GXAdminEntity> implements GXAdminService<GXAdminEntity> {
+public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao, Dict> implements GXAdminService {
     /**
      * 获取当前登录管理员的状态
      *

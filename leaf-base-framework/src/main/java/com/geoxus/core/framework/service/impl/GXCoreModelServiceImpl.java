@@ -7,33 +7,33 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreModelDao;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelMapper;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 
 @Service
 @Slf4j
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCoreModelEntity> implements GXCoreModelService {
-    @Autowired
+public class GXCoreModelServiceImpl extends GXBaseServiceImpl<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao, Dict> implements GXCoreModelService {
+    @Resource
     private GXCoreModelAttributesService coreModelAttributeService;
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #modelId + #modelAttributeField")
     public GXCoreModelEntity getCoreModelByModelId(int modelId, String modelAttributeField) {
-        final GXCoreModelEntity entity = getById(modelId);
+        final GXCoreModelEntity entity = baseDao.getById(modelId);
         if (null == entity) {
             return null;
         }
@@ -88,7 +88,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
 
     @Override
     public Dict getSearchCondition(Dict condition) {
-        final Dict searchCondition = baseMapper.getSearchCondition(condition);
+        final Dict searchCondition = getBaseMapper().getSearchCondition(condition);
         if (null == searchCondition) {
             return Dict.create();
         }
@@ -121,7 +121,7 @@ public class GXCoreModelServiceImpl extends ServiceImpl<GXCoreModelMapper, GXCor
     public int getCoreModelIdByTableName(String tableName) {
         final Dict condition = Dict.create().set("table_name", tableName);
         final QueryWrapper<GXCoreModelEntity> queryWrapper = new QueryWrapper<GXCoreModelEntity>().select("model_id").allEq(condition);
-        Map<String, Object> data = getMap(queryWrapper);
+        Map<String, Object> data = baseDao.getMap(queryWrapper);
         if (null == data || data.isEmpty()) {
             return 0;
         }

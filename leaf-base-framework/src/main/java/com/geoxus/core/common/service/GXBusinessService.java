@@ -3,22 +3,19 @@ package com.geoxus.core.common.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
-import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
 
@@ -26,7 +23,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBExists, GXValidateDBUnique {
+public interface GXBusinessService<T, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T>, R> extends GXBaseService<T, M, D, R>, GXValidateDBExists, GXValidateDBUnique {
     /**
      * 列表或者搜索(分页)
      *
@@ -78,27 +75,7 @@ public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBE
      * @param param 参数
      * @return boolean
      */
-    default boolean batchUpdateStatus(Dict param) {
-        final List<Long> ids = Convert.convert(new TypeReference<List<Long>>() {
-        }, param.getObj(getPrimaryKey()));
-        if (null == ids) {
-            return false;
-        }
-        final List<T> updateEntities = new ArrayList<>();
-        for (Long id : ids) {
-            T entity = getById(id);
-            final Object status = ReflectUtil.invoke(entity, "getStatus");
-            Long entityCurrentStatus = 0L;
-            if (null != status) {
-                entityCurrentStatus = Convert.toLong(status, 0L);
-            }
-            if ((entityCurrentStatus & GXBusinessStatusCode.DELETED.getCode()) != GXBusinessStatusCode.DELETED.getCode()) {
-                ReflectUtil.invoke(entity, "setStatus", GXBusinessStatusCode.DELETED.getCode());
-                updateEntities.add(entity);
-            }
-        }
-        return updateEntities.isEmpty() || updateBatchById(updateEntities);
-    }
+    boolean batchUpdateStatus(Dict param);
 
     /**
      * 通过条件获取配置信息
@@ -106,22 +83,7 @@ public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBE
      * @param condition 条件
      * @return Dict
      */
-    default Dict getDataByCondition(Dict condition, String... fields) {
-        Dict retData = Dict.create();
-        final T entity = getOne(new QueryWrapper<T>().select(fields).allEq(condition));
-        if (Objects.isNull(entity)) {
-            return retData;
-        }
-        Dict dict = Dict.parse(entity);
-        Arrays.stream(fields).forEach(key -> {
-            Object value = dict.getObj(key);
-            if (Objects.nonNull(value) && JSONUtil.isJson(value.toString())) {
-                value = JSONUtil.toBean(value.toString(), Dict.class);
-            }
-            retData.set(key, value);
-        });
-        return retData;
-    }
+    Dict getDataByCondition(Dict condition, String... fields);
 
     /**
      * 实现验证注解(返回true表示数据已经存在)
@@ -199,7 +161,7 @@ public interface GXBusinessService<T, R> extends GXBaseService<T>, GXValidateDBE
      */
     default GXPagination<R> generatePage(Dict param) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
-        GXBaseMapper<T, R> baseMapper = (GXBaseMapper<T, R>) getBaseMapper();
+        GXBaseMapper<T, R> baseMapper = getBaseMapper();
         final List<R> list = baseMapper.listOrSearchPage(riPage, param);
         riPage.setRecords(list);
         return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());

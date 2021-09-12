@@ -2,11 +2,13 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.shiro.dao.GXAdminPermissionsDao;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
+import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 
 import java.util.Set;
 
-public interface GXAdminPermissionsService<T extends GXAdminPermissionsEntity> extends GXBusinessService<T, Dict> {
+public interface GXAdminPermissionsService extends GXBusinessService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao, Dict> {
     /**
      * 通过管理员ID获取权限集
      *
@@ -22,5 +24,5 @@ public interface GXAdminPermissionsService<T extends GXAdminPermissionsEntity> e
      * @param param  额外参数
      * @return long
      */
-    long create(T target, Dict param);
+    long create(GXAdminPermissionsEntity target, Dict param);
 }

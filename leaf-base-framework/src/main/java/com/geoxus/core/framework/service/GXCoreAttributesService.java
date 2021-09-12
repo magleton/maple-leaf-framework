@@ -3,11 +3,13 @@ package com.geoxus.core.framework.service;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.validator.GXValidateDBExists;
+import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
+import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;
 
 import java.util.List;
 
-public interface GXCoreAttributesService extends GXBusinessService<GXCoreAttributesEntity, Dict>, GXValidateDBExists {
+public interface GXCoreAttributesService extends GXBusinessService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao, Dict>, GXValidateDBExists {
     /**
      * 通过类型获取属性的列表
      *

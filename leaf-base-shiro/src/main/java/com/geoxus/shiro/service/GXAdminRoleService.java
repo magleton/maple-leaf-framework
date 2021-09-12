@@ -2,12 +2,14 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.shiro.dao.GXAdminRoleDao;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
+import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService<T extends GXAdminRoleEntity> extends GXBusinessService<T, Dict> {
+public interface GXAdminRoleService extends GXBusinessService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao, Dict> {
     /**
      * 获取当前人的角色列表
      *
@@ -25,5 +27,5 @@ public interface GXAdminRoleService<T extends GXAdminRoleEntity> extends GXBusin
      * @param param  额外参数
      * @return long
      */
-    long create(T target, Dict param);
+    long create(GXAdminRoleEntity target, Dict param);
 }

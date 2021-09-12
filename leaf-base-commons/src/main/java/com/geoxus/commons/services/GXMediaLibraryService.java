@@ -5,8 +5,10 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONObject;
+import com.geoxus.commons.dao.GXMediaLibraryDao;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.events.GXMediaLibraryEvent;
+import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXSpringContextUtils;
@@ -19,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntity> {
+public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao, Dict> {
     /**
      * 保存数据
      *
@@ -133,7 +135,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
         assert mediaLibraryService != null;
         Dict condition = Dict.create().set("target_id", targetId).set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
         condition.putAll(param);
-        return mediaLibraryService.listByMap(condition);
+        return getBaseDao().listByMap(condition);
     }
 
     /**

@@ -4,13 +4,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributeEnumsMapper;
+import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreAttributeEnumsService;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Service
 @GXDataSourceAnnotation("framework")
-public class GXCoreAttributeEnumsServiceImpl extends ServiceImpl<GXCoreAttributeEnumsMapper, GXCoreAttributesEnumsEntity> implements GXCoreAttributeEnumsService {
+public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao, Dict> implements GXCoreAttributeEnumsService {
     @GXFieldCommentAnnotation(zhDesc = "字段不存在的提示")
     private static final String FIELD_VALUE_NOT_EXISTS = "{}属性不存在值{}";
 
@@ -32,7 +33,7 @@ public class GXCoreAttributeEnumsServiceImpl extends ServiceImpl<GXCoreAttribute
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId + #attributeId + #value")
     public boolean isExistsAttributeValue(int attributeId, Object value, int coreModelId) {
-        final List<Dict> list = baseMapper.getAttributeEnumsByAttributeIdAndCoreModelId(attributeId, coreModelId);
+        final List<Dict> list = getBaseMapper().getAttributeEnumsByAttributeIdAndCoreModelId(attributeId, coreModelId);
         if (list.isEmpty()) {
             return true;
         }
@@ -48,7 +49,7 @@ public class GXCoreAttributeEnumsServiceImpl extends ServiceImpl<GXCoreAttribute
     @Cacheable(value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('attribute_name')")
     public List<Dict> getAttributeEnumsByCondition(Dict condition) {
         final Page<Dict> page = new Page<>(1, 500);
-        return baseMapper.listOrSearchPage(page, condition);
+        return getBaseMapper().listOrSearchPage(page, condition);
     }
 
     @Override

@@ -4,12 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.service.GXSessionService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesPermissionMapper;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @GXDataSourceAnnotation("framework")
-public class GXCoreModelAttributePermissionServiceImpl extends ServiceImpl<GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionEntity> implements GXCoreModelAttributePermissionService {
+public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesPermissionEntity, GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionDao, Dict> implements GXCoreModelAttributePermissionService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")
     public Dict getModelAttributePermissionByCoreModelId(int coreModelId, Dict param) {

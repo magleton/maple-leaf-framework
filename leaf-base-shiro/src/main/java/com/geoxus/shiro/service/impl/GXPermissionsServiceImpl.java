@@ -1,10 +1,11 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
+import cn.hutool.core.lang.Dict;
+import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.shiro.dao.GXPermissionsDao;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
-import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import com.geoxus.shiro.mapper.GXPermissionsMapper;
 import com.geoxus.shiro.service.GXAdminPermissionsService;
 import com.geoxus.shiro.service.GXPermissionsService;
@@ -17,12 +18,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class GXPermissionsServiceImpl extends ServiceImpl<GXPermissionsMapper, GXPermissionsEntity> implements GXPermissionsService<GXPermissionsEntity> {
+public class GXPermissionsServiceImpl extends GXBusinessServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao, Dict> implements GXPermissionsService {
     @Resource
-    private GXAdminPermissionsService<GXAdminPermissionsEntity> adminPermissionsService;
+    private GXAdminPermissionsService adminPermissionsService;
 
     @Resource
-    private GXRolePermissionsService<GXRolePermissionsEntity> rolePermissionsService;
+    private GXRolePermissionsService rolePermissionsService;
 
     @Override
     public Set<String> getAdminAllPermissions(Long adminId) {

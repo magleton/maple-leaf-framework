@@ -47,6 +47,7 @@ public class GXLoginUserHandlerMethodArgumentResolver implements HandlerMethodAr
             }
         }
         // 获取用户信息
-        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXUUserService.class)).getById(Convert.toLong(object));
+        Long userId = Convert.toLong(object);
+        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXUUserService.class)).getUserByUserId(userId);
     }
 }

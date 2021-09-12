@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @RequestMapping("/admin/backend")
 public class GXAdminController implements GXBaseController {
     @Resource
-    private GXAdminService<GXAdminEntity> adminService;
+    private GXAdminService adminService;
 
     /**
      * 管理员登录
