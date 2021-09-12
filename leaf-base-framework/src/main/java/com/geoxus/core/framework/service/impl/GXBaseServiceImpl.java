@@ -38,18 +38,24 @@ import java.util.*;
  * @author britton chen <britton@126.com>
  */
 public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> implements GXBaseService<T, M, D> {
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXBaseServiceImpl.class);
+
+    /**
+     * 基础DAO
+     */
     @Autowired
     @SuppressWarnings("all")
     protected D baseDao;
 
+    /**
+     * 基础mapper
+     */
     @Autowired
     @SuppressWarnings("all")
     protected M baseMapper;
-
-    /**
-     * 日志对象
-     */
-    Logger logger = GXCommonUtils.getLogger(GXBaseServiceImpl.class);
 
     /**
      * 获取BaseMapper对象
@@ -129,7 +135,6 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
             String[] fields = CharSequenceUtil.splitToArray(path, fieldSeparator);
             path = CharSequenceUtil.format("{}{}{}", fields[0].replace("'", ""), fieldSeparator, fields[1].replace("'", ""));
         }
-        GXBaseMapper<T> baseMapper = getBaseMapper();
         final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
         if (null == dict) {
             return defaultValue;

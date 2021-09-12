@@ -3,8 +3,6 @@ package com.geoxus.core.framework.service;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.core.common.util.GXCommonUtils;
-import org.slf4j.Logger;
 import org.springframework.cache.Cache;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +16,6 @@ import java.util.Set;
  * @author britton chen <britton@126.com>
  */
 public interface GXBaseService<T, M extends GXBaseMapper<T>, D> {
-    /**
-     * 日志对象
-     */
-    Logger logger = GXCommonUtils.getLogger(GXBaseService.class);
-
     /**
      * 获取BaseMapper对象
      *
