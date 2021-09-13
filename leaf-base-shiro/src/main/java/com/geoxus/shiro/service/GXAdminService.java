@@ -2,10 +2,14 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 import com.geoxus.shiro.mapper.GXAdminMapper;
+import org.apache.shiro.authc.LockedAccountException;
+
+import java.util.Objects;
 
 public interface GXAdminService extends GXBusinessService<GXAdminEntity, GXAdminMapper, GXAdminDao> {
     /**
@@ -26,10 +30,21 @@ public interface GXAdminService extends GXBusinessService<GXAdminEntity, GXAdmin
 
     /**
      * 更新管理员token的过期时间
-     *
-     * @return boolean
      */
-    default boolean updateAdminTokenExpirationTime() {
-        return true;
+    default void updateAdminTokenExpirationTime() {
+    }
+
+    /**
+     * 对token中的数据进行业务处理
+     *
+     * @param data 管理员数据
+     */
+    default void additionalTreatment(Dict data) {
+        // 判断账号状态
+        Integer userStatus = data.getInt("status");
+        // 用户账户为锁定状态
+        if (Objects.isNull(userStatus) || userStatus == GXBusinessStatusCode.LOCKED.getCode()) {
+            throw new LockedAccountException(GXBusinessStatusCode.LOCKED.getMsg());
+        }
     }
 }

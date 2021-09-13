@@ -2,14 +2,15 @@ package com.geoxus.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.constant.GXTokenConstants;
-import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
 import com.geoxus.shiro.service.GXAdminService;
 import com.geoxus.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -17,7 +18,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -73,17 +73,10 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         }
         // 根据用户ID查询用户信息
         Dict admin = shiroService.getAdminById(adminId);
-        // 判断账号状态
-        Integer userStatus = admin.getInt("status");
-        // 用户账户为锁定状态
-        if (Objects.isNull(userStatus) || userStatus == GXBusinessStatusCode.LOCKED.getCode()) {
-            throw new LockedAccountException(GXBusinessStatusCode.LOCKED.getMsg());
-        }
+        // 进行附加处理
+        adminService.additionalTreatment(admin);
         // 调用更新token的ttl方法 , 用于维持token的有效时间
-        boolean b = adminService.updateAdminTokenExpirationTime();
-        if (!b) {
-            throw new GXException("更新token的过期时间错误!");
-        }
+        adminService.updateAdminTokenExpirationTime();
         return new SimpleAuthenticationInfo(admin, accessToken, getName());
     }
 
