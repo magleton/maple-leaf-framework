@@ -33,12 +33,16 @@ public class GXTokenManager {
      *
      * @param adminId 管理员ID
      * @param param   附加信息
+     * @param isTtl   是否加入过期时间  true 生成的token有过期时间  false 生成的token没有过期时间
      * @return String
      */
-    public static String generateAdminToken(long adminId, Dict param) {
+    public static String generateAdminToken(long adminId, Dict param, Boolean isTtl) {
         param.putIfAbsent(GXTokenConstants.ADMIN_ID, adminId);
         param.putIfAbsent("platform", "GEO_XUS");
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstants.KEY, GXTokenConstants.ADMIN_EXPIRES_REFRESH);
+        if (isTtl) {
+            return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstants.KEY, GXTokenConstants.ADMIN_EXPIRES_REFRESH);
+        }
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstants.KEY);
     }
 
     /**

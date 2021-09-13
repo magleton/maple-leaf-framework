@@ -23,4 +23,13 @@ public interface GXAdminService extends GXBusinessService<GXAdminEntity, GXAdmin
      * @return 管理员token
      */
     String login(GXAdminLoginReqDto loginReqDto);
+
+    /**
+     * 更新管理员token的过期时间
+     *
+     * @return boolean
+     */
+    default boolean updateAdminTokenExpirationTime() {
+        return true;
+    }
 }
