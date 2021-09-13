@@ -2,7 +2,7 @@ package com.geoxus.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.core.common.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.dto.protocol.req.UserReqProtocol;

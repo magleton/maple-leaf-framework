@@ -2,9 +2,8 @@ package com.geoxus.core.common.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.builder.GXBaseBuilder;
-import com.geoxus.core.common.dto.protocol.res.GXBaseResProtocol;
+import com.geoxus.dto.protocol.res.GXBaseResProtocol;
 import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;
 import org.apache.ibatis.annotations.*;
 

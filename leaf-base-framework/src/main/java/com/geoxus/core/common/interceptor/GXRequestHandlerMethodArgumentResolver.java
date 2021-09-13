@@ -11,7 +11,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
 import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
-import com.geoxus.core.common.dto.GXBaseDto;
+import com.geoxus.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapstruct.GXBaseMapStruct;

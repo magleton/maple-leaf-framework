@@ -1,6 +1,6 @@
-package com.geoxus.core.common.dto.protocol.res;
+package com.geoxus.dto.protocol.res;
 
-import com.geoxus.core.common.dto.GXBaseDto;
+import com.geoxus.dto.GXBaseDto;
 
 /**
  * 用于处理返回的用户数据

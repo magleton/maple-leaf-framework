@@ -1,6 +1,6 @@
 package com.geoxus.core.common.mapstruct;
 
-import com.geoxus.core.common.dto.GXBaseDto;
+import com.geoxus.dto.GXBaseDto;
 
 import java.util.List;
 
