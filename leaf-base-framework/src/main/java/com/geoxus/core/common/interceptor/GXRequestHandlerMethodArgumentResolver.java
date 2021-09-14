@@ -14,7 +14,7 @@ import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.dto.GXBaseDto;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.mapstruct.GXBaseMapStruct;
+import com.geoxus.mapstruct.GXBaseMapStruct;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;

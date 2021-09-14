@@ -16,7 +16,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数
-     * @param clazz          元素类型
+     * @param clazz        元素类型
      * @return GXPagination
      */
     <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz);

@@ -163,7 +163,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
         Object mediaObj = param.getObj(mediaFieldName);
         if (Objects.isNull(mediaObj)) {
             final String format = CharSequenceUtil.format("请求参数param中不存在{}字段", mediaFieldName);
-            logger.error(format);
+            //logger.error(format);
             return;
         }
         final List<JSONObject> media = Convert.convert(new TypeReference<List<JSONObject>>() {

@@ -13,7 +13,6 @@ import java.util.List;
 
 @Mapper
 public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity> {
-    @Override
     @SelectProvider(type = GXMediaLibraryBuilder.class, method = "listOrSearch")
     @ResultMap("mediaResult")
     <R> List<R> listOrSearchPage(IPage<R> page, Dict param);

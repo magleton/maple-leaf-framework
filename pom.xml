@@ -10,11 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>leaf-api-commons</module>
+        <module>leaf-base-common</module>
+        <module>leaf-feature-common</module>
         <module>leaf-base-framework</module>
         <module>leaf-dynamic-datasource</module>
         <module>leaf-base-shiro</module>
-        <module>leaf-base-commons</module>
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
         <module>leaf-base-canal</module>

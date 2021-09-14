@@ -1,4 +1,4 @@
-package com.geoxus.core.common.mapstruct;
+package com.geoxus.mapstruct;
 
 import com.geoxus.dto.GXBaseDto;
 

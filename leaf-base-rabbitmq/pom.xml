@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
-            <artifactId>leaf-base-commons</artifactId>
+            <artifactId>leaf-feature-common</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>
