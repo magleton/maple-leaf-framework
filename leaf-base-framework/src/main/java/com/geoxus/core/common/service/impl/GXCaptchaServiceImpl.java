@@ -5,7 +5,7 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.util.GXCacheKeysUtils;
 import com.google.common.cache.Cache;

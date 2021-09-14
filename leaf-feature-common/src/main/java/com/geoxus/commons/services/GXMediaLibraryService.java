@@ -12,7 +12,7 @@ import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.core.common.vo.response.GXPagination;
+import com.geoxus.common.pojo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
 import org.springframework.web.multipart.MultipartFile;
 

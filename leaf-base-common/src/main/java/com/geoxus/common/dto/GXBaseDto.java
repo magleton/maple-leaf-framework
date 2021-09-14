@@ -1,4 +1,4 @@
-package com.geoxus.dto;
+package com.geoxus.common.dto;
 
 import lombok.Data;
 

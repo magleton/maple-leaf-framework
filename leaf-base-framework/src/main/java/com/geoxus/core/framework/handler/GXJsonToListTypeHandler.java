@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;

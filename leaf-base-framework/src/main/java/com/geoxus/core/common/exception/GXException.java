@@ -2,7 +2,7 @@ package com.geoxus.core.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import com.geoxus.core.common.vo.common.GXResultCode;
+import com.geoxus.common.pojo.GXResultCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

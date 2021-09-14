@@ -13,15 +13,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
-import com.geoxus.core.common.vo.common.GXBusinessStatusCode;
-import com.geoxus.core.common.vo.response.GXPagination;
+import com.geoxus.common.pojo.GXBusinessStatusCode;
+import com.geoxus.common.pojo.GXPagination;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 
 import javax.validation.ConstraintValidatorContext;

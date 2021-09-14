@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.filter.GXSQLFilter;
 
 import java.util.Map;

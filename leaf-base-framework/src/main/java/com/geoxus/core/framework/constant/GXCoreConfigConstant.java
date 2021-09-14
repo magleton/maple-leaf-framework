@@ -1,6 +1,6 @@
 package com.geoxus.core.framework.constant;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 
 public class GXCoreConfigConstant {
     @GXFieldCommentAnnotation(zhDesc = "主键ID")

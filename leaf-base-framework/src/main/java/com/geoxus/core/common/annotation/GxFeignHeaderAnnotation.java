@@ -1,5 +1,7 @@
 package com.geoxus.core.common.annotation;
 
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+
 import java.lang.annotation.*;
 
 @Target({ElementType.METHOD})

@@ -1,7 +1,7 @@
 package com.geoxus.rpc.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

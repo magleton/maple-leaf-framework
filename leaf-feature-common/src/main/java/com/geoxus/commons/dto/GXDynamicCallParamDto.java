@@ -1,6 +1,6 @@
 package com.geoxus.commons.dto;
 
-import com.geoxus.dto.GXBaseDto;
+import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * // javaType
  * // 不存在或者为空        微服务的调用方式是 XXXObj.xxxMethod(String username , Integer age)
  * // 如果存在或者不为空    微服务的调用方式是 XXXObj.xxxMethod(TestReqDto testReqDto)
- * "javaType":"com.geoxus.dto.PersonDto",
+ * "javaType":"com.geoxus.common.dto.PersonDto",
  * "attributes":[{
  * "fieldName":"permissions",
  * "javaType":"java.util.List",

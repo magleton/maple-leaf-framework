@@ -1,8 +1,8 @@
-package com.geoxus.core.common.vo.response;
+package com.geoxus.common.pojo;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
-package com.geoxus.dto;
+package com.geoxus.common.dto;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.dto.GXBaseDto;
+import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

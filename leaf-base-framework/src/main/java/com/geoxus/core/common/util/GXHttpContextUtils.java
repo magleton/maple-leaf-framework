@@ -5,7 +5,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

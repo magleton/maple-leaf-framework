@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.dto.GXCanalDataDto;
+import com.geoxus.common.dto.GXCanalDataDto;
 import com.geoxus.service.GXCanalMessageParseService;
 import com.geoxus.service.GXProcessCanalDataService;
 import lombok.extern.slf4j.Slf4j;

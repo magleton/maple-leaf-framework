@@ -2,13 +2,12 @@ package com.geoxus.core.common.service;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.common.pojo.GXPagination;
 import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.dto.protocol.res.GXBaseResProtocol;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
-import com.geoxus.core.common.vo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
 
 public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExists, GXValidateDBUnique {

@@ -1,4 +1,4 @@
-package com.geoxus.core.common.annotation;
+package com.geoxus.common.annotation;
 
 import java.lang.annotation.*;
 

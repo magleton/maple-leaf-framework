@@ -1,6 +1,6 @@
 package com.geoxus.core.common.exception;
 
-import com.geoxus.core.common.vo.common.GXResultCode;
+import com.geoxus.common.pojo.GXResultCode;
 
 public class GXTokenEmptyException extends GXException {
     public GXTokenEmptyException(String msg) {

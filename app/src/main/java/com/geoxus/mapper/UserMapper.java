@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.builder.UserBuilder;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.dto.protocol.res.UserResProtocol;
+import com.geoxus.common.dto.protocol.res.UserResProtocol;
 import com.geoxus.entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;

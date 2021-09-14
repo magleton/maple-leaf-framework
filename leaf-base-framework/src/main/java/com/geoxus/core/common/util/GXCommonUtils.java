@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;

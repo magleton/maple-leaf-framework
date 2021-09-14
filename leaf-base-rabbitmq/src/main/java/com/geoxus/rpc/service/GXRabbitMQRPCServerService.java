@@ -1,6 +1,6 @@
 package com.geoxus.rpc.service;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import org.springframework.amqp.core.Message;
 

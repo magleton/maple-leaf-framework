@@ -1,12 +1,12 @@
 package com.geoxus.controller;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.common.dto.protocol.req.UserReqProtocol;
+import com.geoxus.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.common.pojo.GXPagination;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.util.GXResultUtils;
-import com.geoxus.core.common.vo.response.GXPagination;
-import com.geoxus.dto.protocol.req.UserReqProtocol;
-import com.geoxus.dto.protocol.res.UserResProtocol;
 import com.geoxus.service.UserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

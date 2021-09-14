@@ -4,7 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.geoxus.core.common.vo.common.GXResultCode;
+import com.geoxus.common.pojo.GXResultCode;
 import lombok.Data;
 
 import java.lang.reflect.Method;

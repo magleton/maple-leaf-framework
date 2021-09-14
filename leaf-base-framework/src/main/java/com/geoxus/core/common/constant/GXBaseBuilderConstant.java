@@ -1,6 +1,6 @@
 package com.geoxus.core.common.constant;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 
 public class GXBaseBuilderConstant {
     @GXFieldCommentAnnotation(zhDesc = "搜索条件的名字")

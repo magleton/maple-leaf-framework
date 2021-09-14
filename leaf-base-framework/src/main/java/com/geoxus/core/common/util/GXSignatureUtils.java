@@ -1,6 +1,6 @@
 package com.geoxus.core.common.util;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;

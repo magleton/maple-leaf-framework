@@ -2,7 +2,7 @@ package com.geoxus.core.framework.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

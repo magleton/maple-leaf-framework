@@ -1,6 +1,5 @@
-package com.geoxus.dto.protocol.res;
+package com.geoxus.common.dto.protocol.res;
 
-import com.geoxus.dto.protocol.res.GXBaseResProtocol;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

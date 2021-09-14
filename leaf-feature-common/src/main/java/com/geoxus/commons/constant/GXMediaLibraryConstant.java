@@ -1,6 +1,6 @@
 package com.geoxus.commons.constant;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.util.GXCommonUtils;
 
 public class GXMediaLibraryConstant {

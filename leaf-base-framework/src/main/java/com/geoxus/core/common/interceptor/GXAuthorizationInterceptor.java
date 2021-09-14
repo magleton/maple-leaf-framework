@@ -2,13 +2,13 @@ package com.geoxus.core.common.interceptor;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.core.common.annotation.GXLoginAnnotation;
 import com.geoxus.core.common.constant.GXTokenConstants;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.exception.GXTokenEmptyException;
 import com.geoxus.core.common.service.GXUUserService;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.core.common.vo.common.GXResultCode;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.http.HttpStatus;

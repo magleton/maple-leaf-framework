@@ -1,6 +1,6 @@
-package com.geoxus.dto.protocol.req;
+package com.geoxus.common.dto.protocol.req;
 
-import com.geoxus.dto.GXBaseDto;
+import com.geoxus.common.dto.GXBaseDto;
 
 /**
  * 用于接收用户请求信息

@@ -1,6 +1,6 @@
 package com.geoxus.core.common.constant;
 
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 
 public class GXCommonConstant {
     @GXFieldCommentAnnotation(zhDesc = "手机验证码标识")

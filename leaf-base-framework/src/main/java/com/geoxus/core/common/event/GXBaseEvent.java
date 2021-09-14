@@ -2,7 +2,7 @@ package com.geoxus.core.common.event;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;

@@ -1,7 +1,7 @@
 package com.geoxus.core.common.util;
 
 import cn.hutool.core.convert.Convert;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import org.redisson.api.*;
 import org.slf4j.Logger;
 

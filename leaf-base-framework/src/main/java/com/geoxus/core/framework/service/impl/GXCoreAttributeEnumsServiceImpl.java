@@ -3,7 +3,7 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;

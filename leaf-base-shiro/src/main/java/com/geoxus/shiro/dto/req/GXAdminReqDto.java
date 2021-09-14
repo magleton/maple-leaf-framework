@@ -2,7 +2,7 @@ package com.geoxus.shiro.dto.req;
 
 import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
 import com.geoxus.core.common.annotation.GXValidateExtDataAnnotation;
-import com.geoxus.dto.GXBaseDto;
+import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXAdminConstant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

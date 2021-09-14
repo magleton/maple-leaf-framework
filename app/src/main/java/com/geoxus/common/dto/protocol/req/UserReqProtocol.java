@@ -1,7 +1,6 @@
-package com.geoxus.dto.protocol.req;
+package com.geoxus.common.dto.protocol.req;
 
 import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
-import com.geoxus.dto.protocol.req.GXBaseReqProtocol;
 import com.geoxus.service.impl.MyGXValidateJsonFieldServiceImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

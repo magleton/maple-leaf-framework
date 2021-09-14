@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXTokenConstants;
 import com.geoxus.core.common.util.GXAuthCodeUtils;
 import com.google.common.cache.Cache;
