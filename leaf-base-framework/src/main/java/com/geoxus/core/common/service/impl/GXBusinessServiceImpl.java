@@ -21,7 +21,7 @@ import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
-import com.geoxus.common.pojo.GXPagination;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 
 import javax.validation.ConstraintValidatorContext;
@@ -37,7 +37,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -55,7 +55,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPagination<R> listOrSearchPage(Dict param, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param, Class<R> clazz) {
         return generatePage(param, clazz);
     }
 
@@ -208,7 +208,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPagination<R> generatePage(Dict param, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> generatePage(Dict param, Class<R> clazz) {
         String mapperMethodName = "listOrSearchPage";
         return generatePage(param, mapperMethodName, clazz);
     }
@@ -221,15 +221,15 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPagination<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
-            return new GXPagination<>(Collections.emptyList(), 0, riPage.getSize(), riPage.getCurrent());
+            return new GXPaginationProtocol<>(Collections.emptyList(), 0, riPage.getSize(), riPage.getCurrent());
         }
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
         riPage.setRecords(list);
-        return new GXPagination<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
+        return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     /**

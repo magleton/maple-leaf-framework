@@ -5,8 +5,8 @@ import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GXBaseSearchReqProtocol extends GXBaseDto {
     /**
      * 分页信息

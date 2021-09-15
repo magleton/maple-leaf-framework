@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.req.UserReqProtocol;
 import com.geoxus.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.common.pojo.GXPagination;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.service.UserService;
@@ -34,9 +34,9 @@ public class IndexController {
     }
 
     @PostMapping("list-or-search")
-    public GXResultUtils<GXPagination<UserResProtocol>> listOrSearch(@RequestBody GXBaseSearchReqProtocol searchReqProtocol) {
-        GXPagination<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
-        GXPagination<UserResProtocol> pagination1 = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
+    public GXResultUtils<GXPaginationProtocol<UserResProtocol>> listOrSearch(@RequestBody GXBaseSearchReqProtocol searchReqProtocol) {
+        GXPaginationProtocol<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
+        GXPaginationProtocol<UserResProtocol> pagination1 = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
         return GXResultUtils.ok(pagination);
     }
 }

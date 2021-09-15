@@ -3,7 +3,7 @@ package com.geoxus.core.common.service;
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.common.pojo.GXPagination;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.validator.GXValidateDBExists;
@@ -18,7 +18,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param clazz        元素类型
      * @return GXPagination
      */
-    <R> GXPagination<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz);
+    <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz);
 
     /**
      * 列表或者搜索(分页)
@@ -26,7 +26,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 参数
      * @return GXPagination
      */
-    <R> GXPagination<R> listOrSearchPage(Dict param, Class<R> clazz);
+    <R> GXPaginationProtocol<R> listOrSearchPage(Dict param, Class<R> clazz);
 
     /**
      * 内容详情
@@ -74,7 +74,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param param 查询参数
      * @return GXPagination
      */
-    <R> GXPagination<R> generatePage(Dict param, Class<R> clazz);
+    <R> GXPaginationProtocol<R> generatePage(Dict param, Class<R> clazz);
 
     /**
      * 分页  返回实体对象
@@ -83,7 +83,7 @@ public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBas
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    <R> GXPagination<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz);
+    <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz);
 
     /**
      * 获取记录的父级path

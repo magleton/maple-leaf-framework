@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
-import com.geoxus.common.pojo.GXPagination;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.constant.GXCoreConfigConstant;
 import com.geoxus.core.framework.dao.GXCoreConfigDao;
@@ -37,8 +37,8 @@ public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntit
         return false;
     }
 
-    public GXPagination<Dict> listOrSearchPage(Dict param) {
-        return new GXPagination<>(Collections.emptyList());
+    public GXPaginationProtocol<Dict> listOrSearchPage(Dict param) {
+        return new GXPaginationProtocol<>(Collections.emptyList());
     }
 
     public Dict detail(Dict param) {

@@ -5,7 +5,7 @@ import com.geoxus.common.dto.GXBaseDto;
 import java.util.List;
 
 /**
- * @author zj chen <britton@126.com>
+ * @author britton <britton@126.com>
  * @version 1.0
  * @since 2020-09-26
  */

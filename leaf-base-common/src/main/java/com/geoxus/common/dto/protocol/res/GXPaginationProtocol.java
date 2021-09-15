@@ -1,16 +1,16 @@
-package com.geoxus.common.pojo;
+package com.geoxus.common.dto.protocol.res;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class GXPagination<T> implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class GXPaginationProtocol<T> extends GXBaseDto {
+    private static final long serialVersionUID = -6977700102950116740L;
 
     @GXFieldCommentAnnotation(zhDesc = "总记录数")
     private long total;
@@ -35,7 +35,7 @@ public class GXPagination<T> implements Serializable {
      * @param pageSize   每页记录数
      * @param currPage   当前页数
      */
-    public GXPagination(List<T> list, long totalCount, long pageSize, long currPage) {
+    public GXPaginationProtocol(List<T> list, long totalCount, long pageSize, long currPage) {
         this.records = list;
         this.total = totalCount;
         this.pageSize = pageSize;
@@ -46,7 +46,7 @@ public class GXPagination<T> implements Serializable {
     /**
      * 分页
      */
-    public GXPagination(Page<T> page) {
+    public GXPaginationProtocol(Page<T> page) {
         this.records = page.getRecords();
         this.total = page.getTotal();
         this.pageSize = page.getSize();
@@ -57,7 +57,7 @@ public class GXPagination<T> implements Serializable {
     /**
      * 分页
      */
-    public GXPagination(IPage<T> page) {
+    public GXPaginationProtocol(IPage<T> page) {
         this.records = page.getRecords();
         this.total = (int) page.getTotal();
         this.pageSize = (int) page.getSize();
@@ -68,7 +68,7 @@ public class GXPagination<T> implements Serializable {
     /**
      * 分页
      */
-    public GXPagination(List<T> list) {
+    public GXPaginationProtocol(List<T> list) {
         this.records = list;
     }
 }
