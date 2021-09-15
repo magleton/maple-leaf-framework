@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = GXValidateSingleJsonFieldValidator.class)
-public @interface GXSingleFieldToDbJsonFieldAnnotation {
+public @interface GXMergeSingleFieldAnnotation {
     String message() default "{fieldName}数据验证出错";
 
     Class<?>[] groups() default {};

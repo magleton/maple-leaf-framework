@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXRequestBodyToTargetAnnotation {
+public @interface GXParseRequestAnnotation {
     String value() default "";
 
     Class<?>[] groups() default {};

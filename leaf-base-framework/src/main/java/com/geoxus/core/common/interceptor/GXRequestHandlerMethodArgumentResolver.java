@@ -12,8 +12,8 @@ import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.common.mapstruct.GXBaseMapStruct;
 import com.geoxus.common.pojo.GXResultCode;
-import com.geoxus.core.common.annotation.GXRequestBodyToTargetAnnotation;
-import com.geoxus.core.common.annotation.GXSingleFieldToDbJsonFieldAnnotation;
+import com.geoxus.core.common.annotation.GXParseRequestAnnotation;
+import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXCommonUtils;
@@ -49,7 +49,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(GXRequestBodyToTargetAnnotation.class);
+        return parameter.hasParameterAnnotation(GXParseRequestAnnotation.class);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
         final Object bean = Convert.convert(parameterType, JSONUtil.toBean(body, parameterType));
-        final GXRequestBodyToTargetAnnotation requestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXRequestBodyToTargetAnnotation.class);
+        final GXParseRequestAnnotation requestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXParseRequestAnnotation.class);
         final String value = Objects.requireNonNull(requestBodyToTargetAnnotation).value();
         Set<String> jsonFields = new HashSet<>(16);
         boolean validateTarget = requestBodyToTargetAnnotation.validateTarget();
@@ -134,7 +134,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         Dict dict = Convert.convert(Dict.class, obj);
         Map<String, Map<String, Object>> jsonMergeFieldMap = new HashMap<>();
         for (Field field : parameterType.getDeclaredFields()) {
-            GXSingleFieldToDbJsonFieldAnnotation annotation = field.getAnnotation(GXSingleFieldToDbJsonFieldAnnotation.class);
+            GXMergeSingleFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldAnnotation.class);
             if (Objects.isNull(annotation)) {
                 continue;
             }
