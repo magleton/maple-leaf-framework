@@ -225,7 +225,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
         final IPage<R> riPage = constructPageObjectFromParam(param);
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
-            return new GXPaginationProtocol<>(Collections.emptyList(), 0, riPage.getSize(), riPage.getCurrent());
+            throw new GXException(CharSequenceUtil.format("请在相应的Mapper类型中实现{}方法", mapperMethodName));
         }
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
         riPage.setRecords(list);
