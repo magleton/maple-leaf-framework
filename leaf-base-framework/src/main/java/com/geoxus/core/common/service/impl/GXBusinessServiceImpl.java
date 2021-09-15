@@ -10,18 +10,18 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
+import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
-import com.geoxus.common.pojo.GXBusinessStatusCode;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 
 import javax.validation.ConstraintValidatorContext;
@@ -37,7 +37,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -45,7 +45,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
         if (Objects.nonNull(searchReqDto.getSearchCondition())) {
             param.set(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, searchReqDto.getSearchCondition());
         }
-        return generatePage(param, clazz);
+        return generatePage(param);
     }
 
     /**
@@ -55,8 +55,8 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param, Class<R> clazz) {
-        return generatePage(param, clazz);
+    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param) {
+        return generatePage(param);
     }
 
     /**
@@ -208,9 +208,9 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> generatePage(Dict param, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> generatePage(Dict param) {
         String mapperMethodName = "listOrSearchPage";
-        return generatePage(param, mapperMethodName, clazz);
+        return generatePage(param, mapperMethodName);
     }
 
     /**
@@ -221,7 +221,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {

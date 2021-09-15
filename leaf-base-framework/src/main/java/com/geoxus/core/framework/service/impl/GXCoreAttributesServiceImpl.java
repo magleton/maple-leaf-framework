@@ -52,9 +52,9 @@ public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAtt
     }
 
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param, Class<R> clazz) {
+    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
-        final List<R> list = getBaseMapper().listOrSearchPage(riPage, param, clazz);
+        final List<R> list = getBaseMapper().listOrSearchPage(riPage, param);
         riPage.setRecords(list);
         return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }

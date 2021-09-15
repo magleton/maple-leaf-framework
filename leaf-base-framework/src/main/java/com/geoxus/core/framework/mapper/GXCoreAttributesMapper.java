@@ -19,7 +19,7 @@ public interface GXCoreAttributesMapper extends GXBaseMapper<GXCoreAttributesEnt
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    <R> List<R> listOrSearchPage(IPage<R> page, Dict param, Class<R> clazz);
+    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
 
     @SelectProvider(type = GXCoreAttributesBuilder.class, method = "detail")
     @Results({

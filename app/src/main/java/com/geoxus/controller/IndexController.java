@@ -35,8 +35,7 @@ public class IndexController {
 
     @PostMapping("list-or-search")
     public GXResultUtils<GXPaginationProtocol<UserResProtocol>> listOrSearch(@RequestBody GXBaseSearchReqProtocol searchReqProtocol) {
-        GXPaginationProtocol<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
-        GXPaginationProtocol<UserResProtocol> pagination1 = userService.listOrSearchPage(searchReqProtocol, UserResProtocol.class);
+        GXPaginationProtocol<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol);
         return GXResultUtils.ok(pagination);
     }
 }
