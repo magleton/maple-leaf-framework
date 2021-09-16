@@ -1,4 +1,4 @@
-package com.geoxus.sso.plugins.impl;
+package com.geoxus.plugins.impl;
 
 import com.geoxus.sso.plugins.GXSsoPlugin;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 public class GXLoginSsoPlugin implements GXSsoPlugin {
     @Override
     public boolean login(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("AAAAAA");
         return false;
     }
 

@@ -1,16 +1,12 @@
 package com.geoxus.sso.util;
 
-import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.sso.cache.GXSsoCache;
 import com.geoxus.sso.config.GXSsoConfig;
-import com.geoxus.sso.plugins.impl.GXLoginSsoPlugin;
 import com.geoxus.sso.security.token.GXSsoToken;
 import com.geoxus.sso.service.GXConfigurableAbstractSsoService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 
 /**
  * <p>
@@ -32,8 +28,6 @@ public class GXSsoHelperUtil {
     public static GXSsoConfig getSsoConfig() {
         if (null == ssoConfig) {
             ssoConfig = new GXSsoConfig();
-            ssoConfig.setCache(GXSpringContextUtils.getBean(GXSsoCache.class));
-            ssoConfig.setPluginList(Collections.singletonList(new GXLoginSsoPlugin()));
         }
         return ssoConfig;
     }
