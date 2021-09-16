@@ -1,7 +1,7 @@
 package com.geoxus.core.common.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtils;
 
 public interface GXSendSMSService {
     /**

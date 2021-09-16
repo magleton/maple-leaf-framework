@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.constant.GXTokenConstant;
 import com.geoxus.core.common.util.GXHttpContextUtils;
-import com.geoxus.core.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;

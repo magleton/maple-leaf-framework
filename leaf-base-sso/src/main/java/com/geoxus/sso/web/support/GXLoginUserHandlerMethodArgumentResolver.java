@@ -2,11 +2,12 @@ package com.geoxus.sso.web.support;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import com.geoxus.sso.annotation.GXLoginUserAnnotation;
+import cn.hutool.json.JSONUtil;
+import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.core.common.constant.GXTokenConstant;
-import com.geoxus.core.common.oauth.GXTokenManager;
-import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.support.GXHandlerMethodArgumentResolver;
+import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.sso.annotation.GXLoginUserAnnotation;
 import com.geoxus.sso.entity.GXUUserEntity;
 import com.geoxus.sso.service.GXUUserService;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,7 @@ public class GXLoginUserHandlerMethodArgumentResolver extends GXHandlerMethodArg
             if (null == header) {
                 return null;
             }
-            final Dict tokenData = GXTokenManager.decodeUserToken(header);
+            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtil.authCodeDecode(header, GXTokenConstant.KEY), Dict.class);
             object = tokenData.getObj(GXTokenConstant.USER_ID);
             if (null == object) {
                 return null;

@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface GXSsoPlugin {
     /**
-     * <p>
      * 登录时调用该方法
-     * </p>
      *
      * @param request  请求对象
      * @param response 响应对象

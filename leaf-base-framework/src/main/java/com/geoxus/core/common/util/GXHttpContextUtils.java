@@ -6,14 +6,14 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.oauth.GXTokenManager;
+import com.geoxus.common.util.GXAuthCodeUtil;
+import com.geoxus.core.common.constant.GXTokenConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -111,10 +111,7 @@ public class GXHttpContextUtils {
      */
     public static long getUserIdFromToken(String tokenName, String tokenIdName) {
         final String token = ServletUtil.getHeader(Objects.requireNonNull(getHttpServletRequest()), tokenName, CharsetUtil.UTF_8);
-        final Map<String, Object> map = GXTokenManager.decodeUserToken(token);
-        if (null != map && !map.isEmpty()) {
-            return Convert.toLong(map.get(tokenIdName));
-        }
+        String s = GXAuthCodeUtil.authCodeDecode(token, GXTokenConstant.KEY);
         return 0;
     }
 

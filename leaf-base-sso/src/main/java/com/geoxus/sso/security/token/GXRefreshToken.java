@@ -1,12 +1,12 @@
 package com.geoxus.sso.security.token;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.oauth.GXTokenManager;
+import cn.hutool.json.JSONUtil;
+import com.geoxus.common.util.GXAuthCodeUtil;
+import com.geoxus.core.common.constant.GXTokenConstant;
 
 /**
- * <p>
  * 刷新票据
- * </p>
  *
  * @author britton
  * @since 2021-09-16
@@ -14,8 +14,8 @@ import com.geoxus.core.common.oauth.GXTokenManager;
 public class GXRefreshToken implements GXToken {
     private final String token;
 
-    private GXRefreshToken(Long userId, Dict extParam) {
-        token = GXTokenManager.generateUserToken(userId, extParam);
+    private GXRefreshToken(String userId, Dict extParam) {
+        token = GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
     }
 
     @Override

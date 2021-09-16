@@ -2,7 +2,7 @@ package com.geoxus.commons.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.commons.services.GXDataDictService;
-import com.geoxus.core.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtils;
 import com.geoxus.common.pojo.response.GXPagination;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

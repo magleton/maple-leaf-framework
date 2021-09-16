@@ -1,7 +1,9 @@
 package com.geoxus.sso.security.token;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.oauth.GXTokenManager;
+import cn.hutool.json.JSONUtil;
+import com.geoxus.common.util.GXAuthCodeUtil;
+import com.geoxus.core.common.constant.GXTokenConstant;
 
 import java.io.Serializable;
 
@@ -20,8 +22,8 @@ public class GXAccessToken implements GXToken, Serializable {
         // TO DO NOTHING
     }
 
-    public GXAccessToken(Long userId, Dict extParam) {
-        this.token = GXTokenManager.generateUserToken(userId, extParam);
+    public GXAccessToken(Dict extParam) {
+        this.token = GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
     }
 
     @Override

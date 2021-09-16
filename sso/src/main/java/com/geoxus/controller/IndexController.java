@@ -1,7 +1,7 @@
 package com.geoxus.controller;
 
 import com.geoxus.sso.annotation.GXLoginAnnotation;
-import com.geoxus.core.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

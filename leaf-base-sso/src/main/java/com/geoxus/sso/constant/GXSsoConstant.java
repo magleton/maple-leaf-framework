@@ -23,7 +23,7 @@ public class GXSsoConstant {
     /**
      * token中的USER_AGENT字段名字
      */
-    public static final String TOKEN_USER_AGENT = "ua";
+    public static final String TOKEN_USER_AGENT = "userAgent";
 
     /**
      * token中的flag字段名字
@@ -38,12 +38,7 @@ public class GXSsoConstant {
     /**
      * token中的租户ID名字
      */
-    public static final String TOKEN_TENANT_ID = "tid";
-
-    /**
-     * token使用的算法
-     */
-    public static final String RSA = "RSA";
+    public static final String TOKEN_TENANT_ID = "tenantId";
 
     /**
      * token的名字

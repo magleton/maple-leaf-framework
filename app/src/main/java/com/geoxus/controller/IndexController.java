@@ -7,7 +7,7 @@ import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.dto.protocol.res.UserResProtocol;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
 import com.geoxus.core.common.annotation.GXParseRequestAnnotation;
-import com.geoxus.core.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtils;
 import com.geoxus.service.UserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

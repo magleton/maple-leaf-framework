@@ -53,13 +53,6 @@ public class GXSsoHelperUtil {
         return ssoService;
     }
 
-    /**
-     * HS512 密钥
-     */
-    public static String getHS512SecretKey() {
-        return "密钥";/*JwtHelper.getHS512SecretKey()*/
-    }
-
     // ------------------------------- 登录相关方法 -------------------------------
 
     /**
