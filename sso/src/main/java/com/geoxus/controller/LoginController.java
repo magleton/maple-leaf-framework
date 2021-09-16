@@ -20,7 +20,7 @@ public class LoginController {
         GXSsoToken ssoToken = GXSsoToken
                 .create()
                 .setUserId(1)
-                .setIsSuer("admin")
+                .setIssuer("admin")
                 .setUserAgent("我的agent")
                 .setOrigin(GXTokenOrigin.HTML5)
                 .setTenantId(12899)

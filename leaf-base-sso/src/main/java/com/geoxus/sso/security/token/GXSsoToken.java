@@ -47,7 +47,7 @@ public class GXSsoToken extends GXAccessToken {
     /**
      * 发布者
      */
-    private String isSuer;
+    private String issuer;
 
     /**
      * IP 地址
@@ -98,8 +98,8 @@ public class GXSsoToken extends GXAccessToken {
         if (null != this.getIp()) {
             param.set(GXSsoConstant.TOKEN_USER_IP, this.getIp());
         }
-        if (null != this.getIsSuer()) {
-            param.set("isSuer", this.getIsSuer());
+        if (null != this.getIssuer()) {
+            param.set("issuer", this.getIssuer());
         }
         if (null != this.getUserAgent()) {
             param.set(GXSsoConstant.TOKEN_USER_AGENT, this.getUserAgent());
@@ -110,7 +110,8 @@ public class GXSsoToken extends GXAccessToken {
         if (GXTokenOrigin.COOKIE != this.getOrigin()) {
             param.set(GXSsoConstant.TOKEN_ORIGIN, this.getOrigin().value());
         }
-        param.set("isSuedAt", new Date(time));
+        param.set("time", time);
+        param.set("issuedAt", new Date(time));
         return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
     }
 
@@ -160,12 +161,12 @@ public class GXSsoToken extends GXAccessToken {
         return this;
     }
 
-    public String getIsSuer() {
-        return isSuer;
+    public String getIssuer() {
+        return issuer;
     }
 
-    public GXSsoToken setIsSuer(String isSuer) {
-        this.isSuer = isSuer;
+    public GXSsoToken setIssuer(String issuer) {
+        this.issuer = issuer;
         return this;
     }
 
