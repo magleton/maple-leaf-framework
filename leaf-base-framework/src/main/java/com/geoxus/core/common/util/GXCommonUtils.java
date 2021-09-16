@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;
@@ -755,7 +756,7 @@ public class GXCommonUtils {
      * @return String
      */
     public static String encryptedPhoneNumber(String phoneNumber, String key) {
-        return GXAuthCodeUtils.authCodeEncode(phoneNumber, key);
+        return GXAuthCodeUtil.authCodeEncode(phoneNumber, key);
     }
 
     /**
@@ -766,7 +767,7 @@ public class GXCommonUtils {
      * @return String
      */
     public static String decryptedPhoneNumber(String encryptPhoneNumber, String key) {
-        final String s = GXAuthCodeUtils.authCodeDecode(encryptPhoneNumber, key);
+        final String s = GXAuthCodeUtil.authCodeDecode(encryptPhoneNumber, key);
         if ("{}".equals(s)) {
             return encryptPhoneNumber;
         }

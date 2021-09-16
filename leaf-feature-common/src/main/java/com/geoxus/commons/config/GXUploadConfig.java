@@ -1,6 +1,6 @@
 package com.geoxus.commons.config;
 
-import com.geoxus.core.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;

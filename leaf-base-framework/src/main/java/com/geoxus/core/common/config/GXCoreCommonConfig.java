@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.geoxus.core.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import com.geoxus.core.common.validator.impl.GXValidateDBUniqueValidator;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.slf4j.Logger;

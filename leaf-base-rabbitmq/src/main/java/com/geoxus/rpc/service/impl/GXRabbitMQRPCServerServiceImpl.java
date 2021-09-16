@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.config.GXRabbitMQConfig;
-import com.geoxus.core.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.rpc.handler.GXRPCServerHandler;
 import com.geoxus.rpc.service.GXRabbitMQRPCServerService;

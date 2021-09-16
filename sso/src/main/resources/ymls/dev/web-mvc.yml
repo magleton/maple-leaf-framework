@@ -1,0 +1,7 @@
+web-mvc:
+  urlPatterns:
+    - /**/frontend1/**
+    - /**/pc/**
+  resourcePatterns:
+    - /media/path/**
+    - /

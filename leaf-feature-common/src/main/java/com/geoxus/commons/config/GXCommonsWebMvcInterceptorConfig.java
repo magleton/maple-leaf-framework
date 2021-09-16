@@ -1,7 +1,7 @@
 package com.geoxus.commons.config;
 
-import com.geoxus.core.common.config.GXWebMvcConfig;
-import com.geoxus.core.common.config.GXWebMvcInterceptorConfig;
+import com.geoxus.core.common.web.GXWebMvcConfig;
+import com.geoxus.core.common.web.GXWebMvcInterceptorConfig;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
-import com.geoxus.core.common.constant.GXTokenConstants;
+import com.geoxus.core.common.constant.GXTokenConstant;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
@@ -33,7 +33,7 @@ public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXA
         if (data.size() == 0) {
             return null;
         }
-        data.set(GXTokenConstants.ADMIN_ID, adminId);
+        data.set(GXTokenConstant.ADMIN_ID, adminId);
         return data;
     }
 

@@ -3,7 +3,7 @@ package com.geoxus.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import com.geoxus.service.GXRabbitMQQueueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

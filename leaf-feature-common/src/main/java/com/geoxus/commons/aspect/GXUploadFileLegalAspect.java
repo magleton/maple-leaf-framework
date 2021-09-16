@@ -1,6 +1,6 @@
 package com.geoxus.commons.aspect;
 
-import com.geoxus.core.common.constant.GXTokenConstants;
+import com.geoxus.core.common.constant.GXTokenConstant;
 import com.geoxus.core.common.util.GXResultUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
 import com.geoxus.common.pojo.common.GXResultCode;
@@ -23,7 +23,7 @@ public class GXUploadFileLegalAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
         HttpServletRequest request = GXHttpContextUtils.getHttpServletRequest();
         assert request != null;
-        if (null != request.getHeader(GXTokenConstants.ADMIN_TOKEN) || null != request.getHeader(GXTokenConstants.USER_TOKEN)) {
+        if (null != request.getHeader(GXTokenConstant.ADMIN_TOKEN) || null != request.getHeader(GXTokenConstant.USER_TOKEN)) {
             return point.proceed();
         }
         return GXResultUtils.error(GXResultCode.NEED_PERMISSION);

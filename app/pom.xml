@@ -20,12 +20,17 @@
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-framework</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-dynamic-datasource</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-base-sso</artifactId>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 </project>
