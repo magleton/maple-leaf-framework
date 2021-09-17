@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Component
-public class GXSsoCacheRedissonImpl implements GXSSOCache {
+public class GXSSOCacheRedissonImpl implements GXSSOCache {
     @Resource
     private RedissonClient redissonClient;
 
