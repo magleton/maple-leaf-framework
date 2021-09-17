@@ -1,4 +1,4 @@
 server:
   port: 9999
   servlet:
-    context-path: /sso
+    context-path: /user

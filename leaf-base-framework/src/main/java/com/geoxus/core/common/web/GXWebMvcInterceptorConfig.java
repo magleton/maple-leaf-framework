@@ -3,6 +3,7 @@ package com.geoxus.core.common.web;
 import com.geoxus.core.common.interceptor.GXAuthorizationInterceptor;
 import com.geoxus.core.common.interceptor.GXRequestHandlerMethodArgumentResolver;
 import com.geoxus.core.common.interceptor.GXTraceIdInterceptor;
+import com.geoxus.core.common.properties.web.GXWebMvcConfig;
 import com.geoxus.core.common.support.GXHandlerMethodArgumentResolver;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.core.common.web.interceptor.GXBaseSSOPermissionInterceptor;

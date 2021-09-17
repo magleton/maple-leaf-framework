@@ -31,10 +31,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * 通用配置类
  */
-@Configuration
-@PropertySource(value = "classpath:/ymls/${spring.profiles.active}/common.yml",
-        factory = GXYamlPropertySourceFactory.class,
-        ignoreResourceNotFound = true)
 public class GXCoreCommonConfig {
     private static final Logger LOG = LoggerFactory.getLogger(GXCoreCommonConfig.class);
 

@@ -25,6 +25,13 @@ public class GXSsoHelperUtil {
 
     }
 
+    /**
+     * 获取GXSsoConfig配置对象
+     *
+     * @return GXSsoConfig
+     * @author britton
+     * @since 2021-09-17
+     */
     public static GXSsoConfig getSsoConfig() {
         if (null == ssoConfig) {
             ssoConfig = new GXSsoConfig();
@@ -32,6 +39,13 @@ public class GXSsoHelperUtil {
         return ssoConfig;
     }
 
+    /**
+     * 设置GXSsoConfig配置对象
+     *
+     * @return GXSsoConfig
+     * @author britton
+     * @since 2021-09-17
+     */
     public static GXSsoConfig setSsoConfig(GXSsoConfig ssoConfig) {
         GXSsoHelperUtil.ssoConfig = ssoConfig;
         return GXSsoHelperUtil.ssoConfig;

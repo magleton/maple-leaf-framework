@@ -67,14 +67,11 @@ public class GXSsoServiceSupport {
     }
 
     /**
-     * <p>
      * SSOToken 是否缓存处理逻辑
-     * </p>
      * <p>
      * 判断 SSOToken 是否缓存 ， 如果缓存不存退出登录
-     * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @return SSOToken {@link GXSsoToken}
      */
     protected GXSsoToken cacheSSOToken(HttpServletRequest request, GXSsoCache cache) {

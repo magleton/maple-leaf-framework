@@ -7,20 +7,24 @@ import com.geoxus.plugins.impl.GXLoginSsoPlugin;
 import com.geoxus.sso.cache.GXSsoCache;
 import com.geoxus.sso.config.GXSsoConfig;
 import com.geoxus.sso.enums.GXTokenOrigin;
+import com.geoxus.sso.properties.GXSsoConfigProperties;
 import com.geoxus.sso.security.token.GXSsoToken;
 import com.geoxus.sso.util.GXSsoHelperUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Collections;
 
 @RestController
 @RequestMapping("/")
 public class LoginController {
+    @Resource
+    private GXSsoConfigProperties ssoProperties;
+
     @PostMapping("login")
     public GXResultUtils<Dict> login(HttpServletRequest request, HttpServletResponse response) {
         GXSsoToken ssoToken = GXSsoToken.create();

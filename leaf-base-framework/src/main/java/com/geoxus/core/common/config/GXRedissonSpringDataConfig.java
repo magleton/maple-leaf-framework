@@ -1,6 +1,8 @@
 package com.geoxus.core.common.config;
 
 import cn.hutool.json.JSONUtil;
+import com.geoxus.core.common.properties.GXRedissonCacheManagerProperties;
+import com.geoxus.core.common.properties.GXRedissonProperties;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -19,10 +21,10 @@ import java.util.Map;
 @ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonSpringDataConfig {
     @Resource
-    private GXRedissonConfig redissonConfig;
+    private GXRedissonProperties redissonConfig;
 
     @Resource
-    private GXRedissonCacheManagerConfig redissonCacheManagerConfig;
+    private GXRedissonCacheManagerProperties redissonCacheManagerConfig;
 
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redisson() {

@@ -39,7 +39,8 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      */
     @Override
     public GXSsoToken getSsoToken(HttpServletRequest request) {
-        GXSsoToken token = checkIpBrowser(request, cacheSSOToken(request, config.getCache()));
+        GXSsoToken ssoToken = cacheSSOToken(request, config.getCache());
+        GXSsoToken token = checkIpBrowser(request, ssoToken);
         // 执行插件逻辑
         List<GXSsoPlugin> pluginList = config.getPluginList();
         if (pluginList != null) {
