@@ -1,9 +1,8 @@
 package com.geoxus.sso.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.validator.GXValidateDBExists;
 
-public interface GXUUserService extends GXValidateDBExists {
+public interface GXUUserService {
     /**
      * 验证前端用户的Token是否有效
      *
