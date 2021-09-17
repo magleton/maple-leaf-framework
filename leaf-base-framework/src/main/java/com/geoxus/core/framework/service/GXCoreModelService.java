@@ -1,7 +1,7 @@
 package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import com.geoxus.core.framework.dao.GXCoreModelDao;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
@@ -35,7 +35,7 @@ public interface GXCoreModelService extends GXBaseService<GXCoreModelEntity, GXC
      * @param modelName 模型名字
      * @return boolean
      */
-    boolean checkFormKeyMatch(Set<String> keySet, String modelName) throws GXException;
+    boolean checkFormKeyMatch(Set<String> keySet, String modelName) throws GXBusinessException;
 
     /**
      * 通过模型名字获取模型ID

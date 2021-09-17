@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.entity.GXBaseEntity;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
@@ -207,7 +207,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default <R> String listOrSearchPage(IPage<R> page, Dict param) {
-        throw new GXException("请实现自定义的listOrSearchPage方法");
+        throw new GXBusinessException("请实现自定义的listOrSearchPage方法");
     }
 
     /**
@@ -287,7 +287,7 @@ public interface GXBaseBuilder {
     default void mergeSearchConditionToSql(SQL sql, Dict requestParam, Boolean isMergeDBSearchCondition) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
-            throw new GXException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
+            throw new GXBusinessException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
         }
         Dict searchField = getDefaultSearchField();
         if (isMergeDBSearchCondition) {

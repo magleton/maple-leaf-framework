@@ -16,7 +16,7 @@ import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.util.GXCommonUtils;
@@ -69,7 +69,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
     public Dict detail(Dict param) {
         final String tableName = (String) param.remove("tableName");
         if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException("请提供表名!");
+            throw new GXBusinessException("请提供表名!");
         }
         final String fields = (String) Optional.ofNullable(param.remove("fields")).orElse("*");
         final boolean remove = (boolean) Optional.ofNullable(param.remove("remove")).orElse(false);
@@ -144,7 +144,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
     public boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
         String tableName = param.getStr("tableName");
         if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
+            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         return 1 == checkRecordIsExists(tableName, Dict.create().set(fieldName, value));
     }
@@ -162,7 +162,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
     public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
         String tableName = param.getStr("tableName");
         if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
+            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         return checkRecordIsUnique(tableName, Dict.create().set(fieldName, value)) > 1;
     }
@@ -228,9 +228,9 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
             Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
             if (interfaces.length > 0) {
                 String canonicalName = interfaces[0].getCanonicalName();
-                throw new GXException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperMethodName));
+                throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperMethodName));
             }
-            throw new GXException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
+            throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
         }
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
         riPage.setRecords(list);

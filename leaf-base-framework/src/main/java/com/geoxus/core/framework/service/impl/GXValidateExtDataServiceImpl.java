@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.validator.GXValidateExtDataService;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
@@ -56,12 +56,12 @@ public class GXValidateExtDataServiceImpl implements GXValidateExtDataService {
         }
         final int coreModelId = coreModelService.getModelIdByModelIdentification(modelIdentification);
         if (coreModelId <= 0) {
-            throw new GXException(CharSequenceUtil.format(MODEL_SETTING_NOT_EXISTS, modelIdentification));
+            throw new GXBusinessException(CharSequenceUtil.format(MODEL_SETTING_NOT_EXISTS, modelIdentification));
         }
         if (isFullMatchAttribute && !CharSequenceUtil.equals(jsonStr, "{}")) {
             final boolean b = coreModelAttributeService.checkCoreModelFieldAttributes(coreModelId, tableField, jsonStr);
             if (!b) {
-                throw new GXException(CharSequenceUtil.format("{}字段提交的属性与数据库配置的字段属性不匹配!", tableField));
+                throw new GXBusinessException(CharSequenceUtil.format("{}字段提交的属性与数据库配置的字段属性不匹配!", tableField));
             }
         }
         final GXCoreModelEntity coreModelEntity = coreModelService.getCoreModelByModelId(coreModelId, tableField);

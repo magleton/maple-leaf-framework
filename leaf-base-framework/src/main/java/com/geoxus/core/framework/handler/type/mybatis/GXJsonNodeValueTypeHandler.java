@@ -23,7 +23,7 @@
  */
 package com.geoxus.core.framework.handler.type.mybatis;
 
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -54,7 +54,7 @@ public class GXJsonNodeValueTypeHandler extends BaseTypeHandler<GXJsonNodeValue>
                 try {
                     json = GXReaderWriter.write(parameter.get());
                 } catch (IOException ex) {
-                    throw new GXException(ex.getMessage(), ex);
+                    throw new GXBusinessException(ex.getMessage(), ex);
                 }
             }
             ps.setString(i, json);

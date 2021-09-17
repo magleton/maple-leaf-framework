@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
 import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminDao;
@@ -54,7 +54,7 @@ public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXA
         final HashSet<String> column = CollUtil.newHashSet("id", "phone", "status");
         final Dict data = getFieldValueBySQL(GXAdminEntity.class, column, condition, false);
         if (data.size() == 0) {
-            throw new GXException("登录信息不存在,请核对之后重试!!");
+            throw new GXBusinessException("登录信息不存在,请核对之后重试!!");
         }
         final Long adminId = Convert.toLong(data.remove("id"));
         return GXTokenManager.generateAdminToken(adminId, data, true);

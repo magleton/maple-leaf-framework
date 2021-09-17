@@ -1,6 +1,6 @@
 package com.geoxus.sso.config;
 
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.oauth.GXSSOAuthorization;
@@ -183,7 +183,7 @@ public class GXSSOConfig {
 
     public String getRsaCertStore() {
         if (null == rsaCertStore) {
-            throw new GXException("public.cert not found");
+            throw new GXBusinessException("public.cert not found");
         }
         return rsaCertStore;
     }
@@ -200,7 +200,7 @@ public class GXSSOConfig {
 
     public String getRsaJksStore() {
         if (null == rsaJksStore) {
-            throw new GXException("jwt.jks not found");
+            throw new GXBusinessException("jwt.jks not found");
         }
         return rsaJksStore;
     }

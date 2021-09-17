@@ -25,7 +25,7 @@ package com.geoxus.core.framework.handler.type.mybatis;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -58,7 +58,7 @@ public class GXTreeNodeLazyWrapper implements TreeNode, Serializable {
         try {
             node = getNodeInstance();
         } catch (IOException ex) {
-            throw new GXException(ex.getMessage(), ex);
+            throw new GXBusinessException(ex.getMessage(), ex);
         }
         return this.node;
     }

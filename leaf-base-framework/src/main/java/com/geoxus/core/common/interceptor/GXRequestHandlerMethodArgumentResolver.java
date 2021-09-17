@@ -15,7 +15,7 @@ import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.core.common.annotation.GXParseRequestAnnotation;
 import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
@@ -183,11 +183,11 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
                 jsonBody = IoUtil.read(servletRequest.getInputStream(), StandardCharsets.UTF_8);
                 servletRequest.setAttribute(JSON_REQUEST_BODY, jsonBody);
             } catch (IOException e) {
-                throw new GXException(e.getMessage(), e);
+                throw new GXBusinessException(e.getMessage(), e);
             }
         }
         if (!JSONUtil.isJson(jsonBody)) {
-            throw new GXException(GXResultCode.REQUEST_JSON_NOT_BODY);
+            throw new GXBusinessException(GXResultCode.REQUEST_JSON_NOT_BODY);
         }
         return jsonBody;
     }

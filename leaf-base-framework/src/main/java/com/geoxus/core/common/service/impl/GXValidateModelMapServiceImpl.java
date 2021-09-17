@@ -1,7 +1,7 @@
 package com.geoxus.core.common.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.validator.GXValidateModelMap;
 import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
@@ -31,7 +31,7 @@ public class GXValidateModelMapServiceImpl implements GXValidateModelMap {
             final GXCoreAttributesEntity attributesEntity = coreAttributesService.getAttributeByAttributeName(map.getStr(key));
             final boolean matches = Pattern.matches(attributesEntity.getValidationExpression(), map.get(key).toString());
             if (!matches) {
-                throw new GXException(GXResultCode.PARAMETER_VALIDATION_ERROR);
+                throw new GXBusinessException(GXResultCode.PARAMETER_VALIDATION_ERROR);
             }
         }
         return true;

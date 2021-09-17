@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -54,7 +54,7 @@ public class GXTreeNodeTypeHandler extends BaseTypeHandler<TreeNode> {
         try {
             ps.setString(i, GXReaderWriter.write(parameter));
         } catch (IOException ex) {
-            throw new GXException(ex.getMessage(), ex);
+            throw new GXBusinessException(ex.getMessage(), ex);
         }
     }
 

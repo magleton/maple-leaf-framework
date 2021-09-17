@@ -7,12 +7,11 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
-import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelTableFieldService;
 import lombok.extern.slf4j.Slf4j;
@@ -132,7 +131,7 @@ public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreMo
             retDict.set(attributeName, value);
         }
         if (!errorsDict.isEmpty()) {
-            throw new GXException("属性必填错误", HttpStatus.HTTP_INTERNAL_ERROR, errorsDict);
+            throw new GXBusinessException("属性必填错误", HttpStatus.HTTP_INTERNAL_ERROR, errorsDict);
         }
         return retDict;
     }

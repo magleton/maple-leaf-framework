@@ -1,7 +1,7 @@
 package com.geoxus.ueditor.support.qiniu;
 
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import com.qiniu.common.QiniuException;
@@ -212,7 +212,7 @@ public class GXQiNiuUtils {
                 zone = Zone.zoneAs0();
                 break;
             default:
-                throw new GXException("百度编辑七牛云zone配置错误，https://developer.qiniu.com/kodo/sdk/1239/java#server-upload");
+                throw new GXBusinessException("百度编辑七牛云zone配置错误，https://developer.qiniu.com/kodo/sdk/1239/java#server-upload");
         }
         return zone;
     }

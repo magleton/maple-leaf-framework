@@ -25,7 +25,7 @@ package com.geoxus.core.framework.handler.type.mybatis;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -149,7 +149,7 @@ public class GXJsonNodeValue implements Serializable {
      * WARNING if object constructed with invalid JSON string, exception will be thrown.
      *
      * @return Copy of valid JsonNode or MissingNode if no data.
-     * @throws GXException On JSON parsing errors.
+     * @throws GXBusinessException On JSON parsing errors.
      */
     public JsonNode get() {
         if (!isPresent()) {
@@ -158,7 +158,7 @@ public class GXJsonNodeValue implements Serializable {
         try {
             value = getNodeInstance();
         } catch (Exception ex) {
-            throw new GXException("Can not parse JSON string. " + ex.getMessage(), ex);
+            throw new GXBusinessException("Can not parse JSON string. " + ex.getMessage(), ex);
         }
         return value.deepCopy();
     }

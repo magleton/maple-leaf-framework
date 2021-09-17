@@ -15,7 +15,7 @@
  */
 package com.geoxus.sso.service;
 
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.constant.GXSSOConstant;
@@ -217,7 +217,7 @@ public class GXSSOServiceSupport {
             }
             return cookie;
         } catch (Exception e) {
-            throw new GXException("Generate sso cookie exception ", e);
+            throw new GXBusinessException("Generate sso cookie exception ", e);
         }
     }
 

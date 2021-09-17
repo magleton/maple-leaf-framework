@@ -11,7 +11,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.event.GXBaseEvent;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
@@ -256,7 +256,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
         }
         String mainField = CharSequenceUtil.sub(path, 0, index);
         if (null == json.getByPath(mainField)) {
-            throw new GXException(CharSequenceUtil.format("实体的主字段{}不存在!", mainField));
+            throw new GXBusinessException(CharSequenceUtil.format("实体的主字段{}不存在!", mainField));
         }
         String subField = CharSequenceUtil.sub(path, index + 2, path.length());
         Dict dict = Convert.convert(Dict.class, Optional.ofNullable(jsonField.getObj(mainField)).orElse(Dict.create()));

@@ -7,7 +7,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.commons.annotation.GXFrequencyLimitAnnotation;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
 import com.geoxus.core.common.util.GXRedisUtils;
@@ -57,7 +57,7 @@ public class GXDurationCountLimitAspect {
         key = key.concat(sceneValue);
         final long actualCount = GXRedisUtils.getCounter(key, expire, TimeUnit.SECONDS);
         if (actualCount > count) {
-            throw new GXException("操作频繁,请稍后在试......");
+            throw new GXBusinessException("操作频繁,请稍后在试......");
         }
         return point.proceed(point.getArgs());
     }

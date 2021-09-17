@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.annotation.GXRecordHistoryAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXBaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +52,14 @@ public class GXRecordHistoryAspect {
                     }
                 }
                 if (condition.isEmpty()) {
-                    throw new GXException("请指定需要记录的历史信息的查询条件");
+                    throw new GXBusinessException("请指定需要记录的历史信息的查询条件");
                 }
                 service.recordModificationHistory(originTableName, historyTableName, condition, Dict.create().set("append_data", "附加信息"));
             }
             result = point.proceed();
         } catch (Exception e) {
             log.error("record history error", e);
-            throw new GXException("历史信息记录异常");
+            throw new GXBusinessException("历史信息记录异常");
         }
         return result;
     }

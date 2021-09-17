@@ -10,7 +10,7 @@ import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.events.GXMediaLibraryEvent;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.pojo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
@@ -157,7 +157,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      */
     default void handleMedia(GXMediaLibraryEntity target, @NotNull long targetId, @NotNull Dict param) {
         if (param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME) == null) {
-            throw new GXException(CharSequenceUtil.format("请在param参数中传递{}字段", GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME));
+            throw new GXBusinessException(CharSequenceUtil.format("请在param参数中传递{}字段", GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME));
         }
         final String mediaFieldName = "media";
         Object mediaObj = param.getObj(mediaFieldName);

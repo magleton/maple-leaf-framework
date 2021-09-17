@@ -1,4 +1,4 @@
-package com.geoxus.core.common.exception;
+package com.geoxus.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GXException extends RuntimeException {
+public class GXBusinessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     private final String msg;
@@ -22,38 +22,38 @@ public class GXException extends RuntimeException {
 
     private Dict data;
 
-    public GXException(String msg, int code, Dict data, Throwable e) {
+    public GXBusinessException(String msg, int code, Dict data, Throwable e) {
         super(msg, e);
         this.msg = msg;
         this.code = code;
         this.data = data;
     }
 
-    public GXException(String msg, int code, Dict data) {
+    public GXBusinessException(String msg, int code, Dict data) {
         this(msg, code, data, null);
     }
 
-    public GXException(String msg, int code, Throwable e) {
+    public GXBusinessException(String msg, int code, Throwable e) {
         this(msg, code, Dict.create(), e);
     }
 
-    public GXException(String msg, int code) {
+    public GXBusinessException(String msg, int code) {
         this(msg, code, Dict.create());
     }
 
-    public GXException(String msg) {
+    public GXBusinessException(String msg) {
         this(msg, HttpStatus.HTTP_INTERNAL_ERROR);
     }
 
-    public GXException(String msg, Throwable e) {
+    public GXBusinessException(String msg, Throwable e) {
         this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
     }
 
-    public GXException(GXResultCode resultCode) {
+    public GXBusinessException(GXResultCode resultCode) {
         this(resultCode, null);
     }
 
-    public GXException(GXResultCode resultCode, Throwable e) {
+    public GXBusinessException(GXResultCode resultCode, Throwable e) {
         super(resultCode.getMsg(), e);
         this.msg = resultCode.getMsg();
         this.code = resultCode.getCode();

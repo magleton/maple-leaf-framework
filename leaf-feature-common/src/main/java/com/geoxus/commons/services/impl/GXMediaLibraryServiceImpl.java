@@ -15,10 +15,9 @@ import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.commons.services.GXMediaLibraryService;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
-import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -125,7 +124,7 @@ public class GXMediaLibraryServiceImpl extends GXBaseServiceImpl<GXMediaLibraryE
             return entity;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new GXException("文件上传失败");
+            throw new GXBusinessException("文件上传失败");
         }
     }
 

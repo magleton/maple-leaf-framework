@@ -1,7 +1,7 @@
 package com.geoxus.core.common.filter;
 
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.core.common.exception.GXException;
+import com.geoxus.common.exception.GXBusinessException;
 
 /**
  * SQL过滤
@@ -32,7 +32,7 @@ public class GXSQLFilter {
         //判断是否包含非法字符
         for (String keyword : keywords) {
             if (str.indexOf(keyword) != -1) {
-                throw new GXException("包含非法字符");
+                throw new GXBusinessException("包含非法字符");
             }
         }
         return str;

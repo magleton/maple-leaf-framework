@@ -2,6 +2,7 @@ package com.geoxus.core.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
+import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.common.pojo.GXResultCode;
 import com.mysql.cj.exceptions.CJException;
@@ -31,8 +32,8 @@ public class GXExceptionHandler {
     /**
      * 处理自定义异常
      */
-    @ExceptionHandler(GXException.class)
-    public GXResultUtil<Dict> handleRRException(GXException e) {
+    @ExceptionHandler(GXBusinessException.class)
+    public GXResultUtil<Dict> handleRRException(GXBusinessException e) {
         log.error(e.getMessage(), e);
         return GXResultUtil.error(e.getCode(), e.getMsg(), e.getData());
     }
