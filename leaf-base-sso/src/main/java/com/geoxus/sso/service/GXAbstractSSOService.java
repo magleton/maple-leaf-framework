@@ -3,11 +3,11 @@ package com.geoxus.sso.service;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.sso.cache.GXSsoCache;
-import com.geoxus.sso.config.GXSsoConfig;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXTokenFlag;
 import com.geoxus.sso.plugins.GXSsoPlugin;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXCookieHelperUtil;
 import com.geoxus.sso.util.GXHttpUtil;
 import com.geoxus.sso.util.GXRandomUtil;
@@ -29,23 +29,23 @@ import java.util.Objects;
  * @since 2021-09-16
  */
 @Slf4j
-public abstract class GXAbstractSsoService extends GXSsoServiceSupport implements GXSsoService {
+public abstract class GXAbstractSSOService extends GXSSOServiceSupport implements GXSSOService {
     /**
      * 获取当前请求 GXSsoToken
      * 从 Cookie 解密 GXSsoToken 使用场景, 拦截器
      * 非拦截器建议使用 attrSSOToken 减少二次解密
      *
      * @param request 请求对象
-     * @return GXSsoToken {@link GXSsoToken}
+     * @return GXSsoToken {@link GXSSOToken}
      */
     @Override
-    public GXSsoToken getSsoToken(HttpServletRequest request) {
-        GXSsoToken token = checkIpBrowser(request, cacheSsoToken(request, config.getCache()));
+    public GXSSOToken getSSOToken(HttpServletRequest request) {
+        GXSSOToken token = checkIpBrowser(request, cacheSSOToken(request, getConfig().getCache()));
         if (Objects.isNull(token)) {
             return null;
         }
         // 执行插件逻辑
-        List<GXSsoPlugin> pluginList = config.getPluginList();
+        List<GXSsoPlugin> pluginList = getConfig().getPluginList();
         if (pluginList != null) {
             for (GXSsoPlugin plugin : pluginList) {
                 boolean valid = plugin.validateToken(token);
@@ -65,9 +65,9 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      */
     @Override
     public boolean kickLogin(Object userId) {
-        GXSsoCache cache = config.getCache();
+        GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            return cache.delete(GXSsoConfig.toCacheKey(userId));
+            return cache.delete(GXSSOConfig.toCacheKey(userId));
         } else {
             log.info(" kickLogin! please implements GXSsoCache class.");
         }
@@ -85,22 +85,22 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      * @param response 响应对象
      */
     @Override
-    public void setCookie(HttpServletRequest request, HttpServletResponse response, GXSsoToken ssoToken) {
+    public void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
         // 设置加密 Cookie
         Cookie ck = this.generateCookie(request, ssoToken);
 
         // 判断 GXSsoCache 是否缓存处理失效
         // cache 缓存宕机，flag 设置为失效
-        GXSsoCache cache = config.getCache();
+        GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            boolean rlt = cache.set(ssoToken.toCacheKey(), ssoToken, config.getCacheExpires());
+            boolean rlt = cache.set(ssoToken.toCacheKey(), ssoToken, getConfig().getCacheExpires());
             if (!rlt) {
                 ssoToken.setFlag(GXTokenFlag.CACHE_SHUT);
             }
         }
 
         //执行插件逻辑
-        List<GXSsoPlugin> pluginList = config.getPluginList();
+        List<GXSsoPlugin> pluginList = getConfig().getPluginList();
         if (pluginList != null) {
             for (GXSsoPlugin plugin : pluginList) {
                 boolean login = plugin.login(request, response);
@@ -111,7 +111,7 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
         }
 
         // Cookie设置HttpOnly
-        if (config.isCookieHttpOnly()) {
+        if (getConfig().isCookieHttpOnly()) {
             GXCookieHelperUtil.addHttpOnlyCookie(response, ck);
         } else {
             response.addCookie(ck);
@@ -124,7 +124,7 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      * @param request  请求对象
      * @param response 响应对象
      */
-    public void authCookie(HttpServletRequest request, HttpServletResponse response, GXSsoToken ssoToken) {
+    public void authCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
         GXCookieHelperUtil.authJSESSIONID(request, GXRandomUtil.getCharacterAndNumber(8));
         this.setCookie(request, response, ssoToken);
     }
@@ -138,7 +138,7 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      */
     @Override
     public boolean clearLogin(HttpServletRequest request, HttpServletResponse response) {
-        return logout(request, response, config.getCache());
+        return logout(request, response, getConfig().getCache());
     }
 
     /**
@@ -155,14 +155,14 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
         clearLogin(request, response);
 
         // redirect login page
-        String loginUrl = config.getLoginUrl();
+        String loginUrl = getConfig().getLoginUrl();
         if ("".equals(loginUrl)) {
             Dict data = Dict.create().set("code", HttpStatus.HTTP_NOT_AUTHORITATIVE).set("msg", "Please login").set("data", null);
             response.getWriter().write(JSONUtil.toJsonStr(data));
         } else {
-            String retUrl = GXHttpUtil.getQueryString(request, config.getEncoding());
+            String retUrl = GXHttpUtil.getQueryString(request, getConfig().getEncoding());
             log.debug("loginAgain redirect pageUrl.." + retUrl);
-            response.sendRedirect(GXHttpUtil.encodeRetURL(loginUrl, config.getParamReturnUrl(), retUrl));
+            response.sendRedirect(GXHttpUtil.encodeRetURL(loginUrl, getConfig().getParamReturnUrl(), retUrl));
         }
     }
 
@@ -171,10 +171,10 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      */
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // delete cookie
-        logout(request, response, config.getCache());
+        logout(request, response, getConfig().getCache());
 
         // redirect logout page
-        String logoutUrl = config.getLogoutUrl();
+        String logoutUrl = getConfig().getLogoutUrl();
         if ("".equals(logoutUrl)) {
             response.getWriter().write("sso.properties Must include: sso.logout.url");
         } else {

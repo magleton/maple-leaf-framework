@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public class GXSsoConstant {
+public class GXSSOConstant {
     /**
      * 编码
      */
@@ -88,6 +88,6 @@ public class GXSsoConstant {
      */
     public static final Long TOKEN_TIMESTAMP_CUT = 1000L;
 
-    private GXSsoConstant() {
+    private GXSSOConstant() {
     }
 }

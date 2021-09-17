@@ -2,12 +2,12 @@ package com.geoxus.sso.web.interceptor;
 
 import com.geoxus.core.common.web.interceptor.GXBaseSSOPermissionInterceptor;
 import com.geoxus.sso.annotation.GXPermissionAnnotation;
-import com.geoxus.sso.config.GXSsoConfig;
+import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXAction;
-import com.geoxus.sso.oauth.GXSsoAuthorization;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.oauth.GXSSOAuthorization;
+import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXHttpUtil;
-import com.geoxus.sso.util.GXSsoHelperUtil;
+import com.geoxus.sso.util.GXSSOHelperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -28,7 +28,7 @@ public class GXSsoPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
     /*
      * 系统权限授权接口
      */
-    private GXSsoAuthorization authorization;
+    private GXSSOAuthorization authorization;
 
     /*
      * 非法请求提示 URL
@@ -46,7 +46,7 @@ public class GXSsoPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
-            GXSsoToken token = GXSsoHelperUtil.attrToken(request);
+            GXSSOToken token = GXSSOHelperUtil.attrToken(request);
             if (token == null) {
                 return true;
             }
@@ -73,9 +73,9 @@ public class GXSsoPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
      * @param token   token
      * @return boolean
      */
-    protected boolean isVerification(HttpServletRequest request, Object handler, GXSsoToken token) {
+    protected boolean isVerification(HttpServletRequest request, Object handler, GXSSOToken token) {
         // URL 权限认证
-        if (GXSsoConfig.getInstance().isPermissionUri()) {
+        if (GXSSOConfig.getInstance().isPermissionUri()) {
             String uri = request.getRequestURI();
             if (uri == null || this.getAuthorization().isPermitted(token, uri)) {
                 return true;
@@ -126,11 +126,11 @@ public class GXSsoPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
         return false;
     }
 
-    public GXSsoAuthorization getAuthorization() {
+    public GXSSOAuthorization getAuthorization() {
         return authorization;
     }
 
-    public void setAuthorization(GXSsoAuthorization authorization) {
+    public void setAuthorization(GXSSOAuthorization authorization) {
         this.authorization = authorization;
     }
 

@@ -1,18 +1,18 @@
 package com.geoxus.cache.impl;
 
-import com.geoxus.sso.cache.GXSsoCache;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.security.token.GXSSOToken;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GXAppSsoCacheImpl implements GXSsoCache {
+public class GXAppSsoCacheImpl implements GXSSOCache {
     @Override
-    public GXSsoToken get(String key, int expires) {
+    public GXSSOToken get(String key, int expires) {
         return null;
     }
 
     @Override
-    public boolean set(String key, GXSsoToken ssoToken, int expires) {
+    public boolean set(String key, GXSSOToken ssoToken, int expires) {
         return false;
     }
 

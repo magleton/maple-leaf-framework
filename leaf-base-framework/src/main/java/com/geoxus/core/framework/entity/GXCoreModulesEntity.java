@@ -13,9 +13,9 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class GXCoreModulesEntity extends GXBaseEntity implements Serializable {
     @TableId
-    private int moduleId;
+    private Integer moduleId;
 
-    private int parentId;
+    private Integer parentId;
 
     private String moduleName;
 }

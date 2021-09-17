@@ -1,7 +1,7 @@
 package com.geoxus.plugins.impl;
 
 import com.geoxus.sso.plugins.GXSsoPlugin;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class GXLoginSsoPluginImpl implements GXSsoPlugin {
     }
 
     @Override
-    public boolean validateToken(GXSsoToken ssoToken) {
+    public boolean validateToken(GXSSOToken ssoToken) {
         System.out.println("验证token合法性");
         return true;
     }

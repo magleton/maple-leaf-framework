@@ -1,6 +1,6 @@
 package com.geoxus.sso.service;
 
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,13 +12,13 @@ import java.io.IOException;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public interface GXSsoService {
+public interface GXSSOService {
     /**
      * <p>
      * 获取登录 SSOToken
      * </p>
      */
-    GXSsoToken getSsoToken(HttpServletRequest request);
+    GXSSOToken getSSOToken(HttpServletRequest request);
 
     /**
      * 踢出 指定用户 ID 的登录用户，退出当前系统。
@@ -31,7 +31,7 @@ public interface GXSsoService {
     /**
      * 设置登录 Cookie
      */
-    void setCookie(HttpServletRequest request, HttpServletResponse response, GXSsoToken ssoToken);
+    void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken);
 
     /**
      * 清理登录状态

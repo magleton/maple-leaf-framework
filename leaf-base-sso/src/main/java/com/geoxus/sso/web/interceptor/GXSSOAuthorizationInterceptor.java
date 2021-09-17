@@ -3,15 +3,14 @@ package com.geoxus.sso.web.interceptor;
 import com.geoxus.core.common.interceptor.GXAuthorizationInterceptor;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
-import com.geoxus.sso.cache.GXSsoCache;
-import com.geoxus.sso.constant.GXSsoConstant;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.plugins.GXSsoPlugin;
-import com.geoxus.sso.properties.GXSsoConfigProperties;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXHttpUtil;
-import com.geoxus.sso.util.GXSsoHelperUtil;
-import com.geoxus.sso.web.handler.GXSsoDefaultHandler;
-import com.geoxus.sso.web.handler.GXSsoHandler;
+import com.geoxus.sso.util.GXSSOHelperUtil;
+import com.geoxus.sso.web.handler.GXSSODefaultHandler;
+import com.geoxus.sso.web.handler.GXSSOHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -28,11 +27,11 @@ import java.util.Objects;
 @Component
 @Slf4j
 @SuppressWarnings("all")
-public class GXSsoAuthorizationInterceptor extends GXAuthorizationInterceptor {
+public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
     /**
      * SSO 处理器
      */
-    private GXSsoHandler handler;
+    private GXSSOHandler handler;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -47,26 +46,8 @@ public class GXSsoAuthorizationInterceptor extends GXAuthorizationInterceptor {
             return true;
         }
 
-        // 为每个应用配置属于自己的SsoConfig对象
-        GXSsoConfigProperties ssoConfigProperties = GXSpringContextUtils.getBean(GXSsoConfigProperties.class);
-        if (Objects.nonNull(ssoConfigProperties.getConfig())) {
-            GXSsoHelperUtil.setSsoConfig(ssoConfigProperties.getConfig());
-        }
-        // 为每个应用配置自己的插件
-        Map<String, GXSsoPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSsoPlugin.class);
-        if (!ssoPluginMap.isEmpty()) {
-            ArrayList<GXSsoPlugin> plugins = new ArrayList<>();
-            ssoPluginMap.forEach((key, val) -> {
-                plugins.add(val);
-            });
-            GXSsoHelperUtil.getSsoConfig().setPluginList(plugins);
-        }
-        // 为每个应用配置自己的SsoCache实例
-        if (Objects.nonNull(GXSpringContextUtils.getBean(GXSsoCache.class))) {
-            GXSsoHelperUtil.getSsoConfig().setCache(GXSpringContextUtils.getBean(GXSsoCache.class));
-        }
         // 获取SsoToken对象
-        GXSsoToken ssoToken = GXSsoHelperUtil.getSsoToken(request);
+        GXSSOToken ssoToken = GXSSOHelperUtil.getSSOToken(request);
 
         // 判断Token
         if (Objects.isNull(ssoToken)) {
@@ -79,25 +60,25 @@ public class GXSsoAuthorizationInterceptor extends GXAuthorizationInterceptor {
                 // 返回 true 继续执行, 清理登录状态并重定向至登录界面
                 if (getHandler().preTokenIsNull(request, response)) {
                     log.debug("logout. request url:" + request.getRequestURL());
-                    GXSsoHelperUtil.clearRedirectLogin(request, response);
+                    GXSSOHelperUtil.clearRedirectLogin(request, response);
                 }
                 return false;
             }
         } else {
             // 正常请求，request 设置 token 减少二次解密
-            request.setAttribute(GXSsoConstant.SSO_TOKEN_ATTR, ssoToken);
+            request.setAttribute(GXSSOConstant.SSO_TOKEN_ATTR, ssoToken);
         }
         return true;
     }
 
-    public GXSsoHandler getHandler() {
+    public GXSSOHandler getHandler() {
         if (handler == null) {
-            return GXSsoDefaultHandler.getInstance();
+            return GXSSODefaultHandler.getInstance();
         }
         return handler;
     }
 
-    public void setHandler(GXSsoHandler handler) {
+    public void setHandler(GXSSOHandler handler) {
         this.handler = handler;
     }
 }

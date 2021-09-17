@@ -4,12 +4,12 @@ import cn.hutool.core.lang.Dict;
 import com.geoxus.common.util.GXResultUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.plugins.impl.GXLoginSsoPluginImpl;
-import com.geoxus.sso.cache.GXSsoCache;
-import com.geoxus.sso.config.GXSsoConfig;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXTokenOrigin;
-import com.geoxus.sso.properties.GXSsoConfigProperties;
-import com.geoxus.sso.security.token.GXSsoToken;
-import com.geoxus.sso.util.GXSsoHelperUtil;
+import com.geoxus.sso.properties.GXSSOConfigProperties;
+import com.geoxus.sso.security.token.GXSSOToken;
+import com.geoxus.sso.util.GXSSOHelperUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,15 +23,15 @@ import java.util.Collections;
 @RequestMapping("/")
 public class LoginController {
     @Resource
-    private GXSsoConfigProperties ssoProperties;
+    private GXSSOConfigProperties ssoProperties;
 
     @PostMapping("login")
     public GXResultUtils<Dict> login(HttpServletRequest request, HttpServletResponse response) {
-        GXSsoToken ssoToken = GXSsoToken.create();
-        GXSsoConfig ssoConfig = new GXSsoConfig();
+        GXSSOToken ssoToken = GXSSOToken.create();
+        GXSSOConfig ssoConfig = new GXSSOConfig();
         ssoConfig.setPluginList(Collections.singletonList(new GXLoginSsoPluginImpl()))
-                .setCache(GXSpringContextUtils.getBean(GXSsoCache.class));
-        GXSsoHelperUtil.setSsoConfig(ssoProperties.getConfig()).setSsoToken(ssoToken).getSsoToken()
+                .setCache(GXSpringContextUtils.getBean(GXSSOCache.class));
+        GXSSOHelperUtil.setSsoConfig(ssoProperties.getConfig()).setSsoToken(ssoToken).getSsoToken()
                 .setUserId(1)
                 .setIssuer("admin")
                 .setUserAgent("我的agent")
@@ -39,7 +39,7 @@ public class LoginController {
                 .setTenantId(12899)
                 .setTime(System.currentTimeMillis());
         String token = ssoToken.getToken();
-        GXSsoHelperUtil.setCookie(request, response, ssoToken);
+        GXSSOHelperUtil.setCookie(request, response, ssoToken);
         return GXResultUtils.ok(Dict.create().set("token", token));
     }
 }

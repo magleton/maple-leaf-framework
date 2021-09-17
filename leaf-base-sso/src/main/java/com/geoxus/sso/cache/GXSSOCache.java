@@ -1,6 +1,6 @@
 package com.geoxus.sso.cache;
 
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 
 /**
  * <p>
@@ -10,7 +10,7 @@ import com.geoxus.sso.security.token.GXSsoToken;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public interface GXSsoCache {
+public interface GXSSOCache {
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface GXSsoCache {
      * @param expires 过期时间（延时心跳时间）
      * @return SSO票据
      */
-    GXSsoToken get(String key, int expires);
+    GXSSOToken get(String key, int expires);
 
     /**
      * 设置SSO票据
@@ -33,7 +33,7 @@ public interface GXSsoCache {
      * @param ssoToken SSO票据
      * @param expires  过期时间
      */
-    boolean set(String key, GXSsoToken ssoToken, int expires);
+    boolean set(String key, GXSSOToken ssoToken, int expires);
 
     /**
      * 删除SSO票据

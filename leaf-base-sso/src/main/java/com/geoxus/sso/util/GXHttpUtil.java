@@ -1,6 +1,6 @@
 package com.geoxus.sso.util;
 
-import com.geoxus.sso.config.GXSsoConfig;
+import com.geoxus.sso.config.GXSSOConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ public class GXHttpUtil {
      */
     public static void ajaxStatus(HttpServletResponse response, int status, String tip) {
         try {
-            response.setContentType("text/html;charset=" + GXSsoConfig.getSsoEncoding());
+            response.setContentType("text/html;charset=" + GXSSOConfig.getSsoEncoding());
             response.setStatus(status);
             PrintWriter out = response.getWriter();
             out.print(tip);
@@ -136,7 +136,7 @@ public class GXHttpUtil {
         retStr.append(retParam);
         retStr.append("=");
         try {
-            retStr.append(URLEncoder.encode(retUrl, GXSsoConfig.getSsoEncoding()));
+            retStr.append(URLEncoder.encode(retUrl, GXSSOConfig.getSsoEncoding()));
         } catch (UnsupportedEncodingException e) {
             log.error("encodeRetURL error.{} , {}", url, e.getMessage());
         }
@@ -165,7 +165,7 @@ public class GXHttpUtil {
         String retUrl = "";
 
         try {
-            retUrl = URLDecoder.decode(url, GXSsoConfig.getSsoEncoding());
+            retUrl = URLDecoder.decode(url, GXSSOConfig.getSsoEncoding());
         } catch (UnsupportedEncodingException e) {
             log.error("encodeRetURL error.{} ,{}", url, e.getMessage());
         }

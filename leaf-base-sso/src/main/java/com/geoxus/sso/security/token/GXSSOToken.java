@@ -6,8 +6,8 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.core.common.constant.GXTokenConstant;
-import com.geoxus.sso.config.GXSsoConfig;
-import com.geoxus.sso.constant.GXSsoConstant;
+import com.geoxus.sso.config.GXSSOConfig;
+import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.enums.GXTokenFlag;
 import com.geoxus.sso.enums.GXTokenOrigin;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.Date;
  * @since 2021-09-16
  */
 @Slf4j
-public class GXSsoToken extends GXAccessToken {
+public class GXSSOToken extends GXAccessToken {
     /**
      * token 标记
      */
@@ -69,21 +69,21 @@ public class GXSsoToken extends GXAccessToken {
      */
     private Object data;
 
-    public GXSsoToken() {
+    public GXSSOToken() {
         // TO DO NOTHING
     }
 
-    public static GXSsoToken create() {
-        return new GXSsoToken();
+    public static GXSSOToken create() {
+        return new GXSSOToken();
     }
 
-    public static GXSsoToken parser(String token) {
+    public static GXSSOToken parser(String token) {
         return parser(token, false);
     }
 
-    public static GXSsoToken parser(String token, boolean header) {
+    public static GXSSOToken parser(String token, boolean header) {
         String s = GXAuthCodeUtil.authCodeDecode(token, GXTokenConstant.KEY);
-        return JSONUtil.toBean(s, GXSsoToken.class);
+        return JSONUtil.toBean(s, GXSSOToken.class);
     }
 
     @Override
@@ -93,22 +93,22 @@ public class GXSsoToken extends GXAccessToken {
             param.set("userId", this.getUserId());
         }
         if (null != this.getTenantId()) {
-            param.set(GXSsoConstant.TOKEN_TENANT_ID, this.getTenantId());
+            param.set(GXSSOConstant.TOKEN_TENANT_ID, this.getTenantId());
         }
         if (null != this.getIp()) {
-            param.set(GXSsoConstant.TOKEN_USER_IP, this.getIp());
+            param.set(GXSSOConstant.TOKEN_USER_IP, this.getIp());
         }
         if (null != this.getIssuer()) {
             param.set("issuer", this.getIssuer());
         }
         if (null != this.getUserAgent()) {
-            param.set(GXSsoConstant.TOKEN_USER_AGENT, this.getUserAgent());
+            param.set(GXSSOConstant.TOKEN_USER_AGENT, this.getUserAgent());
         }
         if (GXTokenFlag.NORMAL != this.getFlag()) {
-            param.set(GXSsoConstant.TOKEN_FLAG, this.getFlag().value());
+            param.set(GXSSOConstant.TOKEN_FLAG, this.getFlag().value());
         }
         if (GXTokenOrigin.COOKIE != this.getOrigin()) {
-            param.set(GXSsoConstant.TOKEN_ORIGIN, this.getOrigin().value());
+            param.set(GXSSOConstant.TOKEN_ORIGIN, this.getOrigin().value());
         }
         param.set("time", time);
         param.set("issuedAt", new Date(time));
@@ -119,7 +119,7 @@ public class GXSsoToken extends GXAccessToken {
         return flag;
     }
 
-    public GXSsoToken setFlag(GXTokenFlag flag) {
+    public GXSSOToken setFlag(GXTokenFlag flag) {
         this.flag = flag;
         return this;
     }
@@ -128,7 +128,7 @@ public class GXSsoToken extends GXAccessToken {
         return origin;
     }
 
-    public GXSsoToken setOrigin(GXTokenOrigin origin) {
+    public GXSSOToken setOrigin(GXTokenOrigin origin) {
         this.origin = origin;
         return this;
     }
@@ -137,12 +137,12 @@ public class GXSsoToken extends GXAccessToken {
         return userId;
     }
 
-    public GXSsoToken setUserId(Object userId) {
+    public GXSSOToken setUserId(Object userId) {
         this.userId = String.valueOf(userId);
         return this;
     }
 
-    public GXSsoToken setUserId(String userId) {
+    public GXSSOToken setUserId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -151,12 +151,12 @@ public class GXSsoToken extends GXAccessToken {
         return tenantId;
     }
 
-    public GXSsoToken setTenantId(String tenantId) {
+    public GXSSOToken setTenantId(String tenantId) {
         this.tenantId = tenantId;
         return this;
     }
 
-    public GXSsoToken setTenantId(Object tenantId) {
+    public GXSSOToken setTenantId(Object tenantId) {
         this.tenantId = String.valueOf(tenantId);
         return this;
     }
@@ -165,7 +165,7 @@ public class GXSsoToken extends GXAccessToken {
         return issuer;
     }
 
-    public GXSsoToken setIssuer(String issuer) {
+    public GXSSOToken setIssuer(String issuer) {
         this.issuer = issuer;
         return this;
     }
@@ -174,12 +174,12 @@ public class GXSsoToken extends GXAccessToken {
         return ip;
     }
 
-    public GXSsoToken setIp(HttpServletRequest request) {
+    public GXSSOToken setIp(HttpServletRequest request) {
         this.ip = ServletUtil.getClientIP(request);
         return this;
     }
 
-    public GXSsoToken setIp(String ip) {
+    public GXSSOToken setIp(String ip) {
         this.ip = ip;
         return this;
     }
@@ -188,12 +188,12 @@ public class GXSsoToken extends GXAccessToken {
         return userAgent;
     }
 
-    public GXSsoToken setUserAgent(String userAgent) {
+    public GXSSOToken setUserAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
     }
 
-    public GXSsoToken setUserAgent(HttpServletRequest request) {
+    public GXSSOToken setUserAgent(HttpServletRequest request) {
         String userAgent = SecureUtil.md5(ServletUtil.getHeader(request, "user-agent", StandardCharsets.UTF_8));
         if (null == userAgent) {
             return null;
@@ -206,7 +206,7 @@ public class GXSsoToken extends GXAccessToken {
         return time;
     }
 
-    public GXSsoToken setTime(long time) {
+    public GXSSOToken setTime(long time) {
         this.time = time;
         return this;
     }
@@ -215,12 +215,12 @@ public class GXSsoToken extends GXAccessToken {
         return data;
     }
 
-    public GXSsoToken setData(Object data) {
+    public GXSSOToken setData(Object data) {
         this.data = data;
         return this;
     }
 
     public String toCacheKey() {
-        return GXSsoConfig.toCacheKey(this.getUserId());
+        return GXSSOConfig.toCacheKey(this.getUserId());
     }
 }

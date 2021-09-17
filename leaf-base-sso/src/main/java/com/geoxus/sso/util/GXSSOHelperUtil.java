@@ -1,13 +1,18 @@
 package com.geoxus.sso.util;
 
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.sso.config.GXSsoConfig;
-import com.geoxus.sso.security.token.GXSsoToken;
-import com.geoxus.sso.service.GXConfigurableAbstractSsoService;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.config.GXSSOConfig;
+import com.geoxus.sso.plugins.GXSsoPlugin;
+import com.geoxus.sso.properties.GXSSOConfigProperties;
+import com.geoxus.sso.security.token.GXSSOToken;
+import com.geoxus.sso.service.GXConfigurableAbstractSSOService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,21 +23,21 @@ import java.util.Objects;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public class GXSsoHelperUtil {
+public class GXSSOHelperUtil {
     /**
      * SSO配置
      */
-    protected static GXSsoConfig ssoConfig;
+    protected static GXSSOConfig ssoConfig;
 
     /**
      * SSO 服务处理
      */
-    protected static GXConfigurableAbstractSsoService ssoService;
+    protected static GXConfigurableAbstractSSOService ssoService;
 
     /**
      * 私有构造函数
      */
-    private GXSsoHelperUtil() {
+    private GXSSOHelperUtil() {
 
     }
 
@@ -43,9 +48,25 @@ public class GXSsoHelperUtil {
      * @author britton
      * @since 2021-09-17
      */
-    public static GXSsoConfig getSsoConfig() {
-        if (null == ssoConfig) {
-            ssoConfig = new GXSsoConfig();
+    public static GXSSOConfig getSSOConfig() {
+        // 为每个应用设置自己的配置信息
+        if (Objects.isNull(ssoConfig)) {
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class))) {
+                ssoConfig = Objects.requireNonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class)).getConfig();
+            } else {
+                ssoConfig = new GXSSOConfig();
+            }
+            // 为每个应用配置自己的插件
+            Map<String, GXSsoPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSsoPlugin.class);
+            if (!ssoPluginMap.isEmpty()) {
+                ArrayList<GXSsoPlugin> plugins = new ArrayList<>();
+                ssoPluginMap.forEach((key, val) -> plugins.add(val));
+                GXSSOHelperUtil.getSSOConfig().setPluginList(plugins);
+            }
+            // 为每个应用配置自己的SsoCache实例
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXSSOCache.class))) {
+                GXSSOHelperUtil.getSSOConfig().setCache(GXSpringContextUtils.getBean(GXSSOCache.class));
+            }
         }
         return ssoConfig;
     }
@@ -57,19 +78,21 @@ public class GXSsoHelperUtil {
      * @author britton
      * @since 2021-09-17
      */
-    public static GXSsoConfig setSsoConfig(GXSsoConfig ssoConfig) {
-        GXSsoHelperUtil.ssoConfig = ssoConfig;
-        return GXSsoHelperUtil.ssoConfig;
+    public static GXSSOConfig setSsoConfig(GXSSOConfig ssoConfig) {
+        GXSSOHelperUtil.ssoConfig = ssoConfig;
+        return GXSSOHelperUtil.ssoConfig;
     }
 
     /**
      * Sso 服务初始化
      */
-    public static GXConfigurableAbstractSsoService getSsoService() {
-        if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSsoService.class))) {
-            ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSsoService.class);
-        } else if (Objects.isNull(ssoService)) {
-            ssoService = new GXConfigurableAbstractSsoService();
+    public static GXConfigurableAbstractSSOService getSSOService() {
+        if (Objects.isNull(ssoService)) {
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class))) {
+                ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class);
+            } else {
+                ssoService = new GXConfigurableAbstractSSOService();
+            }
         }
         return ssoService;
     }
@@ -91,15 +114,15 @@ public class GXSsoHelperUtil {
      * @param ssoToken   SSO 票据
      * @param invalidate 销毁当前 JSESSIONID
      */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSsoToken ssoToken, boolean invalidate) {
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken, boolean invalidate) {
         if (invalidate) {
-            getSsoService().authCookie(request, response, ssoToken);
+            getSSOService().authCookie(request, response, ssoToken);
         } else {
-            getSsoService().setCookie(request, response, ssoToken);
+            getSSOService().setCookie(request, response, ssoToken);
         }
     }
 
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSsoToken ssoToken) {
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
         setCookie(request, response, ssoToken, false);
     }
 
@@ -118,8 +141,8 @@ public class GXSsoHelperUtil {
      * @return T
      */
     @SuppressWarnings("unchecked")
-    public static <T extends GXSsoToken> T getSsoToken(HttpServletRequest request) {
-        return (T) getSsoService().getSsoToken(request);
+    public static <T extends GXSSOToken> T getSSOToken(HttpServletRequest request) {
+        return (T) getSSOService().getSSOToken(request);
     }
 
     /**
@@ -131,8 +154,8 @@ public class GXSsoHelperUtil {
      * @param request 访问请求
      * @return T
      */
-    public static <T extends GXSsoToken> T attrToken(HttpServletRequest request) {
-        return getSsoService().attrSsoToken(request);
+    public static <T extends GXSSOToken> T attrToken(HttpServletRequest request) {
+        return getSSOService().attrSSOToken(request);
     }
 
     /**
@@ -145,7 +168,7 @@ public class GXSsoHelperUtil {
      * @throws IOException
      */
     public static void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        getSsoService().logout(request, response);
+        getSSOService().logout(request, response);
     }
 
     /**
@@ -157,7 +180,7 @@ public class GXSsoHelperUtil {
      * @return boolean
      */
     public static boolean clearLogin(HttpServletRequest request, HttpServletResponse response) {
-        return getSsoService().clearLogin(request, response);
+        return getSSOService().clearLogin(request, response);
     }
 
     /**
@@ -168,7 +191,7 @@ public class GXSsoHelperUtil {
      * @throws IOException
      */
     public static void clearRedirectLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        getSsoService().clearRedirectLogin(request, response);
+        getSSOService().clearRedirectLogin(request, response);
     }
 
     /**
@@ -178,7 +201,7 @@ public class GXSsoHelperUtil {
      * @return String
      */
     public static String getTokenCacheKey(HttpServletRequest request) {
-        return getSsoToken(request).toCacheKey();
+        return getSSOToken(request).toCacheKey();
     }
 
     /**
@@ -188,7 +211,7 @@ public class GXSsoHelperUtil {
      * @return String
      */
     public static String getTokenCacheKey(Object userId) {
-        return GXSsoConfig.toCacheKey(userId);
+        return GXSSOConfig.toCacheKey(userId);
     }
 
     /**
@@ -198,6 +221,6 @@ public class GXSsoHelperUtil {
      * @return boolean
      */
     public static boolean kickLogin(Object userId) {
-        return getSsoService().kickLogin(userId);
+        return getSSOService().kickLogin(userId);
     }
 }

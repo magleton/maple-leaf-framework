@@ -1,6 +1,6 @@
 package com.geoxus.sso.plugins;
 
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ public interface GXSsoPlugin {
      * @param ssoToken 登录票据
      * @return boolean
      */
-    default boolean validateToken(GXSsoToken ssoToken) {
+    default boolean validateToken(GXSSOToken ssoToken) {
         return true;
     }
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author britton
  * @since 2021-09-15
  */
-public interface GXSsoHandler {
+public interface GXSSOHandler {
     /**
      * token 为空未登录, 拦截到 AJAX 方法时
      *

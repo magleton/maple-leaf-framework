@@ -14,18 +14,18 @@ import java.io.IOException;
  * @author britton britton@126.com
  * @since 2021-09-15
  */
-public class GXSsoDefaultHandler implements GXSsoHandler {
+public class GXSSODefaultHandler implements GXSSOHandler {
     /**
      * 默认处理器
      */
-    private static GXSsoDefaultHandler handler;
+    private static GXSSODefaultHandler handler;
 
     /**
      * new 当前对象
      */
-    public static GXSsoDefaultHandler getInstance() {
+    public static GXSSODefaultHandler getInstance() {
         if (handler == null) {
-            handler = new GXSsoDefaultHandler();
+            handler = new GXSSODefaultHandler();
         }
         return handler;
     }

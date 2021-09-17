@@ -1,13 +1,13 @@
 package com.geoxus.sso.config;
 
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.sso.cache.GXSsoCache;
-import com.geoxus.sso.constant.GXSsoConstant;
-import com.geoxus.sso.oauth.GXSsoAuthorization;
+import com.geoxus.sso.cache.GXSSOCache;
+import com.geoxus.sso.constant.GXSSOConstant;
+import com.geoxus.sso.oauth.GXSSOAuthorization;
 import com.geoxus.sso.plugins.GXSsoPlugin;
-import com.geoxus.sso.security.token.GXSsoToken;
+import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXCookieHelperUtil;
-import com.geoxus.sso.util.GXSsoHelperUtil;
+import com.geoxus.sso.util.GXSSOHelperUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -23,11 +23,11 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class GXSsoConfig {
+public class GXSSOConfig {
     /**
      * 编码格式，默认 UTF-8
      */
-    private String encoding = GXSsoConstant.ENCODING;
+    private String encoding = GXSSOConstant.ENCODING;
 
     /**
      * 签名密钥（用于对此算法）
@@ -132,7 +132,7 @@ public class GXSsoConfig {
     /**
      * 访问票据
      */
-    private GXSsoToken ssoToken;
+    private GXSSOToken ssoToken;
 
     /**
      * 权限认证（默认 false）
@@ -147,22 +147,22 @@ public class GXSsoConfig {
     /**
      * SSO 缓存
      */
-    private GXSsoCache cache;
+    private GXSSOCache cache;
 
     /**
      * SSO 权限授权
      */
-    private GXSsoAuthorization authorization;
+    private GXSSOAuthorization authorization;
 
-    public GXSsoConfig() {
+    public GXSSOConfig() {
         /* 支持 setInstance 设置初始化 */
     }
 
     /**
      * new 当前对象
      */
-    public static GXSsoConfig getInstance() {
-        return GXSsoHelperUtil.getSsoConfig();
+    public static GXSSOConfig getInstance() {
+        return GXSSOHelperUtil.getSSOConfig();
     }
 
     public static String getSsoEncoding() {
@@ -205,11 +205,11 @@ public class GXSsoConfig {
         return rsaJksStore;
     }
 
-    public GXSsoAuthorization getAuthorization() {
+    public GXSSOAuthorization getAuthorization() {
         return authorization;
     }
 
-    public GXSsoConfig setAuthorization(GXSsoAuthorization authorization) {
+    public GXSSOConfig setAuthorization(GXSSOAuthorization authorization) {
         this.authorization = authorization;
         return this;
     }

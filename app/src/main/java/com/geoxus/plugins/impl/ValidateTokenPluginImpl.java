@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
+/*@Component*/
 public class ValidateTokenPluginImpl implements GXSsoPlugin {
     @Override
     public boolean login(HttpServletRequest request, HttpServletResponse response) {

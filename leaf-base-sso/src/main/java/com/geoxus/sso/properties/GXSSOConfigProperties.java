@@ -1,7 +1,7 @@
 package com.geoxus.sso.properties;
 
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
-import com.geoxus.sso.config.GXSsoConfig;
+import com.geoxus.sso.config.GXSSOConfig;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.PropertySource;
         ignoreResourceNotFound = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.ConfigFactory"})
 @ConfigurationProperties(prefix = "sso")
-public class GXSsoConfigProperties {
+public class GXSSOConfigProperties {
     @NestedConfigurationProperty
-    private GXSsoConfig config;
+    private GXSSOConfig config;
 }
