@@ -2,7 +2,7 @@ package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.shiro.service.GXAdminRoleService;
 import com.geoxus.shiro.service.GXAdminService;
 import com.geoxus.shiro.service.GXPermissionsService;
@@ -23,7 +23,7 @@ public class GXShiroServiceImpl implements GXShiroService {
      */
     @SuppressWarnings(value = {"unchecked"})
     public Set<String> getAdminAllPermissions(Long adminId) {
-        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXPermissionsService.class)).getAdminAllPermissions(adminId);
+        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXPermissionsService.class)).getAdminAllPermissions(adminId);
     }
 
     /**
@@ -32,12 +32,12 @@ public class GXShiroServiceImpl implements GXShiroService {
      * @return Dict
      */
     public Set<String> getAdminRoles(Long adminId) {
-        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminRoleService.class)).getAdminRoles(adminId);
+        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminRoleService.class)).getAdminRoles(adminId);
     }
 
     @Override
     public Dict getAdminById(Long adminId) {
-        final Dict dict = Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminService.class)).getStatus(adminId);
+        final Dict dict = Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminService.class)).getStatus(adminId);
         if (null == dict) {
             return Dict.create();
         }
@@ -46,7 +46,7 @@ public class GXShiroServiceImpl implements GXShiroService {
 
     @Override
     public boolean isSuperAdmin(Dict adminData) {
-        final String primaryKey = Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminService.class)).getPrimaryKey();
+        final String primaryKey = Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminService.class)).getPrimaryKey();
         if (null != adminData.getLong(primaryKey)) {
             return adminData.getLong(primaryKey).equals(GXCommonUtils.getEnvironmentValue("super.admin.id", Long.class));
         }

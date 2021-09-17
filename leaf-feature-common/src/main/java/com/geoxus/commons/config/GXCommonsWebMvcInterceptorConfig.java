@@ -1,7 +1,7 @@
 package com.geoxus.commons.config;
 
-import com.geoxus.core.common.properties.web.GXWebMvcConfig;
-import com.geoxus.core.common.web.GXWebMvcInterceptorConfig;
+import com.geoxus.common.properties.web.GXWebMvcConfig;
+import com.geoxus.common.web.interceptor.GXWebMvcInterceptor;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Slf4j
-public class GXCommonsWebMvcInterceptorConfig extends GXWebMvcInterceptorConfig {
+public class GXCommonsWebMvcInterceptorConfig extends GXWebMvcInterceptor {
     @Autowired
     private GXUploadConfig gxUploadConfig;
 

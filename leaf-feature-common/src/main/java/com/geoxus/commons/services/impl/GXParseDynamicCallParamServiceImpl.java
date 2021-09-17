@@ -7,7 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.commons.dto.GXDynamicCallParamAttributeDto;
 import com.geoxus.commons.dto.GXDynamicCallParamDto;
 import com.geoxus.commons.services.GXParseDynamicCallParamService;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
             final String callBackClassName = callParamDto.getCallBackClassName();
             final Class<?> aClass = Class.forName(callBackClassName);
             final String callBackMethodName = callParamDto.getCallBackMethodName();
-            final Object bean = GXSpringContextUtils.getBean(aClass);
+            final Object bean = GXSpringContextUtil.getBean(aClass);
             if (Objects.isNull(bean)) {
                 log.error("callBackClassName = {}的bean不存在", callBackClassName);
                 return null;

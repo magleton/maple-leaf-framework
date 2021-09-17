@@ -11,7 +11,7 @@ import com.geoxus.commons.events.GXMediaLibraryEvent;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.pojo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
 import org.springframework.web.multipart.MultipartFile;
@@ -131,7 +131,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      * @return Collection
      */
     default Collection<GXMediaLibraryEntity> getMedia(int targetId, int coreModelId, Dict param) {
-        final GXMediaLibraryService mediaLibraryService = GXSpringContextUtils.getBean(GXMediaLibraryService.class);
+        final GXMediaLibraryService mediaLibraryService = GXSpringContextUtil.getBean(GXMediaLibraryService.class);
         assert mediaLibraryService != null;
         Dict condition = Dict.create().set("target_id", targetId).set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId);
         condition.putAll(param);
@@ -191,7 +191,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      * @return GXPagination
      */
     default GXPagination<Dict> mergePaginationCoreMediaLibrary(GXPagination<Dict> pagination, String modelIdKey) {
-        final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtils.getBean(GXMediaLibraryService.class);
+        final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtil.getBean(GXMediaLibraryService.class);
         pagination.getRecords().forEach(o -> {
             final Long targetId = o.getLong(modelIdKey);
             final Long coreModelId = o.getLong("coreModelId");
@@ -218,7 +218,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      */
     default GXPagination<Dict> mergePaginationCoreMediaLibrary(GXPagination<Dict> pagination) {
         String modelIdKey = getPrimaryKey();
-        final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtils.getBean(GXMediaLibraryService.class);
+        final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtil.getBean(GXMediaLibraryService.class);
         pagination.getRecords().forEach(o -> {
             final Long targetId = o.getLong(modelIdKey);
             final Long coreModelId = o.getLong("coreModelId");

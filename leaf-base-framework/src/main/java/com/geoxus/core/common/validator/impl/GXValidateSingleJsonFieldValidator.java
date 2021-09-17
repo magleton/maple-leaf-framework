@@ -1,7 +1,7 @@
 package com.geoxus.core.common.validator.impl;
 
 import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
 
 import javax.validation.ConstraintValidator;
@@ -32,7 +32,7 @@ public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<G
         tableName = annotation.tableName();
         parentFieldName = annotation.parentFieldName();
         fieldName = annotation.fieldName();
-        validateJsonFieldService = GXSpringContextUtils.getBean(serviceClazz);
+        validateJsonFieldService = GXSpringContextUtil.getBean(serviceClazz);
     }
 
     @Override

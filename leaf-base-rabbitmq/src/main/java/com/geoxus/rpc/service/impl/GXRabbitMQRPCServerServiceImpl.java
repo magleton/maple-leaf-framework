@@ -7,7 +7,7 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.config.GXRabbitMQConfig;
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.rpc.handler.GXRPCServerHandler;
 import com.geoxus.rpc.service.GXRabbitMQRPCServerService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class GXRabbitMQRPCServerServiceImpl implements GXRabbitMQRPCServerServic
         if (null == methodName) {
             return JSONUtil.toJsonStr(Dict.create().set("thread_name", threadName).set("msg", "RPC的调用方法没有设置").set("code", HttpStatus.HTTP_INTERNAL_ERROR));
         }
-        final GXRPCServerHandler rpcServerHandler = GXSpringContextUtils.getBean(handlerName, GXRPCServerHandler.class);
+        final GXRPCServerHandler rpcServerHandler = GXSpringContextUtil.getBean(handlerName, GXRPCServerHandler.class);
         if (rpcServerHandler == null) {
             return JSONUtil.toJsonStr(Dict.create().set("thread_name", threadName).set("msg", "服务端没有提供对应的RPC服务").set("code", HttpStatus.HTTP_INTERNAL_ERROR));
         }

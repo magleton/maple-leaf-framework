@@ -3,7 +3,7 @@ package com.geoxus.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.dto.GXCanalDataDto;
 import com.geoxus.service.GXCanalMessageParseService;
 import com.geoxus.service.GXProcessCanalDataService;
@@ -31,9 +31,9 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
         }
         final GXCanalDataDto canalDataDto = JSONUtil.toBean(message, GXCanalDataDto.class);
         final String serviceName = CharSequenceUtil.toCamelCase(CharSequenceUtil.format("{}_{}_Service", canalDataDto.getDatabase(), canalDataDto.getTable()));
-        Object bean = GXSpringContextUtils.getBean(serviceName);
+        Object bean = GXSpringContextUtil.getBean(serviceName);
         if (Objects.isNull(bean)) {
-            bean = GXSpringContextUtils.getBean("defaultProcessCanalDataService");
+            bean = GXSpringContextUtil.getBean("defaultProcessCanalDataService");
             if (Objects.isNull(bean)) {
                 log.info("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
                 return dict;

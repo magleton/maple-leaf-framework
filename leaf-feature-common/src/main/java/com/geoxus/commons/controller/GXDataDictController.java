@@ -2,7 +2,7 @@ package com.geoxus.commons.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.commons.services.GXDataDictService;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.common.pojo.response.GXPagination;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +23,8 @@ public class GXDataDictController {
      * @return GXResultUtils
      */
     @PostMapping("/list-or-search")
-    public GXResultUtils<GXPagination<Dict>> listOrSearchPage(@RequestBody Dict condition) {
+    public GXResultUtil<GXPagination<Dict>> listOrSearchPage(@RequestBody Dict condition) {
         final GXPagination<Dict> pagination = dataDictService.listOrSearchPage(condition, Dict.class);
-        return GXResultUtils.ok(pagination);
+        return GXResultUtil.ok(pagination);
     }
 }

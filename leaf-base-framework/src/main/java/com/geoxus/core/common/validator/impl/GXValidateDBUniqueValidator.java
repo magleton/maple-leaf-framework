@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.annotation.GXValidateDBUniqueAnnotation;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateDBUnique;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValida
     public void initialize(GXValidateDBUniqueAnnotation annotation) {
         Class<? extends GXValidateDBUnique> clazz = annotation.service();
         fieldName = annotation.fieldName();
-        service = GXSpringContextUtils.getBean(clazz);
+        service = GXSpringContextUtil.getBean(clazz);
         tableName = annotation.tableName();
         condition = annotation.condition();
         spEL = annotation.spEL();

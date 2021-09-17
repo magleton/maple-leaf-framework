@@ -5,7 +5,7 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.commons.services.GXDynamicCallMethodService;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.util.GXTypeOfUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class GXDynamicCallMethodServiceImpl implements GXDynamicCallMethodServic
         try {
             final Class<?> aClass = Class.forName(serviceClassName);
             final Method method = ReflectUtil.getMethodByName(aClass, methodName);
-            final Object bean = GXSpringContextUtils.getBean(aClass);
+            final Object bean = GXSpringContextUtil.getBean(aClass);
             if (Objects.isNull(method) || Objects.isNull(bean)) {
                 log.error("调用信息不正确{}#{}", serviceClassName, methodName);
                 return null;

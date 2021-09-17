@@ -1,8 +1,8 @@
 package com.geoxus.controller;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.util.GXResultUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXResultUtil;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.plugins.impl.GXLoginSSOPluginImpl;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
@@ -26,11 +26,11 @@ public class LoginController {
     private GXSSOConfigProperties ssoProperties;
 
     @GetMapping("login")
-    public GXResultUtils<Dict> login(HttpServletRequest request, HttpServletResponse response) {
+    public GXResultUtil<Dict> login(HttpServletRequest request, HttpServletResponse response) {
         GXSSOToken ssoToken = GXSSOToken.create();
         GXSSOConfig ssoConfig = new GXSSOConfig();
         ssoConfig.setPluginList(Collections.singletonList(new GXLoginSSOPluginImpl()))
-                .setCache(GXSpringContextUtils.getBean(GXSSOCache.class));
+                .setCache(GXSpringContextUtil.getBean(GXSSOCache.class));
         GXSSOHelperUtil.setSsoConfig(ssoProperties.getConfig()).setSsoToken(ssoToken).getSsoToken()
                 .setUserId(1)
                 .setIssuer("admin")
@@ -40,6 +40,6 @@ public class LoginController {
                 .setTime(System.currentTimeMillis());
         String token = ssoToken.getToken();
         GXSSOHelperUtil.setCookie(request, response, ssoToken);
-        return GXResultUtils.ok(Dict.create().set("token", token));
+        return GXResultUtil.ok(Dict.create().set("token", token));
     }
 }

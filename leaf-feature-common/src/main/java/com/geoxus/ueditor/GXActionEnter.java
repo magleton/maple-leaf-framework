@@ -1,7 +1,7 @@
 package com.geoxus.ueditor;
 
 import cn.hutool.json.JSONException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.ueditor.config.GXDefaultEditorUploader;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import com.geoxus.ueditor.define.GXActionMap;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class GXActionEnter {
     private final GXEditorUploader editorUploader;
 
-    private final GXEditorProperties properties = GXSpringContextUtils.getBean(GXEditorProperties.class);
+    private final GXEditorProperties properties = GXSpringContextUtil.getBean(GXEditorProperties.class);
 
     private final HttpServletRequest request;
 
@@ -28,7 +28,7 @@ public class GXActionEnter {
         this.request = request;
         this.actionType = request.getParameter("action");
         this.configManager = GXConfigManager.getInstance(properties.getConfigFile());
-        editorUploader = GXSpringContextUtils.getBean(GXDefaultEditorUploader.class);
+        editorUploader = GXSpringContextUtil.getBean(GXDefaultEditorUploader.class);
     }
 
     public String exec() throws JSONException {

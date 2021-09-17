@@ -74,6 +74,8 @@ public class GXSSOConstant {
      */
     public static final Charset CHARSET_ENCODING = Charset.forName(ENCODING);
 
+
+
     /**
      * 分隔符
      */

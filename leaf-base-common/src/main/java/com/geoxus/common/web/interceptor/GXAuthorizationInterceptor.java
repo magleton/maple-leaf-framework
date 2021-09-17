@@ -1,4 +1,4 @@
-package com.geoxus.core.common.interceptor;
+package com.geoxus.common.web.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

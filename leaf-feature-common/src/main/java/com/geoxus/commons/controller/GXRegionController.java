@@ -3,7 +3,7 @@ package com.geoxus.commons.controller;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.commons.entities.GXRegionEntity;
 import com.geoxus.commons.services.GXRegionService;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,9 +21,9 @@ public class GXRegionController {
      * @return GXResultUtils
      */
     @GetMapping("/get-region-tree")
-    public GXResultUtils<List<GXRegionEntity>> getRegionTree() {
+    public GXResultUtil<List<GXRegionEntity>> getRegionTree() {
         List<GXRegionEntity> list = regionService.getRegionTree();
-        return GXResultUtils.ok(list);
+        return GXResultUtil.ok(list);
     }
 
     /**
@@ -33,8 +33,8 @@ public class GXRegionController {
      * @return GXResultUtils
      */
     @PostMapping("/get-region")
-    public GXResultUtils<List<GXRegionEntity>> getRegion(@RequestBody Dict param) {
+    public GXResultUtil<List<GXRegionEntity>> getRegion(@RequestBody Dict param) {
         List<GXRegionEntity> list = regionService.getRegion(param);
-        return GXResultUtils.ok(list);
+        return GXResultUtil.ok(list);
     }
 }

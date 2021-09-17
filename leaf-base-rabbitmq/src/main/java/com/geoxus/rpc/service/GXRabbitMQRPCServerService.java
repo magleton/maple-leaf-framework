@@ -1,7 +1,7 @@
 package com.geoxus.rpc.service;
 
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import org.springframework.amqp.core.Message;
 
 import java.util.Optional;
@@ -26,6 +26,6 @@ public interface GXRabbitMQRPCServerService {
      */
     default String getQueueName(String queueName) {
         queueName = Optional.ofNullable(queueName).orElse("rabbit.rpc-server-name");
-        return GXSpringContextUtils.getEnvironment().getProperty(queueName, String.class);
+        return GXSpringContextUtil.getEnvironment().getProperty(queueName, String.class);
     }
 }

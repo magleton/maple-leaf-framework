@@ -9,7 +9,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -76,7 +76,7 @@ public class GXJsonToListTypeHandler extends BaseTypeHandler<List<Map<String, Ob
 
     private List<Map<String, Object>> jsonToList(String from, int coreModelId) {
         from = StrUtil.isEmpty(from) ? "[]" : from;
-        final GXCoreModelAttributePermissionService coreModelAttributePermissionService = GXSpringContextUtils.getBean(GXCoreModelAttributePermissionService.class);
+        final GXCoreModelAttributePermissionService coreModelAttributePermissionService = GXSpringContextUtil.getBean(GXCoreModelAttributePermissionService.class);
         if (!JSONUtil.isJson(from) || (JSONUtil.isJsonObj(from) && JSONUtil.parseObj(from).isEmpty())) {
             return Collections.emptyList();
         }

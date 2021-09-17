@@ -17,7 +17,7 @@ import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateJsonFieldService;
 import com.geoxus.core.common.validator.impl.GXValidatorUtils;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         boolean isConvertToEntity = requestBodyToTargetAnnotation.isConvertToEntity();
         if (mapstructClazz != Void.class && isConvertToEntity) {
             GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
-            }, GXSpringContextUtils.getBean(mapstructClazz));
+            }, GXSpringContextUtil.getBean(mapstructClazz));
             if (null == convert) {
                 LOGGER.error("DTO转换为Entity失败!请提供正确的MapStruct转换Class");
                 return null;
@@ -148,7 +148,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             Class<? extends GXValidateJsonFieldService> service = annotation.service();
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
-                GXValidateJsonFieldService bean = GXSpringContextUtils.getBean(service);
+                GXValidateJsonFieldService bean = GXSpringContextUtil.getBean(service);
                 fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, parentFieldName, fieldName);
             }
             jsonFields.add(parentFieldName);

@@ -1,7 +1,7 @@
 package com.geoxus.controller;
 
 import com.geoxus.sso.annotation.GXLoginAnnotation;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexController {
     @GetMapping("index")
     @GXLoginAnnotation
-    public GXResultUtils<String> index() {
-        return GXResultUtils.ok("SSO , Hello World");
+    public GXResultUtil<String> index() {
+        return GXResultUtil.ok("SSO , Hello World");
     }
 }

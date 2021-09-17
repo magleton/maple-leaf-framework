@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.core.common.support.GXHandlerMethodArgumentResolver;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.web.support.GXHandlerMethodArgumentResolver;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.sso.annotation.GXLoginUserAnnotation;
 import com.geoxus.sso.entity.GXUUserEntity;
 import com.geoxus.sso.service.GXUUserService;
@@ -49,6 +49,6 @@ public class GXLoginUserHandlerMethodArgumentResolver extends GXHandlerMethodArg
         }
         // 获取用户信息
         Long userId = Convert.toLong(object);
-        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXUUserService.class)).getUserByUserId(userId);
+        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXUUserService.class)).getUserByUserId(userId);
     }
 }

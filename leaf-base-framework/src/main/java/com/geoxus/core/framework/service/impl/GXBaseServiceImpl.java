@@ -14,7 +14,7 @@ import com.geoxus.core.common.event.GXBaseEvent;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXAlterTableService;
 import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
@@ -224,7 +224,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public <R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue, int coreModelId) {
-        GXCoreModelAttributePermissionService permissionService = GXSpringContextUtils.getBean(GXCoreModelAttributePermissionService.class);
+        GXCoreModelAttributePermissionService permissionService = GXSpringContextUtil.getBean(GXCoreModelAttributePermissionService.class);
         assert permissionService != null;
         Dict permissions = permissionService.getModelAttributePermissionByCoreModelId(coreModelId, Dict.create());
         Dict jsonField = Convert.convert(Dict.class, permissions.getObj("json_field"));
@@ -552,7 +552,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
         if (targetDict.isEmpty()) {
             return false;
         }
-        GXAlterTableService gxAlterTableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
+        GXAlterTableService gxAlterTableService = GXSpringContextUtil.getBean(GXAlterTableService.class);
         assert gxAlterTableService != null;
         List<GXDBSchemaService.TableField> tableColumns = CollUtil.newArrayList();
         try {

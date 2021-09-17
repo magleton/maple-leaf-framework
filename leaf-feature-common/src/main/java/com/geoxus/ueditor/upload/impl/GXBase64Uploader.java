@@ -1,6 +1,6 @@
 package com.geoxus.ueditor.upload.impl;
 
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.ueditor.GXPathFormat;
 import com.geoxus.ueditor.GXStorageManager;
 import com.geoxus.ueditor.config.GXEditorProperties;
@@ -16,7 +16,7 @@ public class GXBase64Uploader {
     private static final GXEditorProperties properties;
 
     static {
-        properties = GXSpringContextUtils.getBean(GXEditorProperties.class);
+        properties = GXSpringContextUtil.getBean(GXEditorProperties.class);
     }
 
     private GXBase64Uploader() {

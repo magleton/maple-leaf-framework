@@ -1,7 +1,7 @@
 package com.geoxus.core.common.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 
 public interface GXSendSMSService {
     /**
@@ -11,7 +11,7 @@ public interface GXSendSMSService {
      * @param templateName 短信模板名字
      * @return ResultUtil
      */
-    GXResultUtils<String> send(String phone, String templateName, Dict param);
+    GXResultUtil<String> send(String phone, String templateName, Dict param);
 
     /**
      * 验证验证码

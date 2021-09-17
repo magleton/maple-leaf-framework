@@ -1,6 +1,6 @@
 package com.geoxus.util;
 
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.rpc.config.GXRabbitMQRPCRemoteServersConfig;
 import com.geoxus.rpc.service.GXRabbitMQRPCClientService;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -60,7 +60,7 @@ public class GXRabbitUtils {
      * @return String
      */
     public static String getRemoteRPCServerValueByKey(String serverName, String key) {
-        final GXRabbitMQRPCRemoteServersConfig serverConfigBean = GXSpringContextUtils.getBean(GXRabbitMQRPCRemoteServersConfig.class);
+        final GXRabbitMQRPCRemoteServersConfig serverConfigBean = GXSpringContextUtil.getBean(GXRabbitMQRPCRemoteServersConfig.class);
         assert serverConfigBean != null;
         final Map<String, Map<String, Object>> servers = serverConfigBean.getServers();
         final Map<String, Object> server = servers.get(serverName);

@@ -12,7 +12,7 @@ import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.service.GXSendSMSService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.pojo.common.GXResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -92,10 +92,10 @@ public class GXCheckCaptchaAspect {
     }
 
     private GXSendSMSService getSendSMSService() {
-        return GXSpringContextUtils.getBean(GXSendSMSService.class);
+        return GXSpringContextUtil.getBean(GXSendSMSService.class);
     }
 
     private GXCaptchaService getCaptchaService() {
-        return GXSpringContextUtils.getBean(GXCaptchaService.class);
+        return GXSpringContextUtil.getBean(GXCaptchaService.class);
     }
 }

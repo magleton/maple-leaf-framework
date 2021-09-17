@@ -1,4 +1,4 @@
-package com.geoxus.core.common.web.interceptor;
+package com.geoxus.common.web.interceptor;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

@@ -2,7 +2,7 @@ package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.controller.GXBaseController;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.service.GXAdminService;
 import org.springframework.validation.annotation.Validated;
@@ -29,8 +29,8 @@ public class GXAdminController implements GXBaseController {
      * @return GXResultUtils
      */
     @PostMapping("login")
-    public GXResultUtils<Dict> login(@RequestBody @Validated GXAdminLoginReqDto loginReqDto) {
+    public GXResultUtil<Dict> login(@RequestBody @Validated GXAdminLoginReqDto loginReqDto) {
         final String token = adminService.login(loginReqDto);
-        return GXResultUtils.ok(Dict.create().set("admin-token", token).set("username", loginReqDto.getUsername()));
+        return GXResultUtil.ok(Dict.create().set("admin-token", token).set("username", loginReqDto.getUsername()));
     }
 }

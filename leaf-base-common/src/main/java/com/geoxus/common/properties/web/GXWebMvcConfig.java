@@ -1,4 +1,4 @@
-package com.geoxus.core.common.properties.web;
+package com.geoxus.common.properties.web;
 
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;

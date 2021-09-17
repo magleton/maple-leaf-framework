@@ -2,6 +2,7 @@ package com.geoxus.core.common.util;
 
 import cn.hutool.core.convert.Convert;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.util.GXSpringContextUtil;
 import org.redisson.api.*;
 import org.slf4j.Logger;
 
@@ -134,6 +135,6 @@ public class GXRedisUtils {
      * @return RedissonClient
      */
     public static RedissonClient getRedissonClient() {
-        return GXSpringContextUtils.getBean(RedissonClient.class);
+        return GXSpringContextUtil.getBean(RedissonClient.class);
     }
 }

@@ -3,6 +3,7 @@ package com.geoxus.core.common.util;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.github.benmanes.caffeine.cache.*;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 
@@ -22,7 +23,7 @@ public class GXSingletonUtils {
      * @return RedissonSpringCacheManager
      */
     public static RedissonSpringCacheManager getRedissonSpringCacheManager() {
-        return GXSpringContextUtils.getBean(RedissonSpringCacheManager.class);
+        return GXSpringContextUtil.getBean(RedissonSpringCacheManager.class);
     }
 
     /**
@@ -34,7 +35,7 @@ public class GXSingletonUtils {
     public static <K, V> Cache<K, V> getCaffeineCache(String configNameKey) {
         final String beanName = configNameKey + "caffeine-cache";
         Cache<K, V> cache = Convert.convert(new TypeReference<Cache<K, V>>() {
-        }, GXSpringContextUtils.getBean(beanName));
+        }, GXSpringContextUtil.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
@@ -54,7 +55,7 @@ public class GXSingletonUtils {
     public static <K, V> LoadingCache<K, V> getCaffeineCache(String configNameKey, CacheLoader<K, V> cacheLoader) {
         final String beanName = configNameKey + "cache-loader-caffeine-cache";
         LoadingCache<K, V> cache = Convert.convert(new TypeReference<LoadingCache<K, V>>() {
-        }, GXSpringContextUtils.getBean(beanName));
+        }, GXSpringContextUtil.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
@@ -73,7 +74,7 @@ public class GXSingletonUtils {
     public static <K, V> com.github.benmanes.caffeine.cache.AsyncCache<K, V> getAsyncCaffeine(String configNameKey) {
         final String beanName = configNameKey + "async-caffeine-cache";
         AsyncCache<K, V> cache = Convert.convert(new TypeReference<AsyncCache<K, V>>() {
-        }, GXSpringContextUtils.getBean(beanName));
+        }, GXSpringContextUtil.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
@@ -93,7 +94,7 @@ public class GXSingletonUtils {
     public static <K, V> com.github.benmanes.caffeine.cache.AsyncLoadingCache<K, V> getAsyncCaffeine(String cacheNameKey, AsyncCacheLoader<K, V> asyncCacheLoader) {
         final String beanName = cacheNameKey + "origin-async-cache-loader-caffeine-cache";
         AsyncLoadingCache<K, V> cache = Convert.convert(new TypeReference<AsyncLoadingCache<K, V>>() {
-        }, GXSpringContextUtils.getBean(beanName));
+        }, GXSpringContextUtil.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
@@ -116,7 +117,7 @@ public class GXSingletonUtils {
         }
         final String beanName = spec + "caffeine-obj";
         Caffeine<K, V> caffeine = Convert.convert(new TypeReference<Caffeine<K, V>>() {
-        }, GXSpringContextUtils.getBean(beanName));
+        }, GXSpringContextUtil.getBean(beanName));
         if (Objects.nonNull(caffeine)) {
             return caffeine;
         }

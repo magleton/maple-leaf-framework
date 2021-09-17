@@ -2,7 +2,7 @@ package com.geoxus.core.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.common.pojo.GXResultCode;
 import com.mysql.cj.exceptions.CJException;
 import lombok.extern.slf4j.Slf4j;
@@ -32,61 +32,61 @@ public class GXExceptionHandler {
      * 处理自定义异常
      */
     @ExceptionHandler(GXException.class)
-    public GXResultUtils<Dict> handleRRException(GXException e) {
+    public GXResultUtil<Dict> handleRRException(GXException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+        return GXResultUtil.error(e.getCode(), e.getMsg(), e.getData());
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
-    public GXResultUtils<Dict> handleRRBeanValidateException(GXBeanValidateException e) {
+    public GXResultUtil<Dict> handleRRBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getDict());
+        return GXResultUtil.error(e.getCode(), e.getMsg(), e.getDict());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public GXResultUtils<String> handlerNoFoundException(Exception e) {
+    public GXResultUtil<String> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
+        return GXResultUtil.error(404, "路径不存在，请检查路径是否正确");
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public GXResultUtils<String> handleDuplicateKeyException(DuplicateKeyException e) {
+    public GXResultUtil<String> handleDuplicateKeyException(DuplicateKeyException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error("数据库中已存在该记录");
+        return GXResultUtil.error("数据库中已存在该记录");
     }
 
     @ExceptionHandler(Exception.class)
-    public GXResultUtils<String> handleException(Exception e) {
+    public GXResultUtil<String> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error("系统错误");
+        return GXResultUtil.error("系统错误");
     }
 
     @ExceptionHandler(BindException.class)
-    public GXResultUtils<Map<String, Object>> handleBindException(BindException e) {
+    public GXResultUtil<Map<String, Object>> handleBindException(BindException e) {
         log.error(e.getMessage(), e);
         Map<String, Object> errors = new HashMap<>();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, errors);
+        return GXResultUtil.error(GXResultCode.COMMON_ERROR, errors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public GXResultUtils<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public GXResultUtil<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, errors);
+        return GXResultUtil.error(GXResultCode.COMMON_ERROR, errors);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public GXResultUtils<Map<String, Object>> handleValidationException(ValidationException e) {
+    public GXResultUtil<Map<String, Object>> handleValidationException(ValidationException e) {
         log.error(e.getMessage(), e);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("msg", e.getCause().getMessage());
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, hashMap);
+        return GXResultUtil.error(GXResultCode.COMMON_ERROR, hashMap);
     }
 
     /**
@@ -95,39 +95,39 @@ public class GXExceptionHandler {
      * @param e
      */
     @ExceptionHandler(value = {CJException.class})
-    public GXResultUtils<String> handleMysqlSyntaxError(Exception e) {
+    public GXResultUtil<String> handleMysqlSyntaxError(Exception e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getMessage());
+        return GXResultUtil.error(e.getMessage());
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public GXResultUtils<String> handleException(AuthorizationException e) {
+    public GXResultUtil<String> handleException(AuthorizationException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(403, "没有权限进行此操作");
+        return GXResultUtil.error(403, "没有权限进行此操作");
     }
 
     @ExceptionHandler(MultipartException.class)
-    public GXResultUtils<String> handleMultipartException(MultipartException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtil<String> handleMultipartException(MultipartException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getCause().getMessage());
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getCause().getMessage());
     }
 
     @ExceptionHandler(java.net.BindException.class)
-    public GXResultUtils<String> handleBindException(MultipartException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtil<String> handleBindException(MultipartException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(GXTokenEmptyException.class)
-    public GXResultUtils<String> handleGXTokenEmptyException(GXTokenEmptyException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtil<String> handleGXTokenEmptyException(GXTokenEmptyException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
-    public GXResultUtils<String> handleSQLException(SQLException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtil<String> handleSQLException(SQLException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
 
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.common.annotation.GXValidateDBExistsAnnotation;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateDBExists;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,7 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         Class<? extends GXValidateDBExists> clazz = annotation.service();
         fieldName = annotation.fieldName();
         groups = annotation.groups();
-        service = GXSpringContextUtils.getBean(clazz);
+        service = GXSpringContextUtil.getBean(clazz);
         tableName = annotation.tableName();
         condition = annotation.condition();
         spEL = annotation.spEL();

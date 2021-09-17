@@ -2,7 +2,7 @@ package com.geoxus.ueditor.support.qiniu;
 
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class GXQiNiuUtils {
-    private static final GXEditorProperties properties = GXSpringContextUtils.getBean(GXEditorProperties.class);
+    private static final GXEditorProperties properties = GXSpringContextUtil.getBean(GXEditorProperties.class);
 
     private GXQiNiuUtils() {
     }

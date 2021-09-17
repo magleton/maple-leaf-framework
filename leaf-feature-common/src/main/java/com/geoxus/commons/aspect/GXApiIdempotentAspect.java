@@ -7,7 +7,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.geoxus.commons.annotation.GXApiIdempotentAnnotation;
-import com.geoxus.common.util.GXResultUtils;
+import com.geoxus.common.util.GXResultUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,12 +34,12 @@ public class GXApiIdempotentAspect {
         final Object targetObject = getTargetObject(point);
         if (Objects.isNull(targetObject) || Objects.isNull(method)) {
             Dict dict = Dict.create().set("error", CharSequenceUtil.format("验证对象信息不存在信息, 请核对是否配置正确~~~"));
-            return GXResultUtils.error(dict);
+            return GXResultUtil.error(dict);
         }
         final boolean retData = invoke(targetObject, method, condition);
         if (!retData) {
             Dict dict = Dict.create().set("error", CharSequenceUtil.format("请不要提交的太过于频繁~~~~"));
-            return GXResultUtils.error(dict);
+            return GXResultUtil.error(dict);
         }
         return point.proceed(point.getArgs());
     }

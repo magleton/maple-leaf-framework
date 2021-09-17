@@ -1,6 +1,6 @@
 package com.geoxus.sso.web.interceptor;
 
-import com.geoxus.core.common.web.interceptor.GXBaseSSOPermissionInterceptor;
+import com.geoxus.common.web.interceptor.GXBaseSSOPermissionInterceptor;
 import com.geoxus.sso.annotation.GXPermissionAnnotation;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXAction;

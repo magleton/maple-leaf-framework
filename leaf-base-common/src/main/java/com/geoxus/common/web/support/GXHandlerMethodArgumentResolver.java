@@ -1,4 +1,4 @@
-package com.geoxus.core.common.support;
+package com.geoxus.common.web.support;
 
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 

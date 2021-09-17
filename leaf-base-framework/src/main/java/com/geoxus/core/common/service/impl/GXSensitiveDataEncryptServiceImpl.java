@@ -3,7 +3,7 @@ package com.geoxus.core.common.service.impl;
 import cn.hutool.core.util.ReflectUtil;
 import com.geoxus.core.common.annotation.GXSensitiveFieldAnnotation;
 import com.geoxus.core.common.service.GXSensitiveDataEncryptService;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ public class GXSensitiveDataEncryptServiceImpl implements GXSensitiveDataEncrypt
                     final String deEncryptKey = sensitiveField.deEncryptKey();
                     final String[] params = sensitiveField.params();
                     String value = (String) object;
-                    final Object bean = GXSpringContextUtils.getBean(serviceClazz);
+                    final Object bean = GXSpringContextUtil.getBean(serviceClazz);
                     final Object invoke = ReflectUtil.invoke(bean, encryptAlgorithm, value, deEncryptKey, params);
                     ReflectUtil.setFieldValue(paramsObject, accessible, invoke);
                 }

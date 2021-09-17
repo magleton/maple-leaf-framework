@@ -1,6 +1,6 @@
 package com.geoxus.core.common.cache;
 
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import org.apache.ibatis.cache.Cache;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
@@ -169,7 +169,7 @@ public class MybatisRedisCache implements Cache {
 
     private RedisTemplate<Object, Object> getRedis() {
         if (redisTemplate == null) {
-            redisTemplate = GXSpringContextUtils.getBean(RedisTemplate.class);
+            redisTemplate = GXSpringContextUtil.getBean(RedisTemplate.class);
         }
         return redisTemplate;
     }

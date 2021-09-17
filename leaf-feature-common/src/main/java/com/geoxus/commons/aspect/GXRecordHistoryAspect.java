@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.annotation.GXRecordHistoryAnnotation;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXBaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,7 +32,7 @@ public class GXRecordHistoryAspect {
             MethodSignature signature = (MethodSignature) point.getSignature();
             Method method = signature.getMethod();
             final GXRecordHistoryAnnotation gxRecordHistoryAnnotation = method.getAnnotation(GXRecordHistoryAnnotation.class);
-            GXBaseService<?, ?, ?> service = GXSpringContextUtils.getBean(gxRecordHistoryAnnotation.service());
+            GXBaseService<?, ?, ?> service = GXSpringContextUtil.getBean(gxRecordHistoryAnnotation.service());
             if (Objects.nonNull(service)) {
                 String[] paramNames = gxRecordHistoryAnnotation.conditionalParameterName();
                 String originTableName = gxRecordHistoryAnnotation.originTableName();

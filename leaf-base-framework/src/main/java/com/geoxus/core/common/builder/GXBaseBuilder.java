@@ -16,7 +16,7 @@ import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.exception.GXException;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.util.GXSpringContextUtils;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
@@ -150,7 +150,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
         final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
@@ -292,7 +292,7 @@ public interface GXBaseBuilder {
         Dict searchField = getDefaultSearchField();
         if (isMergeDBSearchCondition) {
             final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
-            Dict dbSearchCondition = Objects.requireNonNull(GXSpringContextUtils.getBean(GXCoreModelService.class)).getSearchCondition(condition);
+            Dict dbSearchCondition = Objects.requireNonNull(GXSpringContextUtil.getBean(GXCoreModelService.class)).getSearchCondition(condition);
             searchField.putAll(dbSearchCondition);
         }
         //searchField.putAll(getDefaultSearchField());
@@ -347,7 +347,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove, saveJSONField);
     }
@@ -362,7 +362,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove);
     }
@@ -376,7 +376,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
     }

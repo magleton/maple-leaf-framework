@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.geoxus.common.util.GXSpringContextUtil;
 import org.slf4j.Logger;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -205,7 +206,7 @@ public class GXSpELToolUtils {
      * @return T
      */
     public static <T> T callBeanMethodSpELExpression(Class<?> beanClazz, String methodName, Class<T> clazz, Class<?>[] methodParamTypes, Object... params) {
-        final Object beanObj = GXSpringContextUtils.getBean(beanClazz);
+        final Object beanObj = GXSpringContextUtil.getBean(beanClazz);
         if (Objects.isNull(beanObj)) {
             return null;
         }

@@ -1,6 +1,7 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -11,19 +12,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-public class GXSpringContextUtils {
-    private static final Logger log = GXCommonUtils.getLogger(GXSpringContextUtils.class);
+public class GXSpringContextUtil {
+    private static final Logger LOG = LoggerFactory.getLogger(GXSpringContextUtil.class);
 
     private static final ApplicationContext applicationContext = GXApplicationContextSingleton.INSTANCE.getApplicationContext();
 
-    private GXSpringContextUtils() {
+    private GXSpringContextUtil() {
     }
 
     public static Object getBean(String name) {
         try {
             return applicationContext.getBean(name);
         } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -32,7 +33,7 @@ public class GXSpringContextUtils {
         try {
             return applicationContext.getBean(clazz);
         } catch (Exception e) {
-            log.error(String.format("记录获取Bean的信息, 不影响业务, Bean获取出错 : %s / %s", clazz.getSimpleName(), e.getMessage()), e);
+            LOG.error(String.format("记录获取Bean的信息, 不影响业务, Bean获取出错 : %s / %s", clazz.getSimpleName(), e.getMessage()), e);
         }
         return null;
     }
@@ -41,7 +42,7 @@ public class GXSpringContextUtils {
         try {
             return applicationContext.getBean(name, requiredType);
         } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
