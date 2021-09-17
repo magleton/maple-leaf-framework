@@ -32,6 +32,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -85,8 +86,8 @@ public class GXSSOServiceSupport {
             }
 
             GXSSOToken cacheSSOToken = cache.get(cookieSSOToken.toCacheKey(), getConfig().getCacheExpires());
-            if (cacheSSOToken == null) {
-                // 开启缓存且失效，返回 null 清除 Cookie 退出
+            if (Objects.isNull(cacheSSOToken)) {
+                // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.debug("cacheSSOToken GXSsoToken is null.");
                 return null;
             } else {

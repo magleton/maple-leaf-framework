@@ -10,7 +10,7 @@ import com.geoxus.sso.enums.GXTokenOrigin;
 import com.geoxus.sso.properties.GXSSOConfigProperties;
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXSSOHelperUtil;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ public class LoginController {
     @Resource
     private GXSSOConfigProperties ssoProperties;
 
-    @PostMapping("login")
+    @GetMapping("login")
     public GXResultUtils<Dict> login(HttpServletRequest request, HttpServletResponse response) {
         GXSSOToken ssoToken = GXSSOToken.create();
         GXSSOConfig ssoConfig = new GXSSOConfig();
