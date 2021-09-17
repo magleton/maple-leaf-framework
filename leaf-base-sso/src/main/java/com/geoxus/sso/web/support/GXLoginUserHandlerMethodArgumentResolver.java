@@ -3,14 +3,13 @@ package com.geoxus.sso.web.support;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.common.web.support.GXHandlerMethodArgumentResolver;
+import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.common.web.support.GXHandlerMethodArgumentResolver;
 import com.geoxus.sso.annotation.GXLoginUserAnnotation;
-import com.geoxus.sso.entity.GXUUserEntity;
+import com.geoxus.sso.dto.GXUserInfoDto;
 import com.geoxus.sso.service.GXUUserService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -27,12 +26,14 @@ import java.util.Objects;
 public class GXLoginUserHandlerMethodArgumentResolver extends GXHandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUUserEntity.class)
+        /*return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUUserEntity.class)
+                && parameter.hasParameterAnnotation(GXLoginUserAnnotation.class);*/
+        return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUserInfoDto.class)
                 && parameter.hasParameterAnnotation(GXLoginUserAnnotation.class);
     }
 
     @Override
-    public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer container,
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer container,
                                   NativeWebRequest request, WebDataBinderFactory factory) throws Exception {
         // 获取用户ID
         Object object = request.getAttribute(GXTokenConstant.USER_ID, RequestAttributes.SCOPE_REQUEST);

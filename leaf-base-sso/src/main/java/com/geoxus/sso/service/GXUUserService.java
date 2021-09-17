@@ -2,9 +2,8 @@ package com.geoxus.sso.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.validator.GXValidateDBExists;
-import com.geoxus.sso.entity.GXUUserEntity;
 
-public interface GXUUserService<T extends GXUUserEntity> extends GXValidateDBExists {
+public interface GXUUserService extends GXValidateDBExists {
     /**
      * 验证前端用户的Token是否有效
      *
@@ -31,7 +30,7 @@ public interface GXUUserService<T extends GXUUserEntity> extends GXValidateDBExi
      * @param userId 用户ID
      * @return T
      */
-    default T getUserByUserId(Long userId) {
+    default Dict getUserByUserId(Long userId) {
         return null;
     }
 
