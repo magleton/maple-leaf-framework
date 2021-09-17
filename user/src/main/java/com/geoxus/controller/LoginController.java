@@ -3,7 +3,7 @@ package com.geoxus.controller;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.util.GXResultUtils;
 import com.geoxus.core.common.util.GXSpringContextUtils;
-import com.geoxus.plugins.impl.GXLoginSsoPlugin;
+import com.geoxus.plugins.impl.GXLoginSsoPluginImpl;
 import com.geoxus.sso.cache.GXSsoCache;
 import com.geoxus.sso.config.GXSsoConfig;
 import com.geoxus.sso.enums.GXTokenOrigin;
@@ -29,9 +29,9 @@ public class LoginController {
     public GXResultUtils<Dict> login(HttpServletRequest request, HttpServletResponse response) {
         GXSsoToken ssoToken = GXSsoToken.create();
         GXSsoConfig ssoConfig = new GXSsoConfig();
-        ssoConfig.setPluginList(Collections.singletonList(new GXLoginSsoPlugin()))
+        ssoConfig.setPluginList(Collections.singletonList(new GXLoginSsoPluginImpl()))
                 .setCache(GXSpringContextUtils.getBean(GXSsoCache.class));
-        GXSsoHelperUtil.setSsoConfig(ssoConfig).setSsoToken(ssoToken).getSsoToken()
+        GXSsoHelperUtil.setSsoConfig(ssoProperties.getConfig()).setSsoToken(ssoToken).getSsoToken()
                 .setUserId(1)
                 .setIssuer("admin")
                 .setUserAgent("我的agent")

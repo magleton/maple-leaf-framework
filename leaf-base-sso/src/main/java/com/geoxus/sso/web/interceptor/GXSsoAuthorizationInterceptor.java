@@ -1,8 +1,12 @@
 package com.geoxus.sso.web.interceptor;
 
 import com.geoxus.core.common.interceptor.GXAuthorizationInterceptor;
+import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
+import com.geoxus.sso.cache.GXSsoCache;
 import com.geoxus.sso.constant.GXSsoConstant;
+import com.geoxus.sso.plugins.GXSsoPlugin;
+import com.geoxus.sso.properties.GXSsoConfigProperties;
 import com.geoxus.sso.security.token.GXSsoToken;
 import com.geoxus.sso.util.GXHttpUtil;
 import com.geoxus.sso.util.GXSsoHelperUtil;
@@ -14,6 +18,8 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -41,6 +47,24 @@ public class GXSsoAuthorizationInterceptor extends GXAuthorizationInterceptor {
             return true;
         }
 
+        // 为每个应用配置属于自己的SsoConfig对象
+        GXSsoConfigProperties ssoConfigProperties = GXSpringContextUtils.getBean(GXSsoConfigProperties.class);
+        if (Objects.nonNull(ssoConfigProperties.getConfig())) {
+            GXSsoHelperUtil.setSsoConfig(ssoConfigProperties.getConfig());
+        }
+        // 为每个应用配置自己的插件
+        Map<String, GXSsoPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSsoPlugin.class);
+        if (!ssoPluginMap.isEmpty()) {
+            ArrayList<GXSsoPlugin> plugins = new ArrayList<>();
+            ssoPluginMap.forEach((key, val) -> {
+                plugins.add(val);
+            });
+            GXSsoHelperUtil.getSsoConfig().setPluginList(plugins);
+        }
+        // 为每个应用配置自己的SsoCache实例
+        if (Objects.nonNull(GXSpringContextUtils.getBean(GXSsoCache.class))) {
+            GXSsoHelperUtil.getSsoConfig().setCache(GXSpringContextUtils.getBean(GXSsoCache.class));
+        }
         // 获取SsoToken对象
         GXSsoToken ssoToken = GXSsoHelperUtil.getSsoToken(request);
 
@@ -48,12 +72,12 @@ public class GXSsoAuthorizationInterceptor extends GXAuthorizationInterceptor {
         if (Objects.isNull(ssoToken)) {
             if (GXHttpUtil.isAjax(request)) {
                 // Handler 处理 AJAX 请求
-                this.getHandler().preTokenIsNullAjax(request, response);
+                getHandler().preTokenIsNullAjax(request, response);
                 return false;
             } else {
                 // token 为空, 调用 Handler 处理
                 // 返回 true 继续执行, 清理登录状态并重定向至登录界面
-                if (this.getHandler().preTokenIsNull(request, response)) {
+                if (getHandler().preTokenIsNull(request, response)) {
                     log.debug("logout. request url:" + request.getRequestURL());
                     GXSsoHelperUtil.clearRedirectLogin(request, response);
                 }

@@ -2,3 +2,4 @@ sso:
   config:
     loginUrl: http://www.baidu.com00001
     logoutUrl: http://www.baidu.com00099
+    cookieName: britton

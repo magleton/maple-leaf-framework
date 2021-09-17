@@ -1,5 +1,6 @@
 package com.geoxus.sso.util;
 
+import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.config.GXSsoConfig;
 import com.geoxus.sso.security.token.GXSsoToken;
 import com.geoxus.sso.service.GXConfigurableAbstractSsoService;
@@ -7,6 +8,7 @@ import com.geoxus.sso.service.GXConfigurableAbstractSsoService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * <p>
@@ -17,10 +19,19 @@ import java.io.IOException;
  * @since 2021-09-16
  */
 public class GXSsoHelperUtil {
+    /**
+     * SSO配置
+     */
     protected static GXSsoConfig ssoConfig;
 
+    /**
+     * SSO 服务处理
+     */
     protected static GXConfigurableAbstractSsoService ssoService;
 
+    /**
+     * 私有构造函数
+     */
     private GXSsoHelperUtil() {
 
     }
@@ -55,7 +66,9 @@ public class GXSsoHelperUtil {
      * Sso 服务初始化
      */
     public static GXConfigurableAbstractSsoService getSsoService() {
-        if (ssoService == null) {
+        if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSsoService.class))) {
+            ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSsoService.class);
+        } else if (Objects.isNull(ssoService)) {
             ssoService = new GXConfigurableAbstractSsoService();
         }
         return ssoService;

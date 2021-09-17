@@ -15,6 +15,9 @@ import java.io.IOException;
  * @since 2021-09-15
  */
 public class GXSsoDefaultHandler implements GXSsoHandler {
+    /**
+     * 默认处理器
+     */
     private static GXSsoDefaultHandler handler;
 
     /**

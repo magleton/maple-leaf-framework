@@ -58,7 +58,7 @@ public class GXSsoServiceSupport {
      * 此属性在过滤器拦截器中设置，业务系统中调用有效
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @return SSOToken {@link GXSsoToken}
      */
     @SuppressWarnings("unchecked")
@@ -74,12 +74,13 @@ public class GXSsoServiceSupport {
      * @param request 请求对象
      * @return SSOToken {@link GXSsoToken}
      */
-    protected GXSsoToken cacheSSOToken(HttpServletRequest request, GXSsoCache cache) {
+    protected GXSsoToken cacheSsoToken(HttpServletRequest request, GXSsoCache cache) {
         // 如果缓存不存退出登录
         if (cache != null) {
             GXSsoToken cookieSsoToken = getSsoTokenFromCookie(request);
             if (cookieSsoToken == null) {
                 // 未登录
+                log.debug("用户未登录....");
                 return null;
             }
 
@@ -106,7 +107,7 @@ public class GXSsoServiceSupport {
             }
         }
 
-        // GXSsoToken 为 null 执行以下逻辑
+        // GXSsoCache 为 null 执行以下逻辑
         return getSsoToken(request, config.getCookieName());
     }
 
@@ -122,12 +123,12 @@ public class GXSsoServiceSupport {
     protected GXSsoToken getSsoToken(HttpServletRequest request, String cookieName) {
         String accessToken = request.getHeader(config.getAccessTokenName());
         if (null == accessToken || "".equals(accessToken)) {
-            Cookie uid = GXCookieHelperUtil.findCookieByName(request, cookieName);
-            if (null == uid) {
+            Cookie cookie = GXCookieHelperUtil.findCookieByName(request, cookieName);
+            if (null == cookie) {
                 log.debug("Unauthorized login request, ip=" + GXIpHelperUtil.getIpAddr(request));
                 return null;
             }
-            return GXSsoToken.parser(uid.getValue(), false);
+            return GXSsoToken.parser(cookie.getValue(), false);
         }
         return GXSsoToken.parser(accessToken, true);
     }
@@ -153,7 +154,7 @@ public class GXSsoServiceSupport {
         // 判断请求 IP 是否合法
         if (config.isCookieCheckIp()) {
             String ip = GXIpHelperUtil.getIpAddr(request);
-            if (ssoToken != null && ip != null && !ip.equals(ssoToken.getIp())) {
+            if (ip != null && !ip.equals(ssoToken.getIp())) {
                 log.info(String.format("ip inconsistent! return SSOToken null, SSOToken userIp:%s, reqIp:%s", ssoToken.getIp(), ip));
                 return null;
             }
@@ -164,26 +165,23 @@ public class GXSsoServiceSupport {
     /**
      * cookie 中获取 SSOToken, 该方法未验证 IP 等其他信息。
      * <p>
-     * <p>
      * 1、自动设置
      * 2、拦截器 request 中获取
      * 3、解密 Cookie 获取
      * </p>
      *
      * @param request HTTP 请求
-     * @return
+     * @return GXSsoToken
      */
     public GXSsoToken getSsoTokenFromCookie(HttpServletRequest request) {
-        GXSsoToken token = this.attrSsoToken(request);
+        GXSsoToken token = attrSsoToken(request);
         if (token == null) {
-            token = this.getSsoToken(request, config.getCookieName());
+            token = getSsoToken(request, config.getCookieName());
         }
         return token;
     }
 
-    /**
-     * ------------------------------- 登录相关方法 -------------------------------
-     */
+    // ------------------------------- 登录相关方法 -------------------------------
 
     /**
      * 根据SSOToken生成登录信息Cookie
@@ -197,12 +195,8 @@ public class GXSsoServiceSupport {
             Cookie cookie = new Cookie(config.getCookieName(), token.getToken());
             cookie.setPath(config.getCookiePath());
             cookie.setSecure(config.isCookieSecure());
-            /**
-             * domain 提示
-             * <p>
-             * 有些浏览器 localhost 无法设置 cookie
-             * </p>
-             */
+            // domain 提示
+            // 有些浏览器 localhost 无法设置 cookie
             String domain = config.getCookieDomain();
             if (null != domain) {
                 cookie.setDomain(domain);

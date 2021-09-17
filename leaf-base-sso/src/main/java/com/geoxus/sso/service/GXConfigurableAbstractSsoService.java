@@ -12,6 +12,6 @@ import com.geoxus.sso.config.GXSsoConfig;
  */
 public class GXConfigurableAbstractSsoService extends GXAbstractSsoService {
     public GXConfigurableAbstractSsoService() {
-        config = GXSsoConfig.getInstance();
+        this.config = GXSsoConfig.getInstance();
     }
 }

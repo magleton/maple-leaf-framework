@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -39,8 +40,10 @@ public abstract class GXAbstractSsoService extends GXSsoServiceSupport implement
      */
     @Override
     public GXSsoToken getSsoToken(HttpServletRequest request) {
-        GXSsoToken ssoToken = cacheSSOToken(request, config.getCache());
-        GXSsoToken token = checkIpBrowser(request, ssoToken);
+        GXSsoToken token = checkIpBrowser(request, cacheSsoToken(request, config.getCache()));
+        if (Objects.isNull(token)) {
+            return null;
+        }
         // 执行插件逻辑
         List<GXSsoPlugin> pluginList = config.getPluginList();
         if (pluginList != null) {

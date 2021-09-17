@@ -112,12 +112,12 @@ public class GXSsoConfig {
     /**
      * 登录地址
      */
-    private String loginUrl = "http://127.0.0.1:9999/user/login";
+    private String loginUrl = "";
 
     /**
      * 退出地址
      */
-    private String logoutUrl = "http://127.0.0.1:9999/sso/logOut";
+    private String logoutUrl = "";
 
     /**
      * 登录成功回调地址
