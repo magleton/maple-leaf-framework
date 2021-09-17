@@ -4,7 +4,7 @@ import com.geoxus.core.common.exception.GXException;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.oauth.GXSSOAuthorization;
-import com.geoxus.sso.plugins.GXSsoPlugin;
+import com.geoxus.sso.plugins.GXSSOPlugin;
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXCookieHelperUtil;
 import com.geoxus.sso.util.GXSSOHelperUtil;
@@ -142,7 +142,7 @@ public class GXSSOConfig {
     /**
      * 插件列表
      */
-    private List<GXSsoPlugin> pluginList;
+    private List<GXSSOPlugin> pluginList;
 
     /**
      * SSO 缓存

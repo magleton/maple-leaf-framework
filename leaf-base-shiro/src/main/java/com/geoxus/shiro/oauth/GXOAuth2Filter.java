@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.core.common.util.GXHttpContextUtils;
 import com.geoxus.common.util.GXResultUtils;
 import lombok.extern.slf4j.Slf4j;

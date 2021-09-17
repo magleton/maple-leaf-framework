@@ -7,7 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 import com.geoxus.common.util.GXAuthCodeUtil;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;

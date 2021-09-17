@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.util.GXAuthCodeUtil;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.core.common.support.GXHandlerMethodArgumentResolver;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.annotation.GXLoginUserAnnotation;

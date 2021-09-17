@@ -1,6 +1,6 @@
 package com.geoxus.commons.aspect;
 
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.util.GXResultUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
 import com.geoxus.common.pojo.common.GXResultCode;

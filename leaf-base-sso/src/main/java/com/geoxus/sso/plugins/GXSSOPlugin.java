@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public interface GXSsoPlugin {
+public interface GXSSOPlugin {
     /**
      * 登录时调用该方法
      *

@@ -5,7 +5,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.util.GXAuthCodeUtil;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.enums.GXTokenFlag;

@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  */
 @Component
 @Slf4j
-public class GXSsoPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
+public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
     /*
      * 系统权限授权接口
      */

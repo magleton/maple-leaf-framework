@@ -11,7 +11,6 @@ import com.geoxus.sso.security.token.GXSSOToken;
  * @since 2021-09-16
  */
 public interface GXSSOCache {
-
     /**
      * <p>
      * 根据key获取SSO票据

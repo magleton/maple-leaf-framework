@@ -1,11 +1,8 @@
 package com.geoxus.sso.web.interceptor;
 
 import com.geoxus.core.common.interceptor.GXAuthorizationInterceptor;
-import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
-import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.constant.GXSSOConstant;
-import com.geoxus.sso.plugins.GXSsoPlugin;
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXHttpUtil;
 import com.geoxus.sso.util.GXSSOHelperUtil;
@@ -17,8 +14,6 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 /**

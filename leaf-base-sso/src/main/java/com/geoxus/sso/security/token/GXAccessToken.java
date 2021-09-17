@@ -3,7 +3,7 @@ package com.geoxus.sso.security.token;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.util.GXAuthCodeUtil;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 
 import java.io.Serializable;
 

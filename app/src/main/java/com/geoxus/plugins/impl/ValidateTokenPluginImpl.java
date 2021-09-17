@@ -1,13 +1,12 @@
 package com.geoxus.plugins.impl;
 
-import com.geoxus.sso.plugins.GXSsoPlugin;
-import org.springframework.stereotype.Component;
+import com.geoxus.sso.plugins.GXSSOPlugin;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /*@Component*/
-public class ValidateTokenPluginImpl implements GXSsoPlugin {
+public class ValidateTokenPluginImpl implements GXSSOPlugin {
     @Override
     public boolean login(HttpServletRequest request, HttpServletResponse response) {
         return false;

@@ -3,7 +3,7 @@ package com.geoxus.sso.util;
 import com.geoxus.core.common.util.GXSpringContextUtils;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
-import com.geoxus.sso.plugins.GXSsoPlugin;
+import com.geoxus.sso.plugins.GXSSOPlugin;
 import com.geoxus.sso.properties.GXSSOConfigProperties;
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.service.GXConfigurableAbstractSSOService;
@@ -57,9 +57,9 @@ public class GXSSOHelperUtil {
                 ssoConfig = new GXSSOConfig();
             }
             // 为每个应用配置自己的插件
-            Map<String, GXSsoPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSsoPlugin.class);
+            Map<String, GXSSOPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSSOPlugin.class);
             if (!ssoPluginMap.isEmpty()) {
-                ArrayList<GXSsoPlugin> plugins = new ArrayList<>();
+                ArrayList<GXSSOPlugin> plugins = new ArrayList<>();
                 ssoPluginMap.forEach((key, val) -> plugins.add(val));
                 GXSSOHelperUtil.getSSOConfig().setPluginList(plugins);
             }

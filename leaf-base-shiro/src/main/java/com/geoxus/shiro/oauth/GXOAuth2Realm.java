@@ -1,7 +1,7 @@
 package com.geoxus.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.constant.GXTokenConstant;
+import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.core.common.oauth.GXTokenManager;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.shiro.service.GXAdminService;

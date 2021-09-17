@@ -1,4 +1,4 @@
-package com.geoxus.core.common.constant;
+package com.geoxus.common.constant;
 
 import com.geoxus.common.annotation.GXFieldCommentAnnotation;
 

@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXTokenFlag;
-import com.geoxus.sso.plugins.GXSsoPlugin;
+import com.geoxus.sso.plugins.GXSSOPlugin;
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.util.GXCookieHelperUtil;
 import com.geoxus.sso.util.GXHttpUtil;
@@ -46,9 +46,9 @@ public abstract class GXAbstractSSOService extends GXSSOServiceSupport implement
             return null;
         }
         // 执行插件逻辑
-        List<GXSsoPlugin> pluginList = getConfig().getPluginList();
+        List<GXSSOPlugin> pluginList = getConfig().getPluginList();
         if (pluginList != null) {
-            for (GXSsoPlugin plugin : pluginList) {
+            for (GXSSOPlugin plugin : pluginList) {
                 boolean valid = plugin.validateToken(token);
                 if (!valid) {
                     return null;
@@ -101,9 +101,9 @@ public abstract class GXAbstractSSOService extends GXSSOServiceSupport implement
         }
 
         //执行插件逻辑
-        List<GXSsoPlugin> pluginList = getConfig().getPluginList();
+        List<GXSSOPlugin> pluginList = getConfig().getPluginList();
         if (pluginList != null) {
-            for (GXSsoPlugin plugin : pluginList) {
+            for (GXSSOPlugin plugin : pluginList) {
                 boolean login = plugin.login(request, response);
                 if (!login) {
                     plugin.login(request, response);
