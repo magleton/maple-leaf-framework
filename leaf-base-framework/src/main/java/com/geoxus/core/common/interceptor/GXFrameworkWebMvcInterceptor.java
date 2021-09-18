@@ -13,11 +13,7 @@ import java.util.List;
 @Slf4j
 public class GXFrameworkWebMvcInterceptor extends GXWebMvcInterceptor {
     @Resource
-    private GXHandlerMethodArgumentResolver requestToBeanHandlerMethodArgumentResolver;
-
-    @Resource
     private GXTraceIdInterceptor traceIdInterceptor;
-
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -28,6 +24,5 @@ public class GXFrameworkWebMvcInterceptor extends GXWebMvcInterceptor {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
-        argumentResolvers.add(requestToBeanHandlerMethodArgumentResolver);
     }
 }

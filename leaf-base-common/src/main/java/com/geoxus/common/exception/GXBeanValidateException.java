@@ -1,4 +1,4 @@
-package com.geoxus.core.common.exception;
+package com.geoxus.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import lombok.Data;

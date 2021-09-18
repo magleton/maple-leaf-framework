@@ -1,8 +1,7 @@
-package com.geoxus.core.common.annotation;
+package com.geoxus.common.annotation;
 
-import com.geoxus.core.common.validator.GXValidateJsonFieldService;
-import com.geoxus.core.common.validator.impl.GXValidateSingleJsonFieldValidator;
-import com.geoxus.core.framework.service.impl.GXValidateJsonFieldServiceImpl;
+import com.geoxus.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.impl.GXValidateSingleJsonFieldValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -24,7 +23,7 @@ public @interface GXMergeSingleField {
 
     Class<? extends Payload>[] payload() default {};
 
-    Class<? extends GXValidateJsonFieldService> service() default GXValidateJsonFieldServiceImpl.class;
+    Class<? extends GXValidateJsonFieldService> service() default GXValidateJsonFieldService.class;
 
     String tableName() default "";
 

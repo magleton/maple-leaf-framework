@@ -1,4 +1,4 @@
-package com.geoxus.core.common.annotation;
+package com.geoxus.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,8 +19,4 @@ public @interface GXRequestBody {
     boolean validateCoreModelId() default true;
 
     String primaryKey() default "id";
-
-    Class<?> mapstructClazz() default Void.class;
-
-    boolean isConvertToEntity() default false;
 }

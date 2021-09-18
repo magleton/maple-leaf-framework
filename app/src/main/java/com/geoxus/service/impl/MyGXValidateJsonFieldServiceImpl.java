@@ -1,6 +1,6 @@
 package com.geoxus.service.impl;
 
-import com.geoxus.core.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJsonFieldService;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintValidatorContext;

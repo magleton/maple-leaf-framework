@@ -2,7 +2,7 @@ package com.geoxus.common.web.interceptor;
 
 import com.geoxus.common.properties.web.GXWebMvcConfig;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.web.support.GXHandlerMethodArgumentResolver;
+import com.geoxus.common.web.support.GXCustomerHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -22,6 +22,9 @@ import java.util.Objects;
 public class GXWebMvcInterceptor implements WebMvcConfigurer {
     @Resource
     private GXWebMvcConfig webMvcConfig;
+
+    @Resource
+    private GXRequestHandlerMethodArgumentResolver requestHandlerMethodArgumentResolver;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -46,8 +49,9 @@ public class GXWebMvcInterceptor implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        if (Objects.nonNull(GXSpringContextUtil.getBean(GXHandlerMethodArgumentResolver.class))) {
-            argumentResolvers.add(GXSpringContextUtil.getBean(GXHandlerMethodArgumentResolver.class));
+        argumentResolvers.add(requestHandlerMethodArgumentResolver);
+        if (Objects.nonNull(GXSpringContextUtil.getBean(GXCustomerHandlerMethodArgumentResolver.class))) {
+            argumentResolvers.add(GXSpringContextUtil.getBean(GXCustomerHandlerMethodArgumentResolver.class));
         }
     }
 }

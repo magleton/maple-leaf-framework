@@ -1,11 +1,12 @@
-package com.geoxus.core.common.validator.impl;
+package com.geoxus.common.validator.impl;
 
-import com.geoxus.core.common.annotation.GXMergeSingleField;
+import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJsonFieldService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
 public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<GXMergeSingleField, Object> {
     /**
@@ -37,6 +38,9 @@ public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<G
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext context) {
+        if (Objects.isNull(validateJsonFieldService)) {
+            return true;
+        }
         return validateJsonFieldService.validateJsonFieldData(o, tableName, parentFieldName, fieldName, context);
     }
 }

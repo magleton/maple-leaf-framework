@@ -2,6 +2,7 @@ package com.geoxus.core.common.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
+import com.geoxus.common.exception.GXBeanValidateException;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.common.pojo.GXResultCode;

@@ -1,8 +1,8 @@
-package com.geoxus.core.common.validator.impl;
+package com.geoxus.common.validator.impl;
 
-import com.geoxus.core.common.annotation.GXValidateExtData;
+import com.geoxus.common.annotation.GXValidateExtData;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.validator.GXValidateExtDataService;
+import com.geoxus.common.validator.GXValidateExtDataService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,7 +1,7 @@
 package com.geoxus.shiro.dto.req;
 
-import com.geoxus.core.common.annotation.GXMergeSingleField;
-import com.geoxus.core.common.annotation.GXValidateExtData;
+import com.geoxus.common.annotation.GXMergeSingleField;
+import com.geoxus.common.annotation.GXValidateExtData;
 import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXAdminRoleConstant;
 import lombok.Data;

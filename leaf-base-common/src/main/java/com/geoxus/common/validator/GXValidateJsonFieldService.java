@@ -1,4 +1,4 @@
-package com.geoxus.core.common.validator;
+package com.geoxus.common.validator;
 
 import javax.validation.ConstraintValidatorContext;
 

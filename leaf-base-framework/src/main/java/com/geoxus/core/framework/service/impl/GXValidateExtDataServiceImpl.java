@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.validator.GXValidateExtDataService;
+import com.geoxus.common.validator.GXValidateExtDataService;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;

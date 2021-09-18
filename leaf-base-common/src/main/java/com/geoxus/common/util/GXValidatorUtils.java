@@ -1,4 +1,4 @@
-package com.geoxus.core.common.validator.impl;
+package com.geoxus.common.util;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.common.exception.GXBeanValidateException;
+import com.geoxus.common.exception.GXBeanValidateException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

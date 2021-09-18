@@ -1,26 +1,22 @@
-package com.geoxus.core.common.interceptor;
+package com.geoxus.common.web.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.dto.GXBaseDto;
-import com.geoxus.common.mapstruct.GXBaseMapStruct;
-import com.geoxus.common.pojo.GXResultCode;
-import com.geoxus.core.common.annotation.GXRequestBody;
-import com.geoxus.core.common.annotation.GXMergeSingleField;
-import com.geoxus.core.common.entity.GXBaseEntity;
+import com.geoxus.common.annotation.GXMergeSingleField;
+import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.validator.GXValidateJsonFieldService;
-import com.geoxus.core.common.validator.impl.GXValidatorUtils;
+import com.geoxus.common.util.GXValidatorUtils;
+import com.geoxus.common.validator.GXValidateJsonFieldService;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -35,17 +31,16 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
-public class GXHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @GXFieldComment(zhDesc = "请求中的参数名字")
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
-    @GXFieldComment("日志对象")
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXHandlerMethodArgumentResolver.class);
+    @GXFieldComment(zhDesc = "日志对象")
+    private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -80,20 +75,6 @@ public class GXHandlerMethodArgumentResolver implements HandlerMethodArgumentRes
         }
         // 调用目标bean对象的验证方法对数据进行额外的验证
         callUserDefinedVerifyMethod(parameterType, bean);
-
-        // 将对象转换为指定的entity
-        Class<?> mapstructClazz = requestBody.mapstructClazz();
-        boolean isConvertToEntity = requestBody.isConvertToEntity();
-        if (mapstructClazz != Void.class && isConvertToEntity) {
-            GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
-            }, GXSpringContextUtil.getBean(mapstructClazz));
-            if (null == convert) {
-                LOGGER.error("DTO转换为Entity失败!请提供正确的MapStruct转换Class");
-                return null;
-            }
-            return convert.dtoToEntity(Convert.convert((Type) parameterType, bean));
-        }
-
         return bean;
     }
 
@@ -148,8 +129,10 @@ public class GXHandlerMethodArgumentResolver implements HandlerMethodArgumentRes
             Class<? extends GXValidateJsonFieldService> service = annotation.service();
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
-                GXValidateJsonFieldService bean = GXSpringContextUtil.getBean(service);
-                fieldDefaultValue = ReflectUtil.invoke(bean, method, tableName, parentFieldName, fieldName);
+                GXValidateJsonFieldService validateJsonFieldService = GXSpringContextUtil.getBean(service);
+                if (Objects.nonNull(validateJsonFieldService)) {
+                    fieldDefaultValue = ReflectUtil.invoke(validateJsonFieldService, method, tableName, parentFieldName, fieldName);
+                }
             }
             jsonFields.add(parentFieldName);
             Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(fieldName))).orElse(fieldDefaultValue);

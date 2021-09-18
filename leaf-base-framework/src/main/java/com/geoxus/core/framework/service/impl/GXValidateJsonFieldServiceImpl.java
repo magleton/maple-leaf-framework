@@ -1,7 +1,7 @@
 package com.geoxus.core.framework.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJsonFieldService;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import org.springframework.stereotype.Service;
 

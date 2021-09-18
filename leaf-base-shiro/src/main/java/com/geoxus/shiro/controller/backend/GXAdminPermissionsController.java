@@ -1,7 +1,7 @@
 package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.annotation.GXRequestBody;
+import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.core.common.controller.GXBaseController;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.shiro.dto.req.GXAdminPermissionsReqDto;
