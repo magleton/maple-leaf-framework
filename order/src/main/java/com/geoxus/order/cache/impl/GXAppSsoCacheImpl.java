@@ -1,4 +1,4 @@
-package com.geoxus.cache.impl;
+package com.geoxus.order.cache.impl;
 
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.security.token.GXSSOToken;

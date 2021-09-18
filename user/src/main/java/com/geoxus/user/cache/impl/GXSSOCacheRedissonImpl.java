@@ -1,4 +1,4 @@
-package com.geoxus.cache.impl;
+package com.geoxus.user.cache.impl;
 
 import cn.hutool.core.convert.Convert;
 import com.geoxus.sso.cache.GXSSOCache;

@@ -1,4 +1,4 @@
-package com.geoxus.controller;
+package com.geoxus.user.controller;
 
 import com.geoxus.sso.annotation.GXLoginAnnotation;
 import com.geoxus.common.util.GXResultUtil;

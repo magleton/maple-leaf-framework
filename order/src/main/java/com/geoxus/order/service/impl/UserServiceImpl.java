@@ -1,13 +1,13 @@
-package com.geoxus.service.impl;
+package com.geoxus.order.service.impl;
 
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
-import com.geoxus.dao.UserDao;
-import com.geoxus.common.dto.protocol.req.UserReqProtocol;
-import com.geoxus.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.entity.UserEntity;
-import com.geoxus.mapper.UserMapper;
-import com.geoxus.common.mapstruct.UserProtocolMapstruct;
-import com.geoxus.service.UserService;
+import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
+import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.common.mapstruct.UserProtocolMapstruct;
+import com.geoxus.order.dao.UserDao;
+import com.geoxus.order.entity.UserEntity;
+import com.geoxus.order.mapper.UserMapper;
+import com.geoxus.order.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

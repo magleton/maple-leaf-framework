@@ -1,4 +1,4 @@
-package com.geoxus.plugins.impl;
+package com.geoxus.order.plugins.impl;
 
 import com.geoxus.sso.plugins.GXSSOPlugin;
 

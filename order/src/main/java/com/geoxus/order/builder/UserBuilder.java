@@ -1,4 +1,4 @@
-package com.geoxus.builder;
+package com.geoxus.order.builder;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;

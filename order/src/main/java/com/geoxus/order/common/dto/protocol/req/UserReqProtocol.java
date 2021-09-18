@@ -1,9 +1,10 @@
-package com.geoxus.common.dto.protocol.req;
+package com.geoxus.order.common.dto.protocol.req;
 
 import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.annotation.GXValidateExtData;
+import com.geoxus.common.dto.protocol.req.GXBaseReqProtocol;
 import com.geoxus.core.framework.service.impl.GXValidateJsonFieldServiceImpl;
-import com.geoxus.service.impl.MyGXValidateJsonFieldServiceImpl;
+import com.geoxus.order.service.impl.MyGXValidateJsonFieldServiceImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

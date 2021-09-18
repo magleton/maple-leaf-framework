@@ -1,4 +1,4 @@
-package com.geoxus.service.impl;
+package com.geoxus.order.service.impl;
 
 import com.geoxus.common.validator.GXValidateJSONFieldService;
 import org.springframework.stereotype.Service;

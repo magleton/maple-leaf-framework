@@ -1,4 +1,4 @@
-package com.geoxus.plugins.impl;
+package com.geoxus.user.plugins.impl;
 
 import com.geoxus.sso.plugins.GXSSOPlugin;
 import com.geoxus.sso.security.token.GXSSOToken;

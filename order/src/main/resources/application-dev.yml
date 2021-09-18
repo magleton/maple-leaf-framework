@@ -1,4 +1,4 @@
 server:
   port: 9988
   servlet:
-    context-path: /app
+    context-path: /order

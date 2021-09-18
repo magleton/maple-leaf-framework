@@ -1,11 +1,11 @@
-package com.geoxus.service;
+package com.geoxus.order.service;
 
 import com.geoxus.core.common.service.GXBusinessService;
-import com.geoxus.dao.UserDao;
-import com.geoxus.common.dto.protocol.req.UserReqProtocol;
-import com.geoxus.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.entity.UserEntity;
-import com.geoxus.mapper.UserMapper;
+import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
+import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.dao.UserDao;
+import com.geoxus.order.entity.UserEntity;
+import com.geoxus.order.mapper.UserMapper;
 
 public interface UserService extends GXBusinessService<UserEntity, UserMapper, UserDao> {
     UserResProtocol getUserInfo(Long userId);

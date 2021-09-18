@@ -1,11 +1,11 @@
-package com.geoxus.mapper;
+package com.geoxus.order.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.builder.UserBuilder;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.entity.UserEntity;
+import com.geoxus.order.builder.UserBuilder;
+import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Component;

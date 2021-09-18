@@ -1,9 +1,10 @@
-package com.geoxus.dao;
+package com.geoxus.order.dao;
 
 import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.entity.UserEntity;
-import com.geoxus.mapper.UserMapper;
+import com.geoxus.order.entity.UserEntity;
+import com.geoxus.order.mapper.UserMapper;
+import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.mapper.UserMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository

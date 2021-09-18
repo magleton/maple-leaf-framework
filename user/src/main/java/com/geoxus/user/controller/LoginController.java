@@ -1,4 +1,4 @@
-package com.geoxus.controller;
+package com.geoxus.user.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.util.GXResultUtil;

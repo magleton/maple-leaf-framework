@@ -1,4 +1,4 @@
-package com.geoxus.service.impl;
+package com.geoxus.order.service.impl;
 
 import com.geoxus.sso.security.token.GXSSOToken;
 import com.geoxus.sso.service.GXConfigurableAbstractSSOService;
