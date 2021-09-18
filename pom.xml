@@ -20,7 +20,7 @@
         <module>leaf-base-canal</module>
         <module>leaf-dynamic-datasource-mongodb</module>
         <module>leaf-base-sso</module>
-        <module>app</module>
+        <module>order</module>
         <module>user</module>
         <module>aggregate</module>
     </modules>
