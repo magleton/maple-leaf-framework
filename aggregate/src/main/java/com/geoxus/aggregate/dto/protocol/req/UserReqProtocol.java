@@ -1,6 +1,7 @@
 package com.geoxus.aggregate.dto.protocol.req;
 
 import com.geoxus.common.annotation.GXMergeSingleField;
+import com.geoxus.common.annotation.GXValidateExtData;
 import lombok.Data;
 
 @Data
@@ -15,5 +16,6 @@ public class UserReqProtocol {
     @GXMergeSingleField(tableName = "", fieldName = "sub_title")
     private String subTitle;
 
+    @GXValidateExtData(tableName = "")
     private String ext;
 }

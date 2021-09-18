@@ -17,10 +17,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-common</artifactId>
             <version>${parent.version}</version>
@@ -28,14 +24,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

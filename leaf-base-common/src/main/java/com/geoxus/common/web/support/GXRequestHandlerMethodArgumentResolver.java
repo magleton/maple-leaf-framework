@@ -1,4 +1,4 @@
-package com.geoxus.common.web.interceptor;
+package com.geoxus.common.web.support;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -14,7 +14,7 @@ import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.util.GXValidatorUtils;
-import com.geoxus.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJSONFieldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -126,10 +126,10 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             }
             String tableName = annotation.tableName();
             Object fieldDefaultValue = null;
-            Class<? extends GXValidateJsonFieldService> service = annotation.service();
+            Class<? extends GXValidateJSONFieldService> service = annotation.service();
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
-                GXValidateJsonFieldService validateJsonFieldService = GXSpringContextUtil.getBean(service);
+                GXValidateJSONFieldService validateJsonFieldService = GXSpringContextUtil.getBean(service);
                 if (Objects.nonNull(validateJsonFieldService)) {
                     fieldDefaultValue = ReflectUtil.invoke(validateJsonFieldService, method, tableName, parentFieldName, fieldName);
                 }

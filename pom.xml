@@ -22,6 +22,7 @@
         <module>leaf-base-sso</module>
         <module>app</module>
         <module>user</module>
+        <module>aggregate</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

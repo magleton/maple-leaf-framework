@@ -6,6 +6,7 @@ import com.geoxus.common.validator.GXValidateExtDataService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
 public class GXValidateExtDataValidator implements ConstraintValidator<GXValidateExtData, Object> {
     private GXValidateExtDataService service;
@@ -27,7 +28,7 @@ public class GXValidateExtDataValidator implements ConstraintValidator<GXValidat
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext context) {
-        if (null == o) {
+        if (null == o || Objects.isNull(service)) {
             return true;
         }
         return service.validateExtData(o, modelName, subField, isFullMatchAttribute, context);

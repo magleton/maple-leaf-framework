@@ -1,12 +1,12 @@
 package com.geoxus.service.impl;
 
-import com.geoxus.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJSONFieldService;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintValidatorContext;
 
 @Service
-public class MyGXValidateJsonFieldServiceImpl implements GXValidateJsonFieldService {
+public class MyGXValidateJsonFieldServiceImpl implements GXValidateJSONFieldService {
     @Override
     public boolean validateJsonFieldData(Object o, String tableName, String parentFieldName, String fieldName, ConstraintValidatorContext context) throws UnsupportedOperationException {
         return true;

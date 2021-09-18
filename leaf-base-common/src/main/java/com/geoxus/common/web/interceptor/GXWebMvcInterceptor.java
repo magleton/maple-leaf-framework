@@ -3,6 +3,7 @@ package com.geoxus.common.web.interceptor;
 import com.geoxus.common.properties.web.GXWebMvcConfig;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.web.support.GXCustomerHandlerMethodArgumentResolver;
+import com.geoxus.common.web.support.GXRequestHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

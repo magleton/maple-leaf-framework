@@ -3,9 +3,10 @@ package com.geoxus.common.validator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 验证模型的扩展数据
+ * 自定义验证模型中配置的扩展字段数据
+ * eg: ext:{"name":"jack","age":23}
  */
-public interface GXValidateJsonFieldService {
+public interface GXValidateJSONFieldService {
     /**
      * Checks whether or not a given value exists for a given field
      *

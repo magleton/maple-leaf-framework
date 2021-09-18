@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.web.support.GXHandlerMethodArgumentResolver;
+import com.geoxus.common.web.support.GXCustomerHandlerMethodArgumentResolver;
 import com.geoxus.sso.annotation.GXLoginUserAnnotation;
 import com.geoxus.sso.dto.GXUserInfoDto;
 import com.geoxus.sso.service.GXUUserService;
@@ -23,7 +23,7 @@ import java.util.Objects;
  * 有@GXLoginUserAnnotation注解的方法参数，注入当前登录用户
  */
 @Component
-public class GXLoginUserHandlerMethodArgumentResolver extends GXHandlerMethodArgumentResolver {
+public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         /*return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUUserEntity.class)

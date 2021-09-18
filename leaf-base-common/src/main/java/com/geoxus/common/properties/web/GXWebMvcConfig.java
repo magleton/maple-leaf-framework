@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ import java.util.List;
         encoding = "utf-8",
         ignoreResourceNotFound = true)
 public class GXWebMvcConfig {
-    private List<String> urlPatterns;
+    private List<String> urlPatterns = new ArrayList<>();
 
-    private List<String> resourcePatterns;
+    private List<String> resourcePatterns = new ArrayList<>();
 }

@@ -2,17 +2,17 @@ package com.geoxus.common.validator.impl;
 
 import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.validator.GXValidateJsonFieldService;
+import com.geoxus.common.validator.GXValidateJSONFieldService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
-public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<GXMergeSingleField, Object> {
+public class GXValidateMergeSingleFieldValidator implements ConstraintValidator<GXMergeSingleField, Object> {
     /**
      * 实际处理的服务
      */
-    private GXValidateJsonFieldService validateJsonFieldService;
+    private GXValidateJSONFieldService validateJsonFieldService;
 
     /**
      * 表名字
@@ -29,7 +29,7 @@ public class GXValidateSingleJsonFieldValidator implements ConstraintValidator<G
 
     @Override
     public void initialize(GXMergeSingleField annotation) {
-        Class<? extends GXValidateJsonFieldService> serviceClazz = annotation.service();
+        Class<? extends GXValidateJSONFieldService> serviceClazz = annotation.service();
         tableName = annotation.tableName();
         parentFieldName = annotation.parentFieldName();
         fieldName = annotation.fieldName();
