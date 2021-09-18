@@ -1,13 +1,13 @@
 package com.geoxus.core.common.validator.impl;
 
-import com.geoxus.core.common.annotation.GXValidateExtDataAnnotation;
+import com.geoxus.core.common.annotation.GXValidateExtData;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.validator.GXValidateExtDataService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class GXValidateExtDataValidator implements ConstraintValidator<GXValidateExtDataAnnotation, Object> {
+public class GXValidateExtDataValidator implements ConstraintValidator<GXValidateExtData, Object> {
     private GXValidateExtDataService service;
 
     private String modelName;
@@ -17,7 +17,7 @@ public class GXValidateExtDataValidator implements ConstraintValidator<GXValidat
     private boolean isFullMatchAttribute;
 
     @Override
-    public void initialize(GXValidateExtDataAnnotation constraintAnnotation) {
+    public void initialize(GXValidateExtData constraintAnnotation) {
         Class<? extends GXValidateExtDataService> clazz = constraintAnnotation.service();
         modelName = constraintAnnotation.tableName();
         subField = constraintAnnotation.fieldName();

@@ -6,7 +6,7 @@ import com.geoxus.common.dto.protocol.req.UserReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.dto.protocol.res.UserResProtocol;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
-import com.geoxus.core.common.annotation.GXParseRequestAnnotation;
+import com.geoxus.core.common.annotation.GXRequestBody;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.service.UserService;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +27,7 @@ public class IndexController {
     }
 
     @PostMapping("hello")
-    public GXResultUtil<Dict> hello(@GXParseRequestAnnotation @Validated UserReqProtocol userReqProtocol) {
+    public GXResultUtil<Dict> hello(@GXRequestBody @Validated UserReqProtocol userReqProtocol) {
         userService.createOrUpdate(userReqProtocol);
         return GXResultUtil.ok("Hello World");
     }

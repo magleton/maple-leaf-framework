@@ -5,7 +5,7 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.util.GXCacheKeysUtils;
 import com.google.common.cache.Cache;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 @Slf4j
 public class GXCaptchaServiceImpl implements GXCaptchaService {
-    @GXFieldCommentAnnotation(zhDesc = "Guava缓存组件")
+    @GXFieldComment(zhDesc = "Guava缓存组件")
     private static final Cache<String, String> CAPTCHA_CACHE;
 
     static {

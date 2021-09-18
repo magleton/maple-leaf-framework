@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Inherited
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXSensitiveFieldAnnotation {
+public @interface GXSensitiveField {
     Class<?> serviceClazz() default GXSensitiveFieldDeEncryptService.class;
 
     String encryptAlgorithm() default "encryptAlgorithm";

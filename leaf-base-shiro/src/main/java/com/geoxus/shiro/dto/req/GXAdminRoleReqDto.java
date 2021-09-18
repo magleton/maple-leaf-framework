@@ -1,7 +1,7 @@
 package com.geoxus.shiro.dto.req;
 
-import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
-import com.geoxus.core.common.annotation.GXValidateExtDataAnnotation;
+import com.geoxus.core.common.annotation.GXMergeSingleField;
+import com.geoxus.core.common.annotation.GXValidateExtData;
 import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXAdminRoleConstant;
 import lombok.Data;
@@ -33,12 +33,12 @@ public class GXAdminRoleReqDto extends GXBaseDto {
     /**
      * 扩展数据
      */
-    @GXValidateExtDataAnnotation(tableName = GXAdminRoleConstant.TABLE_NAME)
+    @GXValidateExtData(tableName = GXAdminRoleConstant.TABLE_NAME)
     private String ext;
 
     /**
      * 作者
      */
-    @GXMergeSingleFieldAnnotation(fieldName = "author")
+    @GXMergeSingleField(fieldName = "author")
     private String author;
 }

@@ -2,10 +2,10 @@ package com.geoxus.core.common.validator.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.annotation.GXValidateDBUniqueAnnotation;
+import com.geoxus.core.common.annotation.GXValidateDBUnique;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.validator.GXValidateDBUnique;
+import com.geoxus.core.common.validator.GXValidateDBUniqueService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
@@ -18,8 +18,8 @@ import java.util.Objects;
  * @author zj chen <britton@126.com>
  */
 @Slf4j
-public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValidateDBUniqueAnnotation, Object> {
-    private GXValidateDBUnique service;
+public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValidateDBUnique, Object> {
+    private GXValidateDBUniqueService service;
 
     private String fieldName;
 
@@ -30,8 +30,8 @@ public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValida
     private String spEL;
 
     @Override
-    public void initialize(GXValidateDBUniqueAnnotation annotation) {
-        Class<? extends GXValidateDBUnique> clazz = annotation.service();
+    public void initialize(GXValidateDBUnique annotation) {
+        Class<? extends GXValidateDBUniqueService> clazz = annotation.service();
         fieldName = annotation.fieldName();
         service = GXSpringContextUtil.getBean(clazz);
         tableName = annotation.tableName();

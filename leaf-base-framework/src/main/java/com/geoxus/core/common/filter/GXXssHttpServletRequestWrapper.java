@@ -2,7 +2,7 @@ package com.geoxus.core.common.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -20,10 +20,10 @@ import java.util.Map;
  * XSS过滤处理
  */
 public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    @GXFieldCommentAnnotation(zhDesc = "HTML过滤")
+    @GXFieldComment(zhDesc = "HTML过滤")
     private static final GXHTMLFilter htmlFilter = new GXHTMLFilter();
 
-    @GXFieldCommentAnnotation(zhDesc = "没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)")
+    @GXFieldComment(zhDesc = "没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)")
     HttpServletRequest orgRequest;
 
     public GXXssHttpServletRequestWrapper(HttpServletRequest request) {

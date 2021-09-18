@@ -2,10 +2,10 @@ package com.geoxus.core.common.validator.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.annotation.GXValidateDBExistsAnnotation;
+import com.geoxus.core.common.annotation.GXValidateDBExists;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.validator.GXValidateDBExists;
+import com.geoxus.core.common.validator.GXValidateDBExistsService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
@@ -18,8 +18,8 @@ import java.util.Objects;
  * @author zj chen <britton@126.com>
  */
 @Slf4j
-public class GXValidateDBExistsValidator implements ConstraintValidator<GXValidateDBExistsAnnotation, Object> {
-    private GXValidateDBExists service;
+public class GXValidateDBExistsValidator implements ConstraintValidator<GXValidateDBExists, Object> {
+    private GXValidateDBExistsService service;
 
     private String fieldName;
 
@@ -32,8 +32,8 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
     private String spEL;
 
     @Override
-    public void initialize(GXValidateDBExistsAnnotation annotation) {
-        Class<? extends GXValidateDBExists> clazz = annotation.service();
+    public void initialize(GXValidateDBExists annotation) {
+        Class<? extends GXValidateDBExistsService> clazz = annotation.service();
         fieldName = annotation.fieldName();
         groups = annotation.groups();
         service = GXSpringContextUtil.getBean(clazz);

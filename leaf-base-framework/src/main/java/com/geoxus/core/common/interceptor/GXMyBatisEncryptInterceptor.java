@@ -1,6 +1,6 @@
 package com.geoxus.core.common.interceptor;
 
-import com.geoxus.core.common.annotation.GXSensitiveDataAnnotation;
+import com.geoxus.core.common.annotation.GXSensitiveData;
 import com.geoxus.core.common.service.GXSensitiveDataEncryptService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -37,7 +37,7 @@ public class GXMyBatisEncryptInterceptor implements Interceptor {
         if (parameterObject != null) {
             Class<?> parameterObjectClass = parameterObject.getClass();
             // 校验该实例的类是否被@SensitiveData所注解
-            GXSensitiveDataAnnotation sensitiveData = AnnotationUtils.findAnnotation(parameterObjectClass, GXSensitiveDataAnnotation.class);
+            GXSensitiveData sensitiveData = AnnotationUtils.findAnnotation(parameterObjectClass, GXSensitiveData.class);
             if (Objects.nonNull(sensitiveData)) {
                 // 取出当前当前类所有字段，传入加密方法
                 Field[] declaredFields = parameterObjectClass.getDeclaredFields();

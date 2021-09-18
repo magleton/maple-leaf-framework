@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface GXFieldCommentAnnotation {
+public @interface GXFieldComment {
     String value() default "";
 
     String zhDesc() default "中文描述";

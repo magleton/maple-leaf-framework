@@ -2,7 +2,7 @@ package com.geoxus.core.framework.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.geoxus.core.common.annotation.GXValidateDBExistsAnnotation;
+import com.geoxus.core.common.annotation.GXValidateDBExists;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class GXCoreModelAttributesEntity extends GXBaseEntity implements Seriali
 
     private int coreModelId;
 
-    @GXValidateDBExistsAnnotation(service = GXCoreAttributesService.class, fieldName = "attribute_id")
+    @GXValidateDBExists(service = GXCoreAttributesService.class, fieldName = "attribute_id")
     private int attributeId;
 
     private String showName;

@@ -2,7 +2,7 @@ package com.geoxus.core.common.event;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
@@ -10,13 +10,13 @@ import org.springframework.core.ResolvableTypeProvider;
 import java.lang.reflect.Type;
 
 public abstract class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
-    @GXFieldCommentAnnotation(zhDesc = "附加参数")
+    @GXFieldComment(zhDesc = "附加参数")
     protected transient Dict param;
 
-    @GXFieldCommentAnnotation(zhDesc = "场景值,用于区分同一个事件的不同使用场景")
+    @GXFieldComment(zhDesc = "场景值,用于区分同一个事件的不同使用场景")
     protected transient Object scene;
 
-    @GXFieldCommentAnnotation(zhDesc = "事件名字")
+    @GXFieldComment(zhDesc = "事件名字")
     protected transient String eventName;
 
     protected GXBaseEvent(T source, String eventName, Dict param, Object scene) {

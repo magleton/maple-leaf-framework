@@ -1,6 +1,6 @@
 package com.geoxus.core.common.annotation;
 
-import com.geoxus.core.common.validator.GXValidateDBUnique;
+import com.geoxus.core.common.validator.GXValidateDBUniqueService;
 import com.geoxus.core.common.validator.impl.GXValidateDBUniqueValidator;
 
 import javax.validation.Constraint;
@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = GXValidateDBUniqueValidator.class)
 @Documented
-public @interface GXValidateDBUniqueAnnotation {
+public @interface GXValidateDBUnique {
     /**
      * 错误消息
      *
@@ -47,7 +47,7 @@ public @interface GXValidateDBUniqueAnnotation {
      *
      * @return
      */
-    Class<? extends GXValidateDBUnique> service();
+    Class<? extends GXValidateDBUniqueService> service();
 
     /**
      * 验证的字段名字

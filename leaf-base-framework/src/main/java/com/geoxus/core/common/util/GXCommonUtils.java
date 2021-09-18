@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class GXCommonUtils {
-    @GXFieldCommentAnnotation(zhDesc = "日志对象")
+    @GXFieldComment(zhDesc = "日志对象")
     private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
 
     private GXCommonUtils() {
@@ -245,7 +245,7 @@ public class GXCommonUtils {
     public static void clazzFields(Class<?> clz, Dict data) {
         final Field[] fields = ReflectUtil.getFields(clz);
         for (Field field : fields) {
-            final GXFieldCommentAnnotation fieldAnnotation = field.getAnnotation(GXFieldCommentAnnotation.class);
+            final GXFieldComment fieldAnnotation = field.getAnnotation(GXFieldComment.class);
             if (null == fieldAnnotation) {
                 continue;
             }

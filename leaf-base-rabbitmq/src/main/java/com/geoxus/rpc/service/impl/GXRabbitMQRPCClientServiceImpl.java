@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.rpc.service.GXRabbitMQRPCClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
 public class GXRabbitMQRPCClientServiceImpl implements GXRabbitMQRPCClientService {
-    @GXFieldCommentAnnotation(zhDesc = "Direct Reply-To")
+    @GXFieldComment(zhDesc = "Direct Reply-To")
     private static final String REPLY_TO = "amq.rabbitmq.reply-to";
 
     @Resource

@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author zj chen <britton@126.com>
  */
-public interface GXValidateDBExists {
+public interface GXValidateDBExistsService {
     /**
      * Checks whether or not a given value exists for a given field
      *

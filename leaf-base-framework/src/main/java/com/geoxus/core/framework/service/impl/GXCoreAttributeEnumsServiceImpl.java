@@ -3,7 +3,7 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
 import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @GXDataSourceAnnotation("framework")
 public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao> implements GXCoreAttributeEnumsService {
-    @GXFieldCommentAnnotation(zhDesc = "字段不存在的提示")
+    @GXFieldComment(zhDesc = "字段不存在的提示")
     private static final String FIELD_VALUE_NOT_EXISTS = "{}属性不存在值{}";
 
     @Autowired

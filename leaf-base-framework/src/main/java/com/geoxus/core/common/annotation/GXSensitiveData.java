@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Inherited
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXSensitiveDataAnnotation {
+public @interface GXSensitiveData {
 }

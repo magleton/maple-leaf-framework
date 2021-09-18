@@ -3,7 +3,7 @@ package com.geoxus.core.common.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.service.GXApiIdempotentService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -13,7 +13,7 @@ import java.time.Duration;
 
 @Service
 public class GXApiIdempotentServiceImpl implements GXApiIdempotentService {
-    @GXFieldCommentAnnotation(zhDesc = "Guava缓存组件")
+    @GXFieldComment(zhDesc = "Guava缓存组件")
     private static final Cache<String, String> API_IDEMPOTENT_CACHE;
 
     static {

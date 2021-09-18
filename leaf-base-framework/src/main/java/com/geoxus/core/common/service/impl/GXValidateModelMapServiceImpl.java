@@ -2,7 +2,7 @@ package com.geoxus.core.common.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.validator.GXValidateModelMap;
+import com.geoxus.core.common.validator.GXValidateModelMapService;
 import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 @Service
-public class GXValidateModelMapServiceImpl implements GXValidateModelMap {
+public class GXValidateModelMapServiceImpl implements GXValidateModelMapService {
     @Resource
     private GXCoreAttributesService coreAttributesService;
 

@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.filter.GXSQLFilter;
 
 import java.util.Map;
@@ -13,19 +13,19 @@ import java.util.Map;
  * 查询参数
  */
 public class GXQueryUtils<T> {
-    @GXFieldCommentAnnotation(zhDesc = "当前页码")
+    @GXFieldComment(zhDesc = "当前页码")
     private static final String PAGE = "page";
 
-    @GXFieldCommentAnnotation(zhDesc = "每页显示记录数")
+    @GXFieldComment(zhDesc = "每页显示记录数")
     private static final String LIMIT = "limit";
 
-    @GXFieldCommentAnnotation(zhDesc = "排序字段")
+    @GXFieldComment(zhDesc = "排序字段")
     private static final String ORDER_FIELD = "sidx";
 
-    @GXFieldCommentAnnotation(zhDesc = "排序方式")
+    @GXFieldComment(zhDesc = "排序方式")
     private static final String ORDER = "order";
 
-    @GXFieldCommentAnnotation(zhDesc = "升序")
+    @GXFieldComment(zhDesc = "升序")
     private static final String ASC = "asc";
 
     public IPage<T> getPage(Map<String, Object> params) {

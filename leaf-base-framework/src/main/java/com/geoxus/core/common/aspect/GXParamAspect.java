@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.core.common.annotation.GXParamAnnotation;
+import com.geoxus.core.common.annotation.GXParam;
 import com.geoxus.common.exception.GXBusinessException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,7 +21,7 @@ import java.util.Set;
 @Aspect
 @Component
 public class GXParamAspect {
-    @Pointcut("@annotation(com.geoxus.core.common.annotation.GXParamAnnotation)")
+    @Pointcut("@annotation(com.geoxus.core.common.annotation.GXParam)")
     public void requestParamRequire() {
         //标识切面的入口
     }
@@ -30,7 +30,7 @@ public class GXParamAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
-        final GXParamAnnotation paramAnnotation = method.getAnnotation(GXParamAnnotation.class);
+        final GXParam paramAnnotation = method.getAnnotation(GXParam.class);
         final String[] paramNames = paramAnnotation.paramNames();
         final boolean require = paramAnnotation.require();
         if (!require) {

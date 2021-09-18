@@ -1,13 +1,13 @@
 package com.geoxus.rpc.service;
 
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.util.GXSpringContextUtil;
 import org.springframework.amqp.core.Message;
 
 import java.util.Optional;
 
 public interface GXRabbitMQRPCServerService {
-    @GXFieldCommentAnnotation("默认队列的名字")
+    @GXFieldComment("默认队列的名字")
     String DEFAULT_QUEUE_NAME = "java_rpc_queue";
 
     /**

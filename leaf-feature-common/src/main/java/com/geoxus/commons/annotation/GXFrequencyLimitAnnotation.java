@@ -1,6 +1,6 @@
 package com.geoxus.commons.annotation;
 
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -14,20 +14,20 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GXFrequencyLimitAnnotation {
-    @GXFieldCommentAnnotation(zhDesc = "值")
+    @GXFieldComment(zhDesc = "值")
     @AliasFor("count")
     int value() default 10;
 
-    @GXFieldCommentAnnotation(zhDesc = "限制的默认次数")
+    @GXFieldComment(zhDesc = "限制的默认次数")
     @AliasFor("value")
     int count() default 10;
 
-    @GXFieldCommentAnnotation(zhDesc = "限制的key")
+    @GXFieldComment(zhDesc = "限制的key")
     String key() default "";
 
-    @GXFieldCommentAnnotation(zhDesc = "过期时间, 单位: 秒")
+    @GXFieldComment(zhDesc = "过期时间, 单位: 秒")
     int expire() default 600;
 
-    @GXFieldCommentAnnotation(zhDesc = "场景值 使用IP限制还是使用其他的限制")
+    @GXFieldComment(zhDesc = "场景值 使用IP限制还是使用其他的限制")
     String scene() default "ip";
 }

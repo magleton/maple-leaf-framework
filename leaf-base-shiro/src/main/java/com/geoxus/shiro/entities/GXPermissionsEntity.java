@@ -1,7 +1,7 @@
 package com.geoxus.shiro.entities;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.shiro.constant.GXPermissionsConstant;
 import lombok.Data;
@@ -15,12 +15,12 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class GXPermissionsEntity extends GXBaseEntity implements Serializable {
-    @GXFieldCommentAnnotation(zhDesc = "主键ID")
+    @GXFieldComment(zhDesc = "主键ID")
     private Integer id;
 
-    @GXFieldCommentAnnotation(zhDesc = "权限码")
+    @GXFieldComment(zhDesc = "权限码")
     private String code;
 
-    @GXFieldCommentAnnotation(zhDesc = "扩展数据")
+    @GXFieldComment(zhDesc = "扩展数据")
     private String ext;
 }

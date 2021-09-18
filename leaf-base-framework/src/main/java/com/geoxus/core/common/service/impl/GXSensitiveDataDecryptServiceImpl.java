@@ -1,7 +1,7 @@
 package com.geoxus.core.common.service.impl;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.geoxus.core.common.annotation.GXSensitiveFieldAnnotation;
+import com.geoxus.core.common.annotation.GXSensitiveField;
 import com.geoxus.core.common.service.GXSensitiveDataDecryptService;
 import com.geoxus.common.util.GXSpringContextUtil;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class GXSensitiveDataDecryptServiceImpl implements GXSensitiveDataDecrypt
         Class<?> resultClass = result.getClass();
         Field[] declaredFields = resultClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            GXSensitiveFieldAnnotation sensitiveField = field.getAnnotation(GXSensitiveFieldAnnotation.class);
+            GXSensitiveField sensitiveField = field.getAnnotation(GXSensitiveField.class);
             if (Objects.nonNull(sensitiveField)) {
                 final Field accessible = ReflectUtil.setAccessible(field);
                 Object object = accessible.get(result);

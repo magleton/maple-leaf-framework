@@ -1,7 +1,7 @@
 package com.geoxus.rpc.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.MessageProperties;
@@ -27,10 +27,10 @@ import java.util.concurrent.Executors;
 @Slf4j
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
 public class GXRabbitMQRPCServerConfig {
-    @GXFieldCommentAnnotation(zhDesc = "当前系统的处理器个数")
+    @GXFieldComment(zhDesc = "当前系统的处理器个数")
     private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-    @GXFieldCommentAnnotation(zhDesc = "线程池中线程的个数")
+    @GXFieldComment(zhDesc = "线程池中线程的个数")
     private static final int THREAD_POOL_NUMBER = AVAILABLE_PROCESSORS * 5;
 
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();

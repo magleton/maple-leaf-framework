@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author zj chen <britton@126.com>
  */
-public interface GXValidateDBUnique {
+public interface GXValidateDBUniqueService {
     /**
      * Checks whether or not a given value unique
      * for a given field

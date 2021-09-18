@@ -8,12 +8,12 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.common.mapstruct.GXBaseMapStruct;
 import com.geoxus.common.pojo.GXResultCode;
-import com.geoxus.core.common.annotation.GXParseRequestAnnotation;
-import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
+import com.geoxus.core.common.annotation.GXRequestBody;
+import com.geoxus.core.common.annotation.GXMergeSingleField;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXCommonUtils;
@@ -40,16 +40,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
-public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    @GXFieldCommentAnnotation(zhDesc = "请求中的参数名字")
+public class GXHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+    @GXFieldComment(zhDesc = "请求中的参数名字")
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
-    @GXFieldCommentAnnotation("日志对象")
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXRequestHandlerMethodArgumentResolver.class);
+    @GXFieldComment("日志对象")
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXHandlerMethodArgumentResolver.class);
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(GXParseRequestAnnotation.class);
+        return parameter.hasParameterAnnotation(GXRequestBody.class);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
         final Object bean = Convert.convert(parameterType, JSONUtil.toBean(body, parameterType));
-        final GXParseRequestAnnotation requestBodyToTargetAnnotation = parameter.getParameterAnnotation(GXParseRequestAnnotation.class);
-        final String value = Objects.requireNonNull(requestBodyToTargetAnnotation).value();
+        final GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
+        final String value = Objects.requireNonNull(requestBody).value();
         Set<String> jsonFields = new HashSet<>(16);
-        boolean validateTarget = requestBodyToTargetAnnotation.validateTarget();
+        boolean validateTarget = requestBody.validateTarget();
 
         // 对请求数据进行修复处理
         callUserDefinedRepairMethod(parameterType, bean);
@@ -69,7 +69,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         dealDeclaredJsonFields(bean, parameterType, jsonFields);
 
         // 数据验证
-        Class<?>[] groups = requestBodyToTargetAnnotation.groups();
+        Class<?>[] groups = requestBody.groups();
         if (validateTarget) {
             if (parameter.hasParameterAnnotation(Valid.class)) {
                 GXValidatorUtils.validateEntity(bean, value, groups);
@@ -82,8 +82,8 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         callUserDefinedVerifyMethod(parameterType, bean);
 
         // 将对象转换为指定的entity
-        Class<?> mapstructClazz = requestBodyToTargetAnnotation.mapstructClazz();
-        boolean isConvertToEntity = requestBodyToTargetAnnotation.isConvertToEntity();
+        Class<?> mapstructClazz = requestBody.mapstructClazz();
+        boolean isConvertToEntity = requestBody.isConvertToEntity();
         if (mapstructClazz != Void.class && isConvertToEntity) {
             GXBaseMapStruct<GXBaseDto, GXBaseEntity> convert = Convert.convert(new TypeReference<GXBaseMapStruct<GXBaseDto, GXBaseEntity>>() {
             }, GXSpringContextUtil.getBean(mapstructClazz));
@@ -134,7 +134,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         Dict dict = Convert.convert(Dict.class, obj);
         Map<String, Map<String, Object>> jsonMergeFieldMap = new HashMap<>();
         for (Field field : parameterType.getDeclaredFields()) {
-            GXMergeSingleFieldAnnotation annotation = field.getAnnotation(GXMergeSingleFieldAnnotation.class);
+            GXMergeSingleField annotation = field.getAnnotation(GXMergeSingleField.class);
             if (Objects.isNull(annotation)) {
                 continue;
             }

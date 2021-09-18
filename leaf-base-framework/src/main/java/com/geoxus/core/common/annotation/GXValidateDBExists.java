@@ -1,6 +1,6 @@
 package com.geoxus.core.common.annotation;
 
-import com.geoxus.core.common.validator.GXValidateDBExists;
+import com.geoxus.core.common.validator.GXValidateDBExistsService;
 import com.geoxus.core.common.validator.impl.GXValidateDBExistsValidator;
 import com.geoxus.core.framework.service.GXCoreModelService;
 
@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = GXValidateDBExistsValidator.class)
 @Documented
-public @interface GXValidateDBExistsAnnotation {
+public @interface GXValidateDBExists {
     /**
      * 错误消息
      *
@@ -47,7 +47,7 @@ public @interface GXValidateDBExistsAnnotation {
      *
      * @return Class
      */
-    Class<? extends GXValidateDBExists> service() default GXCoreModelService.class;
+    Class<? extends GXValidateDBExistsService> service() default GXCoreModelService.class;
 
     /**
      * 目标字段名字

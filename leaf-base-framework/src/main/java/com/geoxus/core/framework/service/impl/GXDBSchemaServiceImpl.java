@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
@@ -27,17 +27,17 @@ import java.util.*;
 @Slf4j
 @Service
 public class GXDBSchemaServiceImpl implements GXDBSchemaService {
-    @GXFieldCommentAnnotation(zhDesc = "获取索引SQL模板")
+    @GXFieldComment(zhDesc = "获取索引SQL模板")
     private static final String SHOW_INDEX_SQL = "SHOW INDEX FROM `{}`";
 
-    @GXFieldCommentAnnotation(zhDesc = "删除索引SQL模板")
+    @GXFieldComment(zhDesc = "删除索引SQL模板")
     private static final String DROP_INDEX_SQL = "DROP INDEX `{}` on `{}`";
 
-    @GXFieldCommentAnnotation(zhDesc = "数据源对象")
+    @GXFieldComment(zhDesc = "数据源对象")
     @Autowired
     private DataSource dataSource;
 
-    @GXFieldCommentAnnotation(zhDesc = "字段权限对象")
+    @GXFieldComment(zhDesc = "字段权限对象")
     @Autowired
     private GXCoreModelAttributePermissionService gxCoreModelAttributePermissionService;
 

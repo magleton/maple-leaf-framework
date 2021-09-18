@@ -20,8 +20,8 @@ import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.common.util.GXCommonUtils;
-import com.geoxus.core.common.validator.GXValidateDBExists;
-import com.geoxus.core.common.validator.GXValidateDBUnique;
+import com.geoxus.core.common.validator.GXValidateDBExistsService;
+import com.geoxus.core.common.validator.GXValidateDBUniqueService;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
 
 import javax.validation.ConstraintValidatorContext;
@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseServiceImpl<T, M, D> implements GXBusinessService<T, M, D>, GXValidateDBExists, GXValidateDBUnique {
+public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseServiceImpl<T, M, D> implements GXBusinessService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 列表或者搜索(分页)
      *

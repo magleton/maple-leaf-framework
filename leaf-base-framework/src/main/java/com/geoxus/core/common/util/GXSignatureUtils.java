@@ -1,6 +1,6 @@
 package com.geoxus.core.common.util;
 
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +16,7 @@ import java.util.Set;
  * @author zj chen <britton@126.com>
  */
 public class GXSignatureUtils {
-    @GXFieldCommentAnnotation(zhDesc = "logger对象")
+    @GXFieldComment(zhDesc = "logger对象")
     private static final Logger logger = GXCommonUtils.getLogger(GXSignatureUtils.class);
 
     private GXSignatureUtils() {

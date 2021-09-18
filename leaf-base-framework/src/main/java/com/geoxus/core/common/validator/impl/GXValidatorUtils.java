@@ -5,7 +5,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.core.common.exception.GXBeanValidateException;
 
 import javax.validation.ConstraintViolation;
@@ -22,7 +22,7 @@ import java.util.Set;
  * 参考文档：http://docs.jboss.org/hibernate/validator/5.4/reference/en-US/html_single/
  */
 public class GXValidatorUtils {
-    @GXFieldCommentAnnotation(zhDesc = "验证器")
+    @GXFieldComment(zhDesc = "验证器")
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private GXValidatorUtils() {

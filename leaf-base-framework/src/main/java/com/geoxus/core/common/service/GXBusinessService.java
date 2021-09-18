@@ -6,11 +6,11 @@ import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.core.common.validator.GXValidateDBExists;
-import com.geoxus.core.common.validator.GXValidateDBUnique;
+import com.geoxus.core.common.validator.GXValidateDBExistsService;
+import com.geoxus.core.common.validator.GXValidateDBUniqueService;
 import com.geoxus.core.framework.service.GXBaseService;
 
-public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExists, GXValidateDBUnique {
+public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 列表或者搜索(分页)
      *

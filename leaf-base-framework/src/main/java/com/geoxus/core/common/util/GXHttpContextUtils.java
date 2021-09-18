@@ -5,7 +5,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.annotation.GXFieldCommentAnnotation;
+import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class GXHttpContextUtils {
-    @GXFieldCommentAnnotation(zhDesc = "日志对象")
+    @GXFieldComment(zhDesc = "日志对象")
     private static final Logger LOG = LoggerFactory.getLogger(GXHttpContextUtils.class);
 
     private GXHttpContextUtils() {

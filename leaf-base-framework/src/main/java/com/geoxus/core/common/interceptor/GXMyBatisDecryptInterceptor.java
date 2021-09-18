@@ -3,7 +3,7 @@ package com.geoxus.core.common.interceptor;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.geoxus.core.common.annotation.GXSensitiveDataAnnotation;
+import com.geoxus.core.common.annotation.GXSensitiveData;
 import com.geoxus.core.common.service.GXSensitiveDataDecryptService;
 import com.geoxus.core.common.util.GXTypeOfUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class GXMyBatisDecryptInterceptor implements Interceptor {
 
     private boolean needToDecrypt(Object object) {
         Class<?> objectClass = object.getClass();
-        GXSensitiveDataAnnotation sensitiveData = AnnotationUtils.findAnnotation(objectClass, GXSensitiveDataAnnotation.class);
+        GXSensitiveData sensitiveData = AnnotationUtils.findAnnotation(objectClass, GXSensitiveData.class);
         return Objects.nonNull(sensitiveData);
     }
 

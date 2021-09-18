@@ -1,6 +1,6 @@
 package com.geoxus.common.dto.protocol.req;
 
-import com.geoxus.core.common.annotation.GXMergeSingleFieldAnnotation;
+import com.geoxus.core.common.annotation.GXMergeSingleField;
 import com.geoxus.service.impl.MyGXValidateJsonFieldServiceImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,10 +27,10 @@ public class UserReqProtocol extends GXBaseReqProtocol {
     //@GXValidateExtDataAnnotation(tableName = "users")
     private String ext;
 
-    @GXMergeSingleFieldAnnotation(fieldName = "author", service = MyGXValidateJsonFieldServiceImpl.class)
+    @GXMergeSingleField(fieldName = "author", service = MyGXValidateJsonFieldServiceImpl.class)
     private String author;
 
-    @GXMergeSingleFieldAnnotation(fieldName = "sub_title")
+    @GXMergeSingleField(fieldName = "sub_title")
     private String subTitle;
 
     @Override
