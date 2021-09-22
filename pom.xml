@@ -28,28 +28,33 @@
     <!-- 统一管理jar包版本 -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <junit.version>4.13.2</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.18.20</lombok.version>
         <mysql.version>8.0.25</mysql.version>
-        <druid.spring.boot.version>1.2.6</druid.spring.boot.version>
+        <druid-spring-boot.version>1.2.6</druid-spring-boot.version>
         <hutool.version>5.7.12</hutool.version>
-        <mybatis.plus.boot.version>3.4.3.3</mybatis.plus.boot.version>
-        <redisson.spring.boot.version>3.16.2</redisson.spring.boot.version>
-        <aspectjweaver.version>1.9.6</aspectjweaver.version>
-        <shiro.spring.version>1.8.0</shiro.spring.version>
-        <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
-        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
+        <mybatis-plus-boot.version>3.4.3.3</mybatis-plus-boot.version>
+        <redisson-spring-boot.version>3.16.2</redisson-spring-boot.version>
+        <aspectjweaver.version>1.9.7</aspectjweaver.version>
+        <shiro-spring.version>1.8.0</shiro-spring.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <guava.version>30.1.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
         <ehcache.version>3.3.0</ehcache.version>
         <caffeine.version>3.0.3</caffeine.version>
-        <commons.fileupload.version>1.4</commons.fileupload.version>
+        <commons-fileupload.version>1.4</commons-fileupload.version>
         <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
+        <knife4j.version>3.0.2</knife4j.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
     </properties>
 
     <!-- 子模块继承之后，提供作用：锁定版本+子module不用写groupId和version  -->
@@ -58,21 +63,21 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.3.12.RELEASE</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR12</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.6.RELEASE</version>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -80,7 +85,7 @@
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-dependencies</artifactId>
-                <version>3.0.2</version>
+                <version>${knife4j.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -92,7 +97,7 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.spring.boot.version}</version>
+                <version>${druid-spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -118,12 +123,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis.plus.boot.version}</version>
+                <version>${mybatis-plus-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>${redisson.spring.boot.version}</version>
+                <version>${redisson-spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -133,7 +138,7 @@
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
-                <version>${shiro.spring.version}</version>
+                <version>${shiro-spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -153,7 +158,7 @@
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>${commons.fileupload.version}</version>
+                <version>${commons-fileupload.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -173,7 +178,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.5.RELEASE</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <fork>true</fork>
                     <addResources>true</addResources>
@@ -182,7 +187,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
