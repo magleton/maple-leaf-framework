@@ -1,4 +1,4 @@
-package com.geoxus.config;
+package com.geoxus.mongodb.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;

@@ -17,7 +17,7 @@ import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
 import com.google.common.collect.Table;
@@ -283,7 +283,7 @@ public interface GXBaseBuilder {
      * @param isMergeDBSearchCondition 是否合并数据库配置的搜索条件
      */
     @SuppressWarnings("all")
-    @GXDataSourceAnnotation("framework")
+    @GXDataSource("framework")
     default void mergeSearchConditionToSql(SQL sql, Dict requestParam, Boolean isMergeDBSearchCondition) {
         final String modelIdentificationValue = getModelIdentificationValue();
         if (CharSequenceUtil.isBlank(modelIdentificationValue)) {

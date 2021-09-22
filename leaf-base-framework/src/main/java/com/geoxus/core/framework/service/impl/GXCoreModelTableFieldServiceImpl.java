@@ -3,7 +3,7 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreModelTableFieldDao;
 import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-@GXDataSourceAnnotation("framework")
+@GXDataSource("framework")
 public class GXCoreModelTableFieldServiceImpl extends GXBusinessServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> implements GXCoreModelTableFieldService {
     /**
      * 通过条件获取数据

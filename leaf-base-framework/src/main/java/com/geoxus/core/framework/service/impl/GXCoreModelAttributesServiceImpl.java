@@ -8,7 +8,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
@@ -23,7 +23,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-@GXDataSourceAnnotation("framework")
+@GXDataSource("framework")
 public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> implements GXCoreModelAttributesService {
     @Resource
     private GXCoreModelTableFieldService coreModelTableFieldService;

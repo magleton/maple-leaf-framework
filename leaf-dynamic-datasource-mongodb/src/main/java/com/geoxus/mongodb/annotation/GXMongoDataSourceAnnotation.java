@@ -1,4 +1,4 @@
-package com.geoxus.core.datasource.annotation;
+package com.geoxus.mongodb.annotation;
 
 import java.lang.annotation.*;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface GXDataSourceAnnotation {
+public @interface GXMongoDataSourceAnnotation {
     String value() default "";
 }

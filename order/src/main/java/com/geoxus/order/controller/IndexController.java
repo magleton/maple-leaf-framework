@@ -5,14 +5,17 @@ import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.util.GXResultUtil;
+import com.geoxus.mongodb.annotation.GXMongoDataSourceAnnotation;
 import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.dto.protocol.res.OrderResProtocol;
 import com.geoxus.order.dto.res.GoodsResDto;
 import com.geoxus.order.dto.res.OrderResDto;
+import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapstruct.OrderMapStruct;
 import com.geoxus.order.service.UserService;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +32,9 @@ public class IndexController {
     @Resource
     private OrderMapStruct orderMapStruct;
 
+    @Resource
+    private MongoTemplate mongoTemplate;
+
     @GetMapping("index")
     @GXLoginAnnotation
     public GXResultUtil<Dict> index() {
@@ -42,7 +48,13 @@ public class IndexController {
     }
 
     @GetMapping("get-user-info")
+    @GXMongoDataSourceAnnotation("slave1")
+    //@GXDataSourceAnnotation("slave1")
     public GXResultUtil<UserResProtocol> getUserInfo(Long userId) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("aaaaa");
+        userEntity.setId(1111);
+        mongoTemplate.insert(userEntity);
         UserResProtocol userInfo = userService.getUserInfo(userId);
         return GXResultUtil.ok(userInfo);
     }

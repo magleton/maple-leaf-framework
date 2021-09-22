@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@GXDataSourceAnnotation("framework")
+@GXDataSource("framework")
 public class GXCoreAttributesServiceImpl extends GXBusinessServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> implements GXCoreAttributesService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0")

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.constant.GXCoreConfigConstant;
 import com.geoxus.core.framework.dao.GXCoreConfigDao;
 import com.geoxus.core.framework.entity.GXCoreConfigEntity;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-@GXDataSourceAnnotation("framework")
+@GXDataSource("framework")
 public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao> implements GXCoreConfigService {
     public long create(GXCoreConfigEntity target, Dict param) {
         baseDao.save(target);

@@ -1,7 +1,7 @@
-package com.geoxus.core.datasource.aspect;
+package com.geoxus.mongodb.aspect;
 
-import com.geoxus.core.datasource.annotation.GXDataSource;
-import com.geoxus.core.datasource.config.GXDynamicContextHolder;
+import com.geoxus.mongodb.annotation.GXMongoDataSourceAnnotation;
+import com.geoxus.mongodb.config.GXMongoDynamicContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,8 +22,8 @@ import java.util.Objects;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
-public class GXDataSourceAnnotationAspect {
-    @Pointcut("@annotation(com.geoxus.core.datasource.annotation.GXDataSource) || @within(com.geoxus.core.datasource.annotation.GXDataSource)")
+public class GXMongoDataSourceAnnotationAspect {
+    @Pointcut("@annotation(com.geoxus.mongodb.annotation.GXMongoDataSourceAnnotation) || @within(com.geoxus.mongodb.annotation.GXMongoDataSourceAnnotation)")
     public void dataSourcePointCut() {
         // 这是是切点标记
     }
@@ -33,18 +33,18 @@ public class GXDataSourceAnnotationAspect {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Class<?> targetClass = point.getTarget().getClass();
         Method method = signature.getMethod();
-        GXDataSource targetDataSourceAnnotation = targetClass.getAnnotation(GXDataSource.class);
-        GXDataSource methodDataSourceAnnotation = method.getAnnotation(GXDataSource.class);
+        GXMongoDataSourceAnnotation targetDataSourceAnnotation = targetClass.getAnnotation(GXMongoDataSourceAnnotation.class);
+        GXMongoDataSourceAnnotation methodDataSourceAnnotation = method.getAnnotation(GXMongoDataSourceAnnotation.class);
         if (targetDataSourceAnnotation != null || methodDataSourceAnnotation != null) {
             String value;
             value = Objects.requireNonNullElse(methodDataSourceAnnotation, targetDataSourceAnnotation).value();
-            GXDynamicContextHolder.push(value);
+            GXMongoDynamicContextHolder.push(value);
             log.debug("{}线程设置的数据源是{}", Thread.currentThread().getName(), value);
         }
         try {
             return point.proceed();
         } finally {
-            GXDynamicContextHolder.poll();
+            GXMongoDynamicContextHolder.poll();
             log.debug("{}线程清除数据源", Thread.currentThread().getName());
         }
     }

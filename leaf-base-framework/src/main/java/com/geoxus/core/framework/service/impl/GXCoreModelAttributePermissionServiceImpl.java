@@ -8,7 +8,7 @@ import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.service.GXSessionService;
 import com.geoxus.core.common.util.GXCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.datasource.annotation.GXDataSourceAnnotation;
+import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesPermissionMapper;
@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@GXDataSourceAnnotation("framework")
+@GXDataSource("framework")
 public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesPermissionEntity, GXCoreModelAttributesPermissionMapper, GXCoreModelAttributesPermissionDao> implements GXCoreModelAttributePermissionService {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")

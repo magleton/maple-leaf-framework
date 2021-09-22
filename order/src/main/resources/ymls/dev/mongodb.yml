@@ -9,10 +9,10 @@ mongodb:
       authenticationDatabase: ""
       connections-per-host: 20
       min-connections-per-host: 20
-    salve1:
+    slave1:
       uri: mongodb://192.168.1.245:27017
       replica-set: mgset-3590061
-      database: test01
+      database: test1
       username: ""
       password: ""
       authenticationDatabase: ""

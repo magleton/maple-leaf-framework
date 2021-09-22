@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-dynamic-datasource-mongodb</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-sso</artifactId>
             <version>${parent.version}</version>
         </dependency>

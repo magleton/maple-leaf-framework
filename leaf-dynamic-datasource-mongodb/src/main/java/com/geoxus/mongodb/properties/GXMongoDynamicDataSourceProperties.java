@@ -1,8 +1,7 @@
-package com.geoxus.core.datasource.properties;
+package com.geoxus.mongodb.properties;
 
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -17,11 +16,11 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/datasource.yml"},
+@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/mongodb.yml"},
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = false)
-@ConfigurationProperties(prefix = "dynamic")
+@ConfigurationProperties(prefix = "mongodb")
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.ConfigFactory"})
-public class GXDynamicDataSourceProperties {
-    protected Map<String, GXDataSourceProperties> datasource = new LinkedHashMap<>();
+public class GXMongoDynamicDataSourceProperties {
+    protected Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 }

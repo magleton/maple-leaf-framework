@@ -3,8 +3,8 @@ package com.geoxus.core.datasource.config;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.druid.pool.DruidDataSource;
-import com.geoxus.core.datasource.properties.GXBaseDataSourceProperties;
 import com.geoxus.core.datasource.properties.GXDataSourceProperties;
+import com.geoxus.core.datasource.properties.GXDynamicDataSourceProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 public class GXDynamicDataSourceConfig {
     @Resource
-    private GXBaseDataSourceProperties gxBaseDataSourceProperties;
+    private GXDynamicDataSourceProperties dynamicDataSourceProperties;
 
     @Bean
     public GXDataSourceProperties dataSourceProperties() {
@@ -30,7 +30,7 @@ public class GXDynamicDataSourceConfig {
         if (!CharSequenceUtil.isEmpty(gxDataSourceProperties.getUrl())) {
             return gxDataSourceProperties;
         }
-        return gxBaseDataSourceProperties.getDatasource().get("framework");
+        return dynamicDataSourceProperties.getDatasource().get("framework");
     }
 
     @Bean
@@ -71,7 +71,7 @@ public class GXDynamicDataSourceConfig {
     }
 
     protected Map<Object, Object> getDynamicDataSource() {
-        Map<String, GXDataSourceProperties> dataSourcePropertiesMap = gxBaseDataSourceProperties.getDatasource();
+        Map<String, GXDataSourceProperties> dataSourcePropertiesMap = dynamicDataSourceProperties.getDatasource();
         Map<Object, Object> targetDataSources = new HashMap<>(dataSourcePropertiesMap.size());
         // TODO 此处可以通过在其他地方获取连接信息来新建连接池, 比如从另外的数据库读取信息
         dataSourcePropertiesMap.forEach((k, v) -> {

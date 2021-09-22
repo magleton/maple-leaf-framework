@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("user")
 public class UserEntity extends GXBaseEntity {
+    private static final long serialVersionUID = 3607593165684109949L;
+    
     private Integer id;
 
     private String username;
