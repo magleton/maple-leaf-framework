@@ -7,4 +7,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserProtocolMapstruct extends GXBaseMapStruct<UserReqProtocol, UserEntity> {
+    UserEntity dtoToEntity(UserReqProtocol reqProtocol);
 }
