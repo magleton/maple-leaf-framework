@@ -6,6 +6,9 @@ server:
 spring:
   profiles:
     active: dev
+  devtools:
+    restart:
+      enabled: true
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -44,3 +47,30 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath:/mappers/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.geoxus.core.framework.entity;com.geoxus.modules.*.entity
+  typeEnumsPackage: com.geoxus.core.framework.entity.enums;com.geoxus.modules.*.entity.enums
+  typeHandlersPackage: com.geoxus.core.framework.handlers
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      #数据库大写下划线转换
+      capital-mode: true
+      #逻辑删除配置
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      column-format: "%s"
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    aggressive-lazy-loading: false
+    lazy-loading-enabled: false
