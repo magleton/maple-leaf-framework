@@ -1,20 +1,23 @@
 mongodb:
   datasource:
-    framework:
+    primary:
       uri: mongodb://192.168.1.245:27017
-      replica-set: mgset-3590061
       database: test
+      authenticationDatabase: ""
+      gridFsDatabase: ""
+      replicaSetName: mgset-3590061
+      autoIndexCreation: false
       username: ""
       password: ""
-      authenticationDatabase: ""
-      connections-per-host: 20
-      min-connections-per-host: 20
-    slave1:
+      beanName: primaryMongoTemplate
+    secondary:
       uri: mongodb://192.168.1.245:27017
-      replica-set: mgset-3590061
-      database: test1
+      database: test01
+      authenticationDatabase: ""
+      gridFsDatabase: ""
+      replicaSetName: mgset-3590061
+      autoIndexCreation: false
       username: ""
       password: ""
-      authenticationDatabase: ""
-      connections-per-host: 20
-      min-connections-per-host: 20
+      beanName: secondaryMongoTemplate
+      isPrimary: true

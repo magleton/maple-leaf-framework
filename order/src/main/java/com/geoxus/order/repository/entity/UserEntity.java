@@ -1,4 +1,4 @@
-package com.geoxus.order.entity;
+package com.geoxus.order.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.geoxus.core.common.entity.GXBaseEntity;

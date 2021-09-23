@@ -1,4 +1,4 @@
-package com.geoxus.mongodb.properties;
+package com.geoxus.mongodb.datasource.properties;
 
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;

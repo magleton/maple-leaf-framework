@@ -1,14 +1,11 @@
 server:
-  port: 9988
+  port: 8059
   servlet:
     context-path: /
 
 spring:
   profiles:
     active: dev
-  devtools:
-    restart:
-      enabled: true
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
