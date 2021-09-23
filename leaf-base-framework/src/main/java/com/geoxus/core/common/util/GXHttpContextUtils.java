@@ -87,7 +87,7 @@ public class GXHttpContextUtils {
             value = Convert.convert(clazz, requestParameter);
         }
         if (null == value) {
-            return GXCommonUtils.getClassDefaultValue(clazz);
+            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
         }
         return value;
     }
@@ -166,7 +166,7 @@ public class GXHttpContextUtils {
         assert servletRequest != null;
         final Object attributeValue = servletRequest.getAttribute(attributeName);
         if (null == attributeValue) {
-            return GXCommonUtils.getClassDefaultValue(clazz);
+            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
         }
         return Convert.convert(clazz, attributeValue);
     }

@@ -15,7 +15,7 @@ import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
@@ -311,7 +311,7 @@ public interface GXBaseBuilder {
                     timeFieldFlag = true;
                 }
                 if (Objects.isNull(operator)) {
-                    GXCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
+                    GXFrameworkCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
                     continue;
                 }
                 if (timeFieldFlag) {
@@ -390,7 +390,7 @@ public interface GXBaseBuilder {
      * @return Dict
      */
     default Dict addSearchCondition(Dict requestParam, String key, Object value) {
-        return GXCommonUtils.addSearchCondition(requestParam, key, value, false);
+        return GXFrameworkCommonUtils.addSearchCondition(requestParam, key, value, false);
     }
 
     /**
@@ -401,7 +401,7 @@ public interface GXBaseBuilder {
      * @return Dict
      */
     default Dict addSearchCondition(Dict requestParam, Dict sourceData) {
-        return GXCommonUtils.addSearchCondition(requestParam, sourceData, false);
+        return GXFrameworkCommonUtils.addSearchCondition(requestParam, sourceData, false);
     }
 
     /**

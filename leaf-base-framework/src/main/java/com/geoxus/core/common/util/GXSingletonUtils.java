@@ -41,7 +41,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build();
-        GXCommonUtils.registerSingleton(beanName, cache);
+        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -61,7 +61,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build(cacheLoader);
-        GXCommonUtils.registerSingleton(beanName, cache);
+        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -80,7 +80,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.buildAsync();
-        GXCommonUtils.registerSingleton(beanName, cache);
+        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -100,7 +100,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(cacheNameKey);
         cache = caffeine.buildAsync(asyncCacheLoader);
-        GXCommonUtils.registerSingleton(beanName, cache);
+        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -111,7 +111,7 @@ public class GXSingletonUtils {
      * @return Caffeine
      */
     private static <K, V> Caffeine<K, V> getCaffeine(String cacheNameKey) {
-        String spec = GXCommonUtils.getEnvironmentValue(cacheNameKey);
+        String spec = GXFrameworkCommonUtils.getEnvironmentValue(cacheNameKey);
         if (CharSequenceUtil.isBlank(spec)) {
             spec = "maximumSize=1024";
         }
@@ -123,7 +123,7 @@ public class GXSingletonUtils {
         }
         caffeine = Convert.convert(new TypeReference<Caffeine<K, V>>() {
         }, Caffeine.from(spec));
-        GXCommonUtils.registerSingleton(beanName, caffeine);
+        GXFrameworkCommonUtils.registerSingleton(beanName, caffeine);
         return caffeine;
     }
 }

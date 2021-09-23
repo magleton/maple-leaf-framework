@@ -13,7 +13,7 @@ import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.mapper.GXBaseMapper;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXAlterTableService;
 import com.geoxus.core.framework.service.GXBaseService;
@@ -41,7 +41,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
     /**
      * 日志对象
      */
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXBaseServiceImpl.class);
+    private static final Logger LOGGER = GXFrameworkCommonUtils.getLogger(GXBaseServiceImpl.class);
 
     /**
      * 基础DAO
@@ -87,9 +87,9 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
     public Dict getConstantsFields() {
         final Dict data = Dict.create();
         final List<Class<?>> clazzInterfaces = new ArrayList<>();
-        GXCommonUtils.getInterfaces(getClass(), clazzInterfaces);
+        GXFrameworkCommonUtils.getInterfaces(getClass(), clazzInterfaces);
         for (Class<?> clz : clazzInterfaces) {
-            GXCommonUtils.clazzFields(clz, data);
+            GXFrameworkCommonUtils.clazzFields(clz, data);
         }
         return data;
     }
@@ -114,7 +114,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition) {
-        return getSingleFieldValueByDB(clazz, path, type, condition, GXCommonUtils.getClassDefaultValue(type));
+        return getSingleFieldValueByDB(clazz, path, type, condition, GXFrameworkCommonUtils.getClassDefaultValue(type));
     }
 
     /**
@@ -201,7 +201,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public <R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, int coreModelId) {
-        return getSingleFieldValueByEntity(entity, path, type, GXCommonUtils.getClassDefaultValue(type), coreModelId);
+        return getSingleFieldValueByEntity(entity, path, type, GXFrameworkCommonUtils.getClassDefaultValue(type), coreModelId);
     }
 
     /**
@@ -233,7 +233,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         if (index == -1) {
             if (null != dbField.get(path)) {
-                GXCommonUtils.getLogger(GXBaseServiceImpl.class).error("当前用户无权访问{}字段的数据...", path);
+                GXFrameworkCommonUtils.getLogger(GXBaseServiceImpl.class).error("当前用户无权访问{}字段的数据...", path);
                 return null;
             }
             if (null == json.getByPath(path)) {
@@ -261,7 +261,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
         String subField = CharSequenceUtil.sub(path, index + 2, path.length());
         Dict dict = Convert.convert(Dict.class, Optional.ofNullable(jsonField.getObj(mainField)).orElse(Dict.create()));
         if (!dict.isEmpty() && null != dict.get(subField)) {
-            GXCommonUtils.getLogger(GXBaseServiceImpl.class).error("当前用户无权访问{}.{}字段的数据...", mainField, subField);
+            GXFrameworkCommonUtils.getLogger(GXBaseServiceImpl.class).error("当前用户无权访问{}.{}字段的数据...", mainField, subField);
             return null;
         }
         JSON parse = JSONUtil.parse(json.getByPath(mainField));
@@ -345,7 +345,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public Cache getSpringCache(String cacheName) {
-        return GXCommonUtils.getSpringCache(cacheName);
+        return GXFrameworkCommonUtils.getSpringCache(cacheName);
     }
 
     /**
@@ -419,7 +419,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public String getTableName(Class<T> clazz) {
-        return GXCommonUtils.getTableName(clazz);
+        return GXFrameworkCommonUtils.getTableName(clazz);
     }
 
     /**
@@ -504,7 +504,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
     public Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
         final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
         if (Objects.isNull(dict)) {
-            GXCommonUtils.getLogger(GXBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
+            GXFrameworkCommonUtils.getLogger(GXBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
             return Dict.create();
         }
         return handleSamePrefixDict(dict);
@@ -615,7 +615,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
      */
     @Override
     public <R> void publishEvent(GXBaseEvent<R> event) {
-        GXCommonUtils.publishEvent(event);
+        GXFrameworkCommonUtils.publishEvent(event);
     }
 
     /**

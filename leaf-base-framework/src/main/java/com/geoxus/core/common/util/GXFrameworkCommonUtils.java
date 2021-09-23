@@ -38,11 +38,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "unused"})
-public class GXCommonUtils {
+public class GXFrameworkCommonUtils {
     @GXFieldComment(zhDesc = "日志对象")
-    private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXFrameworkCommonUtils.class);
 
-    private GXCommonUtils() {
+    private GXFrameworkCommonUtils() {
     }
 
     /**
@@ -730,8 +730,8 @@ public class GXCommonUtils {
      * @return String
      */
     public static String encryptedPhoneNumber(String phoneNumber) {
-        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
+        final String prefix = GXFrameworkCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
+        final String suffix = GXFrameworkCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
         final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return encryptedPhoneNumber(phoneNumber, key);
     }
@@ -743,8 +743,8 @@ public class GXCommonUtils {
      * @return String
      */
     public static String decryptedPhoneNumber(String encryptPhoneNumber) {
-        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
+        final String prefix = GXFrameworkCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
+        final String suffix = GXFrameworkCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
         final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return decryptedPhoneNumber(encryptPhoneNumber, key);
     }

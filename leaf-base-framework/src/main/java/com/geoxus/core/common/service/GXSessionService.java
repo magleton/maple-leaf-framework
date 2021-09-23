@@ -1,7 +1,7 @@
 package com.geoxus.core.common.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 
 public interface GXSessionService {
     /**
@@ -10,7 +10,7 @@ public interface GXSessionService {
      * @return Long
      */
     default Long currentSessionUserId() {
-        return GXCommonUtils.getCurrentSessionUserId();
+        return GXFrameworkCommonUtils.getCurrentSessionUserId();
     }
 
     /**

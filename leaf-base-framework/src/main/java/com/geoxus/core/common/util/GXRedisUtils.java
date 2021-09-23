@@ -16,7 +16,7 @@ public class GXRedisUtils {
     private static final String COUNTER_MAP_CACHE_NAME = "counter_map_cache_name";
 
     static {
-        logger = GXCommonUtils.getLogger(GXRedisUtils.class);
+        logger = GXFrameworkCommonUtils.getLogger(GXRedisUtils.class);
     }
 
     private GXRedisUtils() {

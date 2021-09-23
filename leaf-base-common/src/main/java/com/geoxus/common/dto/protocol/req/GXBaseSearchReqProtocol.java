@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class GXBaseSearchReqProtocol extends GXBaseDto {
+    private static final long serialVersionUID = -7685836286570517029L;
+
     /**
      * 分页信息
      * eg:

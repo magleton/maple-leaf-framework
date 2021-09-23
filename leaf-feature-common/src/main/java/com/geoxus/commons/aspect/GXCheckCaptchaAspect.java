@@ -10,7 +10,7 @@ import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.service.GXSendSMSService;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.pojo.common.GXResultCode;
@@ -44,7 +44,7 @@ public class GXCheckCaptchaAspect {
         final int verifyType = gxCheckCaptchaAnnotation.verifyType();
         Dict param = Convert.convert(Dict.class, point.getArgs()[0]);
         final List<String> specialPhone = Convert.convert(new TypeReference<List<String>>() {
-        }, Optional.ofNullable(GXCommonUtils.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
+        }, Optional.ofNullable(GXFrameworkCommonUtils.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
         if (!annotationValue) {
             return point.proceed(point.getArgs());
         }
@@ -67,8 +67,8 @@ public class GXCheckCaptchaAspect {
             if (null == phone) {
                 throw new GXBusinessException("请传递手机号码");
             }
-            phone = GXCommonUtils.decryptedPhoneNumber(phone);
-            final String specialVerifyCode = GXCommonUtils.getEnvironmentValue("special.verify_code", String.class, "");
+            phone = GXFrameworkCommonUtils.decryptedPhoneNumber(phone);
+            final String specialVerifyCode = GXFrameworkCommonUtils.getEnvironmentValue("special.verify_code", String.class, "");
             if (CollUtil.contains(specialPhone, phone) && verifyCode.equals(specialVerifyCode)) {
                 log.info(StrUtil.format("正在使用特殊号码进行验证 : {}-{}", phone, specialVerifyCode));
                 return point.proceed(point.getArgs());

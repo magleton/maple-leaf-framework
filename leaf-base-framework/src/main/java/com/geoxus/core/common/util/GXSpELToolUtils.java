@@ -28,7 +28,7 @@ public class GXSpELToolUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXCommonUtils.getLogger(GXSpELToolUtils.class);
+    private static final Logger LOG = GXFrameworkCommonUtils.getLogger(GXSpELToolUtils.class);
 
     /**
      * 目标类中方法不存在的提示信息
@@ -68,7 +68,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXCommonUtils.getClassDefaultValue(beanClass);
+        return GXFrameworkCommonUtils.getClassDefaultValue(beanClass);
     }
 
     /**
@@ -111,7 +111,7 @@ public class GXSpELToolUtils {
      */
     public static <T> T calculateSpELExpression(Object targetObject, String expressionString, Class<T> beanClazz) {
         if (Objects.isNull(targetObject)) {
-            return GXCommonUtils.getClassDefaultValue(beanClazz);
+            return GXFrameworkCommonUtils.getClassDefaultValue(beanClazz);
         }
         try {
             ExpressionParser parser = new SpelExpressionParser();
@@ -120,7 +120,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXCommonUtils.getClassDefaultValue(beanClazz);
+        return GXFrameworkCommonUtils.getClassDefaultValue(beanClazz);
     }
 
     /**
@@ -149,7 +149,7 @@ public class GXSpELToolUtils {
         final StandardEvaluationContext inventorContext = new StandardEvaluationContext(targetObj);
         final ExpressionParser parser = new SpelExpressionParser();
         if (data.isEmpty()) {
-            return GXCommonUtils.getClassDefaultValue(clazz);
+            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
         }
         data.forEach((key, value) -> parser.parseExpression(key).setValue(inventorContext, value));
         return parser.parseExpression(targetKey).getValue(inventorContext, clazz);

@@ -1,7 +1,7 @@
 package com.geoxus.commons.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.common.util.GXCommonUtils;
+import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 
 public class GXMediaLibraryConstant {
     @GXFieldComment(zhDesc = "主键ID")
@@ -20,7 +20,7 @@ public class GXMediaLibraryConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXCommonUtils.getEnvironmentValue("app.core-model-id.media_library", Integer.class, 100);
+    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.core-model-id.media_library", Integer.class, 100);
 
     @GXFieldComment("目标ID的字段名字")
     public static final String TARGET_ID_FIELD_NAME = "targetId";

@@ -26,7 +26,7 @@ public class GXConcurrentToolsUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXCommonUtils.getLogger(GXConcurrentToolsUtils.class);
+    private static final Logger LOG = GXFrameworkCommonUtils.getLogger(GXConcurrentToolsUtils.class);
 
     /**
      * 线程池对象
