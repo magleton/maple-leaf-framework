@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("user")
-@Document(collation = "t_user")
+@Document(collection = "t_user")
 public class UserEntity extends GXBaseEntity {
     private static final long serialVersionUID = 3607593165684109949L;
 

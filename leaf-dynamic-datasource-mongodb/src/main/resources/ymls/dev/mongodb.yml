@@ -1,23 +1,25 @@
 mongodb:
   datasource:
     primary:
+      #uri: mongodb://demo:demo@192.168.1.245:27017/demo
       uri: mongodb://192.168.1.245:27017
-      database: test
-      authenticationDatabase: ""
+      database: demo
+      authenticationDatabase: "admin"
       gridFsDatabase: ""
       replicaSetName: mgset-3590061
       autoIndexCreation: false
-      username: ""
-      password: ""
+      username: "demo"
+      password: "demo"
       beanName: primaryMongoTemplate
+      isPrimary: true
     secondary:
       uri: mongodb://192.168.1.245:27017
-      database: test01
-      authenticationDatabase: ""
+      database: demo
+      authenticationDatabase: "admin"
       gridFsDatabase: ""
       replicaSetName: mgset-3590061
       autoIndexCreation: false
-      username: ""
-      password: ""
+      username: "demo"
+      password: "demo"
       beanName: secondaryMongoTemplate
-      isPrimary: true
+      isPrimary: false

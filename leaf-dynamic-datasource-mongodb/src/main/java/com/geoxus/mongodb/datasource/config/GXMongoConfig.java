@@ -3,16 +3,19 @@ package com.geoxus.mongodb.datasource.config;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.mongodb.datasource.properties.GXMongoDynamicDataSourceProperties;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author britton <britton@126.com>
  * @since 2021-09-23
  */
-@Configuration
+@Component
 @Slf4j
 public class GXMongoConfig implements ApplicationContextAware {
     @Resource
@@ -38,7 +41,18 @@ public class GXMongoConfig implements ApplicationContextAware {
         mongoDynamicDataSourceProperties.getDatasource().forEach((k, dataSourceProperties) -> {
             String uri = dataSourceProperties.getUri();
             String database = dataSourceProperties.getDatabase();
-            SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(uri), database);
+            String username = dataSourceProperties.getUsername();
+            String authenticationDatabase = dataSourceProperties.getAuthenticationDatabase();
+            char[] password = dataSourceProperties.getPassword();
+            MongoCredential credential = MongoCredential.createCredential(username, authenticationDatabase, password);
+            ConnectionString connectionString = new ConnectionString(uri);
+            MongoClientSettings mongoClientSettings = MongoClientSettings
+                    .builder()
+                    .credential(credential)
+                    .applyConnectionString(connectionString)
+                    .build();
+            //SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongodb://name:pass@localhost:27017/databaseName), database);
+            SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoClientSettings), database);
             MongoTemplate mongoTemplate = new MongoTemplate(factory);
             Boolean isPrimary = dataSourceProperties.getIsPrimary();
             String beanName = dataSourceProperties.getBeanName();
