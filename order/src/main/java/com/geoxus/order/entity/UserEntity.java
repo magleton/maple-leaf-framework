@@ -18,4 +18,6 @@ public class UserEntity extends GXBaseEntity {
     private String username;
 
     private String ext;
+
+    private Integer age;
 }

@@ -1,6 +1,7 @@
 package com.geoxus.order.controller;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.RandomUtil;
 import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
@@ -10,6 +11,7 @@ import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.dto.protocol.res.OrderResProtocol;
 import com.geoxus.order.dto.res.GoodsResDto;
 import com.geoxus.order.dto.res.OrderResDto;
+import com.geoxus.order.entity.UserDto;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapstruct.OrderMapStruct;
 import com.geoxus.order.repository.primary.UserRepository;
@@ -55,11 +57,18 @@ public class IndexController {
     @GetMapping("get-user-info")
     public GXResultUtil<UserResProtocol> getUserInfo(Long userId) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("aaaaa");
-        userEntity.setId(1111);
+        userEntity.setUsername(RandomUtil.randomString(10) + RandomUtil.randomInt());
+        userEntity.setId(RandomUtil.randomInt());
+        userEntity.setAge(RandomUtil.randomInt(1, 100));
         userRepository.insert(userEntity);
         UserResProtocol userInfo = userService.getUserInfo(userId);
         return GXResultUtil.ok(userInfo);
+    }
+
+    @GetMapping("/abc")
+    public GXResultUtil<List<UserDto>> getInfoFromMongoDB() {
+        List<UserDto> vvv = userRepository.getListByUsername("vvv");
+        return GXResultUtil.ok(vvv);
     }
 
     @GXLoginAnnotation
