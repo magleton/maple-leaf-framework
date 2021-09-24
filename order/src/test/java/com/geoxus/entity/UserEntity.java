@@ -2,6 +2,7 @@ package com.geoxus.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.checkerframework.common.value.qual.MinLen;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ public class UserEntity implements Serializable {
 
     private Long id;
 
+    @MinLen(value = 20)
     private String userName;
 
     private String passWord;

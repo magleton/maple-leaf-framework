@@ -2,7 +2,7 @@ package com.geoxus.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.core.common.oauth.GXTokenManager;
+import com.geoxus.common.util.GXTokenManagerUtil;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.shiro.service.GXAdminService;
 import com.geoxus.shiro.service.GXShiroService;
@@ -61,7 +61,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         log.info("用户登录时认证 --> GXOAuth2Realm.doGetAuthenticationInfo() ,  principal = {} : credentials = {}", token.getPrincipal(), token.getCredentials());
         String accessToken = token.getPrincipal().toString();
         // 根据accessToken, 获取token中的值
-        Dict dict = GXTokenManager.decodeAdminToken(accessToken);
+        Dict dict = GXTokenManagerUtil.decodeAdminToken(accessToken);
         // 判断token是否失效
         if (null == dict || dict.isEmpty()) {
             throw new IncorrectCredentialsException("长时间未操作, 请重新登录~~~");

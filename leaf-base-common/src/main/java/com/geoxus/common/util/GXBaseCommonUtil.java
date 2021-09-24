@@ -5,8 +5,8 @@ import cn.hutool.json.JSONUtil;
 import com.geoxus.common.dto.GXBasePagingReqDto;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 
-public class GXBaseCommonUtils {
-    private GXBaseCommonUtils() {
+public class GXBaseCommonUtil {
+    private GXBaseCommonUtil() {
 
     }
 
@@ -25,6 +25,8 @@ public class GXBaseCommonUtils {
         Dict searchCondition = searchReqProtocol.getSearchCondition();
         Dict condition = Dict.create().set("page", page).set("pageSize", pageSize);
         condition.putAll(searchCondition);
-        return JSONUtil.toBean(JSONUtil.toJsonStr(condition), clazz);
+        T targetObject = JSONUtil.toBean(JSONUtil.toJsonStr(condition), clazz);
+        GXValidatorUtil.validateEntity(targetObject);
+        return targetObject;
     }
 }

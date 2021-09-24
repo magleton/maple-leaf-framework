@@ -13,7 +13,7 @@ import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.util.GXValidatorUtils;
+import com.geoxus.common.util.GXValidatorUtil;
 import com.geoxus.common.validator.GXValidateJSONFieldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,10 +67,10 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         Class<?>[] groups = requestBody.groups();
         if (validateTarget) {
             if (parameter.hasParameterAnnotation(Valid.class)) {
-                GXValidatorUtils.validateEntity(bean, value, groups);
+                GXValidatorUtil.validateEntity(bean, value, groups);
             } else if (parameter.hasParameterAnnotation(Validated.class)) {
                 groups = Objects.requireNonNull(parameter.getParameterAnnotation(Validated.class)).value();
-                GXValidatorUtils.validateEntity(bean, value, groups);
+                GXValidatorUtil.validateEntity(bean, value, groups);
             }
         }
         // 调用目标bean对象的验证方法对数据进行额外的验证

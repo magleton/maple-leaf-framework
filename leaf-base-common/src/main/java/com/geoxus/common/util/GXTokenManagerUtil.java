@@ -1,20 +1,14 @@
 package com.geoxus.common.util;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
+import com.geoxus.common.constant.GXTokenConstant;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
-import java.util.concurrent.ExecutionException;
-
 @Slf4j
-public class GXTokenManager {
-    @GXFieldCommentAnnotation(zhDesc = "管理员的token缓存组件")
-    private static final Cache<String, Dict> ADMIN_TOKEN_CACHE = CacheBuilder.newBuilder().maximumSize(10000).expireAfterAccess(Duration.ofMinutes(24)).build();
-
-    private GXTokenManager() {
+public class GXTokenManagerUtil {
+    private GXTokenManagerUtil() {
     }
 
     /**
@@ -31,9 +25,9 @@ public class GXTokenManager {
      * @return String
      */
     public static String generateAdminToken(long adminId, Dict param) {
-        param.putIfAbsent(GXTokenConstants.ADMIN_ID, adminId);
+        param.putIfAbsent(GXTokenConstant.ADMIN_ID, adminId);
         param.putIfAbsent("platform", "GEO_XUS");
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstants.KEY, GXTokenConstants.ADMIN_EXPIRES_REFRESH);
+        return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY, GXTokenConstant.ADMIN_EXPIRES_REFRESH);
     }
 
     /**
@@ -50,8 +44,8 @@ public class GXTokenManager {
      * @return String
      */
     public static String generateUserToken(long userId, Dict param) {
-        param.putIfAbsent(GXTokenConstants.USER_ID, userId);
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstants.KEY);
+        param.putIfAbsent(GXTokenConstant.USER_ID, userId);
+        return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
     }
 
     /**
@@ -63,7 +57,7 @@ public class GXTokenManager {
      */
     public static Dict decodeUserToken(String source) {
         try {
-            String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstants.KEY);
+            String s = GXAuthCodeUtil.authCodeDecode(source, GXTokenConstant.KEY);
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
             return Dict.create();
@@ -79,16 +73,9 @@ public class GXTokenManager {
      */
     public static Dict decodeAdminToken(String source) {
         try {
-            String cacheKey = SecureUtil.md5(source);
-            return ADMIN_TOKEN_CACHE.get(cacheKey, () -> {
-                String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstants.KEY);
-                Dict dict = JSONUtil.toBean(s, Dict.class);
-                if (dict.isEmpty()) {
-                    return Dict.create();
-                }
-                return dict;
-            });
-        } catch (JSONException | ExecutionException exception) {
+            String s = GXAuthCodeUtil.authCodeDecode(source, GXTokenConstant.KEY);
+            return JSONUtil.toBean(s, Dict.class);
+        } catch (JSONException exception) {
             log.error(exception.getMessage());
         }
         return Dict.create();

@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.oauth.GXTokenManager;
+import com.geoxus.common.util.GXTokenManagerUtil;
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
@@ -57,6 +57,6 @@ public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXA
             throw new GXBusinessException("登录信息不存在,请核对之后重试!!");
         }
         final Long adminId = Convert.toLong(data.remove("id"));
-        return GXTokenManager.generateAdminToken(adminId, data, true);
+        return GXTokenManagerUtil.generateAdminToken(adminId, data);
     }
 }

@@ -5,14 +5,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONObject;
+import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
+import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.commons.dao.GXMediaLibraryDao;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.events.GXMediaLibraryEvent;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.core.common.constant.GXCommonConstant;
-import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.pojo.response.GXPagination;
 import com.geoxus.core.framework.service.GXBaseService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -190,7 +190,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      * @param modelIdKey 分页数据中模型的key,一般为数据表主键名字的驼峰名字
      * @return GXPagination
      */
-    default GXPagination<Dict> mergePaginationCoreMediaLibrary(GXPagination<Dict> pagination, String modelIdKey) {
+    default GXPaginationProtocol<Dict> mergePaginationCoreMediaLibrary(GXPaginationProtocol<Dict> pagination, String modelIdKey) {
         final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtil.getBean(GXMediaLibraryService.class);
         pagination.getRecords().forEach(o -> {
             final Long targetId = o.getLong(modelIdKey);
@@ -216,7 +216,7 @@ public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntit
      * @param pagination 分页数据
      * @return GXPagination
      */
-    default GXPagination<Dict> mergePaginationCoreMediaLibrary(GXPagination<Dict> pagination) {
+    default GXPaginationProtocol<Dict> mergePaginationCoreMediaLibrary(GXPaginationProtocol<Dict> pagination) {
         String modelIdKey = getPrimaryKey();
         final GXMediaLibraryService coreMediaLibraryService = GXSpringContextUtil.getBean(GXMediaLibraryService.class);
         pagination.getRecords().forEach(o -> {
