@@ -1,13 +1,12 @@
 package com.geoxus.common.dto.protocol.req;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GXBaseSearchReqProtocol extends GXBaseDto {
+public class GXBaseSearchReqProtocol extends GXBaseReqProtocol {
     private static final long serialVersionUID = -7685836286570517029L;
 
     /**
