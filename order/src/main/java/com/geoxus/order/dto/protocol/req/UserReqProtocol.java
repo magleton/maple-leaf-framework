@@ -38,7 +38,7 @@ public class UserReqProtocol extends GXBaseReqProtocol {
     private String subTitle;
 
     @Override
-    public void repair() {
+    protected void repair() {
         System.out.println("自定义的修复数据");
         subTitle = "我的副标题哈";
     }
