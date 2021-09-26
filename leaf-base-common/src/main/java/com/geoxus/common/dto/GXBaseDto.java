@@ -1,9 +1,10 @@
 package com.geoxus.common.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class GXBaseDto implements Serializable {
+public abstract class GXBaseDto extends GXBaseData {
+    private static final long serialVersionUID = 1887705447072701970L;
 }

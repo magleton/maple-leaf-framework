@@ -1,9 +1,9 @@
 package com.geoxus.order.service.impl;
 
 import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
-import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
-import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.order.common.mapstruct.UserProtocolMapstruct;
+import com.geoxus.order.dto.protocol.req.UserReqProtocol;
+import com.geoxus.order.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.mapstruct.UserProtocolMapstruct;
 import com.geoxus.order.dao.UserDao;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapper.UserMapper;

@@ -1,7 +1,7 @@
-package com.geoxus.order.common.mapstruct;
+package com.geoxus.order.mapstruct;
 
 import com.geoxus.common.mapstruct.GXBaseMapStruct;
-import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
+import com.geoxus.order.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.entity.UserEntity;
 import org.mapstruct.Mapper;
 

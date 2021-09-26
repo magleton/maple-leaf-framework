@@ -3,8 +3,7 @@ package com.geoxus.order.dao;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapper.UserMapper;
-import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
-import com.geoxus.order.mapper.UserMapper;
+import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import org.springframework.stereotype.Repository;
 
 @Repository

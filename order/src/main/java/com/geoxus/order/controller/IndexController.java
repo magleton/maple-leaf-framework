@@ -6,14 +6,16 @@ import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.util.GXResultUtil;
-import com.geoxus.order.common.dto.protocol.req.UserReqProtocol;
-import com.geoxus.order.common.dto.protocol.res.UserResProtocol;
+import com.geoxus.order.dto.UserReqBusinessDto;
+import com.geoxus.order.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.dto.protocol.res.OrderResProtocol;
+import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.dto.res.GoodsResDto;
 import com.geoxus.order.dto.res.OrderResDto;
 import com.geoxus.order.entity.UserDto;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapstruct.OrderMapStruct;
+import com.geoxus.order.mapstruct.UserProtocolBusinessDtoMapStruct;
 import com.geoxus.order.repository.primary.UserRepository;
 import com.geoxus.order.service.UserService;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
@@ -43,6 +45,9 @@ public class IndexController {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private UserProtocolBusinessDtoMapStruct protocolConvertUserReqBusinessDto;
+
     @GetMapping("index")
     public GXResultUtil<Dict> index() {
         return GXResultUtil.ok("APP , Hello World");
@@ -50,19 +55,21 @@ public class IndexController {
 
     @PostMapping("hello")
     public GXResultUtil<Dict> hello(@GXRequestBody @Validated UserReqProtocol userReqProtocol) {
+        UserReqBusinessDto userReqBusinessDto = protocolConvertUserReqBusinessDto.protocolConvertBusinessDto(userReqProtocol);
+        System.out.println(userReqBusinessDto);
         userService.createOrUpdate(userReqProtocol);
         return GXResultUtil.ok("Hello World");
     }
 
     @GetMapping("get-user-info")
-    public GXResultUtil<UserResProtocol> getUserInfo(Long userId) {
+    public GXResultUtil<String> getUserInfo(Long userId) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(RandomUtil.randomString(10) + RandomUtil.randomInt());
         userEntity.setId(RandomUtil.randomInt());
         userEntity.setAge(RandomUtil.randomInt(1, 100));
         userRepository.insert(userEntity);
-        UserResProtocol userInfo = userService.getUserInfo(userId);
-        return GXResultUtil.ok(userInfo);
+        // UserResProtocol userInfo = userService.getUserInfo(userId);
+        return GXResultUtil.ok("sadasd");
     }
 
     @GetMapping("/abc")
