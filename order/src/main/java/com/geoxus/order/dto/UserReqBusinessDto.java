@@ -1,8 +1,11 @@
 package com.geoxus.order.dto;
 
 import com.geoxus.common.dto.GXBaseDto;
+import com.geoxus.common.util.GXValidatorUtil;
+import com.geoxus.common.validator.validator.group.Group;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -18,16 +21,20 @@ public class UserReqBusinessDto extends GXBaseDto {
     private String password;
 
     @NotEmpty
+    @Length(min = 2000, groups = Group.class)
     private String address;
 
     @Override
-    public void verify() {
+    protected void verify() {
         System.out.println("先自定义验证一下");
+        GXValidatorUtil.validateEntity(this, Group.class);
         super.verify();
     }
 
     @Override
-    public void repair() {
-        this.username = "我的固定名字";
+    protected void repair() {
+        this.username = "";
+        this.address = "";
+        this.password = null;
     }
 }

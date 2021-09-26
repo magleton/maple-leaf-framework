@@ -17,13 +17,11 @@ import org.mapstruct.MappingTarget;
 public interface GXBaseMapStruct<S extends GXBaseDto, T extends GXBaseData> {
     @BeforeMapping
     default void beforeMapping(S source) {
-        source.verify();
-        source.repair();
+        source.customizeProcess();
     }
 
     @AfterMapping
     default void afterMapping(@MappingTarget T target) {
-        target.verify();
-        target.repair();
+        target.customizeProcess();
     }
 }
