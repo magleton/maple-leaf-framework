@@ -21,7 +21,7 @@ public interface GXBaseMapStruct<S extends GXBaseDto, T extends GXBaseData> {
     }
 
     @AfterMapping
-    default void afterMapping(@MappingTarget T target) {
+    default void afterMapping(S source, @MappingTarget T target) {
         target.customizeProcess();
     }
 }
