@@ -37,14 +37,14 @@ public class GXDynamicCallParamAttributeDto extends GXBaseDto {
 
     /**
      * 服务提供的服务类的名字 主要用于 {@code datasource.equals("callback")} 的情况
-     * eg: com.geoxus.core.framework.service.GXBaseService
+     * eg: com.geoxus.com.geoxus.core.framework.service.GXBaseService
      */
     private String callBackClassName;
 
     /**
      * 服务提供的服务的方法名字 主要用于 {@code datasource.equals("callback")} 的情况
      * 需要配合 callBackClassName一起使用
-     * eg: com.geoxus.core.framework.service.GXBaseService.getConstantsFields
+     * eg: com.geoxus.com.geoxus.core.framework.service.GXBaseService.getConstantsFields
      */
     private String callBackMethodName;
 }

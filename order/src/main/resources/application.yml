@@ -53,9 +53,9 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:/mappers/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.geoxus.core.framework.entity;com.geoxus.modules.*.entity
-  typeEnumsPackage: com.geoxus.core.framework.entity.enums;com.geoxus.modules.*.entity.enums
-  typeHandlersPackage: com.geoxus.core.framework.handlers
+  typeAliasesPackage: com.geoxus.com.geoxus.core.framework.entity;com.geoxus.modules.*.entity
+  typeEnumsPackage: com.geoxus.com.geoxus.core.framework.entity.enums;com.geoxus.modules.*.entity.enums
+  typeHandlersPackage: com.geoxus.com.geoxus.core.framework.handlers
   global-config:
     # 数据库相关配置
     db-config:

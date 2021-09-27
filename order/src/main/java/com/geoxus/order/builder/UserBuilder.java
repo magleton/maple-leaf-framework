@@ -2,7 +2,7 @@ package com.geoxus.order.builder;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.builder.GXBaseBuilder;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import org.apache.ibatis.jdbc.SQL;
 

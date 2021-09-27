@@ -2,7 +2,6 @@ package com.geoxus.core.framework.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreModelTableFieldDao;
 import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;

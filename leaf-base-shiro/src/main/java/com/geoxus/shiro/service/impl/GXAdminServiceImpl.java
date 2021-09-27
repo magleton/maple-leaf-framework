@@ -7,7 +7,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXTokenManagerUtil;
-import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;

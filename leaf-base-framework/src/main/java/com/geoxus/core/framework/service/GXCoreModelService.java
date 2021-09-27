@@ -2,7 +2,7 @@ package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.validator.GXValidateDBExistsService;
+import com.geoxus.core.framework.validator.GXValidateDBExistsService;
 import com.geoxus.core.framework.dao.GXCoreModelDao;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelMapper;

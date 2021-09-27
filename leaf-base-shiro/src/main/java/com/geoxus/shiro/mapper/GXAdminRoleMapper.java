@@ -1,7 +1,7 @@
 package com.geoxus.shiro.mapper;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXBaseMapper;
 import com.geoxus.shiro.builder.GXAdminRoleBuilder;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import org.apache.ibatis.annotations.Mapper;

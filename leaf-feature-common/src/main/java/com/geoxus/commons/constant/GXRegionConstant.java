@@ -20,7 +20,7 @@ public class GXRegionConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.core-model-id.region", Integer.class);
+    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.com.geoxus.core-model-id.region", Integer.class);
 
     private GXRegionConstant() {
 

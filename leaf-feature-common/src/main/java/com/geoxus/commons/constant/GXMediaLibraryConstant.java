@@ -20,7 +20,7 @@ public class GXMediaLibraryConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.core-model-id.media_library", Integer.class, 100);
+    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.com.geoxus.core-model-id.media_library", Integer.class, 100);
 
     @GXFieldComment("目标ID的字段名字")
     public static final String TARGET_ID_FIELD_NAME = "targetId";

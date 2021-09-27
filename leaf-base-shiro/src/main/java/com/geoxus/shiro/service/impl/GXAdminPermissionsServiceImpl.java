@@ -1,7 +1,7 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.service.impl.GXBusinessServiceImpl;
+import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminPermissionsDao;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;

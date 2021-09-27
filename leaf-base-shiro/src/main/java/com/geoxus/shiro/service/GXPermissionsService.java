@@ -1,7 +1,6 @@
 package com.geoxus.shiro.service;
 
-import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.shiro.dao.GXPermissionsDao;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
 import com.geoxus.shiro.mapper.GXPermissionsMapper;

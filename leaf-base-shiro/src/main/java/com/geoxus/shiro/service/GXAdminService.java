@@ -2,7 +2,7 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
-import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;

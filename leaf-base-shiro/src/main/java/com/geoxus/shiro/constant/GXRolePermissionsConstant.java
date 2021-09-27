@@ -20,7 +20,7 @@ public class GXRolePermissionsConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.core-model-id.role_permissions", Integer.class, 100);
+    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.com.geoxus.core-model-id.role_permissions", Integer.class, 100);
 
     private GXRolePermissionsConstant() {
     }

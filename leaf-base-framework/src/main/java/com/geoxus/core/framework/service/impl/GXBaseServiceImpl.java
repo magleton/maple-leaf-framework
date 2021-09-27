@@ -8,13 +8,13 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.event.GXBaseEvent;
-import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
+import com.geoxus.core.framework.mapper.GXBaseMapper;
 import com.geoxus.core.framework.service.GXAlterTableService;
 import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
@@ -179,7 +179,7 @@ public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao
             dataKey.set(aliasName, key);
         }
         final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), fieldSet, condition, false);
-        dict.remove(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
+        dict.remove(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
         return handleSamePrefixDict(dict);
     }
 

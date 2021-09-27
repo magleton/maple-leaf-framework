@@ -2,7 +2,6 @@ package com.geoxus.core.framework.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.framework.builder.GXCoreConfigBuilder;
 import com.geoxus.core.framework.entity.GXCoreConfigEntity;
 import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;

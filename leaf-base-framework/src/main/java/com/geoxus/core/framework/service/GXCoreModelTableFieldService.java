@@ -1,7 +1,6 @@
 package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.service.GXBusinessService;
 import com.geoxus.core.framework.dao.GXCoreModelTableFieldDao;
 import com.geoxus.core.framework.entity.GXCoreModelTableFieldEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;

@@ -3,7 +3,7 @@ package com.geoxus.commons.builder;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.constant.GXRegionConstant;
-import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.builder.GXBaseBuilder;
 import com.google.common.base.Joiner;
 import org.apache.ibatis.jdbc.SQL;
 

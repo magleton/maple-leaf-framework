@@ -2,7 +2,6 @@ package com.geoxus.core.framework.builder;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.builder.GXBaseBuilder;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreModelConstant;
 import org.apache.ibatis.jdbc.SQL;

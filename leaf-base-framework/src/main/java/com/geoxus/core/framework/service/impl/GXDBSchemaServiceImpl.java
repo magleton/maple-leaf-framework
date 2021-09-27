@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelService;
@@ -171,8 +171,8 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
         boolean allFieldFlag = targetSet.size() == 1 && targetSet.contains("*");
         for (TableField tableField : tableFields) {
             final String columnName = tableField.getColumnName();
-            if (GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME.equals(columnName)) {
-                tmpResult.set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, columnName);
+            if (GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME.equals(columnName)) {
+                tmpResult.set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, columnName);
                 continue;
             }
             String dataType = tableField.getDataType();
@@ -180,7 +180,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
                 if ((remove && targetSet.contains(columnName))) {
                     continue;
                 }
-                Dict attributeCondition = Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("table_field_name", columnName);
+                Dict attributeCondition = Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("table_field_name", columnName);
                 List<Dict> attributes = gxCoreModelAttributesService.getModelAttributesByModelId(attributeCondition);
                 String attributeFlag = "attribute_name";
                 if (attributes.isEmpty()) {

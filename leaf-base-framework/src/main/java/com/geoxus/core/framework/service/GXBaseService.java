@@ -2,7 +2,7 @@ package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.common.event.GXBaseEvent;
-import com.geoxus.core.common.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXBaseMapper;
 import org.springframework.cache.Cache;
 import org.springframework.transaction.annotation.Transactional;
 

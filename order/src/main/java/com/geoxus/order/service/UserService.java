@@ -1,6 +1,6 @@
 package com.geoxus.order.service;
 
-import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.order.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.dao.UserDao;

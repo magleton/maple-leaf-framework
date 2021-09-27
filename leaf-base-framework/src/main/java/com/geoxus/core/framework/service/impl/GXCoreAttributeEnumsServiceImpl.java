@@ -4,8 +4,8 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSource;
+import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
@@ -50,7 +50,7 @@ public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAtt
         if (null != attributeValue) {
             GXCoreAttributesEntity attributesEntity = coreAttributesService.getAttributeByAttributeName(field);
             if (null != attributesEntity) {
-                final int coreModelId = param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
+                final int coreModelId = param.getInt(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
                 boolean exists = isExistsAttributeValue(attributesEntity.getAttributeId(), attributeValue, coreModelId);
                 if (!exists) {
                     constraintValidatorContext.buildConstraintViolationWithTemplate(CharSequenceUtil.format(FIELD_VALUE_NOT_EXISTS, field, attributeValue)).addPropertyNode(field).addConstraintViolation();

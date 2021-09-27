@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.service.GXSessionService;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
-import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.datasource.annotation.GXDataSource;
+import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesPermissionMapper;
@@ -27,7 +27,7 @@ public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId")
     public Dict getModelAttributePermissionByCoreModelId(int coreModelId, Dict param) {
         GXSessionService sessionService = GXSpringContextUtil.getBean(GXSessionService.class);
-        final List<Dict> attributes = baseMapper.getModelAttributePermissionByCondition(Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
+        final List<Dict> attributes = baseMapper.getModelAttributePermissionByCondition(Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId));
         final Dict data = Dict.create();
         final Dict jsonFieldDict = Dict.create();
         final Dict dbFieldDict = Dict.create();

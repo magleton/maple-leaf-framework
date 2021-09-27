@@ -24,6 +24,7 @@
         <module>user</module>
         <module>aggregate</module>
         <module>leaf-base-redisson</module>
+        <module>leaf-base-common-framework</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

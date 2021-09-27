@@ -3,7 +3,7 @@ package com.geoxus.commons.builder;
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.commons.constant.GXDataDictConstant;
-import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.builder.GXBaseBuilder;
 import org.apache.ibatis.jdbc.SQL;
 
 public class GXDataDictBuilder implements GXBaseBuilder {

@@ -1,7 +1,6 @@
 package com.geoxus.core.framework.service;
 
-import com.geoxus.core.common.service.GXBusinessService;
-import com.geoxus.core.common.validator.GXValidateDBExistsService;
+import com.geoxus.core.framework.validator.GXValidateDBExistsService;
 import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;

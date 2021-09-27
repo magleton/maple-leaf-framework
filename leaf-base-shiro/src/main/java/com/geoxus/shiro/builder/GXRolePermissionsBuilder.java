@@ -1,7 +1,7 @@
 package com.geoxus.shiro.builder;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.core.common.builder.GXBaseBuilder;
+import com.geoxus.core.framework.builder.GXBaseBuilder;
 import com.geoxus.shiro.constant.GXRolePermissionsConstant;
 import org.apache.ibatis.jdbc.SQL;
 

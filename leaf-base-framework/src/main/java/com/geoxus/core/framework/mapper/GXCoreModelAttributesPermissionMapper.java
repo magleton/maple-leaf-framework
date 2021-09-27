@@ -1,7 +1,6 @@
 package com.geoxus.core.framework.mapper;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.mapper.GXBaseMapper;
 import com.geoxus.core.framework.builder.GXCoreModelAttributesPermissionsBuilder;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
 import org.apache.ibatis.annotations.Mapper;

@@ -1,6 +1,6 @@
 package com.geoxus.shiro.service;
 
-import com.geoxus.core.common.service.GXBusinessService;
+import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.shiro.dao.GXRolePermissionsDao;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import com.geoxus.shiro.mapper.GXRolePermissionsMapper;
