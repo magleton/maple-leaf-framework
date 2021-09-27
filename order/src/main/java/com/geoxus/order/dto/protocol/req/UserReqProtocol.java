@@ -4,6 +4,8 @@ import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.annotation.GXValidateExtData;
 import com.geoxus.common.dto.protocol.req.GXBaseReqProtocol;
 import com.geoxus.core.framework.service.impl.GXValidateJsonFieldServiceImpl;
+import com.geoxus.order.service.impl.MyGXValidateExtDataService;
+import com.geoxus.order.service.impl.MyGXValidateExtDataService02;
 import com.geoxus.order.service.impl.MyGXValidateJsonFieldServiceImpl;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +31,7 @@ public class UserReqProtocol extends GXBaseReqProtocol {
     @NotEmpty
     private String address;
 
-    @GXValidateExtData(tableName = "users")
+    @GXValidateExtData(tableName = "users", service = MyGXValidateExtDataService02.class)
     private String ext;
 
     @GXMergeSingleField(fieldName = "author", service = MyGXValidateJsonFieldServiceImpl.class)
