@@ -1,8 +1,8 @@
-package com.geoxus.core.common.config;
+package com.geoxus.config;
 
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.common.properties.GXRedissonCacheManagerProperties;
-import com.geoxus.core.common.properties.GXRedissonProperties;
+import com.geoxus.properties.GXRedissonCacheManagerProperties;
+import com.geoxus.properties.GXRedissonProperties;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;

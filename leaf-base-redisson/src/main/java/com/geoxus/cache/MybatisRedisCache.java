@@ -1,4 +1,4 @@
-package com.geoxus.core.common.cache;
+package com.geoxus.cache;
 
 import com.geoxus.common.util.GXSpringContextUtil;
 import org.apache.ibatis.cache.Cache;

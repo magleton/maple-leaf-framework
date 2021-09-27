@@ -14,9 +14,7 @@ server:
 
 spring:
   cache:
-    type: redis
-    redis:
-      key-prefix: redisCache
+    type: caffeine
     cache-names:
       - __DEFAULT__
       - common

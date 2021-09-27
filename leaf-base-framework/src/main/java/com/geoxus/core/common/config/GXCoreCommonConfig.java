@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import com.geoxus.core.common.validator.impl.GXValidateDBUniqueValidator;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.util.unit.DataSize;
 
@@ -31,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 通用配置类
  */
+@Configuration
 public class GXCoreCommonConfig {
     private static final Logger LOG = LoggerFactory.getLogger(GXCoreCommonConfig.class);
 
@@ -92,7 +91,7 @@ public class GXCoreCommonConfig {
      * @return 缓存管理器
      */
     @Bean("caffeineCache")
-    public CaffeineCacheManager cacheManager() {
+    public CaffeineCacheManager caffeineCache() {
         CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
         caffeineCacheManager.setCacheNames(CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__"));
         caffeineCacheManager.setAllowNullValues(false);

@@ -1,6 +1,5 @@
-package com.geoxus.core.common.config;
+package com.geoxus.config;
 
-import org.jetbrains.annotations.NotNull;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +8,10 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 
 /**
  * 解决多CacheManager配置
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  *
  * @author britton
  */
-@Configuration
+@Component
 public class GXCachingConfigurerSupport extends CachingConfigurerSupport {
     @Resource
     private RedissonSpringCacheManager redissonSpringCacheManager;

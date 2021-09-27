@@ -6,11 +6,10 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.commons.annotation.GXFrequencyLimitAnnotation;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.commons.annotation.GXFrequencyLimitAnnotation;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.core.common.util.GXHttpContextUtils;
-import com.geoxus.core.common.util.GXRedisUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
@@ -55,7 +53,8 @@ public class GXDurationCountLimitAspect {
             sceneValue = GXHttpContextUtils.getClientIP();
         }
         key = key.concat(sceneValue);
-        final long actualCount = GXRedisUtils.getCounter(key, expire, TimeUnit.SECONDS);
+        //final long actualCount = GXRedisUtils.getCounter(key, expire, TimeUnit.SECONDS);
+        final long actualCount = 0;
         if (actualCount > count) {
             throw new GXBusinessException("操作频繁,请稍后在试......");
         }

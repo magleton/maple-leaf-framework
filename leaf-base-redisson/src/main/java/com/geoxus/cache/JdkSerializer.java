@@ -1,4 +1,4 @@
-package com.geoxus.core.common.cache;
+package com.geoxus.cache;
 
 import org.apache.ibatis.cache.CacheException;
 

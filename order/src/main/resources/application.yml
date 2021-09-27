@@ -4,6 +4,8 @@ server:
     context-path: /
 
 spring:
+  cache:
+    type: none
   profiles:
     active: dev
   autoconfigure:

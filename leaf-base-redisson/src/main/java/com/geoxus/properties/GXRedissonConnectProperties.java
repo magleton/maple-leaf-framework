@@ -1,4 +1,4 @@
-package com.geoxus.core.common.properties;
+package com.geoxus.properties;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;

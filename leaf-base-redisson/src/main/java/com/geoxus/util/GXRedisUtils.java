@@ -1,23 +1,20 @@
-package com.geoxus.core.common.util;
+package com.geoxus.util;
 
 import cn.hutool.core.convert.Convert;
 import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.util.GXSpringContextUtil;
 import org.redisson.api.*;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class GXRedisUtils {
     @GXFieldComment(zhDesc = "Logger对象")
-    private static final Logger logger;
+    private static final Logger LOG = LoggerFactory.getLogger(GXRedisUtils.class);
 
     @GXFieldComment("计数器缓存的名字")
     private static final String COUNTER_MAP_CACHE_NAME = "counter_map_cache_name";
-
-    static {
-        logger = GXFrameworkCommonUtils.getLogger(GXRedisUtils.class);
-    }
 
     private GXRedisUtils() {
     }

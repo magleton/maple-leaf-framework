@@ -4,11 +4,10 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import com.geoxus.common.exception.GXBeanValidateException;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.common.pojo.GXResultCode;
+import com.geoxus.common.util.GXResultUtil;
 import com.mysql.cj.exceptions.CJException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -100,12 +99,6 @@ public class GXExceptionHandler {
     public GXResultUtil<String> handleMysqlSyntaxError(Exception e) {
         log.error(e.getMessage(), e);
         return GXResultUtil.error(e.getMessage());
-    }
-
-    @ExceptionHandler(AuthorizationException.class)
-    public GXResultUtil<String> handleException(AuthorizationException e) {
-        log.error(e.getMessage(), e);
-        return GXResultUtil.error(403, "没有权限进行此操作");
     }
 
     @ExceptionHandler(MultipartException.class)

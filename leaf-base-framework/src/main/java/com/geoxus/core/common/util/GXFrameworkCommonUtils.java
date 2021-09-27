@@ -24,8 +24,6 @@ import com.geoxus.core.common.constant.GXBaseBuilderConstant;
 import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.event.GXBaseEvent;
 import com.github.benmanes.caffeine.cache.CacheLoader;
-import org.redisson.api.RedissonClient;
-import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -619,25 +617,7 @@ public class GXFrameworkCommonUtils {
     public static <K, V> com.github.benmanes.caffeine.cache.AsyncLoadingCache<K, V> getAsyncCaffeine(String configNameKey, CacheLoader<K, V> cacheLoader) {
         return GXSingletonUtils.getAsyncCaffeine(configNameKey, cacheLoader);
     }
-
-    /**
-     * 获取RedissonSpringCacheManager
-     *
-     * @return RedissonSpringCacheManager
-     */
-    public static RedissonSpringCacheManager getRedissonCacheManager() {
-        return GXSingletonUtils.getRedissonSpringCacheManager();
-    }
-
-    /**
-     * 获取Redisson客户端对象
-     *
-     * @return RedissonClient
-     */
-    public static RedissonClient getRedissonClient() {
-        return GXSpringContextUtil.getBean(RedissonClient.class);
-    }
-
+    
     /**
      * 向Spring IOC容器中新增单列对象
      *

@@ -5,7 +5,6 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.github.benmanes.caffeine.cache.*;
-import org.redisson.spring.cache.RedissonSpringCacheManager;
 
 import java.util.Objects;
 
@@ -15,15 +14,6 @@ public class GXSingletonUtils {
      */
     private GXSingletonUtils() {
 
-    }
-
-    /**
-     * 获取RedissonSpringCacheManager
-     *
-     * @return RedissonSpringCacheManager
-     */
-    public static RedissonSpringCacheManager getRedissonSpringCacheManager() {
-        return GXSpringContextUtil.getBean(RedissonSpringCacheManager.class);
     }
 
     /**

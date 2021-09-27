@@ -1,6 +1,7 @@
 package com.geoxus.order.dto.protocol.req;
 
 import com.geoxus.common.annotation.GXMergeSingleField;
+import com.geoxus.common.annotation.GXValidateExtData;
 import com.geoxus.common.dto.protocol.req.GXBaseReqProtocol;
 import com.geoxus.core.framework.service.impl.GXValidateJsonFieldServiceImpl;
 import com.geoxus.order.service.impl.MyGXValidateJsonFieldServiceImpl;
@@ -28,7 +29,7 @@ public class UserReqProtocol extends GXBaseReqProtocol {
     @NotEmpty
     private String address;
 
-    //@GXValidateExtData(tableName = "users")
+    @GXValidateExtData(tableName = "users")
     private String ext;
 
     @GXMergeSingleField(fieldName = "author", service = MyGXValidateJsonFieldServiceImpl.class)
