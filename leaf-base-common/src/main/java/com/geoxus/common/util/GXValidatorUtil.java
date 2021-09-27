@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.exception.GXBeanValidateException;
 
@@ -41,7 +40,7 @@ public class GXValidatorUtil {
         if (!constraintViolations.isEmpty()) {
             final Dict dict = Dict.create();
             for (ConstraintViolation<Object> constraint : constraintViolations) {
-                final String rootBeanName = StringUtils.camelToUnderline(constraint.getRootBean().getClass().getSimpleName());
+                final String rootBeanName = CharSequenceUtil.toUnderlineCase(constraint.getRootBean().getClass().getSimpleName());
                 final String currentFormName = rootBeanName + "." + constraint.getPropertyPath().toString();
                 dict.set(currentFormName, constraint.getMessage());
             }

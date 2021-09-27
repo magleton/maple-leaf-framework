@@ -1,5 +1,6 @@
 package com.geoxus.aggregate.dto.protocol.req;
 
+import com.geoxus.aggregate.service.impl.MyGXValidateJSONFieldService;
 import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.annotation.GXValidateExtData;
 import lombok.Data;
@@ -10,7 +11,7 @@ public class UserReqProtocol {
 
     private String password;
 
-    @GXMergeSingleField(tableName = "", fieldName = "author")
+    @GXMergeSingleField(tableName = "", fieldName = "author", service = MyGXValidateJSONFieldService.class)
     private String author;
 
     @GXMergeSingleField(tableName = "", fieldName = "sub_title")

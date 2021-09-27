@@ -3,13 +3,14 @@ package com.geoxus.common.dto.protocol.res;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class GXPaginationProtocol<T> extends GXBaseDto {
+public class GXPaginationProtocol<T> extends GXBaseResProtocol {
     private static final long serialVersionUID = -6977700102950116740L;
 
     @GXFieldComment(zhDesc = "总记录数")
