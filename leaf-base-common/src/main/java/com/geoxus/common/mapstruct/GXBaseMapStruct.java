@@ -1,7 +1,6 @@
 package com.geoxus.common.mapstruct;
 
 import com.geoxus.common.dto.GXBaseData;
-import com.geoxus.common.dto.GXBaseDto;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.MappingTarget;
@@ -14,7 +13,7 @@ import org.mapstruct.MappingTarget;
  * @since 2020-09-26
  */
 @SuppressWarnings("all")
-public interface GXBaseMapStruct<S extends GXBaseDto, T extends GXBaseData> {
+public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
     @BeforeMapping
     default void beforeMapping(S source) {
         source.customizeProcess();
