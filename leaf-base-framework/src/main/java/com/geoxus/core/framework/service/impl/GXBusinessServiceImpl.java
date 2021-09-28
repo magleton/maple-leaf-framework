@@ -17,10 +17,9 @@ import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.framework.mapper.GXBaseMapper;
 import com.geoxus.core.framework.service.GXBusinessService;
-import com.geoxus.core.common.constant.GXBaseBuilderConstant;
+import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.common.constant.GXCommonConstant;
-import com.geoxus.core.common.dao.GXBaseDao;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
+import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.core.framework.validator.GXValidateDBExistsService;
 import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
 

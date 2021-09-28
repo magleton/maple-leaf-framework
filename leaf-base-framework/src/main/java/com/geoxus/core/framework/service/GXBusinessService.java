@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.framework.mapper.GXBaseMapper;
-import com.geoxus.core.common.dao.GXBaseDao;
+import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.core.framework.validator.GXValidateDBExistsService;
 import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
 

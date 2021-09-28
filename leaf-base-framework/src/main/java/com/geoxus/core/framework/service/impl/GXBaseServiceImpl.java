@@ -12,7 +12,7 @@ import com.geoxus.common.event.GXBaseEvent;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.dao.GXBaseDao;
+import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.mapper.GXBaseMapper;
 import com.geoxus.core.framework.service.GXAlterTableService;

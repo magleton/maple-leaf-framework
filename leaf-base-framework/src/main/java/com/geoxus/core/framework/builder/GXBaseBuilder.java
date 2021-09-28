@@ -18,10 +18,10 @@ import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
 import com.google.common.collect.Table;
-import com.geoxus.core.common.constant.GXBaseBuilderConstant;
+import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.common.constant.GXCommonConstant;
-import com.geoxus.core.common.entity.GXBaseEntity;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
+import com.geoxus.core.entity.GXBaseEntity;
+import com.geoxus.core.util.GXFrameworkCommonUtils;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package com.geoxus.order.dao;
 
-import com.geoxus.core.common.dao.GXBaseDao;
+import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapper.UserMapper;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;

@@ -7,7 +7,7 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.geoxus.core.common.constant.GXBaseBuilderConstant;
+import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelDao;

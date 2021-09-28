@@ -934,4 +934,17 @@ public class GXBaseCommonUtil {
         return Convert.convert(new cn.hutool.core.lang.TypeReference<Dict>() {
         }, convertStrToMap(str));
     }
+
+    /**
+     * 获取当前登录用户的ID
+     * {@code
+     * 0  : 表示普通用户
+     * >0 : 表示管理员
+     * }
+     *
+     * @return Long
+     */
+    public static long getCurrentSessionUserId() {
+        return 0L;
+    }
 }

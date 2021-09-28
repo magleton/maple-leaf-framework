@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.annotation.GXRecordHistoryAnnotation;
-import com.geoxus.core.common.entity.GXBaseEntity;
+import com.geoxus.core.entity.GXBaseEntity;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.service.GXBaseService;

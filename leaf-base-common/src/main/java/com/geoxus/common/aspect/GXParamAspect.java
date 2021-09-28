@@ -1,0 +1,49 @@
+package com.geoxus.common.aspect;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
+import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.annotation.GXParam;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
+@Aspect
+@Component
+public class GXParamAspect {
+    @Pointcut("@annotation(com.geoxus.common.annotation.GXParam)")
+    public void requestParamRequire() {
+        //标识切面的入口
+    }
+
+    @Around("requestParamRequire()")
+    public Object around(ProceedingJoinPoint point) throws Throwable {
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        Method method = signature.getMethod();
+        final GXParam paramAnnotation = method.getAnnotation(GXParam.class);
+        final String[] paramNames = paramAnnotation.paramNames();
+        final boolean require = paramAnnotation.require();
+        if (!require) {
+            return point.proceed(point.getArgs());
+        }
+        final Object requestParam = point.getArgs()[0];
+        if (requestParam instanceof Map) {
+            final Dict dict = Convert.convert(Dict.class, requestParam);
+            final Set<String> keySet = dict.keySet();
+            if (!CollUtil.containsAll(keySet, Arrays.asList(paramNames))) {
+                throw new GXBusinessException(CharSequenceUtil.format("参数{}必填", String.join(",", paramNames)));
+            }
+        }
+        return point.proceed(point.getArgs());
+    }
+}

@@ -2,7 +2,6 @@ package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.util.GXBaseCommonUtil;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.shiro.service.GXAdminRoleService;
 import com.geoxus.shiro.service.GXAdminService;

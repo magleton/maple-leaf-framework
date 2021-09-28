@@ -2,7 +2,6 @@ package com.geoxus.commons.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.util.GXBaseCommonUtil;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 
 public class GXDataDictConstant {
     @GXFieldComment(zhDesc = "主键ID")

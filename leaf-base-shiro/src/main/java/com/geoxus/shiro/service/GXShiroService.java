@@ -1,7 +1,7 @@
 package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.service.GXSessionService;
+import com.geoxus.core.framework.service.GXSessionService;
 
 import java.util.Set;
 

@@ -1,6 +1,6 @@
 package com.geoxus.commons.annotation;
 
-import com.geoxus.core.common.service.GXApiIdempotentService;
+import com.geoxus.commons.services.GXApiIdempotentService;
 
 import java.lang.annotation.*;
 

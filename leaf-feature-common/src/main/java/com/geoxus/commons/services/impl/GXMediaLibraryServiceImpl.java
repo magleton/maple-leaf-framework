@@ -16,7 +16,7 @@ import com.geoxus.commons.mappers.GXMediaLibraryMapper;
 import com.geoxus.commons.services.GXMediaLibraryService;
 import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.core.common.util.GXUploadUtils;
+import com.geoxus.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;

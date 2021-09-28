@@ -1,7 +1,7 @@
 package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.controller.GXBaseController;
+import com.geoxus.common.controller.GXBaseController;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.service.GXAdminService;

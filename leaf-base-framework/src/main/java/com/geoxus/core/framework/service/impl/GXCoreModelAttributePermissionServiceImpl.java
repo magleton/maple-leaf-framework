@@ -6,13 +6,13 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.common.service.GXSessionService;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesPermissionMapper;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
+import com.geoxus.core.framework.service.GXSessionService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

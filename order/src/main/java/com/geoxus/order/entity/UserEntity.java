@@ -1,7 +1,7 @@
 package com.geoxus.order.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.geoxus.core.common.entity.GXBaseEntity;
+import com.geoxus.core.entity.GXBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
