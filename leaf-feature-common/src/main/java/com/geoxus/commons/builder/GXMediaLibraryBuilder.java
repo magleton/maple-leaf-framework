@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.commons.constant.GXMediaLibraryConstant;
 import com.geoxus.core.framework.builder.GXBaseBuilder;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.constant.GXCommonConstant;
 import org.apache.ibatis.jdbc.SQL;
 
 @SuppressWarnings("unused")

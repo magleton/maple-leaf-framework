@@ -3,6 +3,7 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
@@ -55,7 +56,7 @@ public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntit
                 return JSONUtil.toBean(paramValue, clazz);
             }
         }
-        return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
+        return GXBaseCommonUtil.getClassDefaultValue(clazz);
     }
 
     @Override

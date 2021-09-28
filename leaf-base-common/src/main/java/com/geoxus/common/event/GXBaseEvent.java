@@ -1,4 +1,4 @@
-package com.geoxus.core.common.event;
+package com.geoxus.common.event;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;

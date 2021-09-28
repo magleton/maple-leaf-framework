@@ -4,9 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.common.service.GXSessionService;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesPermissionDao;
@@ -34,7 +34,7 @@ public class GXCoreModelAttributePermissionServiceImpl extends GXBaseServiceImpl
         List<String> roles = CollUtil.newArrayList();
         final List<String> users = CollUtil.newArrayList();
         final Long currentAdminId = Objects.requireNonNull(sessionService).currentSessionUserId(); // GXCommonUtils.getCurrentSessionUserId();
-        final Long superAdminId = GXFrameworkCommonUtils.getEnvironmentValue("super.admin.id", Long.class);
+        final Long superAdminId = GXBaseCommonUtil.getEnvironmentValue("super.admin.id", Long.class);
         if (superAdminId > 0 && currentAdminId.equals(superAdminId)) {
             return Dict.create();
         }

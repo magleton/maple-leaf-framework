@@ -12,7 +12,7 @@ import com.geoxus.commons.dao.GXMediaLibraryDao;
 import com.geoxus.commons.entities.GXMediaLibraryEntity;
 import com.geoxus.commons.events.GXMediaLibraryEvent;
 import com.geoxus.commons.mappers.GXMediaLibraryMapper;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.core.framework.service.GXBaseService;
 import org.springframework.web.multipart.MultipartFile;
 

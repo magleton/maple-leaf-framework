@@ -1,4 +1,4 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import com.geoxus.common.annotation.GXFieldComment;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class GXSignatureUtils {
     @GXFieldComment(zhDesc = "logger对象")
-    private static final Logger logger = GXFrameworkCommonUtils.getLogger(GXSignatureUtils.class);
+    private static final Logger logger = GXBaseCommonUtil.getLogger(GXSignatureUtils.class);
 
     private GXSignatureUtils() {
     }

@@ -1,7 +1,7 @@
 package com.geoxus.commons.events;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.common.event.GXBaseEvent;
+import com.geoxus.common.event.GXBaseEvent;
 
 public class GXMediaLibraryEvent<T> extends GXBaseEvent<T> {
     public GXMediaLibraryEvent(T source, Dict param) {

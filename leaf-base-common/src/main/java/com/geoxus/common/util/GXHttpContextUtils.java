@@ -1,4 +1,4 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.CharsetUtil;
@@ -6,7 +6,6 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXAuthCodeUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +86,7 @@ public class GXHttpContextUtils {
             value = Convert.convert(clazz, requestParameter);
         }
         if (null == value) {
-            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
+            return GXBaseCommonUtil.getClassDefaultValue(clazz);
         }
         return value;
     }
@@ -166,7 +165,7 @@ public class GXHttpContextUtils {
         assert servletRequest != null;
         final Object attributeValue = servletRequest.getAttribute(attributeName);
         if (null == attributeValue) {
-            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
+            return GXBaseCommonUtil.getClassDefaultValue(clazz);
         }
         return Convert.convert(clazz, attributeValue);
     }

@@ -5,15 +5,15 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXResultCode;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.commons.annotation.GXCheckCaptchaAnnotation;
-import com.geoxus.core.common.constant.GXCommonConstant;
 import com.geoxus.core.common.service.GXCaptchaService;
 import com.geoxus.core.common.service.GXSendSMSService;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
-import com.geoxus.core.common.util.GXHttpContextUtils;
+import com.geoxus.common.util.GXHttpContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -44,7 +44,7 @@ public class GXCheckCaptchaAspect {
         final int verifyType = gxCheckCaptchaAnnotation.verifyType();
         Dict param = Convert.convert(Dict.class, point.getArgs()[0]);
         final List<String> specialPhone = Convert.convert(new TypeReference<List<String>>() {
-        }, Optional.ofNullable(GXFrameworkCommonUtils.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
+        }, Optional.ofNullable(GXBaseCommonUtil.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
         if (!annotationValue) {
             return point.proceed(point.getArgs());
         }
@@ -67,8 +67,8 @@ public class GXCheckCaptchaAspect {
             if (null == phone) {
                 throw new GXBusinessException("请传递手机号码");
             }
-            phone = GXFrameworkCommonUtils.decryptedPhoneNumber(phone);
-            final String specialVerifyCode = GXFrameworkCommonUtils.getEnvironmentValue("special.verify_code", String.class, "");
+            phone = GXBaseCommonUtil.decryptedPhoneNumber(phone);
+            final String specialVerifyCode = GXBaseCommonUtil.getEnvironmentValue("special.verify_code", String.class, "");
             if (CollUtil.contains(specialPhone, phone) && verifyCode.equals(specialVerifyCode)) {
                 log.info(StrUtil.format("正在使用特殊号码进行验证 : {}-{}", phone, specialVerifyCode));
                 return point.proceed(point.getArgs());

@@ -53,6 +53,11 @@
             <version>${mybatis-plus-boot.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

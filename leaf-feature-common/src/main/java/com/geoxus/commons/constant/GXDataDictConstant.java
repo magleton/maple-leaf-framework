@@ -1,6 +1,7 @@
 package com.geoxus.commons.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 
 public class GXDataDictConstant {
@@ -20,7 +21,7 @@ public class GXDataDictConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.com.geoxus.core-model-id.data_dict", Integer.class);
+    public static final int CORE_MODEL_ID = GXBaseCommonUtil.getEnvironmentValue("app.com.geoxus.core-model-id.data_dict", Integer.class);
 
     private GXDataDictConstant() {
 

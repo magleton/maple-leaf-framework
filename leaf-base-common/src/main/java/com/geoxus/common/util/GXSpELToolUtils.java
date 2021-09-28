@@ -1,10 +1,9 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.geoxus.common.util.GXSpringContextUtil;
 import org.slf4j.Logger;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -28,7 +27,7 @@ public class GXSpELToolUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXFrameworkCommonUtils.getLogger(GXSpELToolUtils.class);
+    private static final Logger LOG = GXBaseCommonUtil.getLogger(GXSpELToolUtils.class);
 
     /**
      * 目标类中方法不存在的提示信息
@@ -68,7 +67,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXFrameworkCommonUtils.getClassDefaultValue(beanClass);
+        return GXBaseCommonUtil.getClassDefaultValue(beanClass);
     }
 
     /**
@@ -111,7 +110,7 @@ public class GXSpELToolUtils {
      */
     public static <T> T calculateSpELExpression(Object targetObject, String expressionString, Class<T> beanClazz) {
         if (Objects.isNull(targetObject)) {
-            return GXFrameworkCommonUtils.getClassDefaultValue(beanClazz);
+            return GXBaseCommonUtil.getClassDefaultValue(beanClazz);
         }
         try {
             ExpressionParser parser = new SpelExpressionParser();
@@ -120,7 +119,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXFrameworkCommonUtils.getClassDefaultValue(beanClazz);
+        return GXBaseCommonUtil.getClassDefaultValue(beanClazz);
     }
 
     /**
@@ -149,7 +148,7 @@ public class GXSpELToolUtils {
         final StandardEvaluationContext inventorContext = new StandardEvaluationContext(targetObj);
         final ExpressionParser parser = new SpelExpressionParser();
         if (data.isEmpty()) {
-            return GXFrameworkCommonUtils.getClassDefaultValue(clazz);
+            return GXBaseCommonUtil.getClassDefaultValue(clazz);
         }
         data.forEach((key, value) -> parser.parseExpression(key).setValue(inventorContext, value));
         return parser.parseExpression(targetKey).getValue(inventorContext, clazz);

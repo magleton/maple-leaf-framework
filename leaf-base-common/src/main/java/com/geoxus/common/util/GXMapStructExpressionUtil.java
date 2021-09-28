@@ -1,4 +1,4 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;

@@ -3,7 +3,7 @@ package com.geoxus.commons.aspect;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.pojo.GXResultCode;
 import com.geoxus.common.util.GXResultUtil;
-import com.geoxus.core.common.util.GXHttpContextUtils;
+import com.geoxus.common.util.GXHttpContextUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

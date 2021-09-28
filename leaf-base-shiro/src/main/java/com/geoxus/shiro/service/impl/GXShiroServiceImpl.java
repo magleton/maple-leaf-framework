@@ -1,6 +1,7 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.shiro.service.GXAdminRoleService;
@@ -48,7 +49,7 @@ public class GXShiroServiceImpl implements GXShiroService {
     public boolean isSuperAdmin(Dict adminData) {
         final String primaryKey = Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminService.class)).getPrimaryKey();
         if (null != adminData.getLong(primaryKey)) {
-            return adminData.getLong(primaryKey).equals(GXFrameworkCommonUtils.getEnvironmentValue("super.admin.id", Long.class));
+            return adminData.getLong(primaryKey).equals(GXBaseCommonUtil.getEnvironmentValue("super.admin.id", Long.class));
         }
         return adminData.getLong("super_admin") == 1;
     }

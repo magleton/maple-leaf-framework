@@ -1,6 +1,6 @@
 package com.geoxus.core.common.controller;
 
-import com.geoxus.core.common.util.GXHttpContextUtils;
+import com.geoxus.common.util.GXHttpContextUtils;
 
 public interface GXBaseController {
     /**

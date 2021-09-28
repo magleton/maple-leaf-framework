@@ -1,6 +1,7 @@
 package com.geoxus.core.common.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.common.service.GXSensitiveFieldDeEncryptService;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import org.springframework.core.annotation.Order;
@@ -20,9 +21,9 @@ public class GXSensitiveFieldDeEncryptServiceImpl implements GXSensitiveFieldDeE
     @Override
     public String encryptAlgorithm(String dataStr, String key, String... params) {
         if (CharSequenceUtil.isNotBlank(key)) {
-            return GXFrameworkCommonUtils.getAES(key).encryptBase64(dataStr);
+            return GXBaseCommonUtil.getAES(key).encryptBase64(dataStr);
         }
-        return GXFrameworkCommonUtils.getAES().encryptBase64(dataStr);
+        return GXBaseCommonUtil.getAES().encryptBase64(dataStr);
     }
 
     /**
@@ -36,8 +37,8 @@ public class GXSensitiveFieldDeEncryptServiceImpl implements GXSensitiveFieldDeE
     @Override
     public String decryAlgorithm(String dataStr, String key, String... params) {
         if (CharSequenceUtil.isNotBlank(key)) {
-            return GXFrameworkCommonUtils.getAES(key).decryptStr(dataStr);
+            return GXBaseCommonUtil.getAES(key).decryptStr(dataStr);
         }
-        return GXFrameworkCommonUtils.getAES().decryptStr(dataStr);
+        return GXBaseCommonUtil.getAES().decryptStr(dataStr);
     }
 }

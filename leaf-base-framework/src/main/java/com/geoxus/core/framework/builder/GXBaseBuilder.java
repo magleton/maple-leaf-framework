@@ -12,13 +12,14 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.framework.service.GXDBSchemaService;
 import com.google.common.collect.Table;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.core.common.entity.GXBaseEntity;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import org.apache.ibatis.jdbc.SQL;
@@ -311,7 +312,7 @@ public interface GXBaseBuilder {
                     timeFieldFlag = true;
                 }
                 if (Objects.isNull(operator)) {
-                    GXFrameworkCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
+                    GXBaseCommonUtil.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
                     continue;
                 }
                 if (timeFieldFlag) {

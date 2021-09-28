@@ -1,7 +1,7 @@
 package com.geoxus.commons.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
+import com.geoxus.common.util.GXBaseCommonUtil;
 
 public class GXRegionConstant {
     @GXFieldComment(zhDesc = "主键ID")
@@ -20,7 +20,7 @@ public class GXRegionConstant {
     public static final String DATASOURCE = "framework";
 
     @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXFrameworkCommonUtils.getEnvironmentValue("app.com.geoxus.core-model-id.region", Integer.class);
+    public static final int CORE_MODEL_ID = GXBaseCommonUtil.getEnvironmentValue("app.com.geoxus.core-model-id.region", Integer.class);
 
     private GXRegionConstant() {
 

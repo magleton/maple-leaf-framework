@@ -14,10 +14,11 @@ import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.framework.mapper.GXBaseMapper;
 import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.core.common.constant.GXBaseBuilderConstant;
-import com.geoxus.core.common.constant.GXCommonConstant;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.core.common.dao.GXBaseDao;
 import com.geoxus.core.common.util.GXFrameworkCommonUtils;
 import com.geoxus.core.framework.validator.GXValidateDBExistsService;
@@ -264,7 +265,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      */
     @Override
     public String encryptedPhoneNumber(String phoneNumber) {
-        return GXFrameworkCommonUtils.encryptedPhoneNumber(phoneNumber);
+        return GXBaseCommonUtil.encryptedPhoneNumber(phoneNumber);
     }
 
     /**
@@ -275,7 +276,7 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      */
     @Override
     public String decryptedPhoneNumber(String encryptPhoneNumber) {
-        return GXFrameworkCommonUtils.decryptedPhoneNumber(encryptPhoneNumber);
+        return GXBaseCommonUtil.decryptedPhoneNumber(encryptPhoneNumber);
     }
 
     /**
@@ -289,6 +290,6 @@ public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBas
      */
     @Override
     public String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar) {
-        return GXFrameworkCommonUtils.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
+        return GXBaseCommonUtil.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
     }
 }

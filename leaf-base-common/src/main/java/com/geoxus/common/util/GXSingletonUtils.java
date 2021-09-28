@@ -1,4 +1,4 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
@@ -31,7 +31,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build();
-        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
+        GXBaseCommonUtil.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -51,7 +51,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build(cacheLoader);
-        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
+        GXBaseCommonUtil.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -70,7 +70,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.buildAsync();
-        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
+        GXBaseCommonUtil.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -90,7 +90,7 @@ public class GXSingletonUtils {
         }
         Caffeine<K, V> caffeine = getCaffeine(cacheNameKey);
         cache = caffeine.buildAsync(asyncCacheLoader);
-        GXFrameworkCommonUtils.registerSingleton(beanName, cache);
+        GXBaseCommonUtil.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -101,7 +101,7 @@ public class GXSingletonUtils {
      * @return Caffeine
      */
     private static <K, V> Caffeine<K, V> getCaffeine(String cacheNameKey) {
-        String spec = GXFrameworkCommonUtils.getEnvironmentValue(cacheNameKey);
+        String spec = GXBaseCommonUtil.getEnvironmentValue(cacheNameKey);
         if (CharSequenceUtil.isBlank(spec)) {
             spec = "maximumSize=1024";
         }
@@ -113,7 +113,7 @@ public class GXSingletonUtils {
         }
         caffeine = Convert.convert(new TypeReference<Caffeine<K, V>>() {
         }, Caffeine.from(spec));
-        GXFrameworkCommonUtils.registerSingleton(beanName, caffeine);
+        GXBaseCommonUtil.registerSingleton(beanName, caffeine);
         return caffeine;
     }
 }

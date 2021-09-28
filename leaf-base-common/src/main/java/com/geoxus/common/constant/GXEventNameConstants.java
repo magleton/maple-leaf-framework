@@ -1,4 +1,4 @@
-package com.geoxus.core.common.constant;
+package com.geoxus.common.constant;
 
 public class GXEventNameConstants {
     public static final String CREATED = "created";

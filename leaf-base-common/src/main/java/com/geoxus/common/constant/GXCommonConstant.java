@@ -1,4 +1,4 @@
-package com.geoxus.core.common.constant;
+package com.geoxus.common.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
 
@@ -35,6 +35,9 @@ public class GXCommonConstant {
 
     @GXFieldComment("自定义搜索条件的字段名字")
     public static final String SEARCH_MIXED_FIELD_CONDITION = "mixed";
+
+    @GXFieldComment("模型标识的字段名字")
+    public static final String CORE_MODEL_PRIMARY_FIELD_NAME = "core_model_id";
 
     private GXCommonConstant() {
     }

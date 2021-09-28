@@ -1,8 +1,9 @@
-package com.geoxus.core.common.util;
+package com.geoxus.common.util;
 
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,8 +27,8 @@ public class GXConcurrentToolsUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXFrameworkCommonUtils.getLogger(GXConcurrentToolsUtils.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(GXConcurrentToolsUtils.class);
+    
     /**
      * 线程池对象
      */

@@ -7,9 +7,9 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldComment;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.util.GXBaseCommonUtil;
+import com.geoxus.common.util.GXHttpContextUtils;
 import com.geoxus.commons.annotation.GXFrequencyLimitAnnotation;
-import com.geoxus.core.common.util.GXFrameworkCommonUtils;
-import com.geoxus.core.common.util.GXHttpContextUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -69,7 +69,7 @@ public class GXDurationCountLimitAspect {
     private boolean passagePhone() {
         String phone = GXHttpContextUtils.getHttpParam("phone", String.class);
         final List<String> specialPhone = Convert.convert(new TypeReference<List<String>>() {
-        }, Optional.ofNullable(GXFrameworkCommonUtils.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
+        }, Optional.ofNullable(GXBaseCommonUtil.getEnvironmentValue("special.phone", Object.class)).orElse(Collections.emptyList()));
         return StrUtil.isNotBlank(phone) && CollUtil.contains(specialPhone, phone);
     }
 }

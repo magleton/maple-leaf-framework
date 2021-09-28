@@ -3,9 +3,9 @@ package com.geoxus.core.common.aspect;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.util.StrUtil;
-import com.geoxus.core.common.annotation.GXParam;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.core.common.annotation.GXParam;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,7 +41,7 @@ public class GXParamAspect {
             final Dict dict = Convert.convert(Dict.class, requestParam);
             final Set<String> keySet = dict.keySet();
             if (!CollUtil.containsAll(keySet, Arrays.asList(paramNames))) {
-                throw new GXBusinessException(StrUtil.format("参数{}必填", String.join(",", paramNames)));
+                throw new GXBusinessException(CharSequenceUtil.format("参数{}必填", String.join(",", paramNames)));
             }
         }
         return point.proceed(point.getArgs());
