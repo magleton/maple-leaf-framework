@@ -1,6 +1,6 @@
 package com.geoxus.common.web.interceptor;
 
-import com.geoxus.common.properties.web.GXWebMvcConfig;
+import com.geoxus.common.properties.web.GXWebMvcProperties;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.web.support.GXCustomerHandlerMethodArgumentResolver;
 import com.geoxus.common.web.support.GXRequestHandlerMethodArgumentResolver;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @Slf4j
 public class GXWebMvcInterceptor implements WebMvcConfigurer {
     @Resource
-    private GXWebMvcConfig webMvcConfig;
+    private GXWebMvcProperties webMvcConfig;
 
     @Resource
     private GXRequestHandlerMethodArgumentResolver requestHandlerMethodArgumentResolver;

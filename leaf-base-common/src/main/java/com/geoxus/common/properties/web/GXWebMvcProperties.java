@@ -16,7 +16,7 @@ import java.util.List;
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)
-public class GXWebMvcConfig {
+public class GXWebMvcProperties {
     private List<String> urlPatterns = new ArrayList<>();
 
     private List<String> resourcePatterns = new ArrayList<>();

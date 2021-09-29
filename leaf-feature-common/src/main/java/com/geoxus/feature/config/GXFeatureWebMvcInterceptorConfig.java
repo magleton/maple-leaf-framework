@@ -1,6 +1,6 @@
 package com.geoxus.feature.config;
 
-import com.geoxus.common.properties.web.GXWebMvcConfig;
+import com.geoxus.common.properties.web.GXWebMvcProperties;
 import com.geoxus.common.web.interceptor.GXWebMvcInterceptor;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class GXFeatureWebMvcInterceptorConfig extends GXWebMvcInterceptor {
     private GXUploadConfig gxUploadConfig;
 
     @Resource
-    private GXWebMvcConfig gxWebMvcConfig;
+    private GXWebMvcProperties webMvcProperties;
 
     @Resource
     private GXEditorProperties properties;
@@ -35,7 +35,7 @@ public class GXFeatureWebMvcInterceptorConfig extends GXWebMvcInterceptor {
         super.addResourceHandlers(registry);
         try {
             final String resourceLocationsPrefix = "file:";
-            final List<String> list = gxWebMvcConfig.getResourcePatterns();
+            final List<String> list = webMvcProperties.getResourcePatterns();
             String[] array = new String[list.size()];
             list.toArray(array);
             registry.addResourceHandler(array)
