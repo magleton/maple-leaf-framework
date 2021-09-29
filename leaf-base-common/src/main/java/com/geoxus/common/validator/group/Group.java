@@ -1,4 +1,4 @@
-package com.geoxus.common.validator.validator.group;
+package com.geoxus.common.validator.group;
 
 import javax.validation.GroupSequence;
 
