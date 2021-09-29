@@ -7,6 +7,7 @@ import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.framework.annotation.GXValidateDBUnique;
 import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,6 +19,7 @@ import java.util.Objects;
  * @author zj chen <britton@126.com>
  */
 @Slf4j
+@Service
 public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValidateDBUnique, Object> {
     private GXValidateDBUniqueService service;
 
