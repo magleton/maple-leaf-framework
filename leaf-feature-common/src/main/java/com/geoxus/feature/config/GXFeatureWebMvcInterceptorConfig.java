@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class GXFeatureWebMvcInterceptorConfig extends GXWebMvcInterceptor {
     @Resource
-    private GXUploadConfig gxUploadConfig;
+    private GXUploadConfig uploadConfig;
 
     @Resource
     private GXWebMvcProperties webMvcProperties;
 
     @Resource
-    private GXEditorProperties properties;
+    private GXEditorProperties editorProperties;
 
     /**
      * 对文件的路径进行配置,创建一个虚拟路径/Path/** ，即只要在<img src="/Path/picName.jpg"/>便可以直接引用图片
@@ -39,12 +39,12 @@ public class GXFeatureWebMvcInterceptorConfig extends GXWebMvcInterceptor {
             String[] array = new String[list.size()];
             list.toArray(array);
             registry.addResourceHandler(array)
-                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(gxUploadConfig.getDepositPath()).getPath())
+                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(uploadConfig.getDepositPath()).getPath())
                     //PHP图片地址
-                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(gxUploadConfig.getDepositPath() + File.separator + "media").getPath());
+                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(uploadConfig.getDepositPath() + File.separator + "media").getPath());
             //编辑器上传路径
-            registry.addResourceHandler(properties.getLocal().getUrlPrefix() + "**")
-                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(properties.getLocal().getPhysicalPath()).getPath())
+            registry.addResourceHandler(editorProperties.getLocal().getUrlPrefix() + "**")
+                    .addResourceLocations(resourceLocationsPrefix + ResourceUtils.getURL(editorProperties.getLocal().getPhysicalPath()).getPath())
                     .setCacheControl(CacheControl.maxAge(20, TimeUnit.DAYS));
         } catch (Exception e) {
             log.error("虚拟路径配置错误", e);
