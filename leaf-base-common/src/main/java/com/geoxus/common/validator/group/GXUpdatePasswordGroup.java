@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.validator.group;
+package com.geoxus.common.validator.group;
 
 /**
  * 修改密码
