@@ -1,8 +1,8 @@
-package com.geoxus.core.service.impl;
+package com.geoxus.common.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.util.GXBaseCommonUtil;
-import com.geoxus.core.service.GXSensitiveFieldDeEncryptService;
+import com.geoxus.common.service.GXSensitiveFieldDeEncryptService;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 

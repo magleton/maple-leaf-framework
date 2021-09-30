@@ -1,7 +1,7 @@
-package com.geoxus.core.interceptor;
+package com.geoxus.common.interceptor;
 
-import com.geoxus.core.annotation.GXSensitiveData;
-import com.geoxus.core.service.GXSensitiveDataEncryptService;
+import com.geoxus.common.annotation.GXSensitiveData;
+import com.geoxus.common.service.GXSensitiveDataEncryptService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.plugin.*;

@@ -1,4 +1,4 @@
-package com.geoxus.core.service;
+package com.geoxus.common.service;
 
 /**
  * 对指定敏感数据的加解密服务实现

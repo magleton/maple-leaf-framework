@@ -1,6 +1,6 @@
-package com.geoxus.core.annotation;
+package com.geoxus.common.annotation;
 
-import com.geoxus.core.service.GXSensitiveFieldDeEncryptService;
+import com.geoxus.common.service.GXSensitiveFieldDeEncryptService;
 
 import java.lang.annotation.*;
 

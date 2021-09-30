@@ -1,11 +1,11 @@
-package com.geoxus.core.interceptor;
+package com.geoxus.common.interceptor;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.geoxus.core.annotation.GXSensitiveData;
+import com.geoxus.common.annotation.GXSensitiveData;
+import com.geoxus.common.service.GXSensitiveDataDecryptService;
 import com.geoxus.common.util.GXTypeOfUtils;
-import com.geoxus.core.service.GXSensitiveDataDecryptService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;

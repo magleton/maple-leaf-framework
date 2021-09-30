@@ -1,4 +1,4 @@
-package com.geoxus.core.service;
+package com.geoxus.common.service;
 
 public interface GXSensitiveDataDecryptService {
     /**
