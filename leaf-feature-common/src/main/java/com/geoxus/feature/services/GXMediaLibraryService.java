@@ -5,15 +5,16 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONObject;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.service.GXBusinessService;
 import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.service.GXDBBaseService;
 import com.geoxus.feature.dao.GXMediaLibraryDao;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.feature.events.GXMediaLibraryEvent;
 import com.geoxus.feature.mappers.GXMediaLibraryMapper;
-import com.geoxus.common.constant.GXCommonConstant;
-import com.geoxus.core.service.GXDBBaseService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public interface GXMediaLibraryService extends GXDBBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> {
+public interface GXMediaLibraryService extends GXBusinessService, GXDBBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> {
     /**
      * 保存数据
      *

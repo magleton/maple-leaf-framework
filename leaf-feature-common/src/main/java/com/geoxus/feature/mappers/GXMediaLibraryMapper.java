@@ -2,6 +2,7 @@ package com.geoxus.feature.mappers;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.geoxus.core.mapper.GXBaseMapper;
 import com.geoxus.feature.builder.GXMediaLibraryBuilder;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.core.handler.GXJsonToListTypeHandler;
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface GXMediaLibraryMapper extends GXFrameworkBaseMapper<GXMediaLibraryEntity> {
+public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity> {
     @SelectProvider(type = GXMediaLibraryBuilder.class, method = "listOrSearch")
     @ResultMap("mediaResult")
     <R> List<R> listOrSearchPage(IPage<R> page, Dict param);
