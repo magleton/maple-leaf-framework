@@ -11,7 +11,7 @@ import java.util.List;
 
 @Configuration
 @Slf4j
-public class GXFrameworkWebMvcInterceptor extends GXWebMvcInterceptor {
+public class GXCommonWebMvcInterceptor extends GXWebMvcInterceptor {
     @Resource
     private GXTraceIdInterceptor traceIdInterceptor;
 
