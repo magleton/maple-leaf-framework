@@ -86,7 +86,7 @@ public interface GXBaseBuilder {
             }
             sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
         });
-        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.current()));
+        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
         return sql.toString();
     }
 

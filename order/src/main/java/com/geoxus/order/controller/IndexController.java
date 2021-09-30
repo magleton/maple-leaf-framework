@@ -12,11 +12,11 @@ import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.dto.res.GoodsResDto;
 import com.geoxus.order.dto.res.OrderResDto;
 import com.geoxus.order.entity.UserDto;
+import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapstruct.OrderMapStruct;
 import com.geoxus.order.mapstruct.UserProtocolBusinessDtoMapStruct;
 import com.geoxus.order.repository.primary.UserRepository;
 import com.geoxus.order.service.UserService;
-import com.geoxus.sso.annotation.GXLoginAnnotation;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +71,6 @@ public class IndexController {
         return GXResultUtil.ok(vvv);
     }
 
-    @GXLoginAnnotation
     @PostMapping("list-or-search")
     public GXResultUtil<GXPaginationProtocol<UserResProtocol>> listOrSearch(@RequestBody GXBaseSearchReqProtocol searchReqProtocol) {
         GXPaginationProtocol<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol);
@@ -94,5 +93,14 @@ public class IndexController {
                 .goodsResDtoList(Arrays.asList(g3, g4)).build();
         List<OrderResProtocol> orderResProtocols = orderMapStruct.dtoListToProtocolList(Arrays.asList(orderResDto1, orderResDto2));
         return GXResultUtil.ok(orderResProtocols);
+    }
+
+    @GetMapping("update-user-status")
+    public GXResultUtil<String> updateUserStatus() {
+        boolean b = userService.updateFieldByCondition(UserEntity.class, Dict.create().set("status", 1990), Dict.create().set("id", 1).set("username", "jack"));
+        if (b) {
+            return GXResultUtil.ok("success");
+        }
+        return GXResultUtil.ok("fail");
     }
 }
