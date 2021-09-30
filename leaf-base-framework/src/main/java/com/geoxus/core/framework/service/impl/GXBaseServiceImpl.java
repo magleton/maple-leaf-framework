@@ -14,11 +14,11 @@ import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
-import com.geoxus.core.framework.mapper.GXBaseMapper;
-import com.geoxus.core.framework.service.GXAlterTableService;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
+import com.geoxus.core.service.GXAlterTableService;
 import com.geoxus.core.framework.service.GXBaseService;
 import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
-import com.geoxus.core.framework.service.GXDBSchemaService;
+import com.geoxus.core.service.GXDBSchemaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import java.util.*;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public class GXBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> implements GXBaseService<T, M, D> {
+public class GXBaseServiceImpl<T, M extends GXFrameworkBaseMapper<T>, D extends GXBaseDao<M, T>> implements GXBaseService<T, M, D> {
     /**
      * 日志对象
      */

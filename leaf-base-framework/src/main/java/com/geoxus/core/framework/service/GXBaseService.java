@@ -2,7 +2,7 @@ package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.event.GXBaseEvent;
-import com.geoxus.core.framework.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import org.springframework.cache.Cache;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public interface GXBaseService<T, M extends GXBaseMapper<T>, D> {
+public interface GXBaseService<T, M extends GXFrameworkBaseMapper<T>, D> {
     /**
      * 获取BaseMapper对象
      *

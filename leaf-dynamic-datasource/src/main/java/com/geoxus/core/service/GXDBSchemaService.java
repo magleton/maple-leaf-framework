@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.service;
+package com.geoxus.core.service;
 
 import lombok.Data;
 

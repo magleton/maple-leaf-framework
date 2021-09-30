@@ -15,7 +15,7 @@ import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.util.GXBaseCommonUtil;
-import com.geoxus.core.framework.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.common.constant.GXCommonConstant;
@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GXBusinessServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseServiceImpl<T, M, D> implements GXBusinessService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
+public class GXBusinessServiceImpl<T, M extends GXFrameworkBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseServiceImpl<T, M, D> implements GXBusinessService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 列表或者搜索(分页)
      *

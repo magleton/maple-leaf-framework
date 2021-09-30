@@ -4,12 +4,12 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
-import com.geoxus.core.framework.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import com.geoxus.core.dao.GXBaseDao;
 import com.geoxus.core.framework.validator.GXValidateDBExistsService;
 import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
 
-public interface GXBusinessService<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
+public interface GXBusinessService<T, M extends GXFrameworkBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBaseService<T, M, D>, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 列表或者搜索(分页)
      *

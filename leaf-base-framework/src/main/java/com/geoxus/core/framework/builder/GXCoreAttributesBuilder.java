@@ -3,11 +3,12 @@ package com.geoxus.core.framework.builder;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
+import com.geoxus.core.builder.GXBaseBuilder;
 import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 
-public class GXCoreAttributesBuilder implements GXBaseBuilder {
+public class GXCoreAttributesBuilder implements GXFrameWorkBuilder {
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("ca.*").FROM(CharSequenceUtil.format("{} as ca", GXCoreAttributesConstant.TABLE_NAME));
         mergeSearchConditionToSql(sql, param, false);

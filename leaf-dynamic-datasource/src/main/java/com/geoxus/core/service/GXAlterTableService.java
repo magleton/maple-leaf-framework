@@ -1,7 +1,8 @@
-package com.geoxus.core.framework.service;
+package com.geoxus.core.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface GXAlterTableService {
     /**
@@ -58,4 +59,14 @@ public interface GXAlterTableService {
      * @return boolean
      */
     boolean tableCheckIndexExists(String tableName, String indexName);
+
+    /**
+     * 生成动态添加列SQL语句
+     *
+     * @param conditionMap 条件映射
+     * @param tableName    表名字
+     * @param coreModelId  核心模型ID
+     * @return 添加的SQL语句
+     */
+    String generateAddColumnSQL(Map<String, Object> conditionMap, String tableName, int coreModelId);
 }

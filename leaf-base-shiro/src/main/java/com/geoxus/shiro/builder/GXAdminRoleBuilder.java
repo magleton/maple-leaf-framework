@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReUtil;
-import com.geoxus.core.framework.builder.GXBaseBuilder;
+import com.geoxus.core.builder.GXBaseBuilder;
 import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.shiro.constant.GXAdminRoleConstant;

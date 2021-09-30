@@ -12,7 +12,7 @@ import org.apache.ibatis.type.IntegerTypeHandler;
 import java.util.List;
 
 @Mapper
-public interface GXCoreAttributeEnumsMapper extends GXBaseMapper<GXCoreAttributesEnumsEntity> {
+public interface GXCoreAttributeEnumsMapper extends GXFrameworkBaseMapper<GXCoreAttributesEnumsEntity> {
     @SelectProvider(type = GXCoreAttributeEnumsBuilder.class, method = "exists")
     @Results({
             @Result(column = "cnt", property = "count", typeHandler = IntegerTypeHandler.class)

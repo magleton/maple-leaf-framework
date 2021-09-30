@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 @Component
-public interface GXCoreModelTableFieldMapper extends GXBaseMapper<GXCoreModelTableFieldEntity> {
+public interface GXCoreModelTableFieldMapper extends GXFrameworkBaseMapper<GXCoreModelTableFieldEntity> {
     @SelectProvider(type = GXCoreModelTableFieldBuilder.class, method = "getModelAttributesByCondition")
     List<Dict> getModelAttributesByCondition(Dict condition);
 }

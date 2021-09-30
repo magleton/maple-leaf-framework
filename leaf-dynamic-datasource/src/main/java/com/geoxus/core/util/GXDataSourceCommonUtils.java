@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"unused"})
-public class GXFrameworkCommonUtils {
+public class GXDataSourceCommonUtils {
     @GXFieldComment(zhDesc = "日志对象")
-    private static final Logger LOG = LoggerFactory.getLogger(GXFrameworkCommonUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXDataSourceCommonUtils.class);
 
-    private GXFrameworkCommonUtils() {
+    private GXDataSourceCommonUtils() {
     }
 
     /**

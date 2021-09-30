@@ -1,10 +1,12 @@
-package com.geoxus.core.framework.mapper;
+package com.geoxus.core.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.geoxus.core.framework.builder.GXBaseBuilder;
-import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;
-import org.apache.ibatis.annotations.*;
+import com.geoxus.core.builder.GXBaseBuilder;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
 import java.util.Set;
@@ -14,20 +16,8 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     boolean updateFieldByCondition(String tableName, Dict data, Dict whereData);
 
-   /* @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
-    })
-    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);*/
-
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateStatusByCondition")
     boolean updateStatusByCondition(String tableName, int status, Dict condition);
-
-    @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySql")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
-    })
-    Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(String tableName, Dict condition);
@@ -37,4 +27,10 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsUnique")
     Integer checkRecordIsUnique(String tableName, Dict condition);
+
+    /* @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
+    @Results(value = {
+            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
+    })
+    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);*/
 }

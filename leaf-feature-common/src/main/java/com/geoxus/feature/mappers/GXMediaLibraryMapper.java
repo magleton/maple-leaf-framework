@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.feature.builder.GXMediaLibraryBuilder;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
-import com.geoxus.core.framework.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import com.geoxus.core.framework.handler.GXJsonToListTypeHandler;
 import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;
 import org.apache.ibatis.annotations.*;
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface GXMediaLibraryMapper extends GXBaseMapper<GXMediaLibraryEntity> {
+public interface GXMediaLibraryMapper extends GXFrameworkBaseMapper<GXMediaLibraryEntity> {
     @SelectProvider(type = GXMediaLibraryBuilder.class, method = "listOrSearch")
     @ResultMap("mediaResult")
     <R> List<R> listOrSearchPage(IPage<R> page, Dict param);

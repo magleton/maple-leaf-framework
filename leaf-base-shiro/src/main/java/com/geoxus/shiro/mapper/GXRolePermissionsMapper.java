@@ -1,6 +1,6 @@
 package com.geoxus.shiro.mapper;
 
-import com.geoxus.core.framework.mapper.GXBaseMapper;
+import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import com.geoxus.shiro.builder.GXRolePermissionsBuilder;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Component
 @Mapper
-public interface GXRolePermissionsMapper extends GXBaseMapper<GXRolePermissionsEntity> {
+public interface GXRolePermissionsMapper extends GXFrameworkBaseMapper<GXRolePermissionsEntity> {
     @SelectProvider(type = GXRolePermissionsBuilder.class, method = "getPermissionsByAdminId")
     Set<String> getPermissionsByAdminId(Long adminId);
 }

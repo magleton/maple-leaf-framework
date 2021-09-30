@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 @Primary
-public interface GXCoreModelAttributesPermissionMapper extends GXBaseMapper<GXCoreModelAttributesPermissionEntity> {
+public interface GXCoreModelAttributesPermissionMapper extends GXFrameworkBaseMapper<GXCoreModelAttributesPermissionEntity> {
     @SelectProvider(type = GXCoreModelAttributesPermissionsBuilder.class, method = "getModelAttributePermissionByCondition")
     List<Dict> getModelAttributePermissionByCondition(Dict param);
 }

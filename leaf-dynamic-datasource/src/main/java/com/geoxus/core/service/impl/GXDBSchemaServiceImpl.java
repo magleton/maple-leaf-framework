@@ -1,22 +1,15 @@
-package com.geoxus.core.framework.service.impl;
+package com.geoxus.core.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
-import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
-import com.geoxus.core.framework.service.GXCoreModelAttributesService;
-import com.geoxus.core.framework.service.GXCoreModelService;
-import com.geoxus.core.framework.service.GXDBSchemaService;
+import com.geoxus.core.service.GXDBSchemaService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,18 +27,8 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
     private static final String DROP_INDEX_SQL = "DROP INDEX `{}` on `{}`";
 
     @GXFieldComment(zhDesc = "数据源对象")
-    @Autowired
+    @Resource
     private DataSource dataSource;
-
-    @GXFieldComment(zhDesc = "字段权限对象")
-    @Autowired
-    private GXCoreModelAttributePermissionService gxCoreModelAttributePermissionService;
-
-    @Autowired
-    private GXCoreModelService gxCoreModelService;
-
-    @Autowired
-    private GXCoreModelAttributesService gxCoreModelAttributesService;
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName")
@@ -157,90 +140,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
     }
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet + #tableAlias")
     public String getSelectFieldStr(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
-        if (targetSet.size() == 1 && targetSet.contains("*")) {
-            if (remove) {
-                log.error("删除字段不能为'*' , 请指定需要删除的具体字段...");
-            }
-            return "*";
-        }
-        int coreModelId = gxCoreModelService.getCoreModelIdByTableName(tableName);
-        final List<TableField> tableFields = getTableColumn(tableName);
-        final Dict tmpResult = Dict.create();
-        boolean allFieldFlag = targetSet.size() == 1 && targetSet.contains("*");
-        for (TableField tableField : tableFields) {
-            final String columnName = tableField.getColumnName();
-            if (GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME.equals(columnName)) {
-                tmpResult.set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, columnName);
-                continue;
-            }
-            String dataType = tableField.getDataType();
-            if (dataType.equalsIgnoreCase("json") && !saveJSONField) {
-                if ((remove && targetSet.contains(columnName))) {
-                    continue;
-                }
-                Dict attributeCondition = Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("table_field_name", columnName);
-                List<Dict> attributes = gxCoreModelAttributesService.getModelAttributesByModelId(attributeCondition);
-                String attributeFlag = "attribute_name";
-                if (attributes.isEmpty()) {
-                    tmpResult.set(columnName, columnName);
-                    continue;
-                }
-                for (Dict dict : attributes) {
-                    String attributeValue = dict.getStr(attributeFlag);
-                    // attributeValue = CharSequenceUtil.toCamelCase(attributeValue);
-                    String extFieldKey = CharSequenceUtil.format("{}::{}", columnName, CharSequenceUtil.toCamelCase(attributeValue));
-                    String lastAttributeName = CharSequenceUtil.format("{}->>'$.{}' as '{}'", columnName, attributeValue, extFieldKey);
-                    if (allFieldFlag) {
-                        tmpResult.set(extFieldKey, lastAttributeName);
-                        continue;
-                    }
-                    if (remove) {
-                        if (!targetSet.contains(extFieldKey)) {
-                            tmpResult.set(extFieldKey, lastAttributeName);
-                        }
-                    } else {
-                        if (targetSet.contains(extFieldKey) || targetSet.contains(columnName)) {
-                            tmpResult.set(extFieldKey, lastAttributeName);
-                        }
-                    }
-                }
-            } else {
-                if (allFieldFlag) {
-                    tmpResult.set(columnName, columnName);
-                    continue;
-                }
-                if (remove) {
-                    if (!targetSet.contains(columnName)) {
-                        tmpResult.set(columnName, columnName);
-                    }
-                } else {
-                    if (targetSet.contains(columnName)) {
-                        tmpResult.set(columnName, columnName);
-                    }
-                }
-            }
-        }
-        final Dict permissions = gxCoreModelAttributePermissionService.getModelAttributePermissionByCoreModelId(coreModelId, Dict.create());
-        Dict dict = Dict.create();
-        if (!permissions.isEmpty() && null != permissions.getObj("db_field")) {
-            dict = Convert.convert(Dict.class, permissions.getObj("db_field"));
-        }
-        final Set<String> permissionsKey = dict.keySet();
-        final Set<String> result = new HashSet<>();
-        for (Map.Entry<String, Object> entry : tmpResult.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (CollUtil.contains(permissionsKey, key)) {
-                continue;
-            }
-            if (CharSequenceUtil.isBlank(tableAlias)) {
-                result.add(CharSequenceUtil.format("{}", value));
-            } else {
-                result.add(CharSequenceUtil.format("{}.{}", tableAlias, value));
-            }
-        }
-        return String.join(",", result);
+        return null;
     }
 }

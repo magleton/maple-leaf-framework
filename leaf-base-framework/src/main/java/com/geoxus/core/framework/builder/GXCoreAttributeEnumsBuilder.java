@@ -7,7 +7,7 @@ import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreAttributeEnumsConstant;
 import org.apache.ibatis.jdbc.SQL;
 
-public class GXCoreAttributeEnumsBuilder implements GXBaseBuilder {
+public class GXCoreAttributeEnumsBuilder implements GXFrameWorkBuilder {
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("cae.*").FROM(CharSequenceUtil.format("{} as cae", GXCoreAttributeEnumsConstant.TABLE_NAME));
         sql.INNER_JOIN("core_attributes ca on cae.attribute_id = ca.attribute_id");
