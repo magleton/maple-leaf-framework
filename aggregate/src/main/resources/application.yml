@@ -6,5 +6,7 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
+  profiles:
+    active: dev
 
 enable-caffeine: AB
