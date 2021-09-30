@@ -1,6 +1,5 @@
 package com.geoxus.order.service.impl;
 
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.order.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.mapstruct.UserProtocolMapstruct;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class UserServiceImpl extends GXBusinessServiceImpl<UserEntity, UserMapper, UserDao> implements UserService {
+public class UserServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<UserEntity, UserMapper, UserDao> implements UserService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<UserEntity, UserMapper, UserDao> {
     @Resource
     private UserProtocolMapstruct userProtocolMapstruct;
 

@@ -1,6 +1,5 @@
 package com.geoxus.shiro.mapper;
 
-import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import com.geoxus.shiro.builder.GXAdminPermissionsBuilder;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import org.apache.ibatis.annotations.Mapper;

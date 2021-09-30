@@ -3,7 +3,6 @@ package com.geoxus.feature.mappers;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.feature.builder.GXDataDictBuilder;
 import com.geoxus.feature.entities.GXDataDictEntity;
-import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 

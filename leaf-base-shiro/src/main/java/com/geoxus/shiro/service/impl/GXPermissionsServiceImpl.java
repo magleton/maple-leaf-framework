@@ -1,7 +1,6 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXPermissionsDao;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
 import com.geoxus.shiro.mapper.GXPermissionsMapper;
@@ -16,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class GXPermissionsServiceImpl extends GXBusinessServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> implements GXPermissionsService {
+public class GXPermissionsServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> implements GXPermissionsService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> {
     @Resource
     private GXAdminPermissionsService adminPermissionsService;
 

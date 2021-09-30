@@ -9,14 +9,14 @@ import com.geoxus.feature.entities.GXRegionEntity;
 import com.geoxus.feature.mappers.GXRegionMapper;
 import com.geoxus.feature.services.GXRegionService;
 import com.geoxus.common.util.GXChineseToPinYinUtils;
-import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GXRegionServiceImpl extends GXBaseServiceImpl<GXRegionEntity, GXRegionMapper, GXRegionDao> implements GXRegionService {
+public class GXRegionServiceImpl extends GXDBBaseServiceImpl<GXRegionEntity, GXRegionMapper, GXRegionDao> implements GXRegionService {
     private static final String NAME_TAG = "name";
 
     private static final String PARENT_TAG = "parent_id";

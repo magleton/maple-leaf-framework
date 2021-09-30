@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.validator;
+package com.geoxus.core.service;
 
 import cn.hutool.core.lang.Dict;
 

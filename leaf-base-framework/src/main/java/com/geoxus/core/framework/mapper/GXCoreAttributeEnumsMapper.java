@@ -3,6 +3,7 @@ package com.geoxus.core.framework.mapper;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.framework.builder.GXCoreAttributeEnumsBuilder;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
+import com.geoxus.core.mapper.GXBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -12,7 +13,7 @@ import org.apache.ibatis.type.IntegerTypeHandler;
 import java.util.List;
 
 @Mapper
-public interface GXCoreAttributeEnumsMapper extends GXFrameworkBaseMapper<GXCoreAttributesEnumsEntity> {
+public interface GXCoreAttributeEnumsMapper extends GXBaseMapper<GXCoreAttributesEnumsEntity> {
     @SelectProvider(type = GXCoreAttributeEnumsBuilder.class, method = "exists")
     @Results({
             @Result(column = "cnt", property = "count", typeHandler = IntegerTypeHandler.class)

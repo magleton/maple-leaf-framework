@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.handler;
+package com.geoxus.core.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
@@ -8,9 +8,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
-import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
+import com.geoxus.common.constant.GXCommonConstant;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
@@ -24,7 +22,7 @@ import java.util.Map;
 @MappedTypes({List.class})
 public class GXJsonToListTypeHandler extends BaseTypeHandler<List<Map<String, Object>>> {
     @GXFieldComment(zhDesc = "标识核心模型主键名字")
-    private static final String CORE_MODEL_PRIMARY_NAME = GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME;
+    private static final String CORE_MODEL_PRIMARY_NAME = GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME;
 
     @GXFieldComment(zhDesc = "当前字段的名字")
     private String columnName;
@@ -76,27 +74,20 @@ public class GXJsonToListTypeHandler extends BaseTypeHandler<List<Map<String, Ob
 
     private List<Map<String, Object>> jsonToList(String from, int coreModelId) {
         from = StrUtil.isEmpty(from) ? "[]" : from;
-        final GXCoreModelAttributePermissionService coreModelAttributePermissionService = GXSpringContextUtil.getBean(GXCoreModelAttributePermissionService.class);
         if (!JSONUtil.isJson(from) || (JSONUtil.isJsonObj(from) && JSONUtil.parseObj(from).isEmpty())) {
             return Collections.emptyList();
         }
         if (JSONUtil.isJsonObj(from)) {
             from = '[' + from + ']';
         }
-        assert coreModelAttributePermissionService != null;
-        Dict tmpDict = coreModelAttributePermissionService.getModelAttributePermissionByCoreModelId(coreModelId, Dict.create());
-        final Dict jsonFieldDict = Convert.convert(Dict.class, tmpDict.getObj("json_field"));
         Dict dict = Dict.create();
-        if (null != jsonFieldDict && !jsonFieldDict.isEmpty() && null != jsonFieldDict.getObj(this.columnName)) {
-            dict = Convert.convert(Dict.class, jsonFieldDict.getObj(this.columnName));
-        }
         final JSONArray jsonArray = JSONUtil.parseArray(from);
         for (Object object : jsonArray) {
             for (String attribute : dict.keySet()) {
                 ((JSONObject) object).remove(attribute);
             }
         }
-        return Convert.convert(new TypeReference<List<Map<String, Object>>>() {
+        return Convert.convert(new TypeReference<>() {
         }, jsonArray);
     }
 

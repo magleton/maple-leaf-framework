@@ -19,7 +19,7 @@ import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
-import com.geoxus.core.framework.service.impl.GXBaseServiceImpl;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service(value = "mediaLibraryService")
 @GXDataSource("framework")
-public class GXMediaLibraryServiceImpl extends GXBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> implements GXMediaLibraryService {
+public class GXMediaLibraryServiceImpl extends GXDBBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> implements GXMediaLibraryService {
     @Resource
     private GXUploadConfig uploadConfig;
 

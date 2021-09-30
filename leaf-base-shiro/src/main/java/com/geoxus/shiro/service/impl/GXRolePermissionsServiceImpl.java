@@ -1,6 +1,5 @@
 package com.geoxus.shiro.service.impl;
 
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXRolePermissionsDao;
 import com.geoxus.shiro.entities.GXRolePermissionsEntity;
 import com.geoxus.shiro.mapper.GXRolePermissionsMapper;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXRolePermissionsServiceImpl extends GXBusinessServiceImpl<GXRolePermissionsEntity, GXRolePermissionsMapper, GXRolePermissionsDao> implements GXRolePermissionsService {
+public class GXRolePermissionsServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXRolePermissionsEntity, GXRolePermissionsMapper, GXRolePermissionsDao> implements GXRolePermissionsService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXRolePermissionsEntity, GXRolePermissionsMapper, GXRolePermissionsDao> {
     /**
      * 通过管理员ID获取权限集
      *

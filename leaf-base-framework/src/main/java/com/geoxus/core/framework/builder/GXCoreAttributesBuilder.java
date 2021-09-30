@@ -8,7 +8,7 @@ import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.constant.GXCoreAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 
-public class GXCoreAttributesBuilder implements GXFrameWorkBuilder {
+public class GXCoreAttributesBuilder implements GXBaseBuilder {
     public String listOrSearch(Dict param) {
         final SQL sql = new SQL().SELECT("ca.*").FROM(CharSequenceUtil.format("{} as ca", GXCoreAttributesConstant.TABLE_NAME));
         mergeSearchConditionToSql(sql, param, false);

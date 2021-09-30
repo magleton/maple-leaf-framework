@@ -7,7 +7,6 @@ import cn.hutool.crypto.SecureUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXTokenManagerUtil;
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 
 @Service
-public class GXAdminServiceImpl extends GXBusinessServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao> implements GXAdminService {
+public class GXAdminServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao> implements GXAdminService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao> {
     /**
      * 获取当前登录管理员的状态
      *

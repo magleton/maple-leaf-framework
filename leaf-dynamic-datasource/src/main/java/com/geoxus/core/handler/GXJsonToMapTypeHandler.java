@@ -1,13 +1,11 @@
-package com.geoxus.core.framework.handler;
+package com.geoxus.core.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
-import com.geoxus.core.framework.service.GXCoreModelAttributePermissionService;
+import com.geoxus.common.constant.GXCommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -21,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>> {
     @GXFieldComment(zhDesc = "标识核心模型主键名字")
-    private static final String CORE_MODEL_PRIMARY_NAME = GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME;
+    private static final String CORE_MODEL_PRIMARY_NAME = GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME;
 
     @GXFieldComment(zhDesc = "当前字段的名字")
     private String columnName;
@@ -90,14 +88,7 @@ public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>>
             }
             return Dict.create();
         }
-        GXCoreModelAttributePermissionService coreModelAttributePermissionService = GXSpringContextUtil.getBean(GXCoreModelAttributePermissionService.class);
-        assert coreModelAttributePermissionService != null;
-        Dict tmpDict = coreModelAttributePermissionService.getModelAttributePermissionByCoreModelId(coreModelId, Dict.create());
-        final Dict jsonFieldDict = Convert.convert(Dict.class, tmpDict.getObj("json_field"));
         Dict dict = Dict.create();
-        if (null != jsonFieldDict && !jsonFieldDict.isEmpty() && null != jsonFieldDict.getObj(this.columnName)) {
-            dict = Convert.convert(Dict.class, jsonFieldDict.getObj(this.columnName));
-        }
         final Dict map = Convert.convert(Dict.class, JSONUtil.toBean(from, Dict.class));
         for (String attribute : dict.keySet()) {
             map.remove(attribute);

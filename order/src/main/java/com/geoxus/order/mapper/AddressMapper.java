@@ -1,6 +1,6 @@
 package com.geoxus.order.mapper;
 
-import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
+import com.geoxus.core.mapper.GXBaseMapper;
 import com.geoxus.order.builder.AddressBuilder;
 import com.geoxus.order.builder.dto.AddressDto;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Mapper
 @Component
-public interface AddressMapper extends GXFrameworkBaseMapper<UserEntity> {
+public interface AddressMapper extends GXBaseMapper<UserEntity> {
     @SelectProvider(type = AddressBuilder.class, method = "getListByCondition")
     UserResProtocol getListByCondition(AddressDto dto);
 }

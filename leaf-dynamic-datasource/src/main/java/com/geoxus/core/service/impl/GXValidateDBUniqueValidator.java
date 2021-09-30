@@ -1,11 +1,11 @@
-package com.geoxus.core.framework.validator.impl;
+package com.geoxus.core.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.framework.annotation.GXValidateDBUnique;
-import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
+import com.geoxus.core.annotation.GXValidateDBUnique;
+import com.geoxus.core.service.GXValidateDBUniqueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

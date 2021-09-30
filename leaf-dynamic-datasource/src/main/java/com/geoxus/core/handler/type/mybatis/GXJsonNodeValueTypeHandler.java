@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.geoxus.core.framework.handler.type.mybatis;
+package com.geoxus.core.handler.type.mybatis;
 
 import com.geoxus.common.exception.GXBusinessException;
 import org.apache.ibatis.executor.result.ResultMapException;

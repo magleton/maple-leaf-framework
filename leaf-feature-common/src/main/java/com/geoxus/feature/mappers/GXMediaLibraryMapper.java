@@ -4,9 +4,8 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.feature.builder.GXMediaLibraryBuilder;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
-import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
-import com.geoxus.core.framework.handler.GXJsonToListTypeHandler;
-import com.geoxus.core.framework.handler.GXJsonToMapTypeHandler;
+import com.geoxus.core.handler.GXJsonToListTypeHandler;
+import com.geoxus.core.handler.GXJsonToMapTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

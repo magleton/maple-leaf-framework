@@ -7,7 +7,7 @@ import com.geoxus.core.framework.mapper.GXCoreModelTableFieldMapper;
 
 import java.util.List;
 
-public interface GXCoreModelTableFieldService extends GXBusinessService<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> {
+public interface GXCoreModelTableFieldService extends com.geoxus.core.service.GXDBBaseService<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
     /**
      * 通过条件获取数据
      *

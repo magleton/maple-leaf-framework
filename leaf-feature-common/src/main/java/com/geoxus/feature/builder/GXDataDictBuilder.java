@@ -2,12 +2,11 @@ package com.geoxus.feature.builder;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.framework.builder.GXFrameWorkBuilder;
 import com.geoxus.feature.constant.GXDataDictConstant;
 import com.geoxus.core.builder.GXBaseBuilder;
 import org.apache.ibatis.jdbc.SQL;
 
-public class GXDataDictBuilder implements GXFrameWorkBuilder {
+public class GXDataDictBuilder implements GXBaseBuilder {
     /**
      * 列表
      *

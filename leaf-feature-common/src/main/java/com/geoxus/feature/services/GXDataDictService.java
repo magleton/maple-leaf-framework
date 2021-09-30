@@ -3,7 +3,6 @@ package com.geoxus.feature.services;
 import com.geoxus.feature.dao.GXDataDictDao;
 import com.geoxus.feature.entities.GXDataDictEntity;
 import com.geoxus.feature.mappers.GXDataDictMapper;
-import com.geoxus.core.framework.service.GXBusinessService;
 
-public interface GXDataDictService extends GXBusinessService<GXDataDictEntity, GXDataDictMapper, GXDataDictDao> {
+public interface GXDataDictService extends com.geoxus.core.service.GXDBBaseService<GXDataDictEntity, GXDataDictMapper, GXDataDictDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
 }

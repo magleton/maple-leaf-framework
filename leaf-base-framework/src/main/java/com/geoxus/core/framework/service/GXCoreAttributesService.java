@@ -1,13 +1,13 @@
 package com.geoxus.core.framework.service;
 
-import com.geoxus.core.framework.validator.GXValidateDBExistsService;
+import com.geoxus.core.service.GXValidateDBExistsService;
 import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributesMapper;
 
 import java.util.List;
 
-public interface GXCoreAttributesService extends GXBusinessService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao>, GXValidateDBExistsService {
+public interface GXCoreAttributesService extends GXValidateDBExistsService, com.geoxus.core.service.GXDBBaseService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao>, com.geoxus.core.service.GXValidateDBUniqueService {
     /**
      * 通过类型获取属性的列表
      *

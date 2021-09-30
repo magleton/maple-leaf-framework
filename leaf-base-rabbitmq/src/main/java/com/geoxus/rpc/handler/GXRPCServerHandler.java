@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.framework.service.GXBaseService;
+import com.geoxus.core.service.GXDBBaseService;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -49,7 +49,7 @@ public interface GXRPCServerHandler {
      *
      * @return
      */
-    default GXBaseService getService() {
+    default GXDBBaseService getService() {
         return null;
     }
 }

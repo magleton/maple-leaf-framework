@@ -1,7 +1,7 @@
-package com.geoxus.core.framework.annotation;
+package com.geoxus.core.annotation;
 
-import com.geoxus.core.framework.validator.GXValidateDBUniqueService;
-import com.geoxus.core.framework.validator.impl.GXValidateDBUniqueValidator;
+import com.geoxus.core.service.GXValidateDBExistsService;
+import com.geoxus.core.service.impl.GXValidateDBExistsValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,53 +13,52 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * @author britton chen
- * @email britton@126.com
+ * @author britton chen <britton@126.com>
  */
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = GXValidateDBUniqueValidator.class)
+@Constraint(validatedBy = GXValidateDBExistsValidator.class)
 @Documented
-public @interface GXValidateDBUnique {
+public @interface GXValidateDBExists {
     /**
      * 错误消息
      *
-     * @return
+     * @return String
      */
-    String message() default "该数据已经存在";
+    String message() default "{fieldName}对应的数据不存在或是参数不存在";
 
     /**
-     * 分组
+     * 分组验证
      *
-     * @return
+     * @return Class
      */
     Class<?>[] groups() default {};
 
     /**
      * 数据
      *
-     * @return
+     * @return Class
      */
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * 提供服务的类
+     * 目标服务
      *
-     * @return
+     * @return Class
      */
-    Class<? extends GXValidateDBUniqueService> service();
+    Class<? extends GXValidateDBExistsService> service();
 
     /**
-     * 验证的字段名字
+     * 目标字段名字
      *
-     * @return
+     * @return String
      */
     String fieldName() default "model_id";
 
     /**
      * 表名
      *
-     * @return
+     * @return String
      */
     String tableName() default "";
 

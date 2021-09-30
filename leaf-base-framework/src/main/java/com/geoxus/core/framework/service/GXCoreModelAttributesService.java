@@ -1,13 +1,14 @@
 package com.geoxus.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.core.service.GXDBBaseService;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
 
 import java.util.List;
 
-public interface GXCoreModelAttributesService extends GXBaseService<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> {
+public interface GXCoreModelAttributesService extends GXDBBaseService<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> {
     /**
      * 通过模型ID获取模型的属性
      *

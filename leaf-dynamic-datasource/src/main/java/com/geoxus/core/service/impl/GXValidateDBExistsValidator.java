@@ -1,11 +1,11 @@
-package com.geoxus.core.framework.validator.impl;
+package com.geoxus.core.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.core.framework.annotation.GXValidateDBExists;
-import com.geoxus.core.framework.validator.GXValidateDBExistsService;
+import com.geoxus.core.annotation.GXValidateDBExists;
+import com.geoxus.core.service.GXValidateDBExistsService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;

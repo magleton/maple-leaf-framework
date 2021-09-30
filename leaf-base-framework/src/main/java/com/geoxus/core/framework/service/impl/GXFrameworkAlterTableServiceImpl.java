@@ -4,7 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelService;
-import com.geoxus.core.framework.service.GXFrameworkAlterTableService;
+import com.geoxus.core.service.GXAlterTableService;
 import com.geoxus.core.service.impl.GXAlterTableServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-public class GXFrameworkAlterTableServiceImpl extends GXAlterTableServiceImpl implements GXFrameworkAlterTableService {
+public class GXFrameworkAlterTableServiceImpl extends GXAlterTableServiceImpl implements GXAlterTableService {
     @Resource
     private GXCoreAttributesService coreAttributesService;
 

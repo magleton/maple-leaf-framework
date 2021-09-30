@@ -1,7 +1,6 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.shiro.dao.GXAdminRoleDao;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import com.geoxus.shiro.mapper.GXAdminRoleMapper;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminRoleServiceImpl extends GXBusinessServiceImpl<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> implements GXAdminRoleService {
+public class GXAdminRoleServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> implements GXAdminRoleService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> {
     @Override
     public Set<String> getAdminRoles(Long adminId) {
         final Dict condition = Dict.create().set("admin_id", adminId);

@@ -7,14 +7,15 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.core.constant.GXBaseBuilderConstant;
 import com.geoxus.core.datasource.annotation.GXDataSource;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelDao;
 import com.geoxus.core.framework.entity.GXCoreModelEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelMapper;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelService;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import java.util.*;
 @Service
 @Slf4j
 @GXDataSource("framework")
-public class GXCoreModelServiceImpl extends GXBaseServiceImpl<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao> implements GXCoreModelService {
+public class GXCoreModelServiceImpl extends GXDBBaseServiceImpl<GXCoreModelEntity, GXCoreModelMapper, GXCoreModelDao> implements GXCoreModelService {
     @Resource
     private GXCoreModelAttributesService coreModelAttributeService;
 
@@ -40,7 +41,7 @@ public class GXCoreModelServiceImpl extends GXBaseServiceImpl<GXCoreModelEntity,
         if (CharSequenceUtil.isBlank(modelAttributeField)) {
             modelAttributeField = "";
         }
-        final List<Dict> attributes = coreModelAttributeService.getModelAttributesByModelId(Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("db_field_name", modelAttributeField));
+        final List<Dict> attributes = coreModelAttributeService.getModelAttributesByModelId(Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("db_field_name", modelAttributeField));
         entity.setCoreAttributes(attributes);
         return entity;
     }

@@ -4,14 +4,15 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.core.datasource.annotation.GXDataSource;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
 import com.geoxus.core.framework.entity.GXCoreAttributesEnumsEntity;
 import com.geoxus.core.framework.mapper.GXCoreAttributeEnumsMapper;
 import com.geoxus.core.framework.service.GXCoreAttributeEnumsService;
 import com.geoxus.core.framework.service.GXCoreAttributesService;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Service
 @GXDataSource("framework")
-public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao> implements GXCoreAttributeEnumsService {
+public class GXCoreAttributeEnumsServiceImpl extends GXDBBaseServiceImpl<GXCoreAttributesEnumsEntity, GXCoreAttributeEnumsMapper, GXCoreAttributeEnumsDao> implements GXCoreAttributeEnumsService {
     @GXFieldComment(zhDesc = "字段不存在的提示")
     private static final String FIELD_VALUE_NOT_EXISTS = "{}属性不存在值{}";
 
@@ -50,7 +51,7 @@ public class GXCoreAttributeEnumsServiceImpl extends GXBaseServiceImpl<GXCoreAtt
         if (null != attributeValue) {
             GXCoreAttributesEntity attributesEntity = coreAttributesService.getAttributeByAttributeName(field);
             if (null != attributesEntity) {
-                final int coreModelId = param.getInt(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
+                final int coreModelId = param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
                 boolean exists = isExistsAttributeValue(attributesEntity.getAttributeId(), attributeValue, coreModelId);
                 if (!exists) {
                     constraintValidatorContext.buildConstraintViolationWithTemplate(CharSequenceUtil.format(FIELD_VALUE_NOT_EXISTS, field, attributeValue)).addPropertyNode(field).addConstraintViolation();

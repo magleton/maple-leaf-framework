@@ -13,7 +13,7 @@ import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.feature.events.GXMediaLibraryEvent;
 import com.geoxus.feature.mappers.GXMediaLibraryMapper;
 import com.geoxus.common.constant.GXCommonConstant;
-import com.geoxus.core.framework.service.GXBaseService;
+import com.geoxus.core.service.GXDBBaseService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public interface GXMediaLibraryService extends GXBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> {
+public interface GXMediaLibraryService extends GXDBBaseService<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> {
     /**
      * 保存数据
      *

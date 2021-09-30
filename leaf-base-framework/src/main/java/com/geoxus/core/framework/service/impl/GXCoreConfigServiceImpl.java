@@ -3,6 +3,7 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
@@ -18,7 +19,7 @@ import java.util.Collections;
 
 @Service
 @GXDataSource("framework")
-public class GXCoreConfigServiceImpl extends GXBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao> implements GXCoreConfigService {
+public class GXCoreConfigServiceImpl extends GXDBBaseServiceImpl<GXCoreConfigEntity, GXCoreConfigMapper, GXCoreConfigDao> implements GXCoreConfigService {
     public long create(GXCoreConfigEntity target, Dict param) {
         baseDao.save(target);
         return target.getConfigId();

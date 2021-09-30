@@ -1,7 +1,6 @@
 package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.shiro.dao.GXAdminRoleDao;
 import com.geoxus.shiro.entities.GXAdminRoleEntity;
 import com.geoxus.shiro.mapper.GXAdminRoleMapper;
@@ -9,7 +8,7 @@ import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService extends GXBusinessService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao> {
+public interface GXAdminRoleService extends com.geoxus.core.service.GXDBBaseService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
     /**
      * 获取当前人的角色列表
      *

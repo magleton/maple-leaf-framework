@@ -6,14 +6,15 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
+import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.core.datasource.annotation.GXDataSource;
-import com.geoxus.core.framework.constant.GXFrameWorkCommonConstant;
 import com.geoxus.core.framework.dao.GXCoreModelAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreModelAttributesEntity;
 import com.geoxus.core.framework.mapper.GXCoreModelAttributesMapper;
 import com.geoxus.core.framework.service.GXCoreModelAttributesService;
 import com.geoxus.core.framework.service.GXCoreModelTableFieldService;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,15 @@ import java.util.*;
 @Service
 @Slf4j
 @GXDataSource("framework")
-public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> implements GXCoreModelAttributesService {
+public class GXCoreModelAttributesServiceImpl extends GXDBBaseServiceImpl<GXCoreModelAttributesEntity, GXCoreModelAttributesMapper, GXCoreModelAttributesDao> implements GXCoreModelAttributesService {
     @Resource
     private GXCoreModelTableFieldService coreModelTableFieldService;
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0.getStr('core_model_id') + #p0.getStr('table_field_name')")
     public List<Dict> getModelAttributesByModelId(Dict param) {
-        if (null == param.getInt(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME)) {
-            param.set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, 0);
+        if (null == param.getInt(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME)) {
+            param.set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, 0);
         }
         return getBaseMapper().getModelAttributesByCondition(param);
     }
@@ -40,7 +41,7 @@ public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreMo
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #modelId + #attributeId")
     public Dict getModelAttributeByModelIdAndAttributeId(int modelId, int attributeId) {
-        final Dict condition = Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("attribute_id", attributeId);
+        final Dict condition = Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, modelId).set("attribute_id", attributeId);
         final HashSet<String> fieldSet = CollUtil.newHashSet("validation_expression", "force_validation", "required");
         return getFieldValueBySQL(GXCoreModelAttributesEntity.class, fieldSet, condition, false);
     }
@@ -48,7 +49,7 @@ public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreMo
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #coreModelId + #attributeName")
     public Integer checkCoreModelHasAttribute(Integer coreModelId, String attributeName) {
-        final Dict condition = Dict.create().set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("attribute_name", attributeName);
+        final Dict condition = Dict.create().set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId).set("attribute_name", attributeName);
         return getBaseMapper().checkCoreModelHasAttribute(condition);
     }
 
@@ -86,7 +87,7 @@ public class GXCoreModelAttributesServiceImpl extends GXBaseServiceImpl<GXCoreMo
         }
         final Dict sourceDict = JSONUtil.toBean(jsonStr, Dict.class);
         final Dict condition = Dict.create()
-                .set(GXFrameWorkCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId)
+                .set(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME, coreModelId)
                 .set("table_field_name", tableField);
         final Dict retDict = Dict.create();
         final List<Dict> list = getModelAttributesByCondition(condition);

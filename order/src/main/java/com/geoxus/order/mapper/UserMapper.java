@@ -2,7 +2,7 @@ package com.geoxus.order.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.framework.mapper.GXFrameworkBaseMapper;
+import com.geoxus.core.mapper.GXBaseMapper;
 import com.geoxus.order.builder.UserBuilder;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.entity.UserEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Mapper
 @Component
-public interface UserMapper extends GXFrameworkBaseMapper<UserEntity> {
+public interface UserMapper extends GXBaseMapper<UserEntity> {
     @SelectProvider(type = UserBuilder.class, method = "getUserInfo")
     @Result(property = "addresses",
             column = "{userId=id,username=username}",
