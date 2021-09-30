@@ -571,11 +571,12 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
     /**
      * 获取分页对象信息
      *
-     * @param pageInfo 分页参数
+     * @param param 分页参数
      * @return IPage
      */
     @Override
-    public <R> IPage<R> constructPageObjectFromParam(Dict pageInfo) {
+    public <R> IPage<R> constructPageObjectFromParam(Dict param) {
+        Dict pageInfo = getPageInfoFromParam(param);
         return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
     }
 
