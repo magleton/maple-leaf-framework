@@ -12,6 +12,7 @@ public class UserController {
     @PostMapping("index")
     public GXResultUtil<String> hello(@GXRequestBody @Validated UserReqProtocol userReqProtocol) {
         System.out.println(userReqProtocol);
+        System.out.println(userReqProtocol.getAuthor());
         return GXResultUtil.ok("Hello World");
     }
 }
