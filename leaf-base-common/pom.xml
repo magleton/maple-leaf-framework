@@ -81,7 +81,6 @@
                 <!-- 启动时 命令   java -Dloader.path="lib目录" -jar xxx.jar -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
                 <configuration>
                     <mainClass>com.life.MallProductAggregate</mainClass>
                     <jvmArguments>-Dfile.encoding=UTF-8 -Dloader.path="/data/java/lib"</jvmArguments>
@@ -113,7 +112,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
