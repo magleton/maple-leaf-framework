@@ -3,19 +3,18 @@ package com.geoxus.core.framework.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
-import com.geoxus.common.util.GXBaseCommonUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
+import com.geoxus.common.util.GXBaseCommonUtil;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.constant.GXCoreConfigConstant;
 import com.geoxus.core.framework.dao.GXCoreConfigDao;
 import com.geoxus.core.framework.entity.GXCoreConfigEntity;
 import com.geoxus.core.framework.mapper.GXCoreConfigMapper;
 import com.geoxus.core.framework.service.GXCoreConfigService;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 @GXDataSource("framework")
@@ -38,8 +37,8 @@ public class GXCoreConfigServiceImpl extends GXDBBaseServiceImpl<GXCoreConfigEnt
         return false;
     }
 
-    public GXPaginationProtocol<Dict> listOrSearchPage(Dict param) {
-        return new GXPaginationProtocol<>(Collections.emptyList());
+    public <R> IPage<R> listOrSearchPage(Dict param, Class<R> clazz) {
+        return new Page<>();
     }
 
     public Dict detail(Dict param) {

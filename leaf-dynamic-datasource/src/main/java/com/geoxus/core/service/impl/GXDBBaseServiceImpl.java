@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.pojo.GXBusinessStatusCode;
 import com.geoxus.common.service.impl.GXBusinessServiceImpl;
@@ -438,7 +437,7 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
+    public <R> IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -456,7 +455,7 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param) {
+    public <R> IPage<R> listOrSearchPage(Dict param) {
         return generatePage(param);
     }
 
@@ -587,7 +586,7 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> generatePage(Dict param) {
+    public <R> IPage<R> generatePage(Dict param) {
         String mapperMethodName = "listOrSearchPage";
         return generatePage(param, mapperMethodName);
     }
@@ -600,7 +599,7 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
      * @return GXPagination
      */
     @Override
-    public <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName) {
+    public <R> IPage<R> generatePage(Dict param, String mapperMethodName) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
@@ -613,7 +612,8 @@ public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseD
         }
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
         riPage.setRecords(list);
-        return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
+        return riPage;
+        //return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     /**

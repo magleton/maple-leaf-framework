@@ -3,10 +3,8 @@ package com.geoxus.core.service;
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.service.GXBusinessService;
 import com.geoxus.core.mapper.GXBaseMapper;
-import org.springframework.cache.Cache;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,8 +30,6 @@ public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusi
      * @return D
      */
     D getBaseDao();
-
-
 
     /**
      * 获取实体中指定指定的值
@@ -230,7 +226,7 @@ public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusi
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    <R> GXPaginationProtocol<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto);
+    <R> IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto);
 
     /**
      * 列表或者搜索(分页)
@@ -238,7 +234,7 @@ public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusi
      * @param param 参数
      * @return GXPagination
      */
-    <R> GXPaginationProtocol<R> listOrSearchPage(Dict param);
+    <R> IPage<R> listOrSearchPage(Dict param);
 
     /**
      * 内容详情
@@ -278,7 +274,7 @@ public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusi
      * @param param 查询参数
      * @return GXPagination
      */
-    <R> GXPaginationProtocol<R> generatePage(Dict param);
+    <R> IPage<R> generatePage(Dict param);
 
     /**
      * 分页  返回实体对象
@@ -287,7 +283,7 @@ public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusi
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    <R> GXPaginationProtocol<R> generatePage(Dict param, String mapperMethodName);
+    <R> IPage<R> generatePage(Dict param, String mapperMethodName);
 
     /**
      * 获取记录的父级path

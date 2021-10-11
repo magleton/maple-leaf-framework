@@ -1,6 +1,7 @@
 package com.geoxus.feature.controller;
 
 import cn.hutool.core.lang.Dict;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.feature.services.GXDataDictService;
@@ -24,7 +25,9 @@ public class GXDataDictController {
      */
     @PostMapping("/list-or-search")
     public GXResultUtil<GXPaginationProtocol<Dict>> listOrSearchPage(@RequestBody Dict condition) {
-        final GXPaginationProtocol<Dict> pagination = dataDictService.listOrSearchPage(condition);
+        /*final GXPaginationProtocol<Dict> pagination = */
+        IPage<Dict> riPage = dataDictService.listOrSearchPage(condition);
+        GXPaginationProtocol<Dict> pagination = new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
         return GXResultUtil.ok(pagination);
     }
 }

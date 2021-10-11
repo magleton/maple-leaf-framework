@@ -5,7 +5,6 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.dao.GXCoreAttributesDao;
 import com.geoxus.core.framework.entity.GXCoreAttributesEntity;
@@ -51,11 +50,12 @@ public class GXCoreAttributesServiceImpl extends com.geoxus.core.service.impl.GX
     }
 
     @Override
-    public <R> GXPaginationProtocol<R> listOrSearchPage(Dict param) {
+    public <R> IPage<R> listOrSearchPage(Dict param) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
         final List<R> list = getBaseMapper().listOrSearchPage(riPage, param);
         riPage.setRecords(list);
-        return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
+        return riPage;
+        // return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     public long create(GXCoreAttributesEntity target, Dict param) {

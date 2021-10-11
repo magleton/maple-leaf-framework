@@ -23,7 +23,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
     private long pages;
 
     @GXFieldComment(zhDesc = "当前页数")
-    private long page;
+    private long currentPage;
 
     @GXFieldComment(zhDesc = "列表数据")
     private transient List<T> records;
@@ -40,7 +40,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
         this.records = list;
         this.total = totalCount;
         this.pageSize = pageSize;
-        this.page = currPage;
+        this.currentPage = currPage;
         this.pages = (int) Math.ceil((double) totalCount / pageSize);
     }
 
@@ -51,7 +51,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
         this.records = page.getRecords();
         this.total = page.getTotal();
         this.pageSize = page.getSize();
-        this.page = page.getCurrent();
+        this.currentPage = page.getCurrent();
         this.pages = page.getPages();
     }
 
@@ -62,7 +62,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
         this.records = page.getRecords();
         this.total = (int) page.getTotal();
         this.pageSize = (int) page.getSize();
-        this.page = (int) page.getCurrent();
+        this.currentPage = (int) page.getCurrent();
         this.pages = (int) page.getPages();
     }
 

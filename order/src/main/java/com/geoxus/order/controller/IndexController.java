@@ -1,6 +1,7 @@
 package com.geoxus.order.controller;
 
 import cn.hutool.core.lang.Dict;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
@@ -73,7 +74,8 @@ public class IndexController {
 
     @PostMapping("list-or-search")
     public GXResultUtil<GXPaginationProtocol<UserResProtocol>> listOrSearch(@RequestBody GXBaseSearchReqProtocol searchReqProtocol) {
-        GXPaginationProtocol<UserResProtocol> pagination = userService.listOrSearchPage(searchReqProtocol);
+        IPage<UserResProtocol> riPage = userService.listOrSearchPage(searchReqProtocol);
+        GXPaginationProtocol<UserResProtocol> pagination = new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
         return GXResultUtil.ok(pagination);
     }
 
