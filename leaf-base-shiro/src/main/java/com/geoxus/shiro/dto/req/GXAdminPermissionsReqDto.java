@@ -31,6 +31,11 @@ public class GXAdminPermissionsReqDto extends GXBaseDto {
     private Integer permissionId;
 
     /**
+     * 租户ID
+     */
+    private String tenantId;
+
+    /**
      * 扩展数据
      */
     @GXValidateExtData(tableName = GXAdminPermissionsConstant.TABLE_NAME)

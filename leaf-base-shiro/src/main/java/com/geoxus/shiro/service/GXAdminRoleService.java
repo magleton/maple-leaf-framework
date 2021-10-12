@@ -2,13 +2,13 @@ package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.shiro.dao.GXAdminRoleDao;
-import com.geoxus.shiro.entities.GXAdminRoleEntity;
+import com.geoxus.shiro.entities.GXAdminRolesEntity;
 import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService extends com.geoxus.core.service.GXDBBaseService<GXAdminRoleEntity, GXAdminRoleMapper, GXAdminRoleDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
+public interface GXAdminRoleService extends com.geoxus.core.service.GXDBBaseService<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
     /**
      * 获取当前人的角色列表
      *
@@ -26,5 +26,5 @@ public interface GXAdminRoleService extends com.geoxus.core.service.GXDBBaseServ
      * @param param  额外参数
      * @return long
      */
-    long create(GXAdminRoleEntity target, Dict param);
+    long create(GXAdminRolesEntity target, Dict param);
 }

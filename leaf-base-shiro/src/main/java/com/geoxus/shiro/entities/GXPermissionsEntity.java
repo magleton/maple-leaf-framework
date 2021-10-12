@@ -20,7 +20,10 @@ public class GXPermissionsEntity extends GXBaseEntity implements Serializable {
 
     @GXFieldComment(zhDesc = "权限码")
     private String code;
+    
+    @GXFieldComment("租户ID")
+    private String tenantId;
 
-    @GXFieldComment(zhDesc = "扩展数据")
+    @GXFieldComment(zhDesc = "扩展预留信息")
     private String ext;
 }

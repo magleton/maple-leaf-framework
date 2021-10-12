@@ -24,6 +24,9 @@ public class GXRolePermissionsEntity extends GXBaseEntity implements Serializabl
     @GXFieldComment(zhDesc = "权限ID")
     private Integer permissionId;
 
-    @GXFieldComment(zhDesc = "扩展数据")
+    @GXFieldComment("租户ID")
+    private String tenantId;
+
+    @GXFieldComment(zhDesc = "扩展预留信息")
     private String ext;
 }

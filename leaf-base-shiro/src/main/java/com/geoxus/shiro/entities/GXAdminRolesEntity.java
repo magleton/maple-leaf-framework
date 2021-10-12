@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class GXAdminRoleEntity extends GXBaseEntity implements Serializable {
+public class GXAdminRolesEntity extends GXBaseEntity implements Serializable {
     @GXFieldComment(zhDesc = "主键ID")
     private Integer id;
 
@@ -24,6 +24,9 @@ public class GXAdminRoleEntity extends GXBaseEntity implements Serializable {
     @GXFieldComment(zhDesc = "角色ID")
     private Integer roleId;
 
-    @GXFieldComment(zhDesc = "扩展数据")
+    @GXFieldComment("租户ID")
+    private String tenantId;
+
+    @GXFieldComment(zhDesc = "扩展预留信息")
     private String ext;
 }

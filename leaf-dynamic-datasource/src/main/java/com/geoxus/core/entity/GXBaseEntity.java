@@ -16,4 +16,10 @@ public class GXBaseEntity extends GXBaseData {
 
     @TableField(fill = FieldFill.UPDATE)
     private Long updatedAt;
+
+    @TableField(fill = FieldFill.INSERT)
+    private String createdBy;
+    
+    @TableField(fill = FieldFill.UPDATE)
+    private String updatedBy;
 }

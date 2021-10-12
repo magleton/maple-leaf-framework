@@ -5,7 +5,9 @@ import com.geoxus.common.annotation.GXValidateExtData;
 import com.geoxus.common.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXRoleConstant;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GXRoleReqDto extends GXBaseDto {
     /**
@@ -27,6 +29,11 @@ public class GXRoleReqDto extends GXBaseDto {
      * 角色code
      */
     private String code;
+
+    /**
+     * 租户ID
+     */
+    private String tenantId;
 
     /**
      * 扩展数据

@@ -4,8 +4,8 @@ import cn.hutool.core.lang.Dict;
 import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.controller.GXBaseController;
 import com.geoxus.common.util.GXResultUtil;
-import com.geoxus.shiro.dto.req.GXAdminRoleReqDto;
-import com.geoxus.shiro.entities.GXAdminRoleEntity;
+import com.geoxus.shiro.dto.req.GXAdminRolesReqDto;
+import com.geoxus.shiro.entities.GXAdminRolesEntity;
 import com.geoxus.shiro.mapstruct.GXAdminRoleMapStruct;
 import com.geoxus.shiro.service.GXAdminRoleService;
 import org.springframework.validation.annotation.Validated;
@@ -34,8 +34,8 @@ public class GXAdminRoleController implements GXBaseController {
      * @return GXResultUtils
      */
     @PostMapping("create")
-    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminRoleReqDto target) {
-        GXAdminRoleEntity entity = adminRoleMapStruct.dtoToEntity(target);
+    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminRolesReqDto target) {
+        GXAdminRolesEntity entity = adminRoleMapStruct.dtoToEntity(target);
         long id = adminRoleService.create(entity, Dict.create());
         return GXResultUtil.ok(Dict.create().set("id", id));
     }

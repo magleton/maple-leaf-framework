@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXAdminRoleReqDto extends GXBaseDto {
+public class GXAdminRolesReqDto extends GXBaseDto {
     /**
      * 核心模型ID
      */
@@ -29,6 +29,11 @@ public class GXAdminRoleReqDto extends GXBaseDto {
      * 角色ID
      */
     private Integer roleId;
+
+    /**
+     * 租户ID
+     */
+    private String tenantId;
 
     /**
      * 扩展数据

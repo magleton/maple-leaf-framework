@@ -26,6 +26,11 @@ public class GXPermissionsReqDto extends GXBaseDto {
     private String code;
 
     /**
+     * 租户ID
+     */
+    private String tenantId;
+
+    /**
      * 扩展数据
      */
     @GXValidateExtData(tableName = GXPermissionsConstant.TABLE_NAME)

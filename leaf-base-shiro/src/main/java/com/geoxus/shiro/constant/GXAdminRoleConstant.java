@@ -8,7 +8,7 @@ public class GXAdminRoleConstant {
     public static final String PRIMARY_KEY = "id";
 
     @GXFieldComment(zhDesc = "表名")
-    public static final String TABLE_NAME = "admin_role";
+    public static final String TABLE_NAME = "s_admin_roles";
 
     @GXFieldComment(zhDesc = "数据表别名")
     public static final String TABLE_ALIAS_NAME = "admin_role";

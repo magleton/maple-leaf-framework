@@ -46,14 +46,26 @@ public class GXAdminReqDto extends GXBaseDto {
     private String nickname;
 
     /**
+     * 真实名字
+     */
+    private String realName;
+
+    /**
      * 账号状态
      */
     private Integer status;
 
     /**
-     * 是否超级管理员 0 否 1 是
+     * 是否超级管理员
+     * 1:是
+     * 2:否
      */
-    private Integer superAdmin = 0;
+    private Integer superAdmin = 2;
+
+    /**
+     * 租户ID
+     */
+    private String tenantId;
 
     /**
      * 扩展数据
