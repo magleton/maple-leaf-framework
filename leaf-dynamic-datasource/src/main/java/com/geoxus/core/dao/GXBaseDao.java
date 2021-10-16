@@ -1,7 +1,7 @@
 package com.geoxus.core.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.geoxus.core.mapper.GXBaseMapper;
 
-public class GXBaseDao<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> {
+public class GXBaseDao<M extends GXBaseMapper<T>, T> extends ServiceImpl<M, T> {
 }
