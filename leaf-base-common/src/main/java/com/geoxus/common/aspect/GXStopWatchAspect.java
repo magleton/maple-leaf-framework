@@ -27,7 +27,7 @@ import java.lang.reflect.Parameter;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class GXStopWatchAspect {
-    @Pointcut("@annotation(com.life.common.annotation.GXStopWatchAnnotation) || @within(com.life.common.annotation.GXStopWatchAnnotation)")
+    @Pointcut("@annotation(com.geoxus.common.annotation.GXStopWatch) || @within(com.geoxus.common.annotation.GXStopWatch)")
     public void stopWatchPointCut() {
         // 这只是切点标记
     }
