@@ -37,7 +37,7 @@ public class GXStopWatchAspect {
         long start = System.currentTimeMillis();
         MethodSignature signature = (MethodSignature) point.getSignature();
         Class<?> targetClass = point.getTarget().getClass();
-        String classCanonicalName = targetClass.getCanonicalName();
+        String simpleName = targetClass.getSimpleName();
         Method method = signature.getMethod();
         String name = method.getName();
         long end = System.currentTimeMillis();
@@ -51,12 +51,12 @@ public class GXStopWatchAspect {
             Object realParam = args[i];
             parametersDict.set(key, realParam);
         }
-        String callInfo = CharSequenceUtil.format("{}.{}", classCanonicalName, name);
+        String callInfo = CharSequenceUtil.format("{}.{}", simpleName, name);
         String threadName = Thread.currentThread().getName();
-        log.info("{} : {}请求参数{}", threadName, callInfo, JSONUtil.toJsonStr(parametersDict));
+        log.info("{} : 调用{}方法的请求参数 ---- > {}", threadName, callInfo, JSONUtil.toJsonStr(parametersDict));
         Object o = point.proceed();
-        log.info("{} : {}响应数据{}", threadName, callInfo, JSONUtil.toJsonStr(o));
-        log.info("{} : 本次调用{}方法总共运行{}秒", threadName, callInfo, last);
+        log.info("{} : 调用{}方法的响应数据 ---- > {}", threadName, callInfo, JSONUtil.toJsonStr(o));
+        log.info("{} : 调用{}方法总共运行{}秒", threadName, callInfo, last);
         return o;
     }
 }
