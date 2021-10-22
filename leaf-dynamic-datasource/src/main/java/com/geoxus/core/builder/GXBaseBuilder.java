@@ -176,6 +176,31 @@ public interface GXBaseBuilder {
     }
 
     /**
+     * 查询单表的指定字段
+     *
+     * @param tableName 表名
+     * @param fieldSet  字段集合
+     * @param condition 条件
+     * @return String
+     */
+    static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
+        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
+        assert schemaService != null;
+        final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
+        final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
+        final Set<String> conditionKeys = condition.keySet();
+        for (String conditionKey : conditionKeys) {
+            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
+            final String value = condition.getStr(conditionKey);
+            if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
+                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
+            }
+            sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
+        }
+        return sql.toString();
+    }
+
+    /**
      * 分页列表
      *
      * @param param 参数
@@ -287,32 +312,6 @@ public interface GXBaseBuilder {
                 .set("completeAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ);
     }
 
-
-    /**
-     * 查询单表的指定字段
-     *
-     * @param tableName 表名
-     * @param fieldSet  字段集合
-     * @param condition 条件
-     * @return String
-     */
-    static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
-        assert schemaService != null;
-        final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
-        final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
-        final Set<String> conditionKeys = condition.keySet();
-        for (String conditionKey : conditionKeys) {
-            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
-            final String value = condition.getStr(conditionKey);
-            if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
-            }
-            sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
-        }
-        return sql.toString();
-    }
-
     /**
      * 合并搜索条件到SQL对象中
      *
@@ -417,6 +416,29 @@ public interface GXBaseBuilder {
         final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
+    }
+
+    /**
+     * 通过条件获取分类数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     *                  <code>
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("level" , "=" , "1111");
+     *                  getDataByCondition("test" , condition);
+     *                  </code>
+     * @return SQL语句
+     */
+    default String getDataByCondition(String tableName, Table<String, String, Object> condition) {
+        SQL sql = new SQL().SELECT("*").FROM(tableName);
+        Map<String, Map<String, Object>> conditionMap = condition.rowMap();
+        conditionMap.forEach((column, datum) -> datum.forEach((operator, value) -> {
+            String whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+            sql.WHERE(whereStr);
+        }));
+        return sql.toString();
     }
 
     /**

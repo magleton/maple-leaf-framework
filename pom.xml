@@ -44,7 +44,7 @@
         <shiro-spring.version>1.8.0</shiro-spring.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-        <guava.version>30.1.1-jre</guava.version>
+        <guava.version>31.0.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
         <ehcache.version>3.3.0</ehcache.version>
         <caffeine.version>3.0.3</caffeine.version>
