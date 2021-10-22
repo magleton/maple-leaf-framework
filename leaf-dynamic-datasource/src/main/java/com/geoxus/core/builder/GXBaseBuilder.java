@@ -434,10 +434,16 @@ public interface GXBaseBuilder {
     default String getDataByCondition(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().SELECT("*").FROM(tableName);
         Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-        conditionMap.forEach((column, datum) -> datum.forEach((operator, value) -> {
-            String whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+        conditionMap.forEach((column, datum) -> {
+            List<String> wheres = new ArrayList<>();
+            datum.forEach((operator, value) -> {
+                wheres.add(CharSequenceUtil.format("{} {} {}", column, operator, value));
+                wheres.add("or");
+            });
+            wheres.remove(wheres.size() - 1);
+            String whereStr = String.join(" ", wheres);
             sql.WHERE(whereStr);
-        }));
+        });
         return sql.toString();
     }
 
