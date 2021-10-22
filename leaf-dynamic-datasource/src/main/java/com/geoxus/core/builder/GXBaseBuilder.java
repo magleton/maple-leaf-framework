@@ -426,6 +426,7 @@ public interface GXBaseBuilder {
      *                  <code>
      *                  Table<String, String, Object> condition = HashBasedTable.create();
      *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
      *                  condition.put("level" , "=" , "1111");
      *                  getDataByCondition("test" , condition);
      *                  </code>
