@@ -201,6 +201,41 @@ public interface GXBaseBuilder {
     }
 
     /**
+     * 通过条件获取分类数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @param fieldSet  需要查询的字段
+     *                  <code>
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                  condition.put("level" , "=" , "1111");
+     *                  getDataByCondition("test" , condition);
+     *                  </code>
+     * @return SQL语句
+     */
+    static String getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        String selectStr = "*";
+        if (CollUtil.isNotEmpty(fieldSet)) {
+            selectStr = String.join(",", fieldSet);
+        }
+        SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
+        Map<String, Map<String, Object>> conditionMap = condition.rowMap();
+        conditionMap.forEach((column, datum) -> {
+            List<String> wheres = new ArrayList<>();
+            datum.forEach((operator, value) -> {
+                wheres.add(CharSequenceUtil.format("{} {} {}", column, operator, value));
+                wheres.add("or");
+            });
+            wheres.remove(wheres.size() - 1);
+            String whereStr = String.join(" ", wheres);
+            sql.WHERE(whereStr);
+        });
+        return sql.toString();
+    }
+
+    /**
      * 分页列表
      *
      * @param param 参数
@@ -327,12 +362,6 @@ public interface GXBaseBuilder {
             throw new GXBusinessException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
         }
         Dict searchField = getDefaultSearchField();
-        /*if (isMergeDBSearchCondition) {
-            final Dict condition = Dict.create().set(GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME, modelIdentificationValue);
-            Dict dbSearchCondition = Objects.requireNonNull(GXSpringContextUtil.getBean(GXCoreModelService.class)).getSearchCondition(condition);
-            searchField.putAll(dbSearchCondition);
-        }*/
-        //searchField.putAll(getDefaultSearchField());
         Dict requestSearchCondition = getRequestSearchCondition(requestParam);
         final Dict timeFields = getTimeFields();
         Set<String> keySet = requestSearchCondition.keySet();
@@ -416,36 +445,6 @@ public interface GXBaseBuilder {
         final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
-    }
-
-    /**
-     * 通过条件获取分类数据
-     *
-     * @param tableName 表名字
-     * @param condition 条件
-     *                  <code>
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("path" , "like" , "aaa%");
-     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     *                  condition.put("level" , "=" , "1111");
-     *                  getDataByCondition("test" , condition);
-     *                  </code>
-     * @return SQL语句
-     */
-    default String getDataByCondition(String tableName, Table<String, String, Object> condition) {
-        SQL sql = new SQL().SELECT("*").FROM(tableName);
-        Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-        conditionMap.forEach((column, datum) -> {
-            List<String> wheres = new ArrayList<>();
-            datum.forEach((operator, value) -> {
-                wheres.add(CharSequenceUtil.format("{} {} {}", column, operator, value));
-                wheres.add("or");
-            });
-            wheres.remove(wheres.size() - 1);
-            String whereStr = String.join(" ", wheres);
-            sql.WHERE(whereStr);
-        });
-        return sql.toString();
     }
 
     /**

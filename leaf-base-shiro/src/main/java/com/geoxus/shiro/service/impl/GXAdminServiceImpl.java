@@ -7,6 +7,10 @@ import cn.hutool.crypto.SecureUtil;
 import com.geoxus.common.constant.GXTokenConstant;
 import com.geoxus.common.exception.GXBusinessException;
 import com.geoxus.common.util.GXTokenManagerUtil;
+import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.service.GXValidateDBExistsService;
+import com.geoxus.core.service.GXValidateDBUniqueService;
+import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
@@ -17,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 
 @Service
-public class GXAdminServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao> implements GXAdminService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao> {
+public class GXAdminServiceImpl extends GXDBBaseServiceImpl<GXAdminEntity, GXAdminMapper, GXAdminDao> implements GXAdminService, GXValidateDBExistsService, GXValidateDBUniqueService, GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao> {
     /**
      * 获取当前登录管理员的状态
      *
@@ -44,6 +48,11 @@ public class GXAdminServiceImpl extends com.geoxus.core.service.impl.GXDBBaseSer
      */
     @Override
     public String login(GXAdminLoginReqDto loginReqDto) {
+        GXAdminEntity gxAdminEntity = new GXAdminEntity();
+        gxAdminEntity.setExt(Dict.create().set("aaaa" , "aaaa"));
+        gxAdminEntity.setUsername("aaammm");
+        baseDao.saveOrUpdate(gxAdminEntity);
+        System.out.println("aaaa : " + gxAdminEntity.getId());
         final String username = loginReqDto.getUsername();
         final String password = loginReqDto.getPassword();
         String secretPassword = SecureUtil.md5(password);

@@ -1,6 +1,9 @@
 package com.geoxus.shiro.entities;
 
+import cn.hutool.core.lang.Dict;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.geoxus.core.entity.GXBaseEntity;
 import com.geoxus.shiro.constant.GXAdminConstant;
 import lombok.Data;
@@ -77,5 +80,6 @@ public class GXAdminEntity extends GXBaseEntity implements Serializable {
     /**
      * 扩展预留信息
      */
-    private String ext;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Dict ext;
 }

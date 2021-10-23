@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Slf4j
-@Component
+//@Component
 @Intercepts({
         @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})
 })
