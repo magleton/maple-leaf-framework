@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -12,13 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @Slf4j
 public class GXCacheKeysUtils {
-    @Autowired
-    private CacheKeysConfig cacheKeysConfig;
-
     /**
      * 获取系统配置的KEY
      *
@@ -67,7 +65,12 @@ public class GXCacheKeysUtils {
      * @return String
      */
     public String getCacheKey(String configName, String key) {
-        final List<Map<String, String>> list = cacheKeysConfig.getKeys();
+        CacheKeysProperties cacheKeysProperties = GXSpringContextUtil.getBean(CacheKeysProperties.class);
+        if (Objects.isNull(cacheKeysProperties)) {
+            log.info("未配置缓存键列表");
+            return CharSequenceUtil.format("geoxus:default:{}", key);
+        }
+        final List<Map<String, String>> list = cacheKeysProperties.getKeys();
         log.info(list.toString());
         for (Map<String, String> map : list) {
             final String s = map.get(configName);
@@ -84,12 +87,13 @@ public class GXCacheKeysUtils {
     @Data
     @Component
     @Configuration
+    @ConditionalOnExpression("${cache.enable:0}==1")
     @PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/cache-key.yml"},
             factory = GXYamlPropertySourceFactory.class,
             encoding = "UTF-8",
             ignoreResourceNotFound = true)
     @ConfigurationProperties(prefix = "cache-key")
-    static class CacheKeysConfig {
+    static class CacheKeysProperties {
         private List<Map<String, String>> keys;
     }
 }

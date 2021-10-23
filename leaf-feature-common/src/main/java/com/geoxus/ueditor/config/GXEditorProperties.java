@@ -2,6 +2,7 @@ package com.geoxus.ueditor.config;
 
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Data
+@ConditionalOnExpression("${ueditor.enable:0}==1")
 @ConfigurationProperties(prefix = "ue")
 @PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/ueditor.yml"},
         factory = GXYamlPropertySourceFactory.class,

@@ -22,6 +22,8 @@ public class GXAdminController implements GXBaseController {
     @Resource
     private GXAdminService adminService;
 
+
+
     /**
      * 管理员登录
      *

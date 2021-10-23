@@ -1,4 +1,4 @@
-package com.geoxus.feature.config;
+package com.geoxus.feature.properties;
 
 import com.geoxus.feature.interceptor.GXCustomMultipartResolver;
 import com.geoxus.common.factory.GXYamlPropertySourceFactory;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartResolver;
 @PropertySource(value = "classpath:/ymls/${spring.profiles.active}/common.yml",
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true)
-public class GXFeatureConfig {
+public class GXFeatureProperties {
     @Bean
     @ConditionalOnExpression("'${enable-fileupload-progress}'.equals('true')")
     public MultipartResolver multipartResolver() {

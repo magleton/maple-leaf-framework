@@ -10,15 +10,16 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.geoxus.common.constant.GXCommonConstant;
 import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.common.util.GXSpringContextUtil;
 import com.geoxus.common.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.core.framework.service.GXCoreModelService;
 import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
-import com.geoxus.feature.config.GXUploadConfig;
 import com.geoxus.feature.constant.GXMediaLibraryConstant;
 import com.geoxus.feature.dao.GXMediaLibraryDao;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.feature.mappers.GXMediaLibraryMapper;
+import com.geoxus.feature.properties.GXUploadProperties;
 import com.geoxus.feature.services.GXMediaLibraryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,6 @@ import java.util.stream.Collectors;
 @Service(value = "mediaLibraryService")
 @GXDataSource("framework")
 public class GXMediaLibraryServiceImpl extends GXDBBaseServiceImpl<GXMediaLibraryEntity, GXMediaLibraryMapper, GXMediaLibraryDao> implements GXMediaLibraryService {
-    @Resource
-    private GXUploadConfig uploadConfig;
-
     @Resource
     private GXCoreModelService coreModelService;
 
@@ -104,7 +102,11 @@ public class GXMediaLibraryServiceImpl extends GXDBBaseServiceImpl<GXMediaLibrar
     @Override
     @Transactional(rollbackFor = Exception.class)
     public GXMediaLibraryEntity saveFileInfo(MultipartFile file, Dict param) {
-        String filePath = uploadConfig.getDepositPath().trim();
+        GXUploadProperties uploadProperties = GXSpringContextUtil.getBean(GXUploadProperties.class);
+        if (Objects.isNull(uploadProperties)) {
+            throw new GXBusinessException("请配置上传路径");
+        }
+        String filePath = uploadProperties.getDepositPath().trim();
         try {
             String fileName = GXUploadUtils.singleUpload(file, filePath);
             GXMediaLibraryEntity entity = new GXMediaLibraryEntity();
