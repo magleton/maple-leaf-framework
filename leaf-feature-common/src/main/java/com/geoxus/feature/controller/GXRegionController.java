@@ -3,7 +3,7 @@ package com.geoxus.feature.controller;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.feature.entities.GXRegionEntity;
 import com.geoxus.feature.services.GXRegionService;
-import com.geoxus.common.util.GXResultUtil;
+import com.geoxus.core.framework.util.GXResultUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

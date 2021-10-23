@@ -1,7 +1,7 @@
 package com.geoxus.feature.constant;
 
-import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXBaseCommonUtil;
+import com.geoxus.core.framework.annotation.GXFieldComment;
+import com.geoxus.core.framework.util.GXBaseCommonUtil;
 
 public class GXRegionConstant {
     @GXFieldComment(zhDesc = "主键ID")

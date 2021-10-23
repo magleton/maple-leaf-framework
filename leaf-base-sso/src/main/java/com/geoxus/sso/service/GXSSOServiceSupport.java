@@ -15,7 +15,7 @@
  */
 package com.geoxus.sso.service;
 
-import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.constant.GXSSOConstant;

@@ -1,7 +1,7 @@
 package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.util.GXBaseCommonUtil;
+import com.geoxus.core.framework.util.GXBaseCommonUtil;
 
 import java.util.Set;
 

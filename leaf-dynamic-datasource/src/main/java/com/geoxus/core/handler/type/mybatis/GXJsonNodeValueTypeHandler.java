@@ -23,7 +23,7 @@
  */
 package com.geoxus.core.handler.type.mybatis;
 
-import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.core.framework.exception.GXBusinessException;
 import org.apache.ibatis.executor.result.ResultMapException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

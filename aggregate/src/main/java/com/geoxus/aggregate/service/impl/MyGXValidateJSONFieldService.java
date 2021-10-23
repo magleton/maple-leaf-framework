@@ -1,7 +1,7 @@
 package com.geoxus.aggregate.service.impl;
 
-import com.geoxus.common.properties.GXCommonProperties;
-import com.geoxus.common.validator.GXValidateJSONFieldService;
+import com.geoxus.core.framework.properties.GXCommonProperties;
+import com.geoxus.core.framework.validator.GXValidateJSONFieldService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

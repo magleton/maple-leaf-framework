@@ -19,22 +19,22 @@
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-framework</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-redisson</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-dynamic-datasource</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-sso</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 </project>

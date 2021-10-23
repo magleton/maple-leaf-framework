@@ -1,7 +1,7 @@
 package com.geoxus.mongodb.datasource.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.mongodb.datasource.properties.GXMongoDynamicDataSourceProperties;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;

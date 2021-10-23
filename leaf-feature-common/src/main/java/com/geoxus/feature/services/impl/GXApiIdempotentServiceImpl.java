@@ -3,7 +3,7 @@ package com.geoxus.feature.services.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.core.framework.annotation.GXFieldComment;
 import com.geoxus.feature.services.GXApiIdempotentService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

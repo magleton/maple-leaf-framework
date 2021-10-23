@@ -1,8 +1,8 @@
 package com.geoxus.ueditor.support.qiniu;
 
 import cn.hutool.json.JSONUtil;
-import com.geoxus.common.exception.GXBusinessException;
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.exception.GXBusinessException;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;

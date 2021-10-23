@@ -1,7 +1,7 @@
 package com.geoxus.shiro.dto.inner;
 
-import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.dto.GXBaseDto;
+import com.geoxus.core.framework.annotation.GXFieldComment;
+import com.geoxus.core.framework.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

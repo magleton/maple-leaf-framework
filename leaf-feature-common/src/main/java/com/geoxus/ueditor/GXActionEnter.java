@@ -1,7 +1,7 @@
 package com.geoxus.ueditor;
 
 import cn.hutool.json.JSONException;
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.ueditor.config.GXDefaultEditorUploader;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import com.geoxus.ueditor.define.GXActionMap;

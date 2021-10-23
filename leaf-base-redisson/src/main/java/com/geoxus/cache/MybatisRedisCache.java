@@ -1,6 +1,6 @@
 package com.geoxus.cache;
 
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import org.apache.ibatis.cache.Cache;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;

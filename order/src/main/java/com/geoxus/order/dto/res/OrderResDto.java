@@ -1,6 +1,6 @@
 package com.geoxus.order.dto.res;
 
-import com.geoxus.common.dto.GXBaseDto;
+import com.geoxus.core.framework.dto.GXBaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

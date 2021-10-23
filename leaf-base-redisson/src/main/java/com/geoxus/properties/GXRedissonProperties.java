@@ -1,6 +1,6 @@
 package com.geoxus.properties;
 
-import com.geoxus.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;

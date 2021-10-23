@@ -1,7 +1,7 @@
 package com.geoxus.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.dto.GXCanalDataDto;
+import com.geoxus.core.framework.dto.GXCanalDataDto;
 
 public interface GXProcessCanalDataService {
     /**

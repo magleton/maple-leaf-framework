@@ -1,6 +1,6 @@
 package com.geoxus.sso.util;
 
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.plugins.GXSSOPlugin;

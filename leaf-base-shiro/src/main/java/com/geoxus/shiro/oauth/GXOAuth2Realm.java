@@ -1,9 +1,9 @@
 package com.geoxus.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.common.util.GXBaseCommonUtil;
-import com.geoxus.common.util.GXTokenManagerUtil;
+import com.geoxus.core.framework.constant.GXTokenConstant;
+import com.geoxus.core.framework.util.GXBaseCommonUtil;
+import com.geoxus.core.framework.util.GXTokenManagerUtil;
 import com.geoxus.shiro.service.GXAdminService;
 import com.geoxus.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;

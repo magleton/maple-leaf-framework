@@ -1,8 +1,8 @@
 package com.geoxus.aggregate.dto.protocol.req;
 
 import com.geoxus.aggregate.service.impl.MyGXValidateJSONFieldService;
-import com.geoxus.common.annotation.GXMergeSingleField;
-import com.geoxus.common.annotation.GXValidateExtData;
+import com.geoxus.core.framework.annotation.GXMergeSingleField;
+import com.geoxus.core.framework.annotation.GXValidateExtData;
 import lombok.Data;
 
 @Data

@@ -1,7 +1,7 @@
 package com.geoxus.shiro.entities;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.core.framework.annotation.GXFieldComment;
 import com.geoxus.core.entity.GXBaseEntity;
 import com.geoxus.shiro.constant.GXMenuPermissionsConstant;
 import lombok.Data;

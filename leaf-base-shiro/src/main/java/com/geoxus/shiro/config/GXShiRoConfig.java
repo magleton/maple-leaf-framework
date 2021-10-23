@@ -1,6 +1,6 @@
 package com.geoxus.shiro.config;
 
-import com.geoxus.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
 import com.geoxus.shiro.oauth.GXOAuth2Filter;
 import com.geoxus.shiro.oauth.GXOAuth2Realm;
 import lombok.Data;

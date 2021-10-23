@@ -1,6 +1,6 @@
 package com.geoxus.shiro.mapstruct.req;
 
-import com.geoxus.common.mapstruct.GXBaseMapStruct;
+import com.geoxus.core.framework.mapstruct.GXBaseMapStruct;
 import com.geoxus.shiro.dto.req.GXAdminRolesReqDto;
 import com.geoxus.shiro.entities.GXAdminRolesEntity;
 import org.mapstruct.Mapper;

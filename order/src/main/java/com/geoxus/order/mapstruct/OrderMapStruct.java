@@ -1,15 +1,12 @@
 package com.geoxus.order.mapstruct;
 
-import com.geoxus.common.mapstruct.GXBaseMapStruct;
-import com.geoxus.order.dto.protocol.res.GoodsResProtocol;
+import com.geoxus.core.framework.mapstruct.GXBaseMapStruct;
 import com.geoxus.order.dto.protocol.res.OrderResProtocol;
-import com.geoxus.order.dto.res.GoodsResDto;
 import com.geoxus.order.dto.res.OrderResDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

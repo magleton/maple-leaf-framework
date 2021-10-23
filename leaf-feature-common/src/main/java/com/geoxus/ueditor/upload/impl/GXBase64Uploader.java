@@ -1,6 +1,6 @@
 package com.geoxus.ueditor.upload.impl;
 
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.ueditor.GXPathFormat;
 import com.geoxus.ueditor.GXStorageManager;
 import com.geoxus.ueditor.config.GXEditorProperties;

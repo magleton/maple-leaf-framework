@@ -20,10 +20,10 @@
         <module>leaf-base-canal</module>
         <module>leaf-dynamic-datasource-mongodb</module>
         <module>leaf-base-sso</module>
+        <module>leaf-base-redisson</module>
         <module>order</module>
         <module>user</module>
         <module>aggregate</module>
-        <module>leaf-base-redisson</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->
@@ -269,5 +269,14 @@
             </resource>
         </resources>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2144217-release-3jYsVg/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2144217-snapshot-KxvvHM/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

@@ -1,9 +1,9 @@
 package com.geoxus.feature.aspect;
 
-import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.common.pojo.GXResultCode;
-import com.geoxus.common.util.GXResultUtil;
-import com.geoxus.common.util.GXHttpContextUtils;
+import com.geoxus.core.framework.constant.GXTokenConstant;
+import com.geoxus.core.framework.pojo.GXResultCode;
+import com.geoxus.core.framework.util.GXResultUtil;
+import com.geoxus.core.framework.util.GXHttpContextUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

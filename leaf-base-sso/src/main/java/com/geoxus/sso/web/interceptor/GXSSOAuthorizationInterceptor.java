@@ -1,6 +1,6 @@
 package com.geoxus.sso.web.interceptor;
 
-import com.geoxus.common.web.interceptor.GXAuthorizationInterceptor;
+import com.geoxus.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import com.geoxus.sso.annotation.GXLoginAnnotation;
 import com.geoxus.sso.constant.GXSSOConstant;
 import com.geoxus.sso.security.token.GXSSOToken;

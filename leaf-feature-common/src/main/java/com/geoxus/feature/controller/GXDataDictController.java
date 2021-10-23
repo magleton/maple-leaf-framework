@@ -2,8 +2,8 @@ package com.geoxus.feature.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.common.dto.protocol.res.GXPaginationProtocol;
-import com.geoxus.common.util.GXResultUtil;
+import com.geoxus.core.framework.dto.protocol.res.GXPaginationProtocol;
+import com.geoxus.core.framework.util.GXResultUtil;
 import com.geoxus.feature.services.GXDataDictService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,7 +1,7 @@
 package com.geoxus.shiro.dto.req;
 
-import com.geoxus.common.annotation.GXValidateExtData;
-import com.geoxus.common.dto.GXBaseDto;
+import com.geoxus.core.framework.annotation.GXValidateExtData;
+import com.geoxus.core.framework.dto.GXBaseDto;
 import com.geoxus.shiro.constant.GXMenuConstant;
 import com.geoxus.shiro.dto.inner.GXResourceTypeInnerReqDto;
 import com.geoxus.shiro.enums.GXMenuTypeEnum;

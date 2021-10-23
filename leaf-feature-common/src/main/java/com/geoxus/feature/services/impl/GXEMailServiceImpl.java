@@ -3,7 +3,7 @@ package com.geoxus.feature.services.impl;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.MailUtil;
-import com.geoxus.common.util.GXCacheKeysUtils;
+import com.geoxus.core.framework.util.GXCacheKeysUtils;
 import com.geoxus.feature.services.GXEMailService;
 import org.springframework.stereotype.Service;
 

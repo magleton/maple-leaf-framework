@@ -1,6 +1,6 @@
 package com.geoxus.shiro.config;
 
-import com.geoxus.common.web.interceptor.GXWebMvcInterceptor;
+import com.geoxus.core.framework.web.interceptor.GXWebMvcInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 

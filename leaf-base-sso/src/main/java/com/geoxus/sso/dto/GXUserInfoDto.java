@@ -1,6 +1,6 @@
 package com.geoxus.sso.dto;
 
-import com.geoxus.common.dto.GXBaseDto;
+import com.geoxus.core.framework.dto.GXBaseDto;
 import lombok.Data;
 
 @Data

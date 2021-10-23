@@ -1,6 +1,6 @@
 package com.geoxus.shiro.constant;
 
-import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.core.framework.annotation.GXFieldComment;
 
 public class GXRoleConstant {
     @GXFieldComment(zhDesc = "主键ID")

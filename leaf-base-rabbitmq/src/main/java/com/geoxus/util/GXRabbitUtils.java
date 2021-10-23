@@ -1,6 +1,6 @@
 package com.geoxus.util;
 
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.rpc.config.GXRabbitMQRPCRemoteServersConfig;
 import com.geoxus.rpc.service.GXRabbitMQRPCClientService;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;

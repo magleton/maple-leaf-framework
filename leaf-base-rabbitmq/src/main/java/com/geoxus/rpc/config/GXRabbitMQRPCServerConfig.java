@@ -1,7 +1,7 @@
 package com.geoxus.rpc.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.core.framework.annotation.GXFieldComment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.MessageProperties;

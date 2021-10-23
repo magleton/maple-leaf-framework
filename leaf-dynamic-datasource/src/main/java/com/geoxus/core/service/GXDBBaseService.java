@@ -2,8 +2,8 @@ package com.geoxus.core.service;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.common.dto.protocol.req.GXBaseSearchReqProtocol;
-import com.geoxus.common.service.GXBusinessService;
+import com.geoxus.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
+import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.core.mapper.GXBaseMapper;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,8 +1,8 @@
 package com.geoxus.order.dto;
 
-import com.geoxus.common.dto.GXBaseDto;
-import com.geoxus.common.util.GXValidatorUtil;
-import com.geoxus.common.validator.group.Group;
+import com.geoxus.core.framework.dto.GXBaseDto;
+import com.geoxus.core.framework.util.GXValidatorUtil;
+import com.geoxus.core.framework.validator.group.Group;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;

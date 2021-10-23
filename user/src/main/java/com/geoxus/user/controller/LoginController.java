@@ -1,8 +1,8 @@
 package com.geoxus.user.controller;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.util.GXResultUtil;
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.util.GXResultUtil;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.sso.cache.GXSSOCache;
 import com.geoxus.sso.config.GXSSOConfig;
 import com.geoxus.sso.enums.GXTokenOrigin;

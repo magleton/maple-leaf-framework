@@ -1,8 +1,8 @@
 package com.geoxus.util;
 
 import cn.hutool.core.convert.Convert;
-import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXSpringContextUtil;
+import com.geoxus.core.framework.annotation.GXFieldComment;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
 import org.redisson.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

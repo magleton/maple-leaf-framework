@@ -1,6 +1,6 @@
 package com.geoxus.feature.annotation;
 
-import com.geoxus.common.constant.GXCommonConstant;
+import com.geoxus.core.framework.constant.GXCommonConstant;
 
 import java.lang.annotation.*;
 

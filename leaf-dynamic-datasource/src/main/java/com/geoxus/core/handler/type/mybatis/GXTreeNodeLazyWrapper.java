@@ -25,7 +25,7 @@ package com.geoxus.core.handler.type.mybatis;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.geoxus.common.exception.GXBusinessException;
+import com.geoxus.core.framework.exception.GXBusinessException;
 
 import java.io.IOException;
 import java.io.Serializable;

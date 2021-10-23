@@ -15,82 +15,51 @@
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-framework</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-dynamic-datasource</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-shiro</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-feature-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-base-redisson</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-dynamic-datasource-mongodb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-base-sso</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.geoxus.framework</groupId>
+            <artifactId>leaf-base-canal</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <!-- 启动时 命令   java -Dloader.path="lib目录" -jar xxx.jar -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.life.MallProductAggregate</mainClass>
-                    <jvmArguments>-Dfile.encoding=UTF-8 -Dloader.path="/data/java/lib"</jvmArguments>
-                    <!--<classifier>exec</classifier>-->
-                    <layout>ZIP</layout>
-                    <fork>true</fork>
-                    <!--配置需要打包进项目的jar-->
-                    <includes>
-                        <!--这里是填写需要包含进去的jar，
-                        	必须是项目中的某些模块，会经常变动，那么就应该将其坐标写进来
-                        	如果没有则non-exists或者nothing ，表示不打包依赖
-                        -->
-                        <include>
-                            <!--排除所有JAR-->
-                            <groupId>nothing</groupId>
-                            <artifactId>nothing</artifactId>
-                        </include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--此插件用于将依赖包抽出-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <excludeTransitive>false</excludeTransitive>
-                            <stripVersion>false</stripVersion>
-                            <includeScope>runtime</includeScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -119,17 +88,31 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <targetPath>${project.build.directory}/classes</targetPath>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2144217-release-3jYsVg/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2144217-snapshot-KxvvHM/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

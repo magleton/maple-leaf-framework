@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReUtil;
 import com.geoxus.core.builder.GXBaseBuilder;
 import com.geoxus.core.constant.GXBaseBuilderConstant;
-import com.geoxus.common.constant.GXCommonConstant;
+import com.geoxus.core.framework.constant.GXCommonConstant;
 import com.geoxus.shiro.constant.GXAdminRoleConstant;
 import org.apache.ibatis.jdbc.SQL;
 

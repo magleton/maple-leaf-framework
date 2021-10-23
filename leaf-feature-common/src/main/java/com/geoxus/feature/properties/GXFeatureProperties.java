@@ -1,7 +1,7 @@
 package com.geoxus.feature.properties;
 
 import com.geoxus.feature.interceptor.GXCustomMultipartResolver;
-import com.geoxus.common.factory.GXYamlPropertySourceFactory;
+import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

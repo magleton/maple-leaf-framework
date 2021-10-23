@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import com.geoxus.feature.constant.GXMediaLibraryConstant;
-import com.geoxus.common.constant.GXCommonConstant;
+import com.geoxus.core.framework.constant.GXCommonConstant;
 import com.geoxus.feature.events.GXMediaLibraryEvent;
 import com.geoxus.feature.services.GXMediaLibraryService;
 import lombok.extern.slf4j.Slf4j;

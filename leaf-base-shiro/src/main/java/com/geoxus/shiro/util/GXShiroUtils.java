@@ -1,8 +1,8 @@
 package com.geoxus.shiro.util;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.common.constant.GXTokenConstant;
-import com.geoxus.common.util.GXBaseCommonUtil;
+import com.geoxus.core.framework.constant.GXTokenConstant;
+import com.geoxus.core.framework.util.GXBaseCommonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;

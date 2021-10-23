@@ -7,7 +7,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.geoxus.feature.annotation.GXApiIdempotentAnnotation;
-import com.geoxus.common.util.GXResultUtil;
+import com.geoxus.core.framework.util.GXResultUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

@@ -1,8 +1,8 @@
 package com.geoxus.feature.config;
 
-import com.geoxus.common.properties.web.GXWebMvcProperties;
-import com.geoxus.common.util.GXSpringContextUtil;
-import com.geoxus.common.web.interceptor.GXWebMvcInterceptor;
+import com.geoxus.core.framework.properties.web.GXWebMvcProperties;
+import com.geoxus.core.framework.util.GXSpringContextUtil;
+import com.geoxus.core.framework.web.interceptor.GXWebMvcInterceptor;
 import com.geoxus.feature.properties.GXUploadProperties;
 import com.geoxus.ueditor.config.GXEditorProperties;
 import lombok.extern.slf4j.Slf4j;
