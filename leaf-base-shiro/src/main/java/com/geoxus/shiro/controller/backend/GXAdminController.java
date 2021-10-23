@@ -1,13 +1,13 @@
 package com.geoxus.shiro.controller.backend;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.common.annotation.GXRequestBody;
 import com.geoxus.common.controller.GXBaseController;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
 import com.geoxus.shiro.service.GXAdminService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +23,6 @@ public class GXAdminController implements GXBaseController {
     private GXAdminService adminService;
 
 
-
     /**
      * 管理员登录
      *
@@ -31,7 +30,7 @@ public class GXAdminController implements GXBaseController {
      * @return GXResultUtils
      */
     @PostMapping("login")
-    public GXResultUtil<Dict> login(@RequestBody @Validated GXAdminLoginReqDto loginReqDto) {
+    public GXResultUtil<Dict> login(@GXRequestBody @Validated GXAdminLoginReqDto loginReqDto) {
         final String token = adminService.login(loginReqDto);
         return GXResultUtil.ok(Dict.create().set("admin-token", token).set("username", loginReqDto.getUsername()));
     }

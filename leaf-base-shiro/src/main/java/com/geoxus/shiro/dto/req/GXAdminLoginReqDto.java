@@ -23,4 +23,24 @@ public class GXAdminLoginReqDto extends GXBaseDto {
     @NotNull(message = "密码必填")
     @NotEmpty(message = "密码必填")
     private String password;
+
+    @Override
+    protected void afterRepair() {
+        System.out.println("对数据进行第二次修复");
+    }
+
+    @Override
+    public void customizeProcess() {
+        System.out.println("自定义处理");
+    }
+
+    @Override
+    protected void verify() {
+        System.out.println("对数据进行修复");
+    }
+
+    @Override
+    protected void beforeRepair() {
+        System.out.println("对数据进行第一次修复");
+    }
 }

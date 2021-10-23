@@ -32,7 +32,7 @@ public class UserReqBusinessDto extends GXBaseDto {
     }
 
     @Override
-    protected void repair() {
+    protected void afterRepair() {
         this.username = "";
         this.address = "";
         this.password = null;

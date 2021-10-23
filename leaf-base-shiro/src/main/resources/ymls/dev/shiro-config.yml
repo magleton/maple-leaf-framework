@@ -1,6 +1,6 @@
 shiro:
   config:
-    - key: /backend/login
+    - key: /**/backend/login
       value: anon
     - key: /general/**
       value: anon

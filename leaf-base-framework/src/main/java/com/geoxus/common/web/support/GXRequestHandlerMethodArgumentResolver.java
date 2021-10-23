@@ -39,6 +39,21 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     @GXFieldComment(zhDesc = "请求中的参数名字")
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
+    /**
+     * 进行参数验证之前对数据进行修复的方法名字
+     */
+    private static final String BEFORE_REPAIR_METHOD = "beforeRepair";
+
+    /**
+     * 进行参数验证
+     */
+    private static final String VERIFY_METHOD = "verify";
+
+    /**
+     * 进行参数验证之后对数据进行修复的方法名字
+     */
+    private static final String AFTER_REPAIR_METHOD = "afterRepair";
+
     @GXFieldComment(zhDesc = "日志对象")
     private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
 
@@ -57,11 +72,14 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         Set<String> jsonFields = new HashSet<>(16);
         boolean validateTarget = requestBody.validateTarget();
 
-        // 对请求数据进行修复处理
-        callUserDefinedRepairMethod(parameterType, bean);
+        // 对请求数据进行验证之前的修复处理
+        callUserDefinedMethod(parameterType, bean, BEFORE_REPAIR_METHOD);
 
         // 填充目标bean的扩展字段属性
         dealDeclaredJsonFields(bean, parameterType, jsonFields);
+
+        // 调用目标bean对象的验证方法对数据进行验证(自定义验证)
+        callUserDefinedMethod(parameterType, bean, VERIFY_METHOD);
 
         // 数据验证
         Class<?>[] groups = requestBody.groups();
@@ -73,36 +91,27 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
                 GXValidatorUtil.validateEntity(bean, value, groups);
             }
         }
-        // 调用目标bean对象的验证方法对数据进行额外的验证
-        callUserDefinedVerifyMethod(parameterType, bean);
+        
+        // 调用目标bean对象的修复方法对数据进行最后的修复
+        callUserDefinedMethod(parameterType, bean, AFTER_REPAIR_METHOD);
         return bean;
     }
 
     /**
      * 调用补充的修复数据方法对当前对象进行额外数据修复处理
+     * 调用自定义的方法对数据进行额外的处理
      *
      * @param parameterType 参数的类型
      * @param bean          对象的名字
+     * @param methodName    方法名字
      */
-    private void callUserDefinedRepairMethod(Class<?> parameterType, Object bean) {
-        Method method = ReflectUtil.getMethodByName(parameterType, "repair");
+    private void callUserDefinedMethod(Class<?> parameterType, Object bean, String methodName) {
+        Method method = ReflectUtil.getMethodByName(parameterType, methodName);
         if (Objects.nonNull(method)) {
             ReflectUtil.invoke(bean, method);
         }
     }
 
-    /**
-     * 调用补充的验证数据方法对当前对象进行额外数据验证处理
-     *
-     * @param parameterType 参数的类型
-     * @param bean          对象的名字
-     */
-    private void callUserDefinedVerifyMethod(Class<?> parameterType, Object bean) {
-        Method method = ReflectUtil.getMethodByName(parameterType, "verify");
-        if (Objects.nonNull(method)) {
-            ReflectUtil.invoke(bean, method);
-        }
-    }
 
     /**
      * 处理声明的字段
