@@ -13,7 +13,7 @@ import com.geoxus.common.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.common.mapper.GXCoreModelAttributesPermissionMapper;
 import com.geoxus.common.service.GXCoreModelAttributePermissionService;
 import com.geoxus.common.service.GXSessionService;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.geoxus.shiro.builder;
 
-import com.geoxus.core.builder.GXBaseBuilder;
+import com.geoxus.core.datasource.builder.GXBaseBuilder;
 import com.geoxus.shiro.constant.GXRoleConstant;
 
 public class GXRoleBuilder implements GXBaseBuilder {

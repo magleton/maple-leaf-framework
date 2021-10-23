@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
-import com.geoxus.core.builder.GXBaseBuilder;
+import com.geoxus.core.datasource.builder.GXBaseBuilder;
 import com.geoxus.common.constant.GXCoreModelAttributesConstant;
 import org.apache.ibatis.jdbc.SQL;
 

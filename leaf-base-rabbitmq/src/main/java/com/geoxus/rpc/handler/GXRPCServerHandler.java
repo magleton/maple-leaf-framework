@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 
 import java.lang.reflect.Method;
 import java.util.Optional;

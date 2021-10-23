@@ -1,7 +1,7 @@
 package com.geoxus.feature.mappers;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.mapper.GXBaseMapper;
+import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.feature.builder.GXRegionBuilder;
 import com.geoxus.feature.entities.GXRegionEntity;
 import org.apache.ibatis.annotations.Mapper;

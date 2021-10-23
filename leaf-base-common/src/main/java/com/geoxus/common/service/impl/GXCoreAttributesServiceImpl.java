@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @GXDataSource("framework")
-public class GXCoreAttributesServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> implements GXCoreAttributesService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> {
+public class GXCoreAttributesServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> implements GXCoreAttributesService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<GXCoreAttributesEntity, GXCoreAttributesMapper, GXCoreAttributesDao> {
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #p0")
     public List<GXCoreAttributesEntity> getAttributesByCategory(String category) {

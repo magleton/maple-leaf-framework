@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminRoleServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao> implements GXAdminRoleService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao> {
+public class GXAdminRoleServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao> implements GXAdminRoleService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao> {
     @Override
     public Set<String> getAdminRoles(Long adminId) {
         final Dict condition = Dict.create().set("admin_id", adminId);

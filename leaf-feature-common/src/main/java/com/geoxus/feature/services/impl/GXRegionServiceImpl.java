@@ -9,7 +9,7 @@ import com.geoxus.feature.entities.GXRegionEntity;
 import com.geoxus.feature.mappers.GXRegionMapper;
 import com.geoxus.feature.services.GXRegionService;
 import com.geoxus.core.framework.util.GXChineseToPinYinUtils;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.geoxus.common.service;
 
-import com.geoxus.core.service.GXDBBaseService;
-import com.geoxus.core.service.GXValidateDBExistsService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXValidateDBExistsService;
 import com.geoxus.common.dao.GXCoreAttributeEnumsDao;
 import com.geoxus.common.entity.GXCoreAttributesEnumsEntity;
 import com.geoxus.common.mapper.GXCoreAttributeEnumsMapper;

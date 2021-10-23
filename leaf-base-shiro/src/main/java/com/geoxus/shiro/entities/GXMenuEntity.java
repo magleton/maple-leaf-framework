@@ -2,7 +2,7 @@ package com.geoxus.shiro.entities;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.geoxus.core.framework.annotation.GXFieldComment;
-import com.geoxus.core.entity.GXBaseEntity;
+import com.geoxus.core.datasource.entity.GXBaseEntity;
 import com.geoxus.shiro.constant.GXMenuConstant;
 import com.geoxus.shiro.dto.inner.GXResourceTypeInnerReqDto;
 import com.geoxus.shiro.enums.GXMenuTypeEnum;

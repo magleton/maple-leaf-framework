@@ -1,6 +1,6 @@
 package com.geoxus.order.mapper;
 
-import com.geoxus.core.mapper.GXBaseMapper;
+import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.order.builder.AddressBuilder;
 import com.geoxus.order.builder.dto.AddressDto;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;

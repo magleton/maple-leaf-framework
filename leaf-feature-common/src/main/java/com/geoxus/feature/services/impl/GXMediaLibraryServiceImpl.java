@@ -14,7 +14,7 @@ import com.geoxus.core.framework.util.GXSpringContextUtil;
 import com.geoxus.core.framework.util.GXUploadUtils;
 import com.geoxus.core.datasource.annotation.GXDataSource;
 import com.geoxus.common.service.GXCoreModelService;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import com.geoxus.feature.constant.GXMediaLibraryConstant;
 import com.geoxus.feature.dao.GXMediaLibraryDao;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;

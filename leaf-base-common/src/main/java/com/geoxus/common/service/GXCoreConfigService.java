@@ -1,6 +1,6 @@
 package com.geoxus.common.service;
 
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.common.dao.GXCoreConfigDao;
 import com.geoxus.common.entity.GXCoreConfigEntity;
 import com.geoxus.common.mapper.GXCoreConfigMapper;

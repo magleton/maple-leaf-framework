@@ -2,7 +2,7 @@ package com.geoxus.order.mapper;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.mapper.GXBaseMapper;
+import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.order.builder.UserBuilder;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
 import com.geoxus.order.entity.UserEntity;

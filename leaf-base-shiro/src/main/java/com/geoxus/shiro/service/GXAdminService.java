@@ -10,7 +10,7 @@ import org.apache.shiro.authc.LockedAccountException;
 
 import java.util.Objects;
 
-public interface GXAdminService extends com.geoxus.core.service.GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
+public interface GXAdminService extends com.geoxus.core.datasource.service.GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
     /**
      * 获取当前登录管理员的状态
      *

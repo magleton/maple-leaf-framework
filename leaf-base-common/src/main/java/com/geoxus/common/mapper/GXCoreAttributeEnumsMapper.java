@@ -3,7 +3,7 @@ package com.geoxus.common.mapper;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.common.builder.GXCoreAttributeEnumsBuilder;
 import com.geoxus.common.entity.GXCoreAttributesEnumsEntity;
-import com.geoxus.core.mapper.GXBaseMapper;
+import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;

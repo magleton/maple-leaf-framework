@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @Slf4j
 @GXDataSource("framework")
-public class GXCoreModelTableFieldServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> implements GXCoreModelTableFieldService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> {
+public class GXCoreModelTableFieldServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> implements GXCoreModelTableFieldService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<GXCoreModelTableFieldEntity, GXCoreModelTableFieldMapper, GXCoreModelTableFieldDao> {
     /**
      * 通过条件获取数据
      *

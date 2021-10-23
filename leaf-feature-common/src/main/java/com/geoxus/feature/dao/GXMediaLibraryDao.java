@@ -2,7 +2,7 @@ package com.geoxus.feature.dao;
 
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.feature.mappers.GXMediaLibraryMapper;
-import com.geoxus.core.dao.GXBaseDao;
+import com.geoxus.core.datasource.dao.GXBaseDao;
 import org.springframework.stereotype.Repository;
 
 @Repository

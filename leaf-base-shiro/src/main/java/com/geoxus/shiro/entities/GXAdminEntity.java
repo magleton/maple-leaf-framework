@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.geoxus.core.entity.GXBaseEntity;
+import com.geoxus.core.datasource.entity.GXBaseEntity;
 import com.geoxus.shiro.constant.GXAdminConstant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

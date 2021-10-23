@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public interface GXPermissionsService extends com.geoxus.core.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
+public interface GXPermissionsService extends com.geoxus.core.datasource.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
     /**
      * 获取管理员的所有权限列表
      * 权限包括:

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class UserServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<UserEntity, UserMapper, UserDao> implements UserService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<UserEntity, UserMapper, UserDao> {
+public class UserServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<UserEntity, UserMapper, UserDao> implements UserService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<UserEntity, UserMapper, UserDao> {
     @Resource
     private UserProtocolMapstruct userProtocolMapstruct;
 

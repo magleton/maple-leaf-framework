@@ -1,7 +1,7 @@
 package com.geoxus.common.service;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.common.dao.GXCoreModelAttributesPermissionDao;
 import com.geoxus.common.entity.GXCoreModelAttributesPermissionEntity;
 import com.geoxus.common.mapper.GXCoreModelAttributesPermissionMapper;

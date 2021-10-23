@@ -12,7 +12,7 @@ import com.geoxus.common.entity.GXCoreAttributesEnumsEntity;
 import com.geoxus.common.mapper.GXCoreAttributeEnumsMapper;
 import com.geoxus.common.service.GXCoreAttributeEnumsService;
 import com.geoxus.common.service.GXCoreAttributesService;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.geoxus.feature.dao.GXRegionDao;
 import com.geoxus.feature.entities.GXRegionEntity;
 import com.geoxus.feature.mappers.GXRegionMapper;
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.geoxus.feature.annotation;
 
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.common.service.impl.GXCoreModelServiceImpl;
 
 import java.lang.annotation.*;

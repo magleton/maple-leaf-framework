@@ -13,7 +13,7 @@ import com.geoxus.common.dao.GXCoreConfigDao;
 import com.geoxus.common.entity.GXCoreConfigEntity;
 import com.geoxus.common.mapper.GXCoreConfigMapper;
 import com.geoxus.common.service.GXCoreConfigService;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service

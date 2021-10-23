@@ -4,8 +4,8 @@ import cn.hutool.core.map.MapUtil;
 import com.geoxus.common.entity.GXCoreAttributesEntity;
 import com.geoxus.common.service.GXCoreAttributesService;
 import com.geoxus.common.service.GXCoreModelService;
-import com.geoxus.core.service.GXAlterTableService;
-import com.geoxus.core.service.impl.GXAlterTableServiceImpl;
+import com.geoxus.core.datasource.service.GXAlterTableService;
+import com.geoxus.core.datasource.service.impl.GXAlterTableServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

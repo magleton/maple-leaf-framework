@@ -10,7 +10,7 @@ import com.geoxus.core.framework.dto.protocol.res.GXPaginationProtocol;
 import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.core.framework.service.GXBusinessService;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
-import com.geoxus.core.service.GXDBBaseService;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.feature.dao.GXMediaLibraryDao;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
 import com.geoxus.feature.events.GXMediaLibraryEvent;

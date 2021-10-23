@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class GXPermissionsServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> implements GXPermissionsService, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService, com.geoxus.core.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> {
+public class GXPermissionsServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> implements GXPermissionsService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao> {
     @Resource
     private GXAdminPermissionsService adminPermissionsService;
 

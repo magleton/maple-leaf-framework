@@ -7,7 +7,7 @@ import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 
 import java.util.Set;
 
-public interface GXAdminPermissionsService extends com.geoxus.core.service.GXDBBaseService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
+public interface GXAdminPermissionsService extends com.geoxus.core.datasource.service.GXDBBaseService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
     /**
      * 通过管理员ID获取权限集
      *

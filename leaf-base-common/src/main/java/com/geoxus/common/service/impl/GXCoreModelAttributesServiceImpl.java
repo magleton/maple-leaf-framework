@@ -14,7 +14,7 @@ import com.geoxus.common.entity.GXCoreModelAttributesEntity;
 import com.geoxus.common.mapper.GXCoreModelAttributesMapper;
 import com.geoxus.common.service.GXCoreModelAttributesService;
 import com.geoxus.common.service.GXCoreModelTableFieldService;
-import com.geoxus.core.service.impl.GXDBBaseServiceImpl;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

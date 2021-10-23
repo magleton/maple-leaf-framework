@@ -8,7 +8,7 @@ import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface GXAdminRoleService extends com.geoxus.core.service.GXDBBaseService<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao>, com.geoxus.core.service.GXValidateDBExistsService, com.geoxus.core.service.GXValidateDBUniqueService {
+public interface GXAdminRoleService extends com.geoxus.core.datasource.service.GXDBBaseService<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
     /**
      * 获取当前人的角色列表
      *

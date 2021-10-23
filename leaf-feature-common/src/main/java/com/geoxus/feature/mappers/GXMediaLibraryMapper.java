@@ -2,11 +2,11 @@ package com.geoxus.feature.mappers;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.geoxus.core.mapper.GXBaseMapper;
+import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.feature.builder.GXMediaLibraryBuilder;
 import com.geoxus.feature.entities.GXMediaLibraryEntity;
-import com.geoxus.core.handler.GXJsonToListTypeHandler;
-import com.geoxus.core.handler.GXJsonToMapTypeHandler;
+import com.geoxus.core.datasource.handler.GXJsonToListTypeHandler;
+import com.geoxus.core.datasource.handler.GXJsonToMapTypeHandler;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
