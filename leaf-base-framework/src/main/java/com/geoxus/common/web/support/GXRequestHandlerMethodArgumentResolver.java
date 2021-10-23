@@ -91,7 +91,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
                 GXValidatorUtil.validateEntity(bean, value, groups);
             }
         }
-        
+
         // 调用目标bean对象的修复方法对数据进行最后的修复
         callUserDefinedMethod(parameterType, bean, AFTER_REPAIR_METHOD);
         return bean;
@@ -129,33 +129,33 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
                 continue;
             }
             String parentFieldName = annotation.parentFieldName();
-            String fieldName = annotation.fieldName();
-            if (CharSequenceUtil.isBlank(fieldName)) {
-                fieldName = field.getName();
+            String fieldConfigName = annotation.fieldName();
+            if (CharSequenceUtil.isBlank(fieldConfigName)) {
+                fieldConfigName = field.getName();
             }
             String tableName = annotation.tableName();
-            Object fieldDefaultValue = null;
+            Object fieldDefaultValue = dict.get(field.getName());
             Class<? extends GXValidateJSONFieldService> service = annotation.service();
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
                 GXValidateJSONFieldService validateJsonFieldService = GXSpringContextUtil.getBean(service);
                 if (Objects.nonNull(validateJsonFieldService)) {
-                    fieldDefaultValue = ReflectUtil.invoke(validateJsonFieldService, method, tableName, parentFieldName, fieldName);
+                    fieldDefaultValue = ReflectUtil.invoke(validateJsonFieldService, method, tableName, parentFieldName, fieldConfigName);
                 }
             }
             jsonFields.add(parentFieldName);
-            Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(fieldName))).orElse(fieldDefaultValue);
+            Object fieldValue = Optional.ofNullable(dict.getObj(CharSequenceUtil.toCamelCase(fieldConfigName))).orElse(fieldDefaultValue);
             Map<String, Object> tmpMap = new HashMap<>();
             if (CollUtil.contains(jsonMergeFieldMap.keySet(), parentFieldName)) {
                 tmpMap = jsonMergeFieldMap.get(parentFieldName);
             }
-            tmpMap.put(fieldName, fieldValue);
+            tmpMap.put(fieldConfigName, fieldValue);
             jsonMergeFieldMap.put(parentFieldName, tmpMap);
         }
         jsonMergeFieldMap.forEach((key, value) -> {
             Field field = ReflectUtil.getField(parameterType, key);
             if (Objects.nonNull(field)) {
-                ReflectUtil.setFieldValue(obj, field, JSONUtil.toJsonStr(value));
+                ReflectUtil.setFieldValue(obj, field, value);
             }
         });
     }

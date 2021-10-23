@@ -1,5 +1,7 @@
 package com.geoxus.shiro.dto.req;
 
+import cn.hutool.core.lang.Dict;
+import com.geoxus.common.annotation.GXMergeSingleField;
 import com.geoxus.common.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +25,16 @@ public class GXAdminLoginReqDto extends GXBaseDto {
     @NotNull(message = "密码必填")
     @NotEmpty(message = "密码必填")
     private String password;
+
+    private Dict ext;
+
+    @GXMergeSingleField(tableName = "s_admin" , fieldName = "test_oo")
+    private String test;
+
+
+    @GXMergeSingleField(tableName = "s_admin" , fieldName = "l_test")
+    private String lTest;
+
 
     @Override
     protected void afterRepair() {
