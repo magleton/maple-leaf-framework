@@ -1,0 +1,25 @@
+wechat:
+  # 开发者ID(AppID)
+  appId:
+  # Token
+  token: ""
+  #开发者密码(AppSecret)                       
+  appSecret:
+  # AES
+  aesKey: ""
+  # 商户号
+  mchId:
+  # 商户密钥
+  mchKey:
+  # 证书地址
+  keyPath:
+  # 回调地址
+  notifyUrl: /brn/pay/mobile/wechat-notify
+  # 证书位置
+  certLocalPath:
+  # 证书根路径
+  certRootPath:
+  # 订单支付Subject
+  subject: 订单支付Subject
+  # 订单支付Subject
+  body: 支付订单内容Body

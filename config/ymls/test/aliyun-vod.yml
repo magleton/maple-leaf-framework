@@ -1,0 +1,7 @@
+aliyun-vod:
+  #帐号
+  accessKey:
+  #密钥
+  accessKeySecret:
+  #转码ID
+  templateGroupId: 

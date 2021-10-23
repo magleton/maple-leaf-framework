@@ -1,0 +1,15 @@
+britton:
+  config:
+    qq: 452848919
+    wechat: chen_macro
+    nick_name: 枫叶思源
+
+# 超级管理员ID
+super:
+  admin:
+    id: 100
+
+# QQ登录配置
+qq:
+  open:
+    me: https://graph.qq.com/oauth2.0/me?unionid=1&access_token=%s

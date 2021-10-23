@@ -1,0 +1,9 @@
+redis-key:
+  keys:
+    - sys.config: sys:config
+    - sys.captcha: sys:captcha
+    - sys.net-ease: sys:netEase
+    - sys.ali-yun: sys:aliYun
+    - request.api.idempotent: request:api-idempotent
+    - eth.transaction: eth:transaction
+    - prevent.resubmit: prevent:resubmit

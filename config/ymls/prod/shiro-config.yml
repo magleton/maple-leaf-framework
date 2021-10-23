@@ -1,0 +1,18 @@
+shiro:
+  config:
+    - key: /backend/login
+      value: anon
+    - key: /general/**
+      value: anon
+    - key: /ws/**
+      value: anon
+    - key: /**/frontend/**
+      value: anon
+    - key: /media/path/**
+      value: anon
+    - key: /send/**
+      value: anon
+    - key: /file/**
+      value: anon
+    - key: /**/pay/**
+      value: anon

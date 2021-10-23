@@ -1,0 +1,44 @@
+{
+  "properties": [
+    {
+      "name": "eth-enable",
+      "type": "java.lang.String",
+      "description": "Description for eth-enable."
+    },
+    {
+      "name": "sms-provider",
+      "type": "java.lang.String",
+      "description": "Description for sms-provider."
+    },
+    {
+      "name": "spring.redis.open",
+      "type": "java.lang.String",
+      "description": "Description for spring.redis.open."
+    },
+    {
+      "name": "enable-rabbitmq-rpc",
+      "type": "java.lang.String",
+      "description": "Description for enable-rabbitmq-rpc."
+    },
+    {
+      "name": "enable-rabbitmq",
+      "type": "java.lang.String",
+      "description": "Description for enable-rabbitmq."
+    },
+    {
+      "name": "enable-quartz",
+      "type": "java.lang.String",
+      "description": "Description for enable-quartz."
+    },
+    {
+      "name": "use-camel-case-mapping",
+      "type": "java.lang.String",
+      "description": "Description for use-camel-case-mapping."
+    },
+    {
+      "name": "enable-fileupload-progress",
+      "type": "java.lang.String",
+      "description": "Description for enable-fileupload-progress."
+    }
+  ]
+}

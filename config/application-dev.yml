@@ -1,0 +1,22 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 1000
+      min-spare: 30
+    remoteip:
+      remote-ip-header: X-Real-IP
+      protocol-header: X-Forwarded-Proto
+  servlet:
+    context-path: /gx
+  port: 8089
+  forward-headers-strategy: framework
+
+spring:
+  cache:
+    type: caffeine
+    cache-names:
+      - __DEFAULT__
+      - common
+
+debug: false

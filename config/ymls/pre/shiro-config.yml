@@ -1,0 +1,30 @@
+shiro:
+  config:
+    - key: /backend/login
+      value: anon
+    - key: /general/**
+      value: anon
+    - key: /ws/**
+      value: anon
+    - key: /**/frontend/**
+      value: anon
+    - key: /media/path/**
+      value: anon
+    - key: /send/**
+      value: anon
+    - key: /file/**
+      value: anon
+    - key: /**/pay/**
+      value: anon
+    - key: /swagger/**
+      value: anon
+    - key: /swagger-ui.html/**
+      value: anon
+    - key: /webjars/**
+      value: anon
+    - key: /swagger-resources/**
+      value: anon
+    - key: /csrf/**
+      value: anon
+    - key: /v2/**
+      value: anon

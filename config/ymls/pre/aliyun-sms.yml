@@ -1,0 +1,55 @@
+aliyun-sms:
+  accessKey:
+  accessKeySecret:
+  signName:
+  codeLen: 6
+  endPoint: cn-hangzhou
+  templates:
+    on_site_notice:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述
+    new_message:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述
+    register:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述
+    change_password:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述
+    change_phone:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述
+    special_on_site_notice:
+      accessKey:
+      accessKeySecret:
+      signName:
+      templateId:
+      codeLen: 6
+      endPoint: cn-hangzhou
+      desc: 描述

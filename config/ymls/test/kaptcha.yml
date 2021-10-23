@@ -1,0 +1,4 @@
+kaptcha:
+  border: no
+  textproducer.font.color: red
+  textproducer.char.space: 5

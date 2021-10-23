@@ -1,0 +1,24 @@
+aliyun-sms:
+  accessKey:
+  accessKeySecret:
+  signName: 短信签名
+  codeLen: 6
+  templates:
+    on_site_notice:
+      templateId: SMS_TEMPLATE
+      desc: 描述
+    new_message:
+      templateId: SMS_TEMPLATE
+      desc: 描述
+    register:
+      templateId: SMS_TEMPLATE
+      desc: 描述
+    change_password:
+      templateId: SMS_TEMPLATE
+      desc: 描述
+    change_phone:
+      templateId: SMS_141205699
+      desc: 描述
+    special_on_site_notice:
+      templateId: SMS_TEMPLATE
+      desc: 描述
