@@ -1,5 +1,8 @@
 package com.geoxus.core.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.geoxus.common.annotation.GXFieldComment;
@@ -141,6 +144,24 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
 
     @Override
     public String getSelectFieldStr(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
-        return null;
+        if (targetSet.size() == 1 && targetSet.contains("*")) {
+            if (remove) {
+                log.error("删除字段不能为'*' , 请指定需要删除的具体字段...");
+            }
+            return "*";
+        }
+        if(!remove){
+            return String.join(",", targetSet);
+        }
+        final Set<String> result = new HashSet<>();
+        final List<TableField> tableFields = getTableColumn(tableName);
+        for (TableField tableField : tableFields) {
+            final String columnName = tableField.getColumnName();
+            if(CollUtil.contains(targetSet , columnName)){
+                continue;
+            }
+            result.add(columnName);
+        }
+        return String.join(",", result);
     }
 }

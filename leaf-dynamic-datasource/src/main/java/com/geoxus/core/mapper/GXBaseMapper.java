@@ -31,10 +31,4 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
     Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
-
-    /* @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
-    })
-    <R> List<R> listOrSearchPage(IPage<R> page, Dict param);*/
 }
