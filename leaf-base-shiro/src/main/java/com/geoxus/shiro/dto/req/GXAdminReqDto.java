@@ -11,11 +11,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GXAdminReqDto extends GXBaseDto {
     /**
-     * 核心模型ID
-     */
-    private static final int CORE_MODEL_ID = GXAdminConstant.CORE_MODEL_ID;
-
-    /**
      * 主键ID
      */
     private Integer id;

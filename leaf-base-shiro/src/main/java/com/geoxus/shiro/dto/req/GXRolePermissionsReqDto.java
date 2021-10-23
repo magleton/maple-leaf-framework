@@ -11,11 +11,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GXRolePermissionsReqDto extends GXBaseDto {
     /**
-     * 核心模型ID
-     */
-    private static final int CORE_MODEL_ID = GXRolePermissionsConstant.CORE_MODEL_ID;
-
-    /**
      * 主键ID
      */
     private Integer id;

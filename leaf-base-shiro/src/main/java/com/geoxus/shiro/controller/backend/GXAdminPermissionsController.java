@@ -6,7 +6,7 @@ import com.geoxus.common.controller.GXBaseController;
 import com.geoxus.common.util.GXResultUtil;
 import com.geoxus.shiro.dto.req.GXAdminPermissionsReqDto;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
-import com.geoxus.shiro.mapstruct.GXAdminPermissionsMapStruct;
+import com.geoxus.shiro.mapstruct.req.GXAdminPermissionsReqMapStruct;
 import com.geoxus.shiro.service.GXAdminPermissionsService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.validation.annotation.Validated;
@@ -26,18 +26,18 @@ public class GXAdminPermissionsController implements GXBaseController {
     private GXAdminPermissionsService adminPermissionsService;
 
     @Resource
-    private GXAdminPermissionsMapStruct adminPermissionsMapStruct;
+    private GXAdminPermissionsReqMapStruct adminPermissionsMapStruct;
 
     /**
      * 新增管理员权限
      *
-     * @param target 请求参数
+     * @param source 请求参数
      * @return GXResultUtils
      */
     @RequiresRoles("super_admin")
     @PostMapping("create")
-    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminPermissionsReqDto target) {
-        GXAdminPermissionsEntity entity = adminPermissionsMapStruct.dtoToEntity(target);
+    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminPermissionsReqDto source) {
+        GXAdminPermissionsEntity entity = adminPermissionsMapStruct.sourceToTarget(source);
         long id = adminPermissionsService.create(entity, Dict.create());
         return GXResultUtil.ok(Dict.create().set("id", id));
     }

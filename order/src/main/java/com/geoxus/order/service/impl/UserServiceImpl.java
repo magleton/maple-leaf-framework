@@ -1,11 +1,11 @@
 package com.geoxus.order.service.impl;
 
+import com.geoxus.order.dao.UserDao;
 import com.geoxus.order.dto.protocol.req.UserReqProtocol;
 import com.geoxus.order.dto.protocol.res.UserResProtocol;
-import com.geoxus.order.mapstruct.UserProtocolMapstruct;
-import com.geoxus.order.dao.UserDao;
 import com.geoxus.order.entity.UserEntity;
 import com.geoxus.order.mapper.UserMapper;
+import com.geoxus.order.mapstruct.UserProtocolMapstruct;
 import com.geoxus.order.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class UserServiceImpl extends com.geoxus.core.service.impl.GXDBBaseServic
 
     @Override
     public void createOrUpdate(UserReqProtocol userReqProtocol) {
-        UserEntity userEntity = userProtocolMapstruct.dtoToEntity(userReqProtocol);
+        UserEntity userEntity = userProtocolMapstruct.sourceToTarget(userReqProtocol);
         baseDao.save(userEntity);
     }
 }

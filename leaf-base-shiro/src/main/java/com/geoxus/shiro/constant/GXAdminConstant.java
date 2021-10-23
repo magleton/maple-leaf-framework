@@ -1,7 +1,6 @@
 package com.geoxus.shiro.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXBaseCommonUtil;
 
 public class GXAdminConstant {
     @GXFieldComment(zhDesc = "主键ID")
@@ -17,11 +16,8 @@ public class GXAdminConstant {
     public static final String MODEL_IDENTIFICATION_VALUE = "admin";
 
     @GXFieldComment("数据源")
-    public static final String DATASOURCE = "framework";
-
-    @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXBaseCommonUtil.getEnvironmentValue("app.com.geoxus.core-model-id.admin", Integer.class, 100);
-
+    public static final String DATASOURCE = "permissions";
+    
     protected GXAdminConstant() {
     }
 }

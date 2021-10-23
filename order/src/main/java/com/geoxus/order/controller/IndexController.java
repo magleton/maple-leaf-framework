@@ -54,7 +54,7 @@ public class IndexController {
 
     @PostMapping("hello")
     public GXResultUtil<Dict> hello(@GXRequestBody @Validated UserReqProtocol userReqProtocol) {
-        UserReqBusinessDto userReqBusinessDto = protocolConvertUserReqBusinessDto.protocolConvertBusinessDto(userReqProtocol);
+        UserReqBusinessDto userReqBusinessDto = protocolConvertUserReqBusinessDto.sourceToTarget(userReqProtocol);
         System.out.println(userReqBusinessDto);
         userService.createOrUpdate(userReqProtocol);
         return GXResultUtil.ok("Hello World");

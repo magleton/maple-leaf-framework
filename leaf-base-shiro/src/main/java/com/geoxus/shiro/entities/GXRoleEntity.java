@@ -2,6 +2,7 @@ package com.geoxus.shiro.entities;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.geoxus.common.annotation.GXFieldComment;
+import com.geoxus.common.dto.GXBaseData;
 import com.geoxus.shiro.constant.GXRoleConstant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +12,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class GXRoleEntity {
+public class GXRoleEntity extends GXBaseData {
     @GXFieldComment(zhDesc = "主键ID")
     private Integer id;
 

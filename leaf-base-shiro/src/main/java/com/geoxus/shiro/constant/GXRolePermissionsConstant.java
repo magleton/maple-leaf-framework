@@ -1,14 +1,13 @@
 package com.geoxus.shiro.constant;
 
 import com.geoxus.common.annotation.GXFieldComment;
-import com.geoxus.common.util.GXBaseCommonUtil;
 
 public class GXRolePermissionsConstant {
     @GXFieldComment(zhDesc = "主键ID")
     public static final String PRIMARY_KEY = "id";
 
     @GXFieldComment(zhDesc = "表名")
-    public static final String TABLE_NAME = "role_permissions";
+    public static final String TABLE_NAME = "s_role_permissions";
 
     @GXFieldComment(zhDesc = "数据表别名")
     public static final String TABLE_ALIAS_NAME = "role_permissions";
@@ -17,10 +16,7 @@ public class GXRolePermissionsConstant {
     public static final String MODEL_IDENTIFICATION_VALUE = "role_permissions";
 
     @GXFieldComment("数据源")
-    public static final String DATASOURCE = "framework";
-
-    @GXFieldComment("核心模型ID")
-    public static final int CORE_MODEL_ID = GXBaseCommonUtil.getEnvironmentValue("app.com.geoxus.core-model-id.role_permissions", Integer.class, 100);
+    public static final String DATASOURCE = "permissions";
 
     private GXRolePermissionsConstant() {
     }
