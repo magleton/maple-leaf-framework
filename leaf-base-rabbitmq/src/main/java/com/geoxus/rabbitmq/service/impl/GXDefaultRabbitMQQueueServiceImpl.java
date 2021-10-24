@@ -1,10 +1,10 @@
-package com.geoxus.service.impl;
+package com.geoxus.rabbitmq.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
-import com.geoxus.service.GXRabbitMQQueueService;
+import com.geoxus.rabbitmq.service.GXRabbitMQQueueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

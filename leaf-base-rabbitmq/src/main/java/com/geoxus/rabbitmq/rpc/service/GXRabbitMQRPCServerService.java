@@ -1,4 +1,4 @@
-package com.geoxus.rpc.service;
+package com.geoxus.rabbitmq.rpc.service;
 
 import com.geoxus.core.framework.annotation.GXFieldComment;
 import com.geoxus.core.framework.util.GXSpringContextUtil;

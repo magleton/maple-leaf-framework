@@ -1,15 +1,15 @@
-package com.geoxus.rpc.service.impl;
+package com.geoxus.rabbitmq.rpc.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.mongodb.config.GXRabbitMQConfig;
 import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
-import com.geoxus.rpc.handler.GXRPCServerHandler;
-import com.geoxus.rpc.service.GXRabbitMQRPCServerService;
+import com.geoxus.rabbitmq.config.GXRabbitMQConfig;
+import com.geoxus.rabbitmq.rpc.handler.GXRPCServerHandler;
+import com.geoxus.rabbitmq.rpc.service.GXRabbitMQRPCServerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

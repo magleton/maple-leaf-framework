@@ -1,4 +1,4 @@
-package com.geoxus.rpc.handler;
+package com.geoxus.rabbitmq.rpc.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;

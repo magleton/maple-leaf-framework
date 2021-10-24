@@ -1,4 +1,4 @@
-package com.geoxus.rpc.config;
+package com.geoxus.rabbitmq.rpc.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.geoxus.core.framework.annotation.GXFieldComment;

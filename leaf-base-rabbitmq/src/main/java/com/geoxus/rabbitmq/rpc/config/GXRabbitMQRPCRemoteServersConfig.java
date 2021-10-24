@@ -1,4 +1,4 @@
-package com.geoxus.rpc.config;
+package com.geoxus.rabbitmq.rpc.config;
 
 import com.geoxus.core.framework.factory.GXYamlPropertySourceFactory;
 import lombok.Data;

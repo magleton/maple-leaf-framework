@@ -1,9 +1,9 @@
-package com.geoxus.rpc.handler.impl;
+package com.geoxus.rabbitmq.rpc.handler.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.rpc.handler.GXRPCServerHandler;
+import com.geoxus.rabbitmq.rpc.handler.GXRPCServerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;

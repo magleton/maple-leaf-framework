@@ -1,4 +1,4 @@
-package com.geoxus.service;
+package com.geoxus.rabbitmq.service;
 
 import org.springframework.amqp.core.Message;
 

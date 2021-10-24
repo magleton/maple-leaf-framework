@@ -1,4 +1,4 @@
-package com.geoxus.rpc.service;
+package com.geoxus.rabbitmq.rpc.service;
 
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.framework.annotation.GXFieldComment;

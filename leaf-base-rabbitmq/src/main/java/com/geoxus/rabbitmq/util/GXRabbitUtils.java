@@ -1,8 +1,8 @@
-package com.geoxus.util;
+package com.geoxus.rabbitmq.util;
 
 import com.geoxus.core.framework.util.GXSpringContextUtil;
-import com.geoxus.rpc.config.GXRabbitMQRPCRemoteServersConfig;
-import com.geoxus.rpc.service.GXRabbitMQRPCClientService;
+import com.geoxus.rabbitmq.rpc.config.GXRabbitMQRPCRemoteServersConfig;
+import com.geoxus.rabbitmq.rpc.service.GXRabbitMQRPCClientService;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
