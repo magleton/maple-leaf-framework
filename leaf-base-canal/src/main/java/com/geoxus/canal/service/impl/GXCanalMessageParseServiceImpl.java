@@ -1,12 +1,12 @@
-package com.geoxus.service.impl;
+package com.geoxus.canal.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import com.geoxus.canal.dto.GXCanalDataDto;
+import com.geoxus.canal.service.GXCanalMessageParseService;
+import com.geoxus.canal.service.GXProcessCanalDataService;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
-import com.geoxus.core.framework.dto.GXCanalDataDto;
-import com.geoxus.service.GXCanalMessageParseService;
-import com.geoxus.service.GXProcessCanalDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

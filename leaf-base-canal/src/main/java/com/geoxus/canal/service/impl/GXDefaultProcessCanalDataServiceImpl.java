@@ -1,8 +1,8 @@
-package com.geoxus.service.impl;
+package com.geoxus.canal.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.framework.dto.GXCanalDataDto;
-import com.geoxus.service.GXProcessCanalDataService;
+import com.geoxus.canal.dto.GXCanalDataDto;
+import com.geoxus.canal.service.GXProcessCanalDataService;
 import org.springframework.stereotype.Service;
 
 @Service("defaultProcessCanalDataService")

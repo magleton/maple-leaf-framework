@@ -1,7 +1,7 @@
-package com.geoxus.listener;
+package com.geoxus.canal.listener;
 
-import com.geoxus.constant.CanalConstant;
-import com.geoxus.service.GXCanalMessageParseService;
+import com.geoxus.canal.constant.CanalConstant;
+import com.geoxus.canal.service.GXCanalMessageParseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;

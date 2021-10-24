@@ -1,4 +1,4 @@
-package com.geoxus.service;
+package com.geoxus.canal.service;
 
 import cn.hutool.core.lang.Dict;
 

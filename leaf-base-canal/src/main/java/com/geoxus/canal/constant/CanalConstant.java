@@ -1,4 +1,4 @@
-package com.geoxus.constant;
+package com.geoxus.canal.constant;
 
 public class CanalConstant {
     /**
