@@ -2,8 +2,8 @@ package com.geoxus.core.datasource.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import com.geoxus.core.framework.annotation.GXFieldComment;
 import com.geoxus.core.datasource.constant.GXBaseBuilderConstant;
+import com.geoxus.core.framework.annotation.GXFieldComment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
