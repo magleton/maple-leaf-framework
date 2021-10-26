@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnExpression("${upload.enable:0}==1")
 @ConfigurationProperties(prefix = "upload")
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/upload.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/upload.yml"},
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true,
         encoding = "utf-8")

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Data
 @ConditionalOnExpression("${ueditor.enable:0}==1")
 @ConfigurationProperties(prefix = "ue")
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/ueditor.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/ueditor.yml"},
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)

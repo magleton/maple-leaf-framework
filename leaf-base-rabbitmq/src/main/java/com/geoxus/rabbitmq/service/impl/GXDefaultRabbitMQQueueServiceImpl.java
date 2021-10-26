@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 @Slf4j
-@PropertySource(value = "classpath:/ymls/${spring.profiles.active}/rabbit.yml",
+@PropertySource(value = "classpath:/${spring.profiles.active}/rabbit.yml",
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true)
 @ConditionalOnExpression("'${enable-rabbitmq}'.equals('true')")

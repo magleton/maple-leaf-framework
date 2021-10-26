@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Data
 @Configuration
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/sso.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/sso.yml"},
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)

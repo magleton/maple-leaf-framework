@@ -16,7 +16,7 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/datasource.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/datasource.yml"},
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "dynamic")

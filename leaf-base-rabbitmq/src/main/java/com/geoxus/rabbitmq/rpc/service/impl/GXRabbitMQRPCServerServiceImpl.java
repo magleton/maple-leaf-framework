@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@PropertySource(value = "classpath:/ymls/${spring.profiles.active}/rabbit.yml",
+@PropertySource(value = "classpath:/${spring.profiles.active}/rabbit.yml",
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true)
 @ConditionalOnExpression("'${enable-rabbitmq-rpc}'.equals('true')")

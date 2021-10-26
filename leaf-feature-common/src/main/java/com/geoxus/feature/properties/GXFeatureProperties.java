@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.multipart.MultipartResolver;
 @Configuration
-@PropertySource(value = "classpath:/ymls/${spring.profiles.active}/common.yml",
+@PropertySource(value = "classpath:/${spring.profiles.active}/common.yml",
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true)
 public class GXFeatureProperties {

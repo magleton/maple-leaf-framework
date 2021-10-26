@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @SuppressWarnings("all")
 @ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
-@PropertySource(value = "classpath:/ymls/${spring.profiles.active}/common.yml",
+@PropertySource(value = "classpath:/${spring.profiles.active}/common.yml",
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)

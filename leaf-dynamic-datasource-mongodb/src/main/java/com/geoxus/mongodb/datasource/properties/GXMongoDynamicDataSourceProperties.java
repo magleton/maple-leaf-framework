@@ -16,7 +16,7 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/mongodb.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/mongodb.yml"},
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "mongodb")

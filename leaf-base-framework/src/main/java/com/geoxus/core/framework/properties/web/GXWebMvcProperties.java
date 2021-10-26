@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Component
 @ConfigurationProperties(prefix = "web-mvc")
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/web-mvc.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/web-mvc.yml"},
         factory = GXYamlPropertySourceFactory.class,
         encoding = "utf-8",
         ignoreResourceNotFound = true)

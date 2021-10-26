@@ -88,7 +88,7 @@ public class GXCacheKeysUtils {
     @Component
     @Configuration
     @ConditionalOnExpression("${cache.enable:0}==1")
-    @PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/cache-key.yml"},
+    @PropertySource(value = {"classpath:/${spring.profiles.active}/cache-key.yml"},
             factory = GXYamlPropertySourceFactory.class,
             encoding = "UTF-8",
             ignoreResourceNotFound = true)

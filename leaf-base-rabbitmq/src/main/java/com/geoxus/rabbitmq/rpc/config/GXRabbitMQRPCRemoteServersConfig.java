@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Data
 @Configuration
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/rabbit.yml"},
+@PropertySource(value = {"classpath:/${spring.profiles.active}/rabbit.yml"},
         factory = GXYamlPropertySourceFactory.class,
         ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "rabbit.rpc-server.remote")
