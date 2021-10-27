@@ -1,0 +1,4 @@
+sso:
+  config:
+    loginUrl: http://www.baidu.com
+    logoutUrl: http://www.baidu.com
