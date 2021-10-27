@@ -5,18 +5,13 @@
     <parent>
         <groupId>com.geoxus.framework</groupId>
         <artifactId>maple-leaf-framework</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>leaf-framework</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.geoxus.framework</groupId>
-            <artifactId>leaf-base-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-framework</artifactId>
