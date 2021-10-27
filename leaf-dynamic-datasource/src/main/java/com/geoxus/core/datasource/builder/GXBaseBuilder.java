@@ -11,15 +11,15 @@ import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.geoxus.core.datasource.annotation.GXDataSource;
+import com.geoxus.core.datasource.constant.GXBaseBuilderConstant;
+import com.geoxus.core.datasource.entity.GXBaseEntity;
+import com.geoxus.core.datasource.service.GXDBSchemaService;
+import com.geoxus.core.datasource.util.GXDataSourceCommonUtils;
 import com.geoxus.core.framework.constant.GXCommonConstant;
 import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.core.framework.util.GXBaseCommonUtil;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
-import com.geoxus.core.datasource.constant.GXBaseBuilderConstant;
-import com.geoxus.core.datasource.annotation.GXDataSource;
-import com.geoxus.core.datasource.entity.GXBaseEntity;
-import com.geoxus.core.datasource.service.GXDBSchemaService;
-import com.geoxus.core.datasource.util.GXDataSourceCommonUtils;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -204,18 +204,18 @@ public interface GXBaseBuilder {
      * 通过条件获取分类数据
      *
      * @param tableName 表名字
-     * @param condition 条件
      * @param fieldSet  需要查询的字段
+     * @param condition 条件
      *                  <code>
      *                  Table<String, String, Object> condition = HashBasedTable.create();
      *                  condition.put("path" , "like" , "aaa%");
      *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
      *                  condition.put("level" , "=" , "1111");
-     *                  getDataByCondition("test" , condition);
+     *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition);
      *                  </code>
      * @return SQL语句
      */
-    static String getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    static String getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
         String selectStr = "*";
         if (CollUtil.isNotEmpty(fieldSet)) {
             selectStr = String.join(",", fieldSet);
@@ -233,6 +233,17 @@ public interface GXBaseBuilder {
             sql.WHERE(whereStr);
         });
         return sql.toString();
+    }
+
+    /**
+     * 通过条件获取分类数据
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @return SQL语句
+     */
+    static String getDataByCondition(String tableName, Table<String, String, Object> condition) {
+        return getDataByCondition(tableName, CollUtil.newHashSet(), condition);
     }
 
     /**
