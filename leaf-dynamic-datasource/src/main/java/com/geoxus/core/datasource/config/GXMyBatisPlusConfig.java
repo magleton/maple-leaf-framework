@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.handlers.MybatisMapWrapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -66,10 +68,9 @@ public class GXMyBatisPlusConfig {
         // 动态表名插件
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
         /* mybatis-plus-boot-starter  3.4.3.3 以下的版本需要如下配置*/
-        /* Map<String, TableNameHandler> tableNameHandlerMap = new HashMap<>();
+        Map<String, TableNameHandler> tableNameHandlerMap = new HashMap<>();
         tableNameHandlerMap.put("tableName", (sql, tableName) -> tableName);
-        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(tableNameHandlerMap);*/
-        dynamicTableNameInnerInterceptor.setTableNameHandler((sql, tableName) -> tableName);
+        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(tableNameHandlerMap);
         interceptor.addInnerInterceptor(dynamicTableNameInnerInterceptor);
         return interceptor;
     }

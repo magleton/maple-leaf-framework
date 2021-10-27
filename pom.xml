@@ -34,7 +34,7 @@
         <druid-spring-boot.version>1.2.5</druid-spring-boot.version>
         <hutool.version>5.7.12</hutool.version>
         <mybatis-plus-boot.version>3.4.2</mybatis-plus-boot.version>
-        <redisson-spring-boot.version>3.16.2</redisson-spring-boot.version>
+        <redisson-spring-boot.version>3.14.1</redisson-spring-boot.version>
         <aspectjweaver.version>1.9.7</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
