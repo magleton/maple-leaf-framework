@@ -4,3 +4,5 @@ target
 **/*.iml
 **/local
 **/application-local.yml
+config/local
+config/application-local.yml
