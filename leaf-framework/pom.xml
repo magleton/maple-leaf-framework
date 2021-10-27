@@ -34,11 +34,6 @@
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
-            <artifactId>leaf-feature-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.geoxus.framework</groupId>
             <artifactId>leaf-base-redisson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
