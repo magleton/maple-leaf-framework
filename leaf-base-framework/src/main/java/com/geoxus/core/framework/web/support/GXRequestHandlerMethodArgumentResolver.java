@@ -111,8 +111,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             ReflectUtil.invoke(bean, method);
         }
     }
-
-
+    
     /**
      * 处理声明的字段
      *

@@ -3,7 +3,6 @@ package com.geoxus.core.framework.util;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.geoxus.core.framework.pojo.GXResultCode;
 import lombok.Data;
 
@@ -11,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GXResultUtil<T> {
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +46,7 @@ public class GXResultUtil<T> {
     /**
      * 返回数据
      */
-    private T data;
+    private T data = null;
 
     public static <T> GXResultUtil<T> ok(GXResultCode resultCode) {
         return ok(resultCode.getCode(), resultCode.getMsg());
@@ -74,6 +72,11 @@ public class GXResultUtil<T> {
     public static <T> GXResultUtil<T> ok(T data) {
         callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, SUCCESS_MSG, data);
+    }
+
+    public static <T> GXResultUtil<T> ok(String msg, T data) {
+        callUserDefinedMethod(data);
+        return ok(SUCCESS_CODE, msg, data);
     }
 
     public static <T> GXResultUtil<T> ok(int code, String msg, T data) {
