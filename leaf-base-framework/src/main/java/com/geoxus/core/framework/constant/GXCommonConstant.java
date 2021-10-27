@@ -39,6 +39,11 @@ public class GXCommonConstant {
     @GXFieldComment("模型标识的字段名字")
     public static final String CORE_MODEL_PRIMARY_FIELD_NAME = "core_model_id";
 
+    /**
+     * 日志格式
+     */
+    public static final String LOGGER_FORMAT = "{} : {} ---> {}";
+
     private GXCommonConstant() {
     }
 }
