@@ -236,17 +236,6 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 通过条件获取分类数据
-     *
-     * @param tableName 表名字
-     * @param condition 查询条件
-     * @return SQL语句
-     */
-    static String getDataByCondition(String tableName, Table<String, String, Object> condition) {
-        return getDataByCondition(tableName, CollUtil.newHashSet(), condition);
-    }
-
-    /**
      * 分页列表
      *
      * @param param 参数

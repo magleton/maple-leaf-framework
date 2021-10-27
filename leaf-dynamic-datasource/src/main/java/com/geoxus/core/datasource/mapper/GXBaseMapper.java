@@ -38,11 +38,11 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<T> getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    List<T> getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    List<T> getDataListByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    List<T> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 }
