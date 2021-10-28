@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.geoxus.framework</groupId>
-            <artifactId>leaf-dynamic-datasource</artifactId>
+            <artifactId>leaf-base-datasource</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
