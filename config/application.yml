@@ -7,6 +7,8 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      #- org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      #- org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
   datasource:
     ## 参考:https://github.com/drtrang/druid-spring-boot
     ## schema: classpath:import.sql
