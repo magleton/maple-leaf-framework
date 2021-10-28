@@ -17,6 +17,7 @@ import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
 import javax.validation.ValidationException;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,7 +109,12 @@ public class GXExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public GXResultUtil<String> handleSQLException(SQLException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, "SQL语句异常");
     }
 
+    @ExceptionHandler(SQLSyntaxErrorException.class)
+    public GXResultUtil<String> handleSQLException(SQLSyntaxErrorException e, RedirectAttributes redirectAttributes) {
+        log.error(e.getMessage(), e);
+        return GXResultUtil.error(HttpStatus.HTTP_INTERNAL_ERROR, "SQL语句异常");
+    }
 }
