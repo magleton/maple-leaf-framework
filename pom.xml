@@ -19,6 +19,8 @@
         <module>leaf-base-canal</module>
         <module>leaf-base-sso</module>
         <module>leaf-base-redisson</module>
+        <module>leaf-base-dubbo-nacos</module>
+        <module>leaf-base-dubbo-zk</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

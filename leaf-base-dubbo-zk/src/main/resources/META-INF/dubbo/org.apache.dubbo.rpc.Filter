@@ -1,0 +1,1 @@
+dubboExceptionFilter=com.geoxus.framework.filter.GXDubboExceptionFilter
