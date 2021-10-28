@@ -9,7 +9,6 @@ import org.redisson.config.Config;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @ConditionalOnClass(name = {"org.redisson.Redisson"})
-@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
+//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonSpringDataConfig {
     @Resource
     private GXRedissonProperties redissonConfig;

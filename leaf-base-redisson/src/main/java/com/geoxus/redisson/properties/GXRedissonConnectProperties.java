@@ -1,10 +1,9 @@
 package com.geoxus.redisson.properties;
 
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 
 @Data
-@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
+//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonConnectProperties {
     /**
      * 链接地址
