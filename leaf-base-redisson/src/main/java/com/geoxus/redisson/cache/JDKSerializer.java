@@ -1,19 +1,27 @@
 package com.geoxus.redisson.cache;
 
-import org.apache.ibatis.cache.CacheException;
-
+import javax.cache.CacheException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-final class JdkSerializer {
-    private JdkSerializer() {
+final class JDKSerializer {
+    /**
+     * 私有化构造函数
+     */
+    private JDKSerializer() {
     }
 
+    /**
+     * 序列化对象
+     *
+     * @param obj 待序列化的对象
+     * @return 字节数组
+     */
     static byte[] serialize(Object obj) {
         if (obj == null) {
-            return null;
+            return new byte[0];
         }
         try (
                 ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -26,6 +34,12 @@ final class JdkSerializer {
         }
     }
 
+    /**
+     * 反序列化对象
+     *
+     * @param bytes 待反序列化的对象字节数组
+     * @return 反序列化的对象
+     */
     static Object unSerialize(byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
             return null;

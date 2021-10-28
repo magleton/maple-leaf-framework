@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.interceptor;
+package com.geoxus.core.datasource.interceptor;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;

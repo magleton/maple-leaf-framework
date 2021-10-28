@@ -217,18 +217,6 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     }
 
     /**
-     * 获取实体的表明
-     *
-     * @param clazz Class对象
-     * @return String
-     */
-    @Override
-    public <T> String getTableName(Class<T> clazz) {
-        return GXBaseCommonUtil.getTableName(clazz);
-    }
-
-
-    /**
      * 处理相同前缀的Dict
      *
      * @param dict 要处理的Dict

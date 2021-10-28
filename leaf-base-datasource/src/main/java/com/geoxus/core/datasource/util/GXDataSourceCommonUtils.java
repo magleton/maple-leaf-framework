@@ -1,9 +1,12 @@
 package com.geoxus.core.datasource.util;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.geoxus.core.datasource.constant.GXBaseBuilderConstant;
 import com.geoxus.core.framework.annotation.GXFieldComment;
+import com.geoxus.core.framework.util.GXBaseCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,5 +61,19 @@ public class GXDataSourceCommonUtils {
             return requestParam;
         }
         return data;
+    }
+
+    /**
+     * 获取实体的表名字
+     *
+     * @param clazz Class
+     * @return String
+     */
+    public static String getTableName(Class<?> clazz) {
+        final TableName annotation = AnnotationUtil.getAnnotation(clazz, TableName.class);
+        if (null != annotation) {
+            return annotation.value();
+        }
+        return "";
     }
 }

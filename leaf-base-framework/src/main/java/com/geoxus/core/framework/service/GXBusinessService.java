@@ -111,14 +111,6 @@ public interface GXBusinessService {
     Cache getSpringCache(String cacheName);
 
     /**
-     * 获取实体的表明
-     *
-     * @param clazz Class对象
-     * @return String
-     */
-    <T> String getTableName(Class<T> clazz);
-    
-    /**
      * 处理相同前缀的Dict
      *
      * @param dict 要处理的Dict

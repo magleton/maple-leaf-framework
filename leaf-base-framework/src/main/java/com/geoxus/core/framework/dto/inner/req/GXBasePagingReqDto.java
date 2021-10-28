@@ -1,11 +1,12 @@
-package com.geoxus.core.framework.dto;
+package com.geoxus.core.framework.dto.inner.req;
 
+import com.geoxus.core.framework.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXBasePagingReqDto extends GXBaseDto {
+public class GXBasePagingReqDto extends GXBaseReqDto {
     private static final long serialVersionUID = 8088371218041701430L;
 
     /**

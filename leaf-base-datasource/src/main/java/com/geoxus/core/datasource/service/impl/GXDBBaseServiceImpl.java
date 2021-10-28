@@ -21,7 +21,6 @@ import com.geoxus.core.framework.constant.GXCommonConstant;
 import com.geoxus.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.core.framework.pojo.GXBusinessStatusCode;
-import com.geoxus.core.framework.service.impl.GXBusinessServiceImpl;
 import com.geoxus.core.framework.util.GXBaseCommonUtil;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
 import org.slf4j.Logger;
@@ -44,7 +43,9 @@ import java.util.stream.Collectors;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>> extends GXBusinessServiceImpl implements GXDBBaseService<T, M, D> {
+public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>>
+        extends GXDBCommonServiceImpl
+        implements GXDBBaseService<T, M, D> {
     /**
      * 日志对象
      */

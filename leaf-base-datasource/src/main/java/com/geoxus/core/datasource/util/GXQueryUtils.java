@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.util;
+package com.geoxus.core.datasource.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;

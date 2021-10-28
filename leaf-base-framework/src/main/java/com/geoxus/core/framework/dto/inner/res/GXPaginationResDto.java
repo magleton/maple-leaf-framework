@@ -1,7 +1,6 @@
-package com.geoxus.core.framework.dto.protocol.res;
+package com.geoxus.core.framework.dto.inner.res;
 
 import com.geoxus.core.framework.annotation.GXFieldComment;
-import com.geoxus.core.framework.dto.inner.res.GXPaginationResDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,9 +8,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXPaginationProtocol<T> extends GXBaseResProtocol {
-    private static final long serialVersionUID = -6977700102950116740L;
-
+public class GXPaginationResDto<T> extends GXBaseResDto {
     @GXFieldComment(zhDesc = "总记录数")
     private long total;
 
@@ -35,7 +32,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
      * @param pageSize   每页记录数
      * @param currPage   当前页数
      */
-    public GXPaginationProtocol(List<T> list, long totalCount, long pageSize, long currPage) {
+    public GXPaginationResDto(List<T> list, long totalCount, long pageSize, long currPage) {
         this.records = list;
         this.total = totalCount;
         this.pageSize = pageSize;
@@ -46,18 +43,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
     /**
      * 分页
      */
-    public GXPaginationProtocol(GXPaginationResDto<T> page) {
-        this.records = page.getRecords();
-        this.total = page.getTotal();
-        this.pageSize = page.getPageSize();
-        this.currentPage = page.getCurrentPage();
-        this.pages = page.getPages();
-    }
-
-    /**
-     * 分页
-     */
-    public GXPaginationProtocol(List<T> list) {
+    public GXPaginationResDto(List<T> list) {
         this.records = list;
     }
 }

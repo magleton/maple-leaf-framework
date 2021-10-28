@@ -1,5 +1,6 @@
-package com.geoxus.core.framework.dto;
+package com.geoxus.core.framework.dto.inner.req;
 
+import com.geoxus.core.framework.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,7 +39,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXDynamicCallParamDto extends GXBaseDto {
+public class GXDynamicCallParamReqDto extends GXBaseReqDto {
     /**
      * java类型
      */
@@ -47,5 +48,5 @@ public class GXDynamicCallParamDto extends GXBaseDto {
     /**
      * 具体参数信息
      */
-    private List<GXDynamicCallParamAttributeDto> attributes = new ArrayList<>(0);
+    private List<GXDynamicCallParamAttributeReqDto> attributes = new ArrayList<>(0);
 }

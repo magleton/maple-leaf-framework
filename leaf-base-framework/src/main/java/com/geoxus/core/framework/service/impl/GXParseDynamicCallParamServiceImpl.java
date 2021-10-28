@@ -4,8 +4,8 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
-import com.geoxus.core.framework.dto.GXDynamicCallParamAttributeDto;
-import com.geoxus.core.framework.dto.GXDynamicCallParamDto;
+import com.geoxus.core.framework.dto.inner.req.GXDynamicCallParamAttributeReqDto;
+import com.geoxus.core.framework.dto.inner.req.GXDynamicCallParamReqDto;
 import com.geoxus.core.framework.service.GXParseDynamicCallParamService;
 import com.geoxus.core.framework.util.GXSpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      * @param callParamDto 参数信息配置
      * @return Object
      */
-    private Object getValueFromCallback(GXDynamicCallParamAttributeDto callParamDto) {
+    private Object getValueFromCallback(GXDynamicCallParamAttributeReqDto callParamDto) {
         try {
             final String callBackClassName = callParamDto.getCallBackClassName();
             final Class<?> aClass = Class.forName(callBackClassName);
@@ -53,7 +53,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      * @param callParamDto 参数信息配置
      * @return Object
      */
-    private Object getValueFromAssign(GXDynamicCallParamAttributeDto callParamDto) {
+    private Object getValueFromAssign(GXDynamicCallParamAttributeReqDto callParamDto) {
         return callParamDto.getFixedAssignedValue();
     }
 
@@ -69,9 +69,9 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
             log.error("参数请传递JSON类型");
             return null;
         }
-        final GXDynamicCallParamDto callParamDto = JSONUtil.toBean(jsonStr, GXDynamicCallParamDto.class);
+        final GXDynamicCallParamReqDto callParamDto = JSONUtil.toBean(jsonStr, GXDynamicCallParamReqDto.class);
         final String javaType = callParamDto.getJavaType();
-        final List<GXDynamicCallParamAttributeDto> attributes = callParamDto.getAttributes();
+        final List<GXDynamicCallParamAttributeReqDto> attributes = callParamDto.getAttributes();
         if (CharSequenceUtil.isBlank(javaType)) {
             return getParamValueList(attributes);
         }
@@ -94,7 +94,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      * @param callParamAttributes 参数值
      * @return List
      */
-    private List<Object> getParamValueList(List<GXDynamicCallParamAttributeDto> callParamAttributes) {
+    private List<Object> getParamValueList(List<GXDynamicCallParamAttributeReqDto> callParamAttributes) {
         final ArrayList<Object> objects = new ArrayList<>();
         callParamAttributes.forEach(attribute -> {
             final String dataSource = attribute.getDataSource();
@@ -119,7 +119,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      * @param callParamAttributes 参数值
      * @return List
      */
-    private Dict getParamValueObject(List<GXDynamicCallParamAttributeDto> callParamAttributes) {
+    private Dict getParamValueObject(List<GXDynamicCallParamAttributeReqDto> callParamAttributes) {
         final Dict dict = Dict.create();
         callParamAttributes.forEach(attribute -> {
             final String fieldName = attribute.getFieldName();
@@ -143,7 +143,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      * @param callParamDto 参数信息配置
      * @return Object
      */
-    private Object getValueFromToken(GXDynamicCallParamAttributeDto callParamDto) {
+    private Object getValueFromToken(GXDynamicCallParamAttributeReqDto callParamDto) {
         final Dict data = Dict.create();
         final String sourceFieldName = callParamDto.getSourceFieldName();
         return data.getObj(sourceFieldName);

@@ -1,4 +1,4 @@
-package com.geoxus.core.framework.interceptor;
+package com.geoxus.core.datasource.interceptor;
 
 import com.geoxus.core.framework.annotation.GXSensitiveData;
 import com.geoxus.core.framework.service.GXSensitiveDataEncryptService;
