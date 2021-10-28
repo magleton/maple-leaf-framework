@@ -11,12 +11,12 @@
 
     <modules>
         <module>leaf-base-framework</module>
-        <module>leaf-dynamic-datasource</module>
+        <module>leaf-base-datasource</module>
+        <module>leaf-base-datasource-mongodb</module>
         <module>leaf-base-shiro</module>
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
         <module>leaf-base-canal</module>
-        <module>leaf-dynamic-datasource-mongodb</module>
         <module>leaf-base-sso</module>
         <module>leaf-base-redisson</module>
     </modules>

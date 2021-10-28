@@ -6,3 +6,4 @@ target
 **/application-local.yml
 config/local
 config/application-local.yml
+spy.log
