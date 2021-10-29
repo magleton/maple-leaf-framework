@@ -18,6 +18,7 @@ import com.geoxus.core.datasource.service.GXAlterTableService;
 import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.core.datasource.service.GXDBSchemaService;
 import com.geoxus.core.framework.constant.GXCommonConstant;
+import com.geoxus.core.framework.dto.inner.res.GXBaseResDto;
 import com.geoxus.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.framework.exception.GXBusinessException;
 import com.geoxus.core.framework.pojo.GXBusinessStatusCode;
@@ -43,9 +44,9 @@ import java.util.stream.Collectors;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T>, D extends GXBaseDao<M, T>>
+public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXDBCommonServiceImpl
-        implements GXDBBaseService<T, M, D> {
+        implements GXDBBaseService<T, M, D, R> {
     /**
      * 日志对象
      */

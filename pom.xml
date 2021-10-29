@@ -6,7 +6,7 @@
 
     <groupId>com.geoxus.framework</groupId>
     <artifactId>maple-leaf-framework</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>

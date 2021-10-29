@@ -1,16 +1,19 @@
 package com.geoxus.shiro.service;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.core.framework.pojo.GXBusinessStatusCode;
 import com.geoxus.shiro.dao.GXAdminDao;
 import com.geoxus.shiro.dto.req.GXAdminLoginReqDto;
+import com.geoxus.shiro.dto.res.GXAdminResDto;
 import com.geoxus.shiro.entities.GXAdminEntity;
 import com.geoxus.shiro.mapper.GXAdminMapper;
 import org.apache.shiro.authc.LockedAccountException;
 
 import java.util.Objects;
 
-public interface GXAdminService extends com.geoxus.core.datasource.service.GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
+public interface GXAdminService extends
+        GXDBBaseService<GXAdminEntity, GXAdminMapper, GXAdminDao, GXAdminResDto> {
     /**
      * 获取当前登录管理员的状态
      *

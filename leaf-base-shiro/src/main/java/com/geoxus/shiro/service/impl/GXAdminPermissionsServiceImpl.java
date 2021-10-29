@@ -1,7 +1,9 @@
 package com.geoxus.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
+import com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl;
 import com.geoxus.shiro.dao.GXAdminPermissionsDao;
+import com.geoxus.shiro.dto.res.GXAdminPermissionsResDto;
 import com.geoxus.shiro.entities.GXAdminPermissionsEntity;
 import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 import com.geoxus.shiro.service.GXAdminPermissionsService;
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class GXAdminPermissionsServiceImpl extends com.geoxus.core.datasource.service.impl.GXDBBaseServiceImpl<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao> implements GXAdminPermissionsService, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService, com.geoxus.core.datasource.service.GXDBBaseService<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao> {
+public class GXAdminPermissionsServiceImpl extends
+        GXDBBaseServiceImpl<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsDao, GXAdminPermissionsResDto>
+        implements GXAdminPermissionsService {
     /**
      * 通过管理员ID获取权限集
      *

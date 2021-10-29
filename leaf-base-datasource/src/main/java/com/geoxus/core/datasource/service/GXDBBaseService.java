@@ -3,6 +3,7 @@ package com.geoxus.core.datasource.service;
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.geoxus.core.datasource.mapper.GXBaseMapper;
+import com.geoxus.core.framework.dto.inner.res.GXBaseResDto;
 import com.geoxus.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import com.geoxus.core.framework.service.GXBusinessService;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,8 @@ import java.util.Set;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<T, M extends GXBaseMapper<T>, D> extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
+public interface GXDBBaseService<T, M extends GXBaseMapper<T, R>, D, R extends GXBaseResDto>
+        extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 获取BaseMapper对象
      *

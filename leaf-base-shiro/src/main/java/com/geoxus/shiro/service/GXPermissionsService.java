@@ -1,6 +1,8 @@
 package com.geoxus.shiro.service;
 
+import com.geoxus.core.datasource.service.GXDBBaseService;
 import com.geoxus.shiro.dao.GXPermissionsDao;
+import com.geoxus.shiro.dto.res.GXPermissionsResDto;
 import com.geoxus.shiro.entities.GXPermissionsEntity;
 import com.geoxus.shiro.mapper.GXPermissionsMapper;
 
@@ -9,7 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public interface GXPermissionsService extends com.geoxus.core.datasource.service.GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao>, com.geoxus.core.datasource.service.GXValidateDBExistsService, com.geoxus.core.datasource.service.GXValidateDBUniqueService {
+public interface GXPermissionsService extends
+        GXDBBaseService<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsDao, GXPermissionsResDto> {
     /**
      * 获取管理员的所有权限列表
      * 权限包括:

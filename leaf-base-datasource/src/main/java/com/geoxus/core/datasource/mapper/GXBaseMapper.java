@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper
-public interface GXBaseMapper<T> extends BaseMapper<T> {
+public interface GXBaseMapper<T, R> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     boolean updateFieldByCondition(String tableName, Dict data, Dict whereData);
 
@@ -38,11 +38,11 @@ public interface GXBaseMapper<T> extends BaseMapper<T> {
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<T> getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+    List<R> getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
     })
-    List<T> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+    List<R> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 }

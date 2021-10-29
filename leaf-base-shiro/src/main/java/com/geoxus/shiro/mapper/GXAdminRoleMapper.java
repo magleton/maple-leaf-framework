@@ -3,6 +3,7 @@ package com.geoxus.shiro.mapper;
 import cn.hutool.core.lang.Dict;
 import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.shiro.builder.GXAdminRoleBuilder;
+import com.geoxus.shiro.dto.res.GXAdminRoleResDto;
 import com.geoxus.shiro.entities.GXAdminRolesEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 @Component
 @Mapper
-public interface GXAdminRoleMapper extends GXBaseMapper<GXAdminRolesEntity> {
+public interface GXAdminRoleMapper extends GXBaseMapper<GXAdminRolesEntity, GXAdminRoleResDto> {
     @SelectProvider(type = GXAdminRoleBuilder.class, method = "getAdminRoles")
     Set<String> getAdminRoles(Dict condition);
 }
