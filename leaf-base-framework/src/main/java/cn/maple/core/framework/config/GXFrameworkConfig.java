@@ -41,7 +41,7 @@ public class GXFrameworkConfig {
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         final ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         final SerializerProvider serializerProvider = objectMapper.getSerializerProvider();
-        serializerProvider.setNullValueSerializer(new JsonSerializer<Object>() {
+        serializerProvider.setNullValueSerializer(new JsonSerializer<>() {
             @Override
             public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
                 String fieldName = jsonGenerator.getOutputContext().getCurrentName();
