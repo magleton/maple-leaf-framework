@@ -16,10 +16,13 @@ import java.util.Set;
 /**
  * 业务基础Service
  *
- * @param <T>
+ * @param <T> 实体对象类型
+ * @param <M> Mybatis Mapper对象类型
+ * @param <D> DAO对象类型
+ * @param <R> 查询的返回对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
+public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<T, M, R>, R extends GXBaseResDto>
         extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 获取BaseMapper对象
@@ -53,7 +56,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param condition 条件
      * @return R
      */
-    <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition);
+    <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition);
 
     /**
      * 获取实体中指定指定的值
@@ -64,7 +67,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param defaultValue 默认值
      * @return R
      */
-    <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition, R defaultValue);
+    <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition, E defaultValue);
 
     /**
      * 获取JSON中的多个值
@@ -230,7 +233,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    <R> IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto);
+    IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto);
 
     /**
      * 列表或者搜索(分页)
@@ -238,7 +241,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param param 参数
      * @return GXPagination
      */
-    <R> IPage<R> listOrSearchPage(Dict param);
+    IPage<R> listOrSearchPage(Dict param);
 
     /**
      * 内容详情
@@ -270,7 +273,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param pageInfo 参数
      * @return IPage
      */
-    <R> IPage<R> constructPageObjectFromParam(Dict pageInfo);
+    IPage<R> constructPageObjectFromParam(Dict pageInfo);
 
     /**
      * 获取分页信息
@@ -278,7 +281,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param param 查询参数
      * @return GXPagination
      */
-    <R> IPage<R> generatePage(Dict param);
+    IPage<R> generatePage(Dict param);
 
     /**
      * 分页  返回实体对象
@@ -287,7 +290,7 @@ public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    <R> IPage<R> generatePage(Dict param, String mapperMethodName);
+    IPage<R> generatePage(Dict param, String mapperMethodName);
 
     /**
      * 获取记录的父级path

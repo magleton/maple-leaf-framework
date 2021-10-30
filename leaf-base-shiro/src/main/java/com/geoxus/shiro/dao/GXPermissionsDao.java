@@ -7,5 +7,5 @@ import com.geoxus.shiro.mapper.GXPermissionsMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GXPermissionsDao extends GXBaseDao<GXPermissionsMapper, GXPermissionsEntity, GXPermissionsResDto> {
+public class GXPermissionsDao extends GXBaseDao<GXPermissionsEntity, GXPermissionsMapper, GXPermissionsResDto> {
 }

@@ -42,10 +42,13 @@ import java.util.stream.Collectors;
 /**
  * 业务基础Service
  *
- * @param <T>
+ * @param <T> 实体对象类型
+ * @param <M> Mybatis Mapper对象类型
+ * @param <D> DAO对象类型
+ * @param <R> 查询的返回对象类型
  * @author britton chen <britton@126.com>
  */
-public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
+public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<T, M, R>, R extends GXBaseResDto>
         extends GXDBCommonServiceImpl
         implements GXDBBaseService<T, M, D, R> {
     /**
@@ -106,7 +109,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return R
      */
     @Override
-    public <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition) {
+    public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition) {
         return getSingleFieldValueByDB(clazz, path, type, condition, GXBaseCommonUtil.getClassDefaultValue(type));
     }
 
@@ -117,10 +120,10 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @param path         路径
      * @param condition    条件
      * @param defaultValue 默认值
-     * @return R
+     * @return E
      */
     @Override
-    public <R> R getSingleFieldValueByDB(Class<T> clazz, String path, Class<R> type, Dict condition, R defaultValue) {
+    public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition, E defaultValue) {
         String fieldSeparator = "::";
         Object removeObject = condition.remove("remove");
         boolean remove = null != removeObject;
@@ -440,7 +443,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return GXPagination
      */
     @Override
-    public <R> IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
+    public IPage<R> listOrSearchPage(GXBaseSearchReqProtocol searchReqDto) {
         final Dict param = Dict.create();
         if (Objects.nonNull(searchReqDto.getPagingInfo())) {
             param.set("pagingInfo", searchReqDto.getPagingInfo());
@@ -458,7 +461,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return GXPagination
      */
     @Override
-    public <R> IPage<R> listOrSearchPage(Dict param) {
+    public IPage<R> listOrSearchPage(Dict param) {
         return generatePage(param);
     }
 
@@ -577,7 +580,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return IPage
      */
     @Override
-    public <R> IPage<R> constructPageObjectFromParam(Dict param) {
+    public IPage<R> constructPageObjectFromParam(Dict param) {
         Dict pageInfo = getPageInfoFromParam(param);
         return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
     }
@@ -589,7 +592,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return GXPagination
      */
     @Override
-    public <R> IPage<R> generatePage(Dict param) {
+    public IPage<R> generatePage(Dict param) {
         String mapperMethodName = "listOrSearchPage";
         return generatePage(param, mapperMethodName);
     }
@@ -602,7 +605,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      * @return GXPagination
      */
     @Override
-    public <R> IPage<R> generatePage(Dict param, String mapperMethodName) {
+    public IPage<R> generatePage(Dict param, String mapperMethodName) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
@@ -616,7 +619,6 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
         riPage.setRecords(list);
         return riPage;
-        //return new GXPaginationProtocol<>(riPage.getRecords(), riPage.getTotal(), riPage.getSize(), riPage.getCurrent());
     }
 
     /**

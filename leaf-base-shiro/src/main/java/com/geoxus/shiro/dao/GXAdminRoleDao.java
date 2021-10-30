@@ -7,5 +7,5 @@ import com.geoxus.shiro.mapper.GXAdminRoleMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GXAdminRoleDao extends GXBaseDao<GXAdminRoleMapper, GXAdminRolesEntity, GXAdminRoleResDto> {
+public class GXAdminRoleDao extends GXBaseDao<GXAdminRolesEntity, GXAdminRoleMapper, GXAdminRoleResDto> {
 }

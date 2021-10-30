@@ -7,5 +7,5 @@ import com.geoxus.shiro.mapper.GXAdminPermissionsMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GXAdminPermissionsDao extends GXBaseDao<GXAdminPermissionsMapper, GXAdminPermissionsEntity, GXAdminPermissionsResDto> {
+public class GXAdminPermissionsDao extends GXBaseDao<GXAdminPermissionsEntity, GXAdminPermissionsMapper, GXAdminPermissionsResDto> {
 }
