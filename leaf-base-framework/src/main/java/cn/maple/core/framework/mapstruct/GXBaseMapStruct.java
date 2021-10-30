@@ -60,7 +60,7 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * @author britton
      * @since 2021-10-23
      */
-    List<T> sourceListToTargetList(List<S> sourceList);
+    List<T> sourceToTarget(List<S> sourceList);
 
     /**
      * 将目标对象转换为源对象
@@ -80,5 +80,5 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * @author britton
      * @since 2021-10-23
      */
-    List<S> targetListToSourceList(List<T> targetList);
+    List<S> targetToSource(List<T> targetList);
 }
