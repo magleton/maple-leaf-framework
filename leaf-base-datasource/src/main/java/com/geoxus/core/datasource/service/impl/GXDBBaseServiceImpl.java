@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.geoxus.core.datasource.constant.GXBaseBuilderConstant;
 import com.geoxus.core.datasource.dao.GXBaseDao;
+import com.geoxus.core.datasource.entity.GXBaseEntity;
 import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.core.datasource.service.GXAlterTableService;
 import com.geoxus.core.datasource.service.GXDBBaseService;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public class GXDBBaseServiceImpl<T, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
+public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXDBCommonServiceImpl
         implements GXDBBaseService<T, M, D, R> {
     /**

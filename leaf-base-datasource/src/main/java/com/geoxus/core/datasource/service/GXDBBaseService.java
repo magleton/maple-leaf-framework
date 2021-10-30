@@ -2,6 +2,8 @@ package com.geoxus.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.geoxus.core.datasource.dao.GXBaseDao;
+import com.geoxus.core.datasource.entity.GXBaseEntity;
 import com.geoxus.core.datasource.mapper.GXBaseMapper;
 import com.geoxus.core.framework.dto.inner.res.GXBaseResDto;
 import com.geoxus.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
@@ -17,7 +19,7 @@ import java.util.Set;
  * @param <T>
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<T, M extends GXBaseMapper<T, R>, D, R extends GXBaseResDto>
+public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 获取BaseMapper对象
