@@ -1,1 +1,1 @@
-dubboExceptionFilter=com.geoxus.dubbo.nacos.filter.GXDubboExceptionFilter
+dubboExceptionFilter=cn.maple.dubbo.nacos.filter.GXDubboExceptionFilter

@@ -3,7 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.geoxus.framework</groupId>
+        <groupId>cn.maple.framework</groupId>
         <artifactId>maple-leaf-framework</artifactId>
         <version>1.0.6-SNAPSHOT</version>
     </parent>
@@ -13,37 +13,37 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-framework</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-datasource</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-shiro</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-redisson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-datasource-mongodb</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-sso</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.geoxus.framework</groupId>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-canal</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
