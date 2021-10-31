@@ -39,8 +39,6 @@
         <redisson-spring-boot.version>3.14.1</redisson-spring-boot.version>
         <aspectjweaver.version>1.9.7</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <guava.version>31.0.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
         <caffeine.version>3.0.3</caffeine.version>

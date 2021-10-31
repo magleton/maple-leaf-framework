@@ -4,9 +4,6 @@ spring:
       max-request-size: 10MB
       max-file-size: 10MB
       enabled: false
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   datasource:
     ## 参考:https://github.com/drtrang/druid-spring-boot
     ## schema: classpath:import.sql
