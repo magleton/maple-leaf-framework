@@ -10,7 +10,6 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import cn.maple.core.datasource.annotation.GXDataSource;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.entity.GXBaseEntity;
@@ -20,6 +19,7 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXBaseCommonUtil;
 import cn.maple.core.framework.util.GXSpringContextUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -232,6 +232,7 @@ public interface GXBaseBuilder {
             String whereStr = String.join(" ", wheres);
             sql.WHERE(whereStr);
         });
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
         return sql.toString();
     }
 

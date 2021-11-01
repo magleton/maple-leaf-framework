@@ -4,7 +4,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -16,10 +15,7 @@ import java.util.Map;
 
 @MappedTypes({Map.class})
 @Slf4j
-public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>> {
-    @GXFieldComment(zhDesc = "当前字段的名字")
-    private String columnName;
-
+public class GXJSONToMapTypeHandler extends BaseTypeHandler<Map<String, Object>> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Map<String, Object> parameter, JdbcType jdbcType) throws SQLException {
         final String parameterString = mapToJson(parameter);
@@ -35,7 +31,6 @@ public class GXJsonToMapTypeHandler extends BaseTypeHandler<Map<String, Object>>
             int size = (int) clob.length();
             value = clob.getSubString(1L, size);
         }
-        this.columnName = columnName;
         return jsonToMap(value);
     }
 

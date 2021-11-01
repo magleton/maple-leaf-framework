@@ -8,9 +8,6 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
@@ -18,13 +15,15 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.service.GXAlterTableService;
 import cn.maple.core.datasource.service.GXDBBaseService;
 import cn.maple.core.datasource.service.GXDBSchemaService;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.pojo.GXBusinessStatusCode;
 import cn.maple.core.framework.util.GXBaseCommonUtil;
 import cn.maple.core.framework.util.GXSpringContextUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +174,6 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
             dataKey.set(aliasName, key);
         }
         final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), fieldSet, condition, false);
-        dict.remove(GXCommonConstant.CORE_MODEL_PRIMARY_FIELD_NAME);
         return handleSamePrefixDict(dict);
     }
 

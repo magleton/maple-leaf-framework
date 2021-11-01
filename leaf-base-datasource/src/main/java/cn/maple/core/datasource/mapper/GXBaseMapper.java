@@ -2,7 +2,7 @@ package cn.maple.core.datasource.mapper;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
-import cn.maple.core.datasource.handler.GXJsonToMapTypeHandler;
+import cn.maple.core.datasource.handler.GXJSONToMapTypeHandler;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -32,7 +32,7 @@ public interface GXBaseMapper<T, R> extends BaseMapper<T> {
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySql")
     @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
+            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
     })
     Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
 
@@ -44,7 +44,7 @@ public interface GXBaseMapper<T, R> extends BaseMapper<T> {
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJsonToMapTypeHandler.class)
+            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
     })
     List<R> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
