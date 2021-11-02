@@ -24,13 +24,13 @@ public class GXSingletonUtils {
     public static <K, V> Cache<K, V> getCaffeineCache(String configNameKey) {
         final String beanName = configNameKey + "caffeine-cache";
         Cache<K, V> cache = Convert.convert(new TypeReference<Cache<K, V>>() {
-        }, GXSpringContextUtil.getBean(beanName));
+        }, GXSpringContextUtils.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build();
-        GXBaseCommonUtil.registerSingleton(beanName, cache);
+        GXCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -44,13 +44,13 @@ public class GXSingletonUtils {
     public static <K, V> LoadingCache<K, V> getCaffeineCache(String configNameKey, CacheLoader<K, V> cacheLoader) {
         final String beanName = configNameKey + "cache-loader-caffeine-cache";
         LoadingCache<K, V> cache = Convert.convert(new TypeReference<LoadingCache<K, V>>() {
-        }, GXSpringContextUtil.getBean(beanName));
+        }, GXSpringContextUtils.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.build(cacheLoader);
-        GXBaseCommonUtil.registerSingleton(beanName, cache);
+        GXCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -63,13 +63,13 @@ public class GXSingletonUtils {
     public static <K, V> com.github.benmanes.caffeine.cache.AsyncCache<K, V> getAsyncCaffeine(String configNameKey) {
         final String beanName = configNameKey + "async-caffeine-cache";
         AsyncCache<K, V> cache = Convert.convert(new TypeReference<AsyncCache<K, V>>() {
-        }, GXSpringContextUtil.getBean(beanName));
+        }, GXSpringContextUtils.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
         Caffeine<K, V> caffeine = getCaffeine(configNameKey);
         cache = caffeine.buildAsync();
-        GXBaseCommonUtil.registerSingleton(beanName, cache);
+        GXCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -83,13 +83,13 @@ public class GXSingletonUtils {
     public static <K, V> com.github.benmanes.caffeine.cache.AsyncLoadingCache<K, V> getAsyncCaffeine(String cacheNameKey, AsyncCacheLoader<K, V> asyncCacheLoader) {
         final String beanName = cacheNameKey + "origin-async-cache-loader-caffeine-cache";
         AsyncLoadingCache<K, V> cache = Convert.convert(new TypeReference<AsyncLoadingCache<K, V>>() {
-        }, GXSpringContextUtil.getBean(beanName));
+        }, GXSpringContextUtils.getBean(beanName));
         if (Objects.nonNull(cache)) {
             return cache;
         }
         Caffeine<K, V> caffeine = getCaffeine(cacheNameKey);
         cache = caffeine.buildAsync(asyncCacheLoader);
-        GXBaseCommonUtil.registerSingleton(beanName, cache);
+        GXCommonUtils.registerSingleton(beanName, cache);
         return cache;
     }
 
@@ -100,19 +100,19 @@ public class GXSingletonUtils {
      * @return Caffeine
      */
     private static <K, V> Caffeine<K, V> getCaffeine(String cacheNameKey) {
-        String spec = GXBaseCommonUtil.getEnvironmentValue(cacheNameKey);
+        String spec = GXCommonUtils.getEnvironmentValue(cacheNameKey);
         if (CharSequenceUtil.isBlank(spec)) {
             spec = "maximumSize=1024";
         }
         final String beanName = spec + "caffeine-obj";
         Caffeine<K, V> caffeine = Convert.convert(new TypeReference<Caffeine<K, V>>() {
-        }, GXSpringContextUtil.getBean(beanName));
+        }, GXSpringContextUtils.getBean(beanName));
         if (Objects.nonNull(caffeine)) {
             return caffeine;
         }
         caffeine = Convert.convert(new TypeReference<Caffeine<K, V>>() {
         }, Caffeine.from(spec));
-        GXBaseCommonUtil.registerSingleton(beanName, caffeine);
+        GXCommonUtils.registerSingleton(beanName, caffeine);
         return caffeine;
     }
 }

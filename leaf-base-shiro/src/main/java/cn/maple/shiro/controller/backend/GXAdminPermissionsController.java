@@ -3,7 +3,7 @@ package cn.maple.shiro.controller.backend;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.controller.GXBaseController;
-import cn.maple.core.framework.util.GXResultUtil;
+import cn.maple.core.framework.util.GXResultUtils;
 import cn.maple.shiro.dto.req.GXAdminPermissionsReqDto;
 import cn.maple.shiro.entities.GXAdminPermissionsEntity;
 import cn.maple.shiro.mapstruct.req.GXAdminPermissionsReqMapStruct;
@@ -36,9 +36,9 @@ public class GXAdminPermissionsController implements GXBaseController {
      */
     @RequiresRoles("super_admin")
     @PostMapping("create")
-    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminPermissionsReqDto source) {
+    public GXResultUtils<Dict> create(@GXRequestBody @Validated GXAdminPermissionsReqDto source) {
         GXAdminPermissionsEntity entity = adminPermissionsMapStruct.sourceToTarget(source);
         long id = adminPermissionsService.create(entity, Dict.create());
-        return GXResultUtil.ok(Dict.create().set("id", id));
+        return GXResultUtils.ok(Dict.create().set("id", id));
     }
 }

@@ -7,7 +7,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.maple.core.datasource.service.impl.GXDBBaseServiceImpl;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXTokenManagerUtil;
+import cn.maple.core.framework.util.GXTokenManagerUtils;
 import cn.maple.shiro.dao.GXAdminDao;
 import cn.maple.shiro.dto.req.GXAdminLoginReqDto;
 import cn.maple.shiro.dto.res.GXAdminResDto;
@@ -65,6 +65,6 @@ public class GXAdminServiceImpl
             throw new GXBusinessException("登录信息不存在,请核对之后重试!!");
         }
         final Long adminId = Convert.toLong(data.remove("id"));
-        return GXTokenManagerUtil.generateAdminToken(adminId, data);
+        return GXTokenManagerUtils.generateAdminToken(adminId, data);
     }
 }

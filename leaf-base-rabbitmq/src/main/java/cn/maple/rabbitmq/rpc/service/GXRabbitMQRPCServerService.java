@@ -1,7 +1,7 @@
 package cn.maple.rabbitmq.rpc.service;
 
 import cn.maple.core.framework.annotation.GXFieldComment;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.springframework.amqp.core.Message;
 
 import java.util.Optional;
@@ -26,6 +26,6 @@ public interface GXRabbitMQRPCServerService {
      */
     default String getQueueName(String queueName) {
         queueName = Optional.ofNullable(queueName).orElse("rabbit.rpc-server-name");
-        return GXSpringContextUtil.getEnvironment().getProperty(queueName, String.class);
+        return GXSpringContextUtils.getEnvironment().getProperty(queueName, String.class);
     }
 }

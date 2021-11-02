@@ -1,8 +1,8 @@
 package cn.maple.shiro.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.shiro.service.GXAdminRoleService;
 import cn.maple.shiro.service.GXAdminService;
 import cn.maple.shiro.service.GXPermissionsService;
@@ -23,7 +23,7 @@ public class GXShiroServiceImpl implements GXShiroService {
      */
     @SuppressWarnings(value = {"unchecked"})
     public Set<String> getAdminAllPermissions(Long adminId) {
-        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXPermissionsService.class)).getAdminAllPermissions(adminId);
+        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXPermissionsService.class)).getAdminAllPermissions(adminId);
     }
 
     /**
@@ -32,12 +32,12 @@ public class GXShiroServiceImpl implements GXShiroService {
      * @return Dict
      */
     public Set<String> getAdminRoles(Long adminId) {
-        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminRoleService.class)).getAdminRoles(adminId);
+        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminRoleService.class)).getAdminRoles(adminId);
     }
 
     @Override
     public Dict getAdminById(Long adminId) {
-        final Dict dict = Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminService.class)).getStatus(adminId);
+        final Dict dict = Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminService.class)).getStatus(adminId);
         if (null == dict) {
             return Dict.create();
         }
@@ -46,9 +46,9 @@ public class GXShiroServiceImpl implements GXShiroService {
 
     @Override
     public boolean isSuperAdmin(Dict adminData) {
-        final String primaryKey = Objects.requireNonNull(GXSpringContextUtil.getBean(GXAdminService.class)).getPrimaryKey();
+        final String primaryKey = Objects.requireNonNull(GXSpringContextUtils.getBean(GXAdminService.class)).getPrimaryKey();
         if (null != adminData.getLong(primaryKey)) {
-            return adminData.getLong(primaryKey).equals(GXBaseCommonUtil.getEnvironmentValue("super.admin.id", Long.class));
+            return adminData.getLong(primaryKey).equals(GXCommonUtils.getEnvironmentValue("super.admin.id", Long.class));
         }
         return adminData.getLong("super_admin") == 1;
     }

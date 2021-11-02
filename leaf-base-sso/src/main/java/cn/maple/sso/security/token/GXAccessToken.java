@@ -2,7 +2,7 @@ package cn.maple.sso.security.token;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.util.GXAuthCodeUtil;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.constant.GXTokenConstant;
 
 import java.io.Serializable;
@@ -23,7 +23,7 @@ public class GXAccessToken implements GXToken, Serializable {
     }
 
     public GXAccessToken(Dict extParam) {
-        this.token = GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
+        this.token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
     }
 
     @Override

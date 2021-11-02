@@ -3,7 +3,7 @@ package cn.maple.shiro.controller.backend;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.controller.GXBaseController;
-import cn.maple.core.framework.util.GXResultUtil;
+import cn.maple.core.framework.util.GXResultUtils;
 import cn.maple.shiro.dto.req.GXAdminRolesReqDto;
 import cn.maple.shiro.entities.GXAdminRolesEntity;
 import cn.maple.shiro.mapstruct.req.GXAdminRoleReqMapStruct;
@@ -34,9 +34,9 @@ public class GXAdminRoleController implements GXBaseController {
      * @return GXResultUtils
      */
     @PostMapping("create")
-    public GXResultUtil<Dict> create(@GXRequestBody @Validated GXAdminRolesReqDto source) {
+    public GXResultUtils<Dict> create(@GXRequestBody @Validated GXAdminRolesReqDto source) {
         GXAdminRolesEntity entity = adminRoleReqMapStruct.sourceToTarget(source);
         long id = adminRoleService.create(entity, Dict.create());
-        return GXResultUtil.ok(Dict.create().set("id", id));
+        return GXResultUtils.ok(Dict.create().set("id", id));
     }
 }

@@ -33,10 +33,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GXBaseCommonUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(GXBaseCommonUtil.class);
+public class GXCommonUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
 
-    private GXBaseCommonUtil() {
+    private GXCommonUtils() {
 
     }
 
@@ -54,7 +54,7 @@ public class GXBaseCommonUtil {
      * @return <R>
      */
     public static <R> R getEnvironmentValue(String key, Class<R> clazzType) {
-        final R envValue = GXSpringContextUtil.getEnvironment().getProperty(key, clazzType);
+        final R envValue = GXSpringContextUtils.getEnvironment().getProperty(key, clazzType);
         if (null == envValue) {
             return getClassDefaultValue(clazzType);
         }
@@ -76,7 +76,7 @@ public class GXBaseCommonUtil {
      * @return <R>
      */
     public static <R> R getEnvironmentValue(String key, Class<R> clazzType, R defaultValue) {
-        final R envValue = GXSpringContextUtil.getEnvironment().getProperty(key, clazzType);
+        final R envValue = GXSpringContextUtils.getEnvironment().getProperty(key, clazzType);
         if (null == envValue) {
             return defaultValue;
         }
@@ -90,7 +90,7 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String getEnvironmentValue(String key) {
-        final String property = GXSpringContextUtil.getEnvironment().getProperty(key);
+        final String property = GXSpringContextUtils.getEnvironment().getProperty(key);
         if (null == property) {
             return "";
         }
@@ -103,7 +103,7 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String getActiveProfile() {
-        return GXSpringContextUtil.getEnvironment().getActiveProfiles()[0];
+        return GXSpringContextUtils.getEnvironment().getActiveProfiles()[0];
     }
 
     /**
@@ -282,7 +282,7 @@ public class GXBaseCommonUtil {
      * @param event 事件对象
      */
     public static <T> void publishEvent(GXBaseEvent<T> event) {
-        GXSpringContextUtil.getApplicationContext().publishEvent(event);
+        GXSpringContextUtils.getApplicationContext().publishEvent(event);
     }
 
     /**
@@ -308,8 +308,8 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String encryptedPhoneNumber(String phoneNumber) {
-        final String prefix = GXBaseCommonUtil.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXBaseCommonUtil.getEnvironmentValue("encrypted.phone.suffix", String.class);
+        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
+        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
         final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return encryptedPhoneNumber(phoneNumber, key);
     }
@@ -321,8 +321,8 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String decryptedPhoneNumber(String encryptPhoneNumber) {
-        final String prefix = GXBaseCommonUtil.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXBaseCommonUtil.getEnvironmentValue("encrypted.phone.suffix", String.class);
+        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
+        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
         final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
         return decryptedPhoneNumber(encryptPhoneNumber, key);
     }
@@ -335,7 +335,7 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String encryptedPhoneNumber(String phoneNumber, String key) {
-        return GXAuthCodeUtil.authCodeEncode(phoneNumber, key);
+        return GXAuthCodeUtils.authCodeEncode(phoneNumber, key);
     }
 
     /**
@@ -346,7 +346,7 @@ public class GXBaseCommonUtil {
      * @return String
      */
     public static String decryptedPhoneNumber(String encryptPhoneNumber, String key) {
-        final String s = GXAuthCodeUtil.authCodeDecode(encryptPhoneNumber, key);
+        final String s = GXAuthCodeUtils.authCodeDecode(encryptPhoneNumber, key);
         if ("{}".equals(s)) {
             return encryptPhoneNumber;
         }
@@ -439,7 +439,7 @@ public class GXBaseCommonUtil {
             LOG.error("不合法的JSON字符串 : {}", jsonStr);
             return getClassDefaultValue(clazz);
         }
-        final ObjectMapper objectMapper = GXSpringContextUtil.getBean(ObjectMapper.class);
+        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
         try {
             assert objectMapper != null;
             return objectMapper.readValue(jsonStr, clazz);
@@ -462,7 +462,7 @@ public class GXBaseCommonUtil {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(reference);
         }
-        final ObjectMapper objectMapper = GXSpringContextUtil.getBean(ObjectMapper.class);
+        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
         try {
             assert objectMapper != null;
             return objectMapper.readValue(jsonStr, reference);
@@ -495,7 +495,7 @@ public class GXBaseCommonUtil {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(clazz);
         }
-        final ObjectMapper objectMapper = GXSpringContextUtil.getBean(ObjectMapper.class);
+        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
         try {
             assert objectMapper != null;
             Dict data = objectMapper.readValue(jsonStr, Dict.class);
@@ -711,7 +711,7 @@ public class GXBaseCommonUtil {
      * @return Cache
      */
     public static Cache getSpringCache(String cacheName) {
-        final CacheManager cacheManager = GXSpringContextUtil.getBean(CacheManager.class);
+        final CacheManager cacheManager = GXSpringContextUtils.getBean(CacheManager.class);
         assert cacheManager != null;
         return cacheManager.getCache(cacheName);
     }
@@ -804,7 +804,7 @@ public class GXBaseCommonUtil {
      * @param singletonObject 需要存储的对象
      */
     public static void registerSingleton(String beanName, Object singletonObject) {
-        GXSpringContextUtil.registerSingleton(beanName, singletonObject);
+        GXSpringContextUtils.registerSingleton(beanName, singletonObject);
     }
 
 

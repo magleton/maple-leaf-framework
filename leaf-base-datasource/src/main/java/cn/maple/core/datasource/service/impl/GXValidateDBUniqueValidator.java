@@ -3,7 +3,7 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.datasource.annotation.GXValidateDBUnique;
 import cn.maple.core.datasource.service.GXValidateDBUniqueService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class GXValidateDBUniqueValidator implements ConstraintValidator<GXValida
     public void initialize(GXValidateDBUnique annotation) {
         Class<? extends GXValidateDBUniqueService> clazz = annotation.service();
         fieldName = annotation.fieldName();
-        service = GXSpringContextUtil.getBean(clazz);
+        service = GXSpringContextUtils.getBean(clazz);
         tableName = annotation.tableName();
         condition = annotation.condition();
         spEL = annotation.spEL();

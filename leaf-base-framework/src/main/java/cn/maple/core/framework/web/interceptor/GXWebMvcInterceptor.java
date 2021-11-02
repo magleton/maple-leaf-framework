@@ -1,7 +1,7 @@
 package cn.maple.core.framework.web.interceptor;
 
 import cn.maple.core.framework.properties.web.GXWebMvcProperties;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.support.GXCustomerHandlerMethodArgumentResolver;
 import cn.maple.core.framework.web.support.GXRequestHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -40,19 +40,19 @@ public class GXWebMvcInterceptor implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         final List<String> list = webMvcConfig.getUrlPatterns();
-        if (Objects.nonNull(GXSpringContextUtil.getBean(GXAuthorizationInterceptor.class))) {
-            registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtil.getBean(GXAuthorizationInterceptor.class))).addPathPatterns(list);
+        if (Objects.nonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))) {
+            registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))).addPathPatterns(list);
         }
-        if (Objects.nonNull(GXSpringContextUtil.getBean(GXBaseSSOPermissionInterceptor.class))) {
-            registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtil.getBean(GXBaseSSOPermissionInterceptor.class))).addPathPatterns(list);
+        if (Objects.nonNull(GXSpringContextUtils.getBean(GXBaseSSOPermissionInterceptor.class))) {
+            registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseSSOPermissionInterceptor.class))).addPathPatterns(list);
         }
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(requestHandlerMethodArgumentResolver);
-        if (Objects.nonNull(GXSpringContextUtil.getBean(GXCustomerHandlerMethodArgumentResolver.class))) {
-            argumentResolvers.add(GXSpringContextUtil.getBean(GXCustomerHandlerMethodArgumentResolver.class));
+        if (Objects.nonNull(GXSpringContextUtils.getBean(GXCustomerHandlerMethodArgumentResolver.class))) {
+            argumentResolvers.add(GXSpringContextUtils.getBean(GXCustomerHandlerMethodArgumentResolver.class));
         }
     }
 }

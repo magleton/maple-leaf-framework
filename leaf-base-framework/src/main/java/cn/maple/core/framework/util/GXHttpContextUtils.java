@@ -86,7 +86,7 @@ public class GXHttpContextUtils {
             value = Convert.convert(clazz, requestParameter);
         }
         if (null == value) {
-            return GXBaseCommonUtil.getClassDefaultValue(clazz);
+            return GXCommonUtils.getClassDefaultValue(clazz);
         }
         return value;
     }
@@ -110,7 +110,7 @@ public class GXHttpContextUtils {
      */
     public static long getUserIdFromToken(String tokenName, String tokenIdName) {
         final String token = ServletUtil.getHeader(Objects.requireNonNull(getHttpServletRequest()), tokenName, CharsetUtil.UTF_8);
-        String s = GXAuthCodeUtil.authCodeDecode(token, GXTokenConstant.KEY);
+        String s = GXAuthCodeUtils.authCodeDecode(token, GXTokenConstant.KEY);
         return 0;
     }
 
@@ -165,7 +165,7 @@ public class GXHttpContextUtils {
         assert servletRequest != null;
         final Object attributeValue = servletRequest.getAttribute(attributeName);
         if (null == attributeValue) {
-            return GXBaseCommonUtil.getClassDefaultValue(clazz);
+            return GXCommonUtils.getClassDefaultValue(clazz);
         }
         return Convert.convert(clazz, attributeValue);
     }

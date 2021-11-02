@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.util.GXAuthCodeUtil;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.sso.config.GXSSOConfig;
 import cn.maple.sso.constant.GXSSOConstant;
@@ -82,7 +82,7 @@ public class GXSSOToken extends GXAccessToken {
     }
 
     public static GXSSOToken parser(String token, boolean header) {
-        String s = GXAuthCodeUtil.authCodeDecode(token, GXTokenConstant.KEY);
+        String s = GXAuthCodeUtils.authCodeDecode(token, GXTokenConstant.KEY);
         return JSONUtil.toBean(s, GXSSOToken.class);
     }
 
@@ -112,7 +112,7 @@ public class GXSSOToken extends GXAccessToken {
         }
         param.set("time", time);
         param.set("issuedAt", new Date(time));
-        return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
     }
 
     public GXTokenFlag getFlag() {

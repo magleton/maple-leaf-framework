@@ -3,7 +3,7 @@ package cn.maple.shiro.controller.backend;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.controller.GXBaseController;
-import cn.maple.core.framework.util.GXResultUtil;
+import cn.maple.core.framework.util.GXResultUtils;
 import cn.maple.shiro.dto.req.GXAdminLoginReqDto;
 import cn.maple.shiro.service.GXAdminService;
 import org.springframework.validation.annotation.Validated;
@@ -30,8 +30,8 @@ public class GXAdminController implements GXBaseController {
      * @return GXResultUtils
      */
     @PostMapping("login")
-    public GXResultUtil<Dict> login(@GXRequestBody @Validated GXAdminLoginReqDto loginReqDto) {
+    public GXResultUtils<Dict> login(@GXRequestBody @Validated GXAdminLoginReqDto loginReqDto) {
         final String token = adminService.login(loginReqDto);
-        return GXResultUtil.ok(Dict.create().set("admin-token", token).set("username", loginReqDto.getUsername()));
+        return GXResultUtils.ok(Dict.create().set("admin-token", token).set("username", loginReqDto.getUsername()));
     }
 }

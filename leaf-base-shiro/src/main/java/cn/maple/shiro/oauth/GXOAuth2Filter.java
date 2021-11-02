@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.util.GXHttpContextUtils;
-import cn.maple.core.framework.util.GXResultUtil;
+import cn.maple.core.framework.util.GXResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -44,7 +44,7 @@ public class GXOAuth2Filter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", GXHttpContextUtils.getOrigin());
-            String json = JSONUtil.toJsonStr(Objects.requireNonNull(GXResultUtil
+            String json = JSONUtil.toJsonStr(Objects.requireNonNull(GXResultUtils
                     .error(HttpStatus.HTTP_UNAUTHORIZED, "invalid token", Dict.create())));
             httpResponse.getWriter().print(json);
             return false;
@@ -60,7 +60,7 @@ public class GXOAuth2Filter extends AuthenticatingFilter {
         httpResponse.setHeader("Access-Control-Allow-Origin", GXHttpContextUtils.getOrigin());
         try {
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            GXResultUtil<String> r = GXResultUtil.error(HttpStatus.HTTP_UNAUTHORIZED, throwable.getMessage());
+            GXResultUtils<String> r = GXResultUtils.error(HttpStatus.HTTP_UNAUTHORIZED, throwable.getMessage());
             String json = JSONUtil.toJsonStr(r);
             httpResponse.getWriter().print(json);
         } catch (IOException e1) {

@@ -2,7 +2,7 @@ package cn.maple.shiro.util;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -33,7 +33,7 @@ public class GXShiroUtils {
         }
         Long adminId = getAdminData().getLong(GXTokenConstant.ADMIN_ID);
         if (null == adminId) {
-            adminId = getAdminData().getLong(GXBaseCommonUtil.toCamelCase(GXTokenConstant.ADMIN_ID));
+            adminId = getAdminData().getLong(GXCommonUtils.toCamelCase(GXTokenConstant.ADMIN_ID));
         }
         return null == adminId ? 0 : adminId;
     }

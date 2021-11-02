@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GXMapStructExpressionUtil {
+public class GXMapStructExpressionUtils {
     /**
      * 私有构造函数
      */
-    private GXMapStructExpressionUtil() {
+    private GXMapStructExpressionUtils() {
     }
 
     /**

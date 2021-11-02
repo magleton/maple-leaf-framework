@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 @Data
-public class GXResultUtil<T> {
+public class GXResultUtils<T> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -48,40 +48,40 @@ public class GXResultUtil<T> {
      */
     private T data = null;
 
-    public static <T> GXResultUtil<T> ok(GXResultCode resultCode) {
+    public static <T> GXResultUtils<T> ok(GXResultCode resultCode) {
         return ok(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtil<T> ok(GXResultCode resultCode, T data) {
+    public static <T> GXResultUtils<T> ok(GXResultCode resultCode, T data) {
         callUserDefinedMethod(data);
         return ok(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
-    public static <T> GXResultUtil<T> ok(String msg) {
+    public static <T> GXResultUtils<T> ok(String msg) {
         return ok(SUCCESS_CODE, msg, null);
     }
 
-    public static <T> GXResultUtil<T> ok(int code, String msg) {
+    public static <T> GXResultUtils<T> ok(int code, String msg) {
         return ok(code, msg, null);
     }
 
-    public static <T> GXResultUtil<T> ok(int code) {
+    public static <T> GXResultUtils<T> ok(int code) {
         return ok(code, SUCCESS_MSG, null);
     }
 
-    public static <T> GXResultUtil<T> ok(T data) {
+    public static <T> GXResultUtils<T> ok(T data) {
         callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, SUCCESS_MSG, data);
     }
 
-    public static <T> GXResultUtil<T> ok(String msg, T data) {
+    public static <T> GXResultUtils<T> ok(String msg, T data) {
         callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, msg, data);
     }
 
-    public static <T> GXResultUtil<T> ok(int code, String msg, T data) {
+    public static <T> GXResultUtils<T> ok(int code, String msg, T data) {
         callUserDefinedMethod(data);
-        GXResultUtil<T> r = new GXResultUtil<>();
+        GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
         r.setData(data);
@@ -98,43 +98,43 @@ public class GXResultUtil<T> {
         }
     }
 
-    public static <T> GXResultUtil<T> ok() {
-        return new GXResultUtil<>();
+    public static <T> GXResultUtils<T> ok() {
+        return new GXResultUtils<>();
     }
 
-    public static <T> GXResultUtil<T> error() {
+    public static <T> GXResultUtils<T> error() {
         return error(FAIL_CODE, "未知异常，请联系管理员");
     }
 
-    public static <T> GXResultUtil<T> error(T data) {
+    public static <T> GXResultUtils<T> error(T data) {
         callUserDefinedMethod(data);
         return error(FAIL_CODE, FAIL_MSG, data);
     }
 
-    public static <T> GXResultUtil<T> error(String msg) {
+    public static <T> GXResultUtils<T> error(String msg) {
         return error(FAIL_CODE, msg);
     }
 
-    public static <T> GXResultUtil<T> error(int code) {
+    public static <T> GXResultUtils<T> error(int code) {
         return error(code, FAIL_MSG, null);
     }
 
-    public static <T> GXResultUtil<T> error(int code, String msg) {
+    public static <T> GXResultUtils<T> error(int code, String msg) {
         return error(code, msg, null);
     }
 
-    public static <T> GXResultUtil<T> error(GXResultCode resultCode) {
+    public static <T> GXResultUtils<T> error(GXResultCode resultCode) {
         return error(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtil<T> error(GXResultCode resultCode, T data) {
+    public static <T> GXResultUtils<T> error(GXResultCode resultCode, T data) {
         callUserDefinedMethod(data);
         return error(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
-    public static <T> GXResultUtil<T> error(int code, String msg, T data) {
+    public static <T> GXResultUtils<T> error(int code, String msg, T data) {
         callUserDefinedMethod(data);
-        GXResultUtil<T> r = new GXResultUtil<>();
+        GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
         r.setData(data);

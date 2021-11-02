@@ -65,7 +65,7 @@ public class GXCacheKeysUtils {
      * @return String
      */
     public String getCacheKey(String configName, String key) {
-        CacheKeysProperties cacheKeysProperties = GXSpringContextUtil.getBean(CacheKeysProperties.class);
+        CacheKeysProperties cacheKeysProperties = GXSpringContextUtils.getBean(CacheKeysProperties.class);
         if (Objects.isNull(cacheKeysProperties)) {
             log.info("未配置缓存键列表");
             return CharSequenceUtil.format("geoxus:default:{}", key);

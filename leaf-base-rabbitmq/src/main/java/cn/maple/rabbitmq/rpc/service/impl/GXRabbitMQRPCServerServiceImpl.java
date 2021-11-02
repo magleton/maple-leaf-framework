@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.rabbitmq.config.GXRabbitMQConfig;
 import cn.maple.rabbitmq.rpc.handler.GXRPCServerHandler;
 import cn.maple.rabbitmq.rpc.service.GXRabbitMQRPCServerService;
@@ -60,7 +60,7 @@ public class GXRabbitMQRPCServerServiceImpl implements GXRabbitMQRPCServerServic
         if (null == methodName) {
             return JSONUtil.toJsonStr(Dict.create().set("thread_name", threadName).set("msg", "RPC的调用方法没有设置").set("code", HttpStatus.HTTP_INTERNAL_ERROR));
         }
-        final GXRPCServerHandler rpcServerHandler = GXSpringContextUtil.getBean(handlerName, GXRPCServerHandler.class);
+        final GXRPCServerHandler rpcServerHandler = GXSpringContextUtils.getBean(handlerName, GXRPCServerHandler.class);
         if (rpcServerHandler == null) {
             return JSONUtil.toJsonStr(Dict.create().set("thread_name", threadName).set("msg", "服务端没有提供对应的RPC服务").set("code", HttpStatus.HTTP_INTERNAL_ERROR));
         }

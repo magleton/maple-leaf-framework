@@ -3,7 +3,7 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         Class<? extends GXValidateDBExistsService> clazz = annotation.service();
         fieldName = annotation.fieldName();
         groups = annotation.groups();
-        service = GXSpringContextUtil.getBean(clazz);
+        service = GXSpringContextUtils.getBean(clazz);
         tableName = annotation.tableName();
         condition = annotation.condition();
         spEL = annotation.spEL();

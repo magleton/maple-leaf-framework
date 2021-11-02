@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.canal.dto.GXCanalDataDto;
 import cn.maple.canal.service.GXCanalMessageParseService;
 import cn.maple.canal.service.GXProcessCanalDataService;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +31,9 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
         }
         final GXCanalDataDto canalDataDto = JSONUtil.toBean(message, GXCanalDataDto.class);
         final String serviceName = CharSequenceUtil.toCamelCase(CharSequenceUtil.format("{}_{}_Service", canalDataDto.getDatabase(), canalDataDto.getTable()));
-        Object bean = GXSpringContextUtil.getBean(serviceName);
+        Object bean = GXSpringContextUtils.getBean(serviceName);
         if (Objects.isNull(bean)) {
-            bean = GXSpringContextUtil.getBean("defaultProcessCanalDataService");
+            bean = GXSpringContextUtils.getBean("defaultProcessCanalDataService");
             if (Objects.isNull(bean)) {
                 log.info("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
                 return dict;

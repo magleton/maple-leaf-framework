@@ -1,7 +1,7 @@
 package cn.maple.core.framework.validator.impl;
 
 import cn.maple.core.framework.annotation.GXMergeSingleField;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.validator.GXValidateJSONFieldService;
 
 import javax.validation.ConstraintValidator;
@@ -33,7 +33,7 @@ public class GXValidateMergeSingleFieldValidator implements ConstraintValidator<
         tableName = annotation.tableName();
         parentFieldName = annotation.parentFieldName();
         fieldName = annotation.fieldName();
-        validateJsonFieldService = GXSpringContextUtil.getBean(serviceClazz);
+        validateJsonFieldService = GXSpringContextUtils.getBean(serviceClazz);
     }
 
     @Override

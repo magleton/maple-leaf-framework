@@ -27,7 +27,7 @@ public class GXSpELToolUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXBaseCommonUtil.getLogger(GXSpELToolUtils.class);
+    private static final Logger LOG = GXCommonUtils.getLogger(GXSpELToolUtils.class);
 
     /**
      * 目标类中方法不存在的提示信息
@@ -67,7 +67,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXBaseCommonUtil.getClassDefaultValue(beanClass);
+        return GXCommonUtils.getClassDefaultValue(beanClass);
     }
 
     /**
@@ -110,7 +110,7 @@ public class GXSpELToolUtils {
      */
     public static <T> T calculateSpELExpression(Object targetObject, String expressionString, Class<T> beanClazz) {
         if (Objects.isNull(targetObject)) {
-            return GXBaseCommonUtil.getClassDefaultValue(beanClazz);
+            return GXCommonUtils.getClassDefaultValue(beanClazz);
         }
         try {
             ExpressionParser parser = new SpelExpressionParser();
@@ -119,7 +119,7 @@ public class GXSpELToolUtils {
         } catch (SpelEvaluationException e) {
             LOG.error("SpEL表达式失败 , 表达式 : {} , 异常信息 : {}", expressionString, e.getMessage());
         }
-        return GXBaseCommonUtil.getClassDefaultValue(beanClazz);
+        return GXCommonUtils.getClassDefaultValue(beanClazz);
     }
 
     /**
@@ -148,7 +148,7 @@ public class GXSpELToolUtils {
         final StandardEvaluationContext inventorContext = new StandardEvaluationContext(targetObj);
         final ExpressionParser parser = new SpelExpressionParser();
         if (data.isEmpty()) {
-            return GXBaseCommonUtil.getClassDefaultValue(clazz);
+            return GXCommonUtils.getClassDefaultValue(clazz);
         }
         data.forEach((key, value) -> parser.parseExpression(key).setValue(inventorContext, value));
         return parser.parseExpression(targetKey).getValue(inventorContext, clazz);
@@ -205,7 +205,7 @@ public class GXSpELToolUtils {
      * @return T
      */
     public static <T> T callBeanMethodSpELExpression(Class<?> beanClazz, String methodName, Class<T> clazz, Class<?>[] methodParamTypes, Object... params) {
-        final Object beanObj = GXSpringContextUtil.getBean(beanClazz);
+        final Object beanObj = GXSpringContextUtils.getBean(beanClazz);
         if (Objects.isNull(beanObj)) {
             return null;
         }

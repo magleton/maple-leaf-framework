@@ -1,6 +1,6 @@
 package cn.maple.rabbitmq.util;
 
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.rabbitmq.rpc.config.GXRabbitMQRPCRemoteServersConfig;
 import cn.maple.rabbitmq.rpc.service.GXRabbitMQRPCClientService;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -60,7 +60,7 @@ public class GXRabbitUtils {
      * @return String
      */
     public static String getRemoteRPCServerValueByKey(String serverName, String key) {
-        final GXRabbitMQRPCRemoteServersConfig serverConfigBean = GXSpringContextUtil.getBean(GXRabbitMQRPCRemoteServersConfig.class);
+        final GXRabbitMQRPCRemoteServersConfig serverConfigBean = GXSpringContextUtils.getBean(GXRabbitMQRPCRemoteServersConfig.class);
         assert serverConfigBean != null;
         final Map<String, Map<String, Object>> servers = serverConfigBean.getServers();
         final Map<String, Object> server = servers.get(serverName);

@@ -7,7 +7,7 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.dto.inner.req.GXDynamicCallParamAttributeReqDto;
 import cn.maple.core.framework.dto.inner.req.GXDynamicCallParamReqDto;
 import cn.maple.core.framework.service.GXParseDynamicCallParamService;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
             final String callBackClassName = callParamDto.getCallBackClassName();
             final Class<?> aClass = Class.forName(callBackClassName);
             final String callBackMethodName = callParamDto.getCallBackMethodName();
-            final Object bean = GXSpringContextUtil.getBean(aClass);
+            final Object bean = GXSpringContextUtils.getBean(aClass);
             if (Objects.isNull(bean)) {
                 log.error("callBackClassName = {}的bean不存在", callBackClassName);
                 return null;

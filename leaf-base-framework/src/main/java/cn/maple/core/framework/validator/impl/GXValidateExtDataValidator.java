@@ -1,7 +1,7 @@
 package cn.maple.core.framework.validator.impl;
 
 import cn.maple.core.framework.annotation.GXValidateExtData;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.validator.GXValidateExtDataService;
 
 import javax.validation.ConstraintValidator;
@@ -22,7 +22,7 @@ public class GXValidateExtDataValidator implements ConstraintValidator<GXValidat
         Class<? extends GXValidateExtDataService> clazz = constraintAnnotation.service();
         modelName = constraintAnnotation.tableName();
         subField = constraintAnnotation.fieldName();
-        service = GXSpringContextUtil.getBean(clazz);
+        service = GXSpringContextUtils.getBean(clazz);
         isFullMatchAttribute = constraintAnnotation.isFullMatchAttribute();
     }
 

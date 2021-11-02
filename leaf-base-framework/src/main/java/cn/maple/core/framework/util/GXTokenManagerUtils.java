@@ -7,8 +7,8 @@ import cn.maple.core.framework.constant.GXTokenConstant;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GXTokenManagerUtil {
-    private GXTokenManagerUtil() {
+public class GXTokenManagerUtils {
+    private GXTokenManagerUtils() {
     }
 
     /**
@@ -27,7 +27,7 @@ public class GXTokenManagerUtil {
     public static String generateAdminToken(long adminId, Dict param) {
         param.putIfAbsent(GXTokenConstant.ADMIN_ID, adminId);
         param.putIfAbsent("platform", "GEO_XUS");
-        return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY, GXTokenConstant.ADMIN_EXPIRES_REFRESH);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY, GXTokenConstant.ADMIN_EXPIRES_REFRESH);
     }
 
     /**
@@ -45,7 +45,7 @@ public class GXTokenManagerUtil {
      */
     public static String generateUserToken(long userId, Dict param) {
         param.putIfAbsent(GXTokenConstant.USER_ID, userId);
-        return GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
     }
 
     /**
@@ -57,7 +57,7 @@ public class GXTokenManagerUtil {
      */
     public static Dict decodeUserToken(String source) {
         try {
-            String s = GXAuthCodeUtil.authCodeDecode(source, GXTokenConstant.KEY);
+            String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstant.KEY);
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
             return Dict.create();
@@ -73,7 +73,7 @@ public class GXTokenManagerUtil {
      */
     public static Dict decodeAdminToken(String source) {
         try {
-            String s = GXAuthCodeUtil.authCodeDecode(source, GXTokenConstant.KEY);
+            String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstant.KEY);
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
             log.error(exception.getMessage());

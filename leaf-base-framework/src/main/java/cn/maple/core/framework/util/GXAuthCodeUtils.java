@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author zj chen <britton@126.com>
  */
-public class GXAuthCodeUtil {
+public class GXAuthCodeUtils {
     /**
      * private static MD5 md5 = new MD5();
      * private static BASE64 base64 = new BASE64();

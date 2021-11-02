@@ -9,7 +9,7 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
 import org.springframework.cache.Cache;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public String encryptedPhoneNumber(String phoneNumber) {
-        return GXBaseCommonUtil.encryptedPhoneNumber(phoneNumber);
+        return GXCommonUtils.encryptedPhoneNumber(phoneNumber);
     }
 
     /**
@@ -34,7 +34,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public String decryptedPhoneNumber(String encryptPhoneNumber) {
-        return GXBaseCommonUtil.decryptedPhoneNumber(encryptPhoneNumber);
+        return GXCommonUtils.decryptedPhoneNumber(encryptPhoneNumber);
     }
 
     /**
@@ -48,7 +48,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar) {
-        return GXBaseCommonUtil.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
+        return GXCommonUtils.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
     }
 
     /**
@@ -80,7 +80,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public <R> void publishEvent(GXBaseEvent<R> event) {
-        GXBaseCommonUtil.publishEvent(event);
+        GXCommonUtils.publishEvent(event);
     }
 
     /**
@@ -93,9 +93,9 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     public Dict getConstantsFields() {
         final Dict data = Dict.create();
         final List<Class<?>> clazzInterfaces = new ArrayList<>();
-        GXBaseCommonUtil.getInterfaces(getClass(), clazzInterfaces);
+        GXCommonUtils.getInterfaces(getClass(), clazzInterfaces);
         for (Class<?> clz : clazzInterfaces) {
-            GXBaseCommonUtil.clazzFields(clz, data);
+            GXCommonUtils.clazzFields(clz, data);
         }
         return data;
     }
@@ -118,7 +118,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, int coreModelId) {
-        return getSingleFieldValueByEntity(entity, path, type, GXBaseCommonUtil.getClassDefaultValue(type), coreModelId);
+        return getSingleFieldValueByEntity(entity, path, type, GXCommonUtils.getClassDefaultValue(type), coreModelId);
     }
 
     /**
@@ -213,7 +213,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public Cache getSpringCache(String cacheName) {
-        return GXBaseCommonUtil.getSpringCache(cacheName);
+        return GXCommonUtils.getSpringCache(cacheName);
     }
 
     /**

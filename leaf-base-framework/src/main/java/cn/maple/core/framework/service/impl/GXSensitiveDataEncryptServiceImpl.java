@@ -1,7 +1,7 @@
 package cn.maple.core.framework.service.impl;
 
 import cn.hutool.core.util.ReflectUtil;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.annotation.GXSensitiveField;
 import cn.maple.core.framework.service.GXSensitiveDataEncryptService;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class GXSensitiveDataEncryptServiceImpl implements GXSensitiveDataEncrypt
                     final String deEncryptKey = sensitiveField.deEncryptKey();
                     final String[] params = sensitiveField.params();
                     String value = (String) object;
-                    final Object bean = GXSpringContextUtil.getBean(serviceClazz);
+                    final Object bean = GXSpringContextUtils.getBean(serviceClazz);
                     final Object invoke = ReflectUtil.invoke(bean, encryptAlgorithm, value, deEncryptKey, params);
                     ReflectUtil.setFieldValue(paramsObject, accessible, invoke);
                 }

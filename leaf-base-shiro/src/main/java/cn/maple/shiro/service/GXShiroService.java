@@ -1,7 +1,7 @@
 package cn.maple.shiro.service;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 import java.util.Set;
 
@@ -48,7 +48,7 @@ public interface GXShiroService {
      * @return Long
      */
     default Long currentSessionUserId() {
-        return GXBaseCommonUtil.getCurrentSessionUserId();
+        return GXCommonUtils.getCurrentSessionUserId();
     }
 
     /**

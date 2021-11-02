@@ -1,6 +1,6 @@
 package cn.maple.sso.util;
 
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.config.GXSSOConfig;
 import cn.maple.sso.plugins.GXSSOPlugin;
@@ -51,21 +51,21 @@ public class GXSSOHelperUtil {
     public static GXSSOConfig getSSOConfig() {
         // 为每个应用设置自己的配置信息
         if (Objects.isNull(ssoConfig)) {
-            if (Objects.nonNull(GXSpringContextUtil.getBean(GXSSOConfigProperties.class))) {
-                ssoConfig = Objects.requireNonNull(GXSpringContextUtil.getBean(GXSSOConfigProperties.class)).getConfig();
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class))) {
+                ssoConfig = Objects.requireNonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class)).getConfig();
             } else {
                 ssoConfig = new GXSSOConfig();
             }
             // 为每个应用配置自己的插件
-            Map<String, GXSSOPlugin> ssoPluginMap = GXSpringContextUtil.getBeans(GXSSOPlugin.class);
+            Map<String, GXSSOPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSSOPlugin.class);
             if (!ssoPluginMap.isEmpty()) {
                 ArrayList<GXSSOPlugin> plugins = new ArrayList<>();
                 ssoPluginMap.forEach((key, val) -> plugins.add(val));
                 GXSSOHelperUtil.getSSOConfig().setPluginList(plugins);
             }
             // 为每个应用配置自己的SsoCache实例
-            if (Objects.nonNull(GXSpringContextUtil.getBean(GXSSOCache.class))) {
-                GXSSOHelperUtil.getSSOConfig().setCache(GXSpringContextUtil.getBean(GXSSOCache.class));
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXSSOCache.class))) {
+                GXSSOHelperUtil.getSSOConfig().setCache(GXSpringContextUtils.getBean(GXSSOCache.class));
             }
         }
         return ssoConfig;
@@ -88,8 +88,8 @@ public class GXSSOHelperUtil {
      */
     public static GXConfigurableAbstractSSOService getSSOService() {
         if (Objects.isNull(ssoService)) {
-            if (Objects.nonNull(GXSpringContextUtil.getBean(GXConfigurableAbstractSSOService.class))) {
-                ssoService = GXSpringContextUtil.getBean(GXConfigurableAbstractSSOService.class);
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class))) {
+                ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class);
             } else {
                 ssoService = new GXConfigurableAbstractSSOService();
             }

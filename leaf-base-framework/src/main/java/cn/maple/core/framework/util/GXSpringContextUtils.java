@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-public class GXSpringContextUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(GXSpringContextUtil.class);
+public class GXSpringContextUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(GXSpringContextUtils.class);
 
     private static final ApplicationContext applicationContext = GXApplicationContextSingleton.INSTANCE.getApplicationContext();
 
-    private GXSpringContextUtil() {
+    private GXSpringContextUtils() {
     }
 
     public static Object getBean(String name) {

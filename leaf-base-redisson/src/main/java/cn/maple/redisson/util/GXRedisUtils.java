@@ -2,7 +2,7 @@ package cn.maple.redisson.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.maple.core.framework.annotation.GXFieldComment;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.redisson.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,6 +132,6 @@ public class GXRedisUtils {
      * @return RedissonClient
      */
     public static RedissonClient getRedissonClient() {
-        return GXSpringContextUtil.getBean(RedissonClient.class);
+        return GXSpringContextUtils.getBean(RedissonClient.class);
     }
 }

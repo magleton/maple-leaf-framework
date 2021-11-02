@@ -2,8 +2,8 @@ package cn.maple.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
-import cn.maple.core.framework.util.GXTokenManagerUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXTokenManagerUtils;
 import cn.maple.shiro.service.GXAdminService;
 import cn.maple.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.info("授权验证权限时调用-->GXOAuth2Realm.doGetAuthorizationInfo() principals : " + principals.getPrimaryPrincipal());
         Dict dict = (Dict) principals.getPrimaryPrincipal();
-        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.ADMIN_ID)).orElse(dict.getLong(GXBaseCommonUtil.toCamelCase(GXTokenConstant.ADMIN_ID)));
+        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.ADMIN_ID)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstant.ADMIN_ID)));
         // 获取用户权限列表
         Set<String> permsSet = shiroService.getAdminAllPermissions(adminId);
         // 获取用户角色列表
@@ -61,7 +61,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         log.info("用户登录时认证 --> GXOAuth2Realm.doGetAuthenticationInfo() ,  principal = {} : credentials = {}", token.getPrincipal(), token.getCredentials());
         String accessToken = token.getPrincipal().toString();
         // 根据accessToken, 获取token中的值
-        Dict dict = GXTokenManagerUtil.decodeAdminToken(accessToken);
+        Dict dict = GXTokenManagerUtils.decodeAdminToken(accessToken);
         // 判断token是否失效
         if (null == dict || dict.isEmpty()) {
             throw new IncorrectCredentialsException("长时间未操作, 请重新登录~~~");

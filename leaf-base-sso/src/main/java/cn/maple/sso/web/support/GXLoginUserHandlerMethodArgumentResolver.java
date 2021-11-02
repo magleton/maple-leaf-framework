@@ -4,8 +4,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.util.GXAuthCodeUtil;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.support.GXCustomerHandlerMethodArgumentResolver;
 import cn.maple.sso.annotation.GXLoginUserAnnotation;
 import cn.maple.sso.dto.GXUserInfoDto;
@@ -42,7 +42,7 @@ public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandl
             if (null == header) {
                 return null;
             }
-            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtil.authCodeDecode(header, GXTokenConstant.KEY), Dict.class);
+            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtils.authCodeDecode(header, GXTokenConstant.KEY), Dict.class);
             object = tokenData.getObj(GXTokenConstant.USER_ID);
             if (null == object) {
                 return null;
@@ -50,6 +50,6 @@ public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandl
         }
         // 获取用户信息
         Long userId = Convert.toLong(object);
-        return Objects.requireNonNull(GXSpringContextUtil.getBean(GXUUserService.class)).getUserByUserId(userId);
+        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXUUserService.class)).getUserByUserId(userId);
     }
 }

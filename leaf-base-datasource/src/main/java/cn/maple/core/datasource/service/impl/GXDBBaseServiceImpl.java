@@ -19,8 +19,8 @@ import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.pojo.GXBusinessStatusCode;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -53,7 +53,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     /**
      * 日志对象
      */
-    private static final Logger LOGGER = GXBaseCommonUtil.getLogger(GXDBBaseServiceImpl.class);
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXDBBaseServiceImpl.class);
 
     /**
      * 基础DAO
@@ -109,7 +109,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition) {
-        return getSingleFieldValueByDB(clazz, path, type, condition, GXBaseCommonUtil.getClassDefaultValue(type));
+        return getSingleFieldValueByDB(clazz, path, type, condition, GXCommonUtils.getClassDefaultValue(type));
     }
 
     /**
@@ -355,7 +355,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     public Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
         final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
         if (Objects.isNull(dict)) {
-            GXBaseCommonUtil.getLogger(GXDBBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
+            GXCommonUtils.getLogger(GXDBBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
             return Dict.create();
         }
         return handleSamePrefixDict(dict);
@@ -378,7 +378,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
         if (targetDict.isEmpty()) {
             return false;
         }
-        GXAlterTableService gxAlterTableService = GXSpringContextUtil.getBean(GXAlterTableService.class);
+        GXAlterTableService gxAlterTableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
         assert gxAlterTableService != null;
         List<GXDBSchemaService.TableField> tableColumns = CollUtil.newArrayList();
         try {

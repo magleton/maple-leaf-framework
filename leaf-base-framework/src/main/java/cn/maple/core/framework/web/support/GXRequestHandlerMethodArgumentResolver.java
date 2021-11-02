@@ -12,7 +12,7 @@ import cn.maple.core.framework.annotation.GXMergeSingleField;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.pojo.GXResultCode;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.util.GXValidatorUtil;
 import cn.maple.core.framework.validator.GXValidateJSONFieldService;
 import org.slf4j.Logger;
@@ -137,7 +137,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             Class<? extends GXValidateJSONFieldService> service = annotation.service();
             Method method = ReflectUtil.getMethodByName(service, "getFieldValueByCondition");
             if (Objects.nonNull(method)) {
-                GXValidateJSONFieldService validateJsonFieldService = GXSpringContextUtil.getBean(service);
+                GXValidateJSONFieldService validateJsonFieldService = GXSpringContextUtils.getBean(service);
                 if (Objects.nonNull(validateJsonFieldService)) {
                     fieldDefaultValue = ReflectUtil.invoke(validateJsonFieldService, method, tableName, parentFieldName, fieldConfigName);
                 }

@@ -17,8 +17,8 @@ import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.datasource.util.GXDataSourceCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
-import cn.maple.core.framework.util.GXSpringContextUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
@@ -184,7 +184,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
         final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
@@ -414,7 +414,7 @@ public interface GXBaseBuilder {
                     timeFieldFlag = true;
                 }
                 if (Objects.isNull(operator)) {
-                    GXBaseCommonUtil.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
+                    GXCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
                     continue;
                 }
                 if (timeFieldFlag) {
@@ -450,7 +450,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
-        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove, saveJSONField);
     }
@@ -465,7 +465,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove);
     }
@@ -479,7 +479,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     default String getSelectField(String tableName, Set<String> targetSet, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtil.getBean(GXDBSchemaService.class);
+        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
     }

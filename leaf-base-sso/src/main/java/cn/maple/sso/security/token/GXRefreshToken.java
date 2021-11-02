@@ -2,7 +2,7 @@ package cn.maple.sso.security.token;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.util.GXAuthCodeUtil;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.constant.GXTokenConstant;
 
 /**
@@ -15,7 +15,7 @@ public class GXRefreshToken implements GXToken {
     private final String token;
 
     private GXRefreshToken(String userId, Dict extParam) {
-        token = GXAuthCodeUtil.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
+        token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
     }
 
     @Override
