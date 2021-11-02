@@ -3,12 +3,15 @@ package cn.maple.core.datasource.util;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import com.baomidou.mybatisplus.annotation.TableName;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.framework.annotation.GXFieldComment;
-import cn.maple.core.framework.util.GXBaseCommonUtil;
+import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 @SuppressWarnings({"unused"})
 public class GXDataSourceCommonUtils {
@@ -75,5 +78,20 @@ public class GXDataSourceCommonUtils {
             return annotation.value();
         }
         return "";
+    }
+
+    /**
+     * 获取分页对象信息
+     *
+     * @param page    分页对象
+     * @param records 分页数据
+     * @return GXPagination
+     */
+    public static <R> GXPaginationResDto<R> convertPageToTarget(IPage<R> page, List<R> records) {
+        long pages = page.getPages();
+        long currentPage = page.getCurrent();
+        long pageSize = page.getSize();
+        long totalCount = page.getTotal();
+        return new GXPaginationResDto<>(records, totalCount, pages, pageSize, currentPage);
     }
 }

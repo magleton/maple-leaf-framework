@@ -237,6 +237,42 @@ public interface GXBaseBuilder {
     }
 
     /**
+     * 通过条件获取分类数据
+     *
+     * @param tableName 表名字
+     * @param fieldSet  需要查询的字段
+     * @param condition 条件
+     *                  <code>
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                  condition.put("level" , "=" , "1111");
+     *                  getDataByCondition(Page , "test" , CollUtil.newHashSet("id" , "username"), condition);
+     *                  </code>
+     * @return SQL语句
+     */
+    static String getPageDataByCondition(IPage<?> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+        String selectStr = "*";
+        if (CollUtil.isNotEmpty(fieldSet)) {
+            selectStr = String.join(",", fieldSet);
+        }
+        SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
+        Map<String, Map<String, Object>> conditionMap = condition.rowMap();
+        conditionMap.forEach((column, datum) -> {
+            List<String> wheres = new ArrayList<>();
+            datum.forEach((operator, value) -> {
+                wheres.add(CharSequenceUtil.format("{} {} {}", column, operator, value));
+                wheres.add("or");
+            });
+            wheres.remove(wheres.size() - 1);
+            String whereStr = String.join(" ", wheres);
+            sql.WHERE(whereStr);
+        });
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        return sql.toString();
+    }
+
+    /**
      * 分页列表
      *
      * @param param 参数

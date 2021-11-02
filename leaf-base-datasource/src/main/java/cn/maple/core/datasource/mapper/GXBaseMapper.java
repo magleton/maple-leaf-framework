@@ -3,7 +3,6 @@ package cn.maple.core.datasource.mapper;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.datasource.handler.GXJSONToMapTypeHandler;
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -48,9 +47,15 @@ public interface GXBaseMapper<T, R> extends BaseMapper<T> {
     })
     List<R> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
+    @SelectProvider(type = GXBaseBuilder.class, method = "getPageDataByCondition")
+    @Results(value = {
+            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
+    })
+    List<R> getPageDataByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+
     @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<GXPaginationResDto<R>> listOrSearchPage(IPage<R> page, Dict param);
+    List<R> listOrSearchPage(IPage<R> page, Dict param);
 }
