@@ -22,6 +22,7 @@
         <module>leaf-base-dubbo-nacos</module>
         <module>leaf-base-dubbo-zk</module>
         <module>leaf-base-extension</module>
+        <module>leaf-base-statemachine</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->
