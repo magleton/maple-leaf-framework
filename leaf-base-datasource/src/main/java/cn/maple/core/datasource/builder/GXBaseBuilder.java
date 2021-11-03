@@ -257,6 +257,8 @@ public interface GXBaseBuilder {
      *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
      *                  condition.put("level" , "=" , "1111");
      *                  getDataByCondition(Page , "test" , CollUtil.newHashSet("id" , "username"), condition);
+     *                  condition1.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition1);
      *                  </code>
      * @return SQL语句
      */
