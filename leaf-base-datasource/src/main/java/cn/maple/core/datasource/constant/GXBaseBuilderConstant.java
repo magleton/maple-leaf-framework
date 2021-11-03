@@ -60,6 +60,9 @@ public class GXBaseBuilderConstant {
     @GXFieldComment(zhDesc = "NOT IN条件")
     public static final String NOT_IN = " NOT IN ({})";
 
+    @GXFieldComment(zhDesc = "标识查询条件是一个函数类型 eg : JSON_OVERLAPS(items->'$.zipcode', CAST('[94536]' AS JSON))")
+    public static final String T_FUNC_MARK = "T_FUNC";
+
     private GXBaseBuilderConstant() {
     }
 }
