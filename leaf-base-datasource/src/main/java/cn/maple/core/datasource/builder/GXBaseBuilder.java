@@ -388,10 +388,6 @@ public interface GXBaseBuilder {
     @SuppressWarnings("all")
     @GXDataSource("framework")
     default void mergeSearchConditionToSql(SQL sql, Dict requestParam, Boolean isMergeDBSearchCondition) {
-        final String modelIdentificationValue = getModelIdentificationValue();
-        if (CharSequenceUtil.isBlank(modelIdentificationValue)) {
-            throw new GXBusinessException(CharSequenceUtil.format("请配置{}.{}的模型标识", getClass().getSimpleName(), GXBaseBuilderConstant.MODEL_IDENTIFICATION_NAME));
-        }
         Dict searchField = getDefaultSearchField();
         Dict requestSearchCondition = getRequestSearchCondition(requestParam);
         final Dict timeFields = getTimeFields();
@@ -486,11 +482,4 @@ public interface GXBaseBuilder {
     default Dict getDefaultSearchField() {
         return Dict.create();
     }
-
-    /**
-     * 数据配置的模型标识
-     *
-     * @return String
-     */
-    String getModelIdentificationValue();
 }
