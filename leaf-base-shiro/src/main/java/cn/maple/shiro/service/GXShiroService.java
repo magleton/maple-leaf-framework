@@ -1,8 +1,11 @@
 package cn.maple.shiro.service;
 
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.pojo.GXBusinessStatusCode;
 import cn.maple.core.framework.util.GXCommonUtils;
+import org.apache.shiro.authc.LockedAccountException;
 
+import java.util.Objects;
 import java.util.Set;
 
 public interface GXShiroService {
@@ -59,5 +62,25 @@ public interface GXShiroService {
      */
     default Dict adminRoles(Long currentAdminId) {
         return Dict.create();
+    }
+
+    /**
+     * 进行附加处理
+     *
+     * @param data 管理员数据
+     */
+    default void additionalTreatment(Dict data) {
+        // 判断账号状态
+        Integer userStatus = data.getInt("status");
+        // 用户账户为锁定状态
+        if (Objects.isNull(userStatus) || userStatus == GXBusinessStatusCode.LOCKED.getCode()) {
+            throw new LockedAccountException(GXBusinessStatusCode.LOCKED.getMsg());
+        }
+    }
+
+    /**
+     * 更新管理员的token缓存时间
+     */
+    default void updateAdminTokenExpirationTime() {
     }
 }

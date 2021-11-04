@@ -1,9 +1,11 @@
 package cn.maple.shiro.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 public class GXShiroCommonUtils {
+    private GXShiroCommonUtils() {
+    }
+
     /**
      * 获取当前登录用户的ID
      * 0  : 表示普通用户
@@ -15,18 +17,8 @@ public class GXShiroCommonUtils {
         try {
             return GXShiroUtils.getAdminId();
         } catch (Exception e) {
-            GXShiroCommonUtils.getLogger(GXShiroCommonUtils.class).error(e.getMessage(), e);
+            GXCommonUtils.getLogger(GXShiroCommonUtils.class).error(e.getMessage(), e);
         }
         return 0;
-    }
-
-    /**
-     * 获取Logger对象
-     *
-     * @param clazz Class
-     * @return Logger
-     */
-    public static Logger getLogger(Class<?> clazz) {
-        return LoggerFactory.getLogger(clazz);
     }
 }

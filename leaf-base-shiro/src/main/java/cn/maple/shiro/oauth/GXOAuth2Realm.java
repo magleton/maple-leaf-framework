@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTokenManagerUtils;
-import cn.maple.shiro.service.GXAdminService;
 import cn.maple.shiro.service.GXShiroService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -26,9 +25,6 @@ import java.util.Set;
 public class GXOAuth2Realm extends AuthorizingRealm {
     @Resource
     private GXShiroService shiroService;
-
-    @Resource
-    private GXAdminService adminService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -73,10 +69,10 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         }
         // 根据用户ID查询用户信息
         Dict admin = shiroService.getAdminById(adminId);
-        // 进行附加处理
-        adminService.additionalTreatment(admin);
-        // 调用更新token的ttl方法 , 用于维持token的有效时间
-        adminService.updateAdminTokenExpirationTime();
+        // TODO 进行附加处理 可以通过派发事件的方式处理
+        shiroService.additionalTreatment(admin);
+        // TODO 调用更新token的ttl方法 , 用于维持token的有效时间 可以通过派发事件的方式处理
+        shiroService.updateAdminTokenExpirationTime();
         return new SimpleAuthenticationInfo(admin, accessToken, getName());
     }
 
