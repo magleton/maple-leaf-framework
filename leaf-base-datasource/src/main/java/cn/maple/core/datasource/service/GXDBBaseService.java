@@ -1,13 +1,13 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import cn.maple.core.framework.service.GXBusinessService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,21 +23,7 @@ import java.util.Set;
  * @author britton chen <britton@126.com>
  */
 public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<T, M, R>, R extends GXBaseResDto>
-        extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
-    /**
-     * 获取BaseMapper对象
-     *
-     * @return M
-     */
-    M getBaseMapper();
-
-    /**
-     * 获取BaseDao对象
-     *
-     * @return D
-     */
-    D getBaseDao();
-
+        extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 获取实体中指定指定的值
      * <pre>

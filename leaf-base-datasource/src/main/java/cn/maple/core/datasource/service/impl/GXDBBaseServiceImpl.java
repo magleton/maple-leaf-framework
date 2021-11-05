@@ -2,7 +2,6 @@ package cn.maple.core.datasource.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -12,29 +11,22 @@ import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.service.GXAlterTableService;
 import cn.maple.core.datasource.service.GXDBBaseService;
-import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.pojo.GXBusinessStatusCode;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,33 +53,6 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @Autowired
     @SuppressWarnings("all")
     protected D baseDao;
-
-    /**
-     * 基础mapper
-     */
-    @Autowired
-    @SuppressWarnings("all")
-    protected M baseMapper;
-
-    /**
-     * 获取BaseMapper对象
-     *
-     * @return M
-     */
-    @Override
-    public M getBaseMapper() {
-        return baseDao.getBaseMapper();
-    }
-
-    /**
-     * 获取BaseDao对象
-     *
-     * @return D
-     */
-    @Override
-    public D getBaseDao() {
-        return baseDao;
-    }
 
     /**
      * 获取实体中指定指定的值
@@ -123,25 +88,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition, E defaultValue) {
-        String fieldSeparator = "::";
-        Object removeObject = condition.remove("remove");
-        boolean remove = null != removeObject;
-        if (CharSequenceUtil.contains(path, fieldSeparator)) {
-            String[] fields = CharSequenceUtil.splitToArray(path, fieldSeparator);
-            path = CharSequenceUtil.format("{}{}{}", fields[0].replace("'", ""), fieldSeparator, fields[1].replace("'", ""));
-        }
-        final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), CollUtil.newHashSet(path), condition, remove);
-        if (null == dict) {
-            return defaultValue;
-        }
-        Object obj = dict.get(path);
-        if (null == obj) {
-            return defaultValue;
-        }
-        if (obj instanceof byte[]) {
-            obj = new String((byte[]) obj, StandardCharsets.UTF_8);
-        }
-        return Convert.convert(type, obj);
+        return baseDao.getSingleFieldValueByDB(clazz, path, type, condition, defaultValue);
     }
 
     /**
@@ -155,25 +102,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @SuppressWarnings("unused")
     @Override
     public Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition) {
-        String fieldSeparator = "::";
-        final Set<String> fieldSet = CollUtil.newHashSet();
-        final Dict dataKey = Dict.create();
-        for (Map.Entry<String, Object> entry : fields.entrySet()) {
-            String key = entry.getKey();
-            String aliasName = key;
-            if (CharSequenceUtil.contains(key, fieldSeparator)) {
-                String[] keys = CharSequenceUtil.splitToArray(key, fieldSeparator);
-                aliasName = CharSequenceUtil.format("{}{}{}",
-                        keys[0].replace("'", ""),
-                        fieldSeparator,
-                        keys[1].replace("'", ""));
-                fieldSet.add(CharSequenceUtil.format("{}", aliasName));
-            } else {
-                fieldSet.add(CharSequenceUtil.format("{}", key));
-            }
-            dataKey.set(aliasName, key);
-        }
-        final Dict dict = baseMapper.getFieldValueBySql(getTableName(clazz), fieldSet, condition, false);
+        Dict dict = baseDao.getMultiFieldsValueByDB(clazz, fields, condition);
         return handleSamePrefixDict(dict);
     }
 
@@ -189,11 +118,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSingleField(Class<T> clazz, String path, Object value, Dict condition) {
-        int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
-        String mainPath = CharSequenceUtil.sub(path, 0, index);
-        String subPath = CharSequenceUtil.sub(path, index + 1, path.length());
-        final Dict data = Dict.create().set(mainPath, Dict.create().set(subPath, value));
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
+        return baseDao.updateSingleField(clazz, path, value, condition);
     }
 
     /**
@@ -207,7 +132,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition) {
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
+        return baseDao.updateMultiFields(clazz, data, condition);
     }
 
     /**
@@ -234,7 +159,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public Integer checkRecordIsExists(Class<T> clazz, Dict condition) {
-        return baseMapper.checkRecordIsExists(getTableName(clazz), condition);
+        return baseDao.checkRecordIsExists(clazz, condition);
     }
 
     /**
@@ -246,7 +171,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public Integer checkRecordIsExists(String tableName, Dict condition) {
-        return baseMapper.checkRecordIsExists(tableName, condition);
+        return baseDao.checkRecordIsExists(tableName, condition);
     }
 
     /**
@@ -258,7 +183,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public Integer checkRecordIsUnique(Class<T> clazz, Dict condition) {
-        return baseMapper.checkRecordIsUnique(getTableName(clazz), condition);
+        return baseDao.checkRecordIsUnique(clazz, condition);
     }
 
     /**
@@ -270,7 +195,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public Integer checkRecordIsUnique(String tableName, Dict condition) {
-        return baseMapper.checkRecordIsUnique(tableName, condition);
+        return baseDao.checkRecordIsUnique(tableName, condition);
     }
 
     /**
@@ -298,7 +223,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public boolean updateFieldByCondition(Class<T> clazz, Dict data, Dict condition) {
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
+        return baseDao.updateFieldByCondition(clazz, data, condition);
     }
 
     /**
@@ -311,7 +236,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public boolean updateStatusByCondition(Class<T> clazz, int status, Dict condition) {
-        return baseMapper.updateStatusByCondition(getTableName(clazz), status, condition);
+        return baseDao.updateStatusByCondition(clazz, status, condition);
     }
 
     /**
@@ -325,7 +250,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @SuppressWarnings("all")
     @Override
     public Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
-        return baseMapper.batchInsertBySql(getTableName(clazz), fieldSet, dataList);
+        return baseDao.batchInsertBySQL(clazz, fieldSet, dataList);
     }
 
     /**
@@ -353,11 +278,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
      */
     @Override
     public Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        final Dict dict = baseMapper.getFieldValueBySql(tableName, fieldSet, condition, remove);
-        if (Objects.isNull(dict)) {
-            GXCommonUtils.getLogger(GXDBBaseServiceImpl.class).error("在{}获取{}字段的数据不存在...", tableName, fieldSet);
-            return Dict.create();
-        }
+        Dict dict = baseDao.getFieldValueBySQL(tableName, fieldSet, condition, remove);
         return handleSamePrefixDict(dict);
     }
 
@@ -374,52 +295,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
-        final Dict targetDict = baseMapper.getFieldValueBySql(originTableName, CollUtil.newHashSet("*"), condition, true);
-        if (targetDict.isEmpty()) {
-            return false;
-        }
-        GXAlterTableService gxAlterTableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
-        assert gxAlterTableService != null;
-        List<GXDBSchemaService.TableField> tableColumns = CollUtil.newArrayList();
-        try {
-            tableColumns = gxAlterTableService.getTableColumns(historyTableName);
-        } catch (SQLException e) {
-            LoggerFactory.getLogger(GXDBBaseServiceImpl.class).error(e.getMessage(), e);
-        }
-        if (tableColumns.isEmpty()) {
-            return false;
-        }
-        final Set<String> tableField = CollUtil.newHashSet();
-        for (GXDBSchemaService.TableField field : tableColumns) {
-            tableField.add(field.getColumnName());
-        }
-        final Dict tableValues = Dict.create();
-        final HashSet<String> lastTableField = new HashSet<>();
-        for (String key : tableField) {
-            String value = targetDict.getStr(key);
-            if (null != value) {
-                lastTableField.add(key);
-                final Object dataObj = appendData.getObj(key);
-                if (null != dataObj) {
-                    if (JSONUtil.isJson(value)) {
-                        final Dict toBean = JSONUtil.toBean(value, Dict.class);
-                        if ((dataObj instanceof Dict)) {
-                            toBean.putAll((Dict) dataObj);
-                        } else {
-                            toBean.set(key, dataObj);
-                        }
-                        value = JSONUtil.toJsonStr(toBean);
-                    } else {
-                        value = value.concat("::" + dataObj);
-                    }
-                }
-                tableValues.set(key, value);
-            }
-        }
-        tableValues.set("updated_at", tableValues.getLong("created_at"));
-        tableValues.set("created_at", DateUtil.current());
-        final Integer insert = baseMapper.batchInsertBySql(historyTableName, lastTableField, CollUtil.newArrayList(tableValues));
-        return insert > 0;
+        return baseDao.recordModificationHistory(originTableName, historyTableName, condition, appendData);
     }
 
     /**
@@ -605,17 +481,7 @@ public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<
     @Override
     public IPage<R> generatePage(Dict param, String mapperMethodName) {
         final IPage<R> riPage = constructPageObjectFromParam(param);
-        Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
-        if (Objects.isNull(mapperMethod)) {
-            Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
-            if (interfaces.length > 0) {
-                String canonicalName = interfaces[0].getCanonicalName();
-                throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperMethodName));
-            }
-            throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
-        }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
-        riPage.setRecords(list);
+        baseDao.generatePage(riPage, param, mapperMethodName);
         return riPage;
     }
 
