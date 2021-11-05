@@ -1,7 +1,6 @@
 package cn.maple.core.framework.aspect;
 
-import cn.maple.core.framework.annotation.GXValidatedParam;
-import cn.maple.core.framework.util.GXValidatorUtil;
+import cn.hutool.core.util.ReflectUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -13,7 +12,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Aspect
 @Component
@@ -28,16 +26,12 @@ public class GXValidatedAspect {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
         Parameter[] parameters = method.getParameters();
-        Object[] args = point.getArgs();
         if (parameters.length > 0) {
-            AtomicInteger index = new AtomicInteger();
             Arrays.stream(parameters).forEach(o -> {
-                GXValidatedParam annotation = o.getAnnotation(GXValidatedParam.class);
-                if (Objects.nonNull(annotation)) {
-                    Class<?>[] groups = annotation.groups();
-                    GXValidatorUtil.validateEntity(args[index.get()], groups);
+                Method customizeProcess = ReflectUtil.getMethodByName(o.getClass(), "customizeProcess");
+                if (Objects.nonNull(customizeProcess)) {
+                    ReflectUtil.invoke(o, customizeProcess);
                 }
-                index.getAndIncrement();
             });
         }
     }
