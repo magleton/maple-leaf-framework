@@ -20,14 +20,13 @@ import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.*;
 
-public class GXBaseDao<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, R extends GXBaseResDto> extends ServiceImpl<M, T> {
+public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R extends GXBaseResDto> extends ServiceImpl<M, T> {
     /**
      * 分页  返回实体对象
      *

@@ -22,7 +22,7 @@ import java.util.Set;
  * @param <R> 查询的返回对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<T, M, R>, R extends GXBaseResDto>
+public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 获取实体中指定指定的值

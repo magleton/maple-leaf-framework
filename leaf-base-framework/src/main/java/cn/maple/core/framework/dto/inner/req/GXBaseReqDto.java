@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GXBaseReqDto extends GXBaseDto {
     @Override
-    protected void verify() {
+    public void verify() {
         GXValidatorUtil.validateEntity(this);
     }
 }

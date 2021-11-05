@@ -39,9 +39,9 @@ import java.util.stream.Collectors;
  * @param <R> 查询的返回对象类型
  * @author britton chen <britton@126.com>
  */
-public class GXDBBaseServiceImpl<T extends GXBaseEntity, M extends GXBaseMapper<T, R>, D extends GXBaseDao<T, M, R>, R extends GXBaseResDto>
+public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXDBCommonServiceImpl
-        implements GXDBBaseService<T, M, D, R> {
+        implements GXDBBaseService<M, T, D, R> {
     /**
      * 日志对象
      */
