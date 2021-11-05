@@ -1,6 +1,6 @@
 package cn.maple.core.framework.aspect;
 
-import cn.maple.core.framework.annotation.GXValidParam;
+import cn.maple.core.framework.annotation.GXValidated;
 import cn.maple.core.framework.util.GXValidatorUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Aspect
 @Component
 public class GXValidatedAspect {
-    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXValidated)")
+    @Pointcut("@within(org.springframework.stereotype.Service) || @within(org.springframework.stereotype.Repository)")
     public void pointCut() {
         //标识切面的入口
     }
@@ -32,7 +32,7 @@ public class GXValidatedAspect {
         if (parameters.length > 0) {
             AtomicInteger index = new AtomicInteger();
             Arrays.stream(parameters).forEach(o -> {
-                GXValidParam annotation = o.getAnnotation(GXValidParam.class);
+                GXValidated annotation = o.getAnnotation(GXValidated.class);
                 if (Objects.nonNull(annotation)) {
                     Class<?>[] groups = annotation.groups();
                     GXValidatorUtil.validateEntity(args[index.get()], groups);
