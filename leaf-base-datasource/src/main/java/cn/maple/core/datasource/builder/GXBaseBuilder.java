@@ -228,14 +228,16 @@ public interface GXBaseBuilder {
         conditionMap.forEach((column, datum) -> {
             List<String> wheres = new ArrayList<>();
             datum.forEach((operator, value) -> {
-                String whereStr = "";
-                if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
-                    whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
-                } else {
-                    whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+                if (Objects.nonNull(value)) {
+                    String whereStr = "";
+                    if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
+                        whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
+                    } else {
+                        whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+                    }
+                    wheres.add(whereStr);
+                    wheres.add("or");
                 }
-                wheres.add(whereStr);
-                wheres.add("or");
             });
             wheres.remove(wheres.size() - 1);
             String whereStr = String.join(" ", wheres);
