@@ -1,12 +1,11 @@
 package cn.maple.core.framework.dto.inner.req;
 
-import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXBasePagingReqDto extends GXBaseReqDto {
+public class GXPagingReqDto extends GXBaseReqDto {
     private static final long serialVersionUID = 8088371218041701430L;
 
     /**

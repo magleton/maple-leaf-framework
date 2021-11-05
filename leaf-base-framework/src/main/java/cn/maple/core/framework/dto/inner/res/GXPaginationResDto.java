@@ -8,6 +8,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuppressWarnings("all")
 public class GXPaginationResDto<T> extends GXBaseResDto {
     @GXFieldComment(zhDesc = "总记录数")
     private long total;
