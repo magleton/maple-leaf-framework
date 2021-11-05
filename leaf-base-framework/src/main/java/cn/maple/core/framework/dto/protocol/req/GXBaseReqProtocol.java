@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.req;
 
-import cn.maple.core.framework.dto.GXBaseDto;
+import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 
 /**
  * @author britton
@@ -10,6 +10,5 @@ import cn.maple.core.framework.dto.GXBaseDto;
  * 用于接收用户请求信息
  * 并对请求信息进行一些额外处理
  */
-public abstract class GXBaseReqProtocol extends GXBaseDto {
-    
+public abstract class GXBaseReqProtocol extends GXBaseReqDto {
 }
