@@ -10,10 +10,12 @@ import java.lang.annotation.Target;
  * @since 2021-10-19 15:20
  * <p>
  * 触发验证一个对象的动作
+ * eg:
+ * test(@GXManualValidated TestReqDto reqDto)
  */
-@Target({ElementType.PARAMETER, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXValidated {
+public @interface GXManualValidated {
     @GXFieldComment(zhDesc = "验证的组")
     Class<?>[] groups() default {};
 }
