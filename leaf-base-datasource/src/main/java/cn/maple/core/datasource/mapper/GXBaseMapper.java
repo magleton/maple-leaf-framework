@@ -31,7 +31,7 @@ public interface GXBaseMapper<T, R> extends BaseMapper<T> {
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySql")
     @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
+            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
     Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
 
@@ -39,19 +39,19 @@ public interface GXBaseMapper<T, R> extends BaseMapper<T> {
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+    R getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
+            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> getDataListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+    List<R> getListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getPageDataByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "getPageByCondition")
     @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = GXJSONToMapTypeHandler.class)
+            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> getPageDataByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
+    List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
     @Results(value = {

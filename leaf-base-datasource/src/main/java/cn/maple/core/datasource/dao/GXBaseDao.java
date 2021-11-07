@@ -19,6 +19,7 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Table;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
@@ -297,6 +298,43 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
         final Integer insert = baseMapper.batchInsertBySql(historyTableName, lastTableField, CollUtil.newArrayList(tableValues));
         return insert > 0;
     }
+
+    /**
+     * 通过条件获取数据
+     *
+     * @param tableName 表名
+     * @param fieldSet  需要获取的字段
+     * @param condition 查询条件
+     * @return 列表
+     */
+    public R getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+        return baseMapper.getDataByCondition(tableName, fieldSet, condition);
+    }
+
+    /**
+     * 通过条件获取数据列表
+     *
+     * @param tableName 表名
+     * @param fieldSet  需要获取的字段
+     * @param condition 查询条件
+     * @return 列表
+     */
+    public List<R> getListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+        return baseMapper.getListByCondition(tableName, fieldSet, condition);
+    }
+
+    /**
+     * 通过条件获取分页数据列表
+     *
+     * @param tableName 表名
+     * @param fieldSet  需要获取的字段
+     * @param condition 查询条件
+     * @return 列表
+     */
+    public List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+        return baseMapper.getPageByCondition(page, tableName, fieldSet, condition);
+    }
+
 
     /**
      * 获取表名字
