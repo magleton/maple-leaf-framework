@@ -1,4 +1,4 @@
-package cn.maple.core.framework.repository;
+package cn.maple.core.framework.ddd.repository;
 
 import com.google.common.collect.Table;
 
