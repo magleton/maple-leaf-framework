@@ -206,14 +206,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
     boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData);
 
     /**
-     * 通过表明获取模型ID
-     *
-     * @param clazz 实体的Class
-     * @return int
-     */
-    int getCoreModelIdByTableName(Class<T> clazz);
-
-    /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数

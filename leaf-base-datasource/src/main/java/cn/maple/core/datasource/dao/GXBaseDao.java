@@ -334,8 +334,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     public List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
         return baseMapper.getPageByCondition(page, tableName, fieldSet, condition);
     }
-
-
+    
     /**
      * 获取表名字
      *

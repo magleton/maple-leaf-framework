@@ -299,18 +299,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     }
 
     /**
-     * 通过表明获取模型ID
-     *
-     * @param clazz 实体的Class
-     * @return int
-     */
-    @Override
-    public int getCoreModelIdByTableName(Class<T> clazz) {
-        String tableName = getTableName(clazz);
-        return getSingleFieldValueByDB(clazz, "model_id", Integer.class, Dict.create().set("table_name", tableName));
-    }
-
-    /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数
