@@ -1,6 +1,7 @@
 package cn.maple.core.framework.ddd.repository;
 
 import cn.maple.core.framework.ddd.presenter.GXBasePresenter;
+import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import com.google.common.collect.Table;
 
@@ -8,6 +9,33 @@ import java.util.List;
 import java.util.Set;
 
 public interface GXBaseRepository {
+    /**
+     * 保存数据
+     *
+     * @param saveData 需要保存的数据
+     * @param <R>      返回数据类型
+     * @return R
+     */
+    <R> R create(GXBaseReqDto saveData);
+
+    /**
+     * 保存数据
+     *
+     * @param updateData 需要更新的数据
+     * @param <R>        返回数据类型
+     * @return R
+     */
+    <R> R update(GXBaseReqDto updateData);
+
+    /**
+     * 保存数据
+     *
+     * @param data 需要更新或者保存的数据
+     * @param <R>  返回数据类型
+     * @return R
+     */
+    <R> R updateOrCreate(GXBaseReqDto data);
+
     /**
      * 获取所有数据
      *
@@ -17,6 +45,16 @@ public interface GXBaseRepository {
      * @return 列表
      */
     <R> List<R> all(Set<String> columns, Table<String, String, Object> condition);
+
+    /**
+     * 获取第一条数据
+     *
+     * @param columns   需要获取的列
+     * @param condition 条件
+     * @param <R>       数据的类型
+     * @return 列表
+     */
+    <R> R first(Set<String> columns, Table<String, String, Object> condition);
 
     /**
      * 根据条件获取数据
