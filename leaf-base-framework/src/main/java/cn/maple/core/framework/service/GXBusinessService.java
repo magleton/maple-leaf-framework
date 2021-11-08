@@ -38,7 +38,7 @@ public interface GXBusinessService {
      * @param param 参数
      * @return Dict
      */
-    Dict getPageInfoFromParam(Dict param);
+    Dict getPageDictFromParam(Dict param);
 
     /**
      * 派发事件 (异步事件可以通过在监听器上面添加@Async注解实现)

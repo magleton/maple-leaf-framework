@@ -443,8 +443,8 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
      */
     @Override
     public IPage<R> constructMyBatisPageObject(Dict param) {
-        Dict pageInfo = getPageInfoFromParam(param);
-        return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
+        Dict pageDict = getPageDictFromParam(param);
+        return new Page<>(pageDict.getInt("page"), pageDict.getInt("pageSize"));
     }
 
     /**

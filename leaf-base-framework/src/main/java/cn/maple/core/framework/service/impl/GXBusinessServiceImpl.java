@@ -58,7 +58,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      * @return Dict
      */
     @Override
-    public Dict getPageInfoFromParam(Dict param) {
+    public Dict getPageDictFromParam(Dict param) {
         int currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
         int pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
         final Dict pagingInfo = Convert.convert(Dict.class, param.getObj("pagingInfo"));
