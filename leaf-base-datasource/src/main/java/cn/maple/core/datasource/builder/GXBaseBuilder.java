@@ -264,7 +264,7 @@ public interface GXBaseBuilder {
      *                  </code>
      * @return SQL语句
      */
-    static String getPageByCondition(IPage<?> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+    static <R> String getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
         return getDataByCondition(tableName, fieldSet, condition);
     }
 
