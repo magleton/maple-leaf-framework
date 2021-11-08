@@ -6,5 +6,5 @@ package cn.gaple.extension;
  *
  * @author britton
  */
-public interface GXExtensionPointI {
+public interface GXExtensionPoint {
 }

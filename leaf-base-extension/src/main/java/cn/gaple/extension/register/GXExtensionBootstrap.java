@@ -1,7 +1,7 @@
 package cn.gaple.extension.register;
 
 import cn.gaple.extension.GXExtension;
-import cn.gaple.extension.GXExtensionPointI;
+import cn.gaple.extension.GXExtensionPoint;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ public class GXExtensionBootstrap {
     public void init() {
         Map<String, Object> extensionBeans = applicationContext.getBeansWithAnnotation(GXExtension.class);
         extensionBeans.values().forEach(
-                extension -> extensionRegister.doRegistration((GXExtensionPointI) extension)
+                extension -> extensionRegister.doRegistration((GXExtensionPoint) extension)
         );
     }
 }

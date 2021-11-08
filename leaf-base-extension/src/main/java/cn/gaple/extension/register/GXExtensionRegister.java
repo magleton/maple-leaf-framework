@@ -27,7 +27,7 @@ public class GXExtensionRegister {
     @Resource
     private GXExtensionRepository extensionRepository;
 
-    public void doRegistration(GXExtensionPointI extensionObject) {
+    public void doRegistration(GXExtensionPoint extensionObject) {
         Class<?> extensionClz = extensionObject.getClass();
         if (AopUtils.isAopProxy(extensionObject)) {
             extensionClz = ClassUtils.getUserClass(extensionObject);
@@ -36,7 +36,7 @@ public class GXExtensionRegister {
         if (Objects.nonNull(extensionAnn)) {
             GXBizScenario bizScenario = GXBizScenario.valueOf(extensionAnn.bizId(), extensionAnn.useCase(), extensionAnn.scenario());
             GXExtensionCoordinate extensionCoordinate = new GXExtensionCoordinate(calculateExtensionPoint(extensionClz), bizScenario.getUniqueIdentity());
-            GXExtensionPointI preVal = extensionRepository.getExtensionRepo().put(extensionCoordinate, extensionObject);
+            GXExtensionPoint preVal = extensionRepository.getExtensionRepo().put(extensionCoordinate, extensionObject);
             if (preVal != null) {
                 throw new GXBusinessException("Duplicate registration is not allowed for :" + extensionCoordinate);
             }
