@@ -1,4 +1,4 @@
-package cn.maple.core.framework.config;
+package cn.maple.core.framework.config.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
