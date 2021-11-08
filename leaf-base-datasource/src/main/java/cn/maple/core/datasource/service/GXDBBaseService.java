@@ -251,7 +251,7 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
      * @param pageInfo 参数
      * @return IPage
      */
-    IPage<R> constructPageObjectFromParam(Dict pageInfo);
+    IPage<R> constructMyBatisPageObject(Dict pageInfo);
 
     /**
      * 获取分页信息

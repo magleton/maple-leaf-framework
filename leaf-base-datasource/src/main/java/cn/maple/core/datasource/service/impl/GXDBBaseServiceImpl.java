@@ -442,7 +442,7 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
      * @return IPage
      */
     @Override
-    public IPage<R> constructPageObjectFromParam(Dict param) {
+    public IPage<R> constructMyBatisPageObject(Dict param) {
         Dict pageInfo = getPageInfoFromParam(param);
         return new Page<>(pageInfo.getInt("page"), pageInfo.getInt("pageSize"));
     }
@@ -468,7 +468,7 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
      */
     @Override
     public IPage<R> generatePage(Dict param, String mapperMethodName) {
-        final IPage<R> riPage = constructPageObjectFromParam(param);
+        final IPage<R> riPage = constructMyBatisPageObject(param);
         baseDao.generatePage(riPage, param, mapperMethodName);
         return riPage;
     }
