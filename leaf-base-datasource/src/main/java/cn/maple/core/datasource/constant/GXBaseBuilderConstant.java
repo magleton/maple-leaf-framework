@@ -6,9 +6,6 @@ public class GXBaseBuilderConstant {
     @GXFieldComment(zhDesc = "搜索条件的名字")
     public static final String SEARCH_CONDITION_NAME = "searchCondition";
 
-    @GXFieldComment(zhDesc = "模型标识的名字")
-    public static final String MODEL_IDENTIFICATION_NAME = "model_identification";
-
     @GXFieldComment(zhDesc = "左糊查询条件")
     public static final String LEFT_LIKE = " like '%{}'";
 
