@@ -26,11 +26,11 @@ public class GXExtensionExecutor extends GXAbstractComponentExecutor {
     }
 
     /**
-     * if the bizScenarioUniqueIdentity is "gaple.tmall.supermarket"
+     * if the bizScenarioUniqueIdentity is "gaple.xx.supermarket"
      * <p>
      * the search path is as below:
-     * 1、first try to get extension by "gaple.tmall.supermarket", if get, return it.
-     * 2、loop try to get extension by "gaple.tmall", if get, return it.
+     * 1、first try to get extension by "gaple.xx.supermarket", if get, return it.
+     * 2、loop try to get extension by "gaple.xx", if get, return it.
      * 3、loop try to get extension by "gaple", if get, return it.
      * 4、if not found, try the default extension
      *

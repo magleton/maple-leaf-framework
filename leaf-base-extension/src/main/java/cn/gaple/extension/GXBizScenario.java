@@ -29,7 +29,7 @@ public class GXBizScenario {
 
     /**
      * bizId is used to identify a business,
-     * such as "tmall",
+     * such as "xx",
      * it's nullable if there is only one biz
      */
     private String bizId = DEFAULT_BIZ_ID;
@@ -43,7 +43,7 @@ public class GXBizScenario {
 
     /**
      * scenario is used to identify a use case,
-     * such as "88vip","normal",
+     * such as "xx","normal",
      * can not be null
      */
     private String scenario = DEFAULT_SCENARIO;
@@ -69,9 +69,9 @@ public class GXBizScenario {
     }
 
     /**
-     * For above case, the BizScenario will be "tmall.placeOrder.88vip",
+     * For above case, the BizScenario will be "xx.placeOrder.yy",
      * with this code,
-     * we can provide extension processing other than "tmall.placeOrder.normal" scenario.
+     * we can provide extension processing other than "xx.placeOrder.normal" scenario.
      *
      * @return 标识符
      */
