@@ -1,4 +1,4 @@
-package cn.maple.redisson.config;
+package cn.maple.core.framework.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
