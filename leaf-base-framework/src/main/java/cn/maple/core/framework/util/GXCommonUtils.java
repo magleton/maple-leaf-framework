@@ -656,7 +656,7 @@ public class GXCommonUtils {
         Dict condition = Dict.create().set("page", page).set("pageSize", pageSize);
         condition.putAll(searchCondition);
         T targetObject = JSONUtil.toBean(JSONUtil.toJsonStr(condition), clazz);
-        GXValidatorUtil.validateEntity(targetObject);
+        GXValidatorUtils.validateEntity(targetObject);
         return targetObject;
     }
 

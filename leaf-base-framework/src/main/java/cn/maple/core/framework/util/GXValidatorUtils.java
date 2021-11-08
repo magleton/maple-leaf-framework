@@ -20,11 +20,11 @@ import java.util.Set;
  * @author zj chen <britton@126.com>
  * 参考文档：http://docs.jboss.org/hibernate/validator/5.4/reference/en-US/html_single/
  */
-public class GXValidatorUtil {
+public class GXValidatorUtils {
     @GXFieldComment(zhDesc = "验证器")
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private GXValidatorUtil() {
+    private GXValidatorUtils() {
 
     }
 

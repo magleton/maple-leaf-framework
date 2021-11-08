@@ -8,7 +8,7 @@ import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.pojo.GXResultCode;
-import cn.maple.core.framework.util.GXValidatorUtil;
+import cn.maple.core.framework.util.GXValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -75,7 +75,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             if (parameter.hasParameterAnnotation(Validated.class)) {
                 groups = Objects.requireNonNull(parameter.getParameterAnnotation(Validated.class)).value();
             }
-            GXValidatorUtil.validateEntity(bean, value, groups);
+            GXValidatorUtils.validateEntity(bean, value, groups);
         }
 
         // 调用目标bean对象的修复方法对数据进行最后的修复
