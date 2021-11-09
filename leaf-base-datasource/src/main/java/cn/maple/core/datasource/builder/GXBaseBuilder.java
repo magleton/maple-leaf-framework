@@ -224,6 +224,18 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", fieldSet);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
+        dealSQLCondition(sql, condition);
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        return sql.toString();
+    }
+
+    /**
+     * 处理SQL语句
+     *
+     * @param sql       SQL语句
+     * @param condition 条件
+     */
+    static void dealSQLCondition(SQL sql, Table<String, String, Object> condition) {
         Map<String, Map<String, Object>> conditionMap = condition.rowMap();
         conditionMap.forEach((column, datum) -> {
             List<String> wheres = new ArrayList<>();
@@ -243,8 +255,6 @@ public interface GXBaseBuilder {
             String whereStr = String.join(" ", wheres);
             sql.WHERE(whereStr);
         });
-        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
-        return sql.toString();
     }
 
     /**
