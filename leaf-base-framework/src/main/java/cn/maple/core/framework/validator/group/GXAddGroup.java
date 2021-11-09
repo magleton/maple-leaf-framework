@@ -5,5 +5,5 @@ package cn.maple.core.framework.validator.group;
  *
  * @author britton britton@126.com
  */
-public interface AddGroup {
+public interface GXAddGroup {
 }

@@ -7,6 +7,6 @@ import javax.validation.GroupSequence;
  *
  * @author britton britton@126.com
  */
-@GroupSequence({AddGroup.class, UpdateGroup.class})
-public interface Group {
+@GroupSequence({GXAddGroup.class, GXUpdateGroup.class})
+public interface GXGroup {
 }
