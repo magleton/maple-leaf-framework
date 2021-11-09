@@ -37,7 +37,7 @@ public class GXMyBatisPlusConfig {
 
             @Override
             public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
-                final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {
+                final Map<String, Object> map = Convert.convert(new TypeReference<>() {
                 }, object);
                 return new MybatisMapWrapper(metaObject, map) {
                     @Override
