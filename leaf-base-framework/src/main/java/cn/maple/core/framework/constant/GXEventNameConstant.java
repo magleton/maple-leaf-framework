@@ -1,6 +1,6 @@
 package cn.maple.core.framework.constant;
 
-public class GXEventNameConstants {
+public class GXEventNameConstant {
     public static final String CREATED = "created";
 
     public static final String CREATING = "creating";
@@ -21,6 +21,6 @@ public class GXEventNameConstants {
     
     public static final String RESTORING = "restoring";
 
-    private GXEventNameConstants() {
+    private GXEventNameConstant() {
     }
 }
