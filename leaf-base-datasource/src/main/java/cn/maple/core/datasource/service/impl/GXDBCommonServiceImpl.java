@@ -1,7 +1,7 @@
 package cn.maple.core.datasource.service.impl;
 
 import cn.maple.core.datasource.service.GXDBCommonService;
-import cn.maple.core.datasource.util.GXDataSourceCommonUtils;
+import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ public class GXDBCommonServiceImpl extends GXBusinessServiceImpl implements GXDB
      */
     @Override
     public <T> String getTableName(Class<T> clazz) {
-        return GXDataSourceCommonUtils.getTableName(clazz);
+        return GXDBCommonUtils.getTableName(clazz);
     }
 }

@@ -1,6 +1,5 @@
 package cn.maple.core.datasource.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
@@ -25,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 业务基础Service
@@ -53,58 +49,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     @Autowired
     @SuppressWarnings("all")
     protected D baseDao;
-
-    /**
-     * 获取实体中指定指定的值
-     * <pre>
-     *     {@code
-     *     getSingleJSONFieldValueByDB(
-     *      GoodsEntity,
-     *      "ext.name",
-     *      Integer.class,
-     *      Dict.create().set("user_id" , 1111)
-     *      )
-     *     }
-     * </pre>
-     *
-     * @param clazz     Class对象
-     * @param path      路径
-     * @param condition 条件
-     * @return R
-     */
-    @Override
-    public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition) {
-        return getSingleFieldValueByDB(clazz, path, type, condition, GXCommonUtils.getClassDefaultValue(type));
-    }
-
-    /**
-     * 获取实体中指定指定的值
-     *
-     * @param clazz        Class对象
-     * @param path         路径
-     * @param condition    条件
-     * @param defaultValue 默认值
-     * @return E
-     */
-    @Override
-    public <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition, E defaultValue) {
-        return baseDao.getSingleFieldValueByDB(clazz, path, type, condition, defaultValue);
-    }
-
-    /**
-     * 获取JSON中的多个值
-     *
-     * @param clazz     Class 对象
-     * @param fields    字段
-     * @param condition 条件
-     * @return Dict
-     */
-    @SuppressWarnings("unused")
-    @Override
-    public Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition) {
-        Dict dict = baseDao.getMultiFieldsValueByDB(clazz, fields, condition);
-        return handleSamePrefixDict(dict);
-    }
 
     /**
      * 更新JSON字段中的某一个值
@@ -133,21 +77,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     @Override
     public boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition) {
         return baseDao.updateMultiFields(clazz, data, condition);
-    }
-
-    /**
-     * 根据条件获取一条记录
-     *
-     * @param clazz     Class对象
-     * @param fieldSet  字段集合
-     * @param condition 查询条件
-     * @param remove    是否移除
-     * @return Dict
-     */
-    @SuppressWarnings("unused")
-    @Override
-    public Dict getOneByCondition(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove) {
-        return getFieldValueBySQL(clazz, fieldSet, condition, remove);
     }
 
     /**
@@ -199,21 +128,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     }
 
     /**
-     * 修改状态
-     *
-     * @param status    状态
-     * @param condition 条件
-     * @return boolean
-     */
-    @Override
-    public boolean modifyStatus(int status, Dict condition) {
-        final Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-        Class<T> clazz = Convert.convert(new TypeReference<Class<T>>() {
-        }, type);
-        return updateStatusByCondition(clazz, status, condition);
-    }
-
-    /**
      * 通过SQL更新表中的数据
      *
      * @param clazz     Class 对象
@@ -227,19 +141,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     }
 
     /**
-     * 通过SQL更新表中的数据
-     *
-     * @param clazz     Class 对象
-     * @param status    状态
-     * @param condition 更新条件
-     * @return boolean
-     */
-    @Override
-    public boolean updateStatusByCondition(Class<T> clazz, int status, Dict condition) {
-        return baseDao.updateStatusByCondition(clazz, status, condition);
-    }
-
-    /**
      * 通过SQL语句批量插入数据
      *
      * @param clazz    实体的Class
@@ -250,52 +151,7 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     @SuppressWarnings("all")
     @Override
     public Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
-        return baseDao.batchInsertBySQL(clazz, fieldSet, dataList);
-    }
-
-    /**
-     * 获取表中的指定字段
-     *
-     * @param clazz     Class对象
-     * @param fieldSet  字段集合
-     * @param condition 查询条件
-     * @return Dict
-     */
-    @Override
-    public Dict getFieldValueBySQL(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove) {
-        final String tableName = getTableName(clazz);
-        return getFieldValueBySQL(tableName, fieldSet, condition, remove);
-    }
-
-    /**
-     * 获取表中的指定字段
-     *
-     * @param tableName 表名
-     * @param fieldSet  字段集合
-     * @param condition 更新条件
-     * @param remove    是否移除
-     * @return Dict
-     */
-    @Override
-    public Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        Dict dict = baseDao.getFieldValueBySQL(tableName, fieldSet, condition, remove);
-        return handleSamePrefixDict(dict);
-    }
-
-    /**
-     * 记录原表的数据到历史表里面
-     *
-     * @param originTableName  原表名
-     * @param historyTableName 历史表名字
-     * @param condition        条件
-     * @param appendData       附加信息
-     * @return boolean
-     */
-    @SuppressWarnings("all")
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData) {
-        return baseDao.recordModificationHistory(originTableName, historyTableName, condition, appendData);
+        return baseDao.batchInsert(clazz, fieldSet, dataList);
     }
 
     /**
@@ -325,25 +181,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
     @Override
     public IPage<R> listOrSearchPage(Dict param) {
         return generatePage(param);
-    }
-
-    /**
-     * 内容详情
-     *
-     * @param param 参数
-     * @return Dict
-     */
-    @Override
-    public Dict detail(Dict param) {
-        final String tableName = (String) param.remove("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXBusinessException("请提供表名!");
-        }
-        final String fields = (String) Optional.ofNullable(param.remove("fields")).orElse("*");
-        final boolean remove = (boolean) Optional.ofNullable(param.remove("remove")).orElse(false);
-        Set<String> lastFields = Arrays.stream(CharSequenceUtil.replace(fields, " ", "").split(",")).collect(Collectors.toSet());
-        Dict condition = Convert.convert(Dict.class, Optional.ofNullable(param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME)).orElse(Dict.create()));
-        return getFieldValueBySQL(tableName, lastFields, condition, remove);
     }
 
     /**
@@ -471,26 +308,6 @@ public class GXDBBaseServiceImpl<M extends GXBaseMapper<T, R>, T extends GXBaseE
         final IPage<R> riPage = constructMyBatisPageObject(param);
         baseDao.generatePage(riPage, param, mapperMethodName);
         return riPage;
-    }
-
-    /**
-     * 获取记录的父级path
-     *
-     * @param parentId   父级ID
-     * @param appendSelf 　是否将parentId附加到返回结果上面
-     * @return String
-     */
-    @Override
-    public String getParentPath(Class<T> clazz, Long parentId, boolean appendSelf) {
-        Dict condition = Dict.create().set(getPrimaryKey(), parentId);
-        final Dict dict = getFieldValueBySQL(clazz, CollUtil.newHashSet("path"), condition, false);
-        if (null == dict || dict.isEmpty()) {
-            return "0";
-        }
-        if (appendSelf) {
-            return CharSequenceUtil.format("{}-{}", dict.getStr("path"), parentId);
-        }
-        return dict.getStr("path");
     }
 
     /**

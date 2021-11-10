@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @SuppressWarnings({"unused"})
-public class GXDataSourceCommonUtils {
+public class GXDBCommonUtils {
     @GXFieldComment(zhDesc = "日志对象")
-    private static final Logger LOG = LoggerFactory.getLogger(GXDataSourceCommonUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXDBCommonUtils.class);
 
-    private GXDataSourceCommonUtils() {
+    private GXDBCommonUtils() {
     }
 
     /**

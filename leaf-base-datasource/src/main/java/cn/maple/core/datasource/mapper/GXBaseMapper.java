@@ -18,23 +18,14 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     boolean updateFieldByCondition(String tableName, Dict data, Dict whereData);
 
-    @UpdateProvider(type = GXBaseBuilder.class, method = "updateStatusByCondition")
-    boolean updateStatusByCondition(String tableName, int status, Dict condition);
-
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(String tableName, Dict condition);
-
-    @InsertProvider(type = GXBaseBuilder.class, method = "batchInsertBySql")
-    Integer batchInsertBySql(String tableName, Set<String> fieldSet, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsUnique")
     Integer checkRecordIsUnique(String tableName, Dict condition);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getFieldValueBySql")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
-    })
-    Dict getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
+    @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
+    Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
@@ -53,10 +44,4 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
     List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition);
-
-    @SelectProvider(type = GXBaseBuilder.class, method = "listOrSearchPage")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
-    })
-    List<R> listOrSearchPage(IPage<R> page, Dict param);
 }

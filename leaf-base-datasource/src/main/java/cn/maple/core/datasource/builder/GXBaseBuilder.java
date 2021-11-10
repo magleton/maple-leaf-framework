@@ -7,16 +7,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.annotation.GXDataSource;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
-import cn.maple.core.datasource.util.GXDataSourceCommonUtils;
+import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -97,18 +95,6 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 单独更新记录状态
-     *
-     * @param tableName 数据表明
-     * @param status    状态值
-     * @param condition 更新条件
-     * @return String
-     */
-    static String updateStatusByCondition(String tableName, int status, Dict condition) {
-        return updateFieldByCondition(tableName, Dict.create().set("status", status), condition);
-    }
-
-    /**
      * 判断给定条件的值是否存在
      *
      * @param tableName 表名
@@ -149,7 +135,7 @@ public interface GXBaseBuilder {
      * @param dataList  需要插入的数据列表
      * @return String
      */
-    static String batchInsertBySql(String tableName, Set<String> fieldSet, List<Dict> dataList) {
+    static String batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
         if (dataList.isEmpty()) {
             return "";
         }
@@ -173,31 +159,6 @@ public interface GXBaseBuilder {
             values.append("),");
         }
         return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
-    }
-
-    /**
-     * 查询单表的指定字段
-     *
-     * @param tableName 表名
-     * @param fieldSet  字段集合
-     * @param condition 条件
-     * @return String
-     */
-    static String getFieldValueBySql(String tableName, Set<String> fieldSet, Dict condition, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
-        assert schemaService != null;
-        final String selectFieldStr = schemaService.getSelectFieldStr(tableName, fieldSet, remove);
-        final SQL sql = new SQL().SELECT(selectFieldStr).FROM(tableName);
-        final Set<String> conditionKeys = condition.keySet();
-        for (String conditionKey : conditionKeys) {
-            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
-            final String value = condition.getStr(conditionKey);
-            if (!(PhoneUtil.isMobile(value) || PhoneUtil.isPhone(value) || PhoneUtil.isTel(value)) && ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
-            }
-            sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
-        }
-        return sql.toString();
     }
 
     /**
@@ -279,16 +240,6 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 分页列表
-     *
-     * @param param 参数
-     * @return String
-     */
-    default <R> String listOrSearchPage(IPage<R> page, Dict param) {
-        throw new GXBusinessException("请实现自定义的listOrSearchPage方法");
-    }
-
-    /**
      * 获取请求对象中的搜索条件数据
      *
      * @param param 参数
@@ -362,7 +313,7 @@ public interface GXBaseBuilder {
      * @return Dict
      */
     default Dict addSearchCondition(Dict requestParam, String key, Object value) {
-        return GXDataSourceCommonUtils.addSearchCondition(requestParam, key, value, false);
+        return GXDBCommonUtils.addSearchCondition(requestParam, key, value, false);
     }
 
     /**
@@ -373,7 +324,7 @@ public interface GXBaseBuilder {
      * @return Dict
      */
     default Dict addSearchCondition(Dict requestParam, Dict sourceData) {
-        return GXDataSourceCommonUtils.addSearchCondition(requestParam, sourceData, false);
+        return GXDBCommonUtils.addSearchCondition(requestParam, sourceData, false);
     }
 
     /**

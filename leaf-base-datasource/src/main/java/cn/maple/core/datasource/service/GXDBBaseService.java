@@ -25,47 +25,6 @@ import java.util.Set;
 public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto>
         extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
-     * 获取实体中指定指定的值
-     * <pre>
-     *     {@code
-     *     getSingleJSONFieldValueByDB(
-     *      GoodsEntity,
-     *      "ext.name",
-     *      Integer.class,
-     *      Dict.create().set("user_id" , 1111)
-     *      )
-     *     }
-     * </pre>
-     *
-     * @param clazz     Class对象
-     * @param path      路径
-     * @param condition 条件
-     * @return R
-     */
-    <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition);
-
-    /**
-     * 获取实体中指定指定的值
-     *
-     * @param clazz        Class对象
-     * @param path         路径
-     * @param condition    条件
-     * @param defaultValue 默认值
-     * @return R
-     */
-    <E> E getSingleFieldValueByDB(Class<T> clazz, String path, Class<E> type, Dict condition, E defaultValue);
-
-    /**
-     * 获取JSON中的多个值
-     *
-     * @param clazz     Class 对象
-     * @param fields    字段
-     * @param condition 条件
-     * @return Dict
-     */
-    Dict getMultiFieldsValueByDB(Class<T> clazz, Dict fields, Dict condition);
-
-    /**
      * 更新JSON字段中的某一个值
      *
      * @param clazz     Class对象
@@ -86,17 +45,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
      */
     @Transactional(rollbackFor = Exception.class)
     boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition);
-
-    /**
-     * 根据条件获取一条记录
-     *
-     * @param clazz     Class对象
-     * @param fieldSet  字段集合
-     * @param condition 查询条件
-     * @param remove    是否移除
-     * @return Dict
-     */
-    Dict getOneByCondition(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove);
 
     /**
      * 检测给定条件的记录是否存在
@@ -135,15 +83,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
     Integer checkRecordIsUnique(String tableName, Dict condition);
 
     /**
-     * 修改状态
-     *
-     * @param status    状态
-     * @param condition 条件
-     * @return boolean
-     */
-    boolean modifyStatus(int status, Dict condition);
-
-    /**
      * 通过SQL更新表中的数据
      *
      * @param clazz     Class 对象
@@ -154,16 +93,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
     boolean updateFieldByCondition(Class<T> clazz, Dict data, Dict condition);
 
     /**
-     * 通过SQL更新表中的数据
-     *
-     * @param clazz     Class 对象
-     * @param status    状态
-     * @param condition 更新条件
-     * @return boolean
-     */
-    boolean updateStatusByCondition(Class<T> clazz, int status, Dict condition);
-
-    /**
      * 通过SQL语句批量插入数据
      *
      * @param clazz    实体的Class
@@ -172,38 +101,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
      * @return int
      */
     Integer batchInsertBySQL(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList);
-
-    /**
-     * 获取表中的指定字段
-     *
-     * @param clazz     Class对象
-     * @param fieldSet  字段集合
-     * @param condition 查询条件
-     * @return Dict
-     */
-    Dict getFieldValueBySQL(Class<T> clazz, Set<String> fieldSet, Dict condition, boolean remove);
-
-    /**
-     * 获取表中的指定字段
-     *
-     * @param tableName 表名
-     * @param fieldSet  字段集合
-     * @param condition 更新条件
-     * @param remove    是否移除
-     * @return Dict
-     */
-    Dict getFieldValueBySQL(String tableName, Set<String> fieldSet, Dict condition, boolean remove);
-
-    /**
-     * 记录原表的数据到历史表里面
-     *
-     * @param originTableName  原表名
-     * @param historyTableName 历史表名字
-     * @param condition        条件
-     * @param appendData       附加信息
-     * @return boolean
-     */
-    boolean recordModificationHistory(String originTableName, String historyTableName, Dict condition, Dict appendData);
 
     /**
      * 列表或者搜索(分页)
@@ -220,14 +117,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
      * @return GXPagination
      */
     IPage<R> listOrSearchPage(Dict param);
-
-    /**
-     * 内容详情
-     *
-     * @param param 参数
-     * @return Dict
-     */
-    Dict detail(Dict param);
 
     /**
      * 批量更新status字段
@@ -269,15 +158,6 @@ public interface GXDBBaseService<M extends GXBaseMapper<T, R>, T extends GXBaseE
      * @return GXPagination
      */
     IPage<R> generatePage(Dict param, String mapperMethodName);
-
-    /**
-     * 获取记录的父级path
-     *
-     * @param parentId   父级ID
-     * @param appendSelf 　是否将parentId附加到返回结果上面
-     * @return String
-     */
-    String getParentPath(Class<T> clazz, Long parentId, boolean appendSelf);
 
     /**
      * 获取 Primary Key
