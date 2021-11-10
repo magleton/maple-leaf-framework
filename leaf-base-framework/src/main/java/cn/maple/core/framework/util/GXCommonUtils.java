@@ -12,14 +12,12 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.annotation.GXFieldComment;
+import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.event.GXBaseEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cn.maple.core.framework.annotation.GXFieldComment;
-import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
-import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
-import cn.maple.core.framework.event.GXBaseEvent;
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import org.slf4j.Logger;
@@ -638,26 +636,6 @@ public class GXCommonUtils {
      */
     public static void removeJSONObjectAnyPath(JSONObject parse, String path) {
         removeJSONObjectAnyPath(parse, path, Object.class);
-    }
-
-    /**
-     * 将搜索条件转换为指定的目标DTO对象
-     *
-     * @param searchReqProtocol 搜索条件
-     * @param clazz             目标对象类型
-     * @param <T>               目标对象类型
-     * @return GXBasePagingReqDto
-     */
-    public static <T extends GXQueryParamReqDto> T searchConvertSpecialTargetObject(GXBaseSearchReqProtocol searchReqProtocol, Class<T> clazz) {
-        Dict pagingInfo = searchReqProtocol.getPagingInfo();
-        Integer page = pagingInfo.getInt("page");
-        Integer pageSize = pagingInfo.getInt("pageSize");
-        Dict searchCondition = searchReqProtocol.getSearchCondition();
-        Dict condition = Dict.create().set("page", page).set("pageSize", pageSize);
-        condition.putAll(searchCondition);
-        T targetObject = JSONUtil.toBean(JSONUtil.toJsonStr(condition), clazz);
-        GXValidatorUtils.validateEntity(targetObject);
-        return targetObject;
     }
 
     /**

@@ -1,21 +1,25 @@
 package cn.maple.core.framework.ddd.repository;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
 
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto> {
+public interface GXBaseRepository<Q extends GXBaseReqDto, S extends GXBaseResDto> {
     /**
      * 保存数据
      *
      * @param saveData 需要保存的数据
      * @return ID
      */
-    Integer create(E saveData);
+    default Integer create(Q saveData) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 保存数据
@@ -23,7 +27,9 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param updateData 需要更新的数据
      * @return ID
      */
-    Integer update(E updateData);
+    default Integer update(Q updateData) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 保存数据
@@ -31,7 +37,9 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param data 需要更新或者保存的数据
      * @return ID
      */
-    Integer updateOrCreate(E data);
+    default Integer updateOrCreate(Q data) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 根据条件获取所有数据
@@ -40,26 +48,32 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param condition 条件
      * @return 列表
      */
-    List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition);
+    default List<S> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 根据条件获取数据
      *
-     * @param whereCondition 查询条件
+     * @param condition 查询条件
      * @return R 返回数据
      */
-    R findOneByCondition(Set<String> columns, Table<String, String, Object> whereCondition);
+    default S findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 根据条件获取分页数据
      *
-     * @param columns        需要的数据列
-     * @param page           当前页
-     * @param pageSize       每页大小
-     * @param whereCondition 查询条件
+     * @param page      当前页
+     * @param pageSize  每页大小
+     * @param condition 查询条件
+     * @param columns   需要的数据列
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(Set<String> columns, Integer page, Integer pageSize, Table<String, String, Object> whereCondition);
+    default GXPaginationResDto<S> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+        throw new GXBusinessException("自定义实现");
+    }
 
     /**
      * 根据条件删除
@@ -67,5 +81,54 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param whereCondition 删除条件
      * @return 影响行数
      */
-    int deleteWhere(Table<String, String, Object> whereCondition);
+    default Integer deleteWhere(Table<String, String, Object> whereCondition) {
+        throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 检测数据是否存在
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @return 1 存在 0 不存在
+     */
+    default Integer checkRecordIsExists(String tableName, Dict condition) {
+        throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 检测数据是否唯一
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @return 1 不唯一 0 唯一
+     */
+    default Integer checkRecordIsUnique(String tableName, Dict condition) {
+        throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 批量插入数据
+     *
+     * @param tableName 表名
+     * @param fieldSet  需要插入的字段集合
+     * @param dataList  数据集合
+     * @return 影响行数
+     */
+    default Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
+        throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 通过条件更新数据
+     *
+     * @param tableName 需要更新的表名
+     * @param fieldSet  需要更新的字段集合
+     * @param dataList  数据集合
+     * @param condition 更新条件
+     * @return 更新的条数
+     */
+    default Integer updateDataByCondition(String tableName, Set<String> fieldSet, List<Dict> dataList, Table<String, String, Object> condition) {
+        throw new GXBusinessException("自定义实现");
+    }
 }

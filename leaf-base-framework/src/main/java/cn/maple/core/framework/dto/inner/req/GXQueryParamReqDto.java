@@ -1,5 +1,6 @@
 package cn.maple.core.framework.dto.inner.req;
 
+import com.google.common.collect.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,4 +18,12 @@ public class GXQueryParamReqDto extends GXBaseReqDto {
      * 每页大小
      */
     private Integer pageSize = 20;
+
+    /**
+     * 查询条件
+     * eg:
+     * Table<String , String , Object> condition = HashBaseTable.create();
+     * condition.put("username" , "like" , "'枫叶思源%'");
+     */
+    private transient Table<String, String, Object> queryCondition;
 }
