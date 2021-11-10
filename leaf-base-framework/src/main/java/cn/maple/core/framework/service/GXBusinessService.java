@@ -53,8 +53,7 @@ public interface GXBusinessService {
      * @return Dict
      */
     Dict getConstantsFields();
-
-
+    
     /**
      * 获取实体中指定指定的值
      * <pre>

@@ -76,7 +76,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return boolean
      */
     @Override
-    public boolean updateFieldByCondition(String tableName, Dict data, Dict condition) {
+    public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         return false;
     }
 

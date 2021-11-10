@@ -49,7 +49,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param condition 更新条件
      * @return boolean
      */
-    boolean updateFieldByCondition(String tableName, Dict data, Dict condition);
+    boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 
     /**
      * 通过SQL语句批量插入数据
