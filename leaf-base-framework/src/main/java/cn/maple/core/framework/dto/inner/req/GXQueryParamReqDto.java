@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.inner.req;
 
-import com.google.common.collect.Table;
+import cn.hutool.core.lang.Dict;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,8 +22,8 @@ public class GXQueryParamReqDto extends GXBaseReqDto {
     /**
      * 查询条件
      * eg:
-     * Table<String , String , Object> condition = HashBaseTable.create();
-     * condition.put("username" , "like" , "'枫叶思源%'");
+     * Dict condition = Dict.create();
+     * condition.set("username" ,"枫叶思源");
      */
-    private transient Table<String, String, Object> queryCondition;
+    private Dict queryCondition;
 }
