@@ -30,7 +30,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param condition 条件
      * @return int
      */
-    Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition);
+    boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
 
     /**
      * 检测给定条件的记录是否唯一
@@ -39,7 +39,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param condition 条件
      * @return int
      */
-    Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition);
+    boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition);
 
     /**
      * 通过SQL更新表中的数据

@@ -95,7 +95,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 查询条件
      * @return 1 存在 0 不存在
      */
-    default Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    default boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -106,7 +106,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 查询条件
      * @return 1 不唯一 0 唯一
      */
-    default Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
+    default boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 

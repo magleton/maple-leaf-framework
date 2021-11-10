@@ -51,7 +51,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return int
      */
     @Override
-    public Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         return repository.checkRecordIsExists(tableName, condition);
     }
 
@@ -63,7 +63,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return int
      */
     @Override
-    public Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
+    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         return repository.checkRecordIsUnique(tableName, condition);
     }
 
@@ -125,7 +125,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
         }
         Table<String, String, Object> condition = HashBasedTable.create();
         condition.put(fieldName, "=", value);
-        return 1 == checkRecordIsExists(tableName, condition);
+        return checkRecordIsExists(tableName, condition);
     }
 
     /**
@@ -145,7 +145,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
         }
         Table<String, String, Object> condition = HashBasedTable.create();
         condition.put(fieldName, "=", value);
-        return checkRecordIsUnique(tableName, condition) > 1;
+        return checkRecordIsUnique(tableName, condition);
     }
 
     /**
