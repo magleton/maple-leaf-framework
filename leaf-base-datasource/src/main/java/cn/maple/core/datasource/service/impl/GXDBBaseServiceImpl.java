@@ -3,8 +3,9 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.datasource.service.GXDBBaseService;
-import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
@@ -28,9 +29,9 @@ import java.util.Set;
  * @param <Q> 请求参数类型
  * @param <S> 响应数据类型
  */
-public class GXDBBaseServiceImpl<R extends GXBaseRepository<Q, S>, Q extends GXBaseReqDto, S extends GXBaseResDto>
+public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXBaseEntity, Q extends GXBaseReqDto, S extends GXBaseResDto>
         extends GXDBCommonServiceImpl
-        implements GXDBBaseService<R, Q, S> {
+        implements GXDBBaseService<R, T, Q, S> {
     /**
      * 日志对象
      */

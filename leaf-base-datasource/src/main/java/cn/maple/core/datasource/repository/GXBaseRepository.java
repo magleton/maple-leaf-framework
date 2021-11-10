@@ -1,7 +1,7 @@
-package cn.maple.core.framework.ddd.repository;
+package cn.maple.core.datasource.repository;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
+import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -10,34 +10,37 @@ import com.google.common.collect.Table;
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<Q extends GXBaseReqDto, S extends GXBaseResDto> {
+public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto> {
     /**
      * 保存数据
      *
-     * @param saveData 需要保存的数据
+     * @param entity    需要保存的数据
+     * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer create(Q saveData) {
+    default Integer create(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
     /**
      * 保存数据
      *
-     * @param updateData 需要更新的数据
+     * @param entity    需要更新的数据
+     * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer update(Q updateData) {
+    default Integer update(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
     /**
      * 保存数据
      *
-     * @param data 需要更新或者保存的数据
+     * @param entity    需要更新或者保存的数据
+     * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer updateOrCreate(Q data) {
+    default Integer updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -48,7 +51,7 @@ public interface GXBaseRepository<Q extends GXBaseReqDto, S extends GXBaseResDto
      * @param condition 条件
      * @return 列表
      */
-    default List<S> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
+    default List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -58,7 +61,7 @@ public interface GXBaseRepository<Q extends GXBaseReqDto, S extends GXBaseResDto
      * @param condition 查询条件
      * @return R 返回数据
      */
-    default S findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
+    default R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -71,7 +74,7 @@ public interface GXBaseRepository<Q extends GXBaseReqDto, S extends GXBaseResDto
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    default GXPaginationResDto<S> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+    default GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
         throw new GXBusinessException("自定义实现");
     }
 

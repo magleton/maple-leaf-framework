@@ -1,7 +1,8 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.ddd.repository.GXBaseRepository;
+import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
@@ -19,7 +20,7 @@ import java.util.Set;
  * @param <S> 响应对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<R extends GXBaseRepository<Q, S>, Q extends GXBaseReqDto, S extends GXBaseResDto>
+public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXBaseEntity, Q extends GXBaseReqDto, S extends GXBaseResDto>
         extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 检测给定条件的记录是否存在
