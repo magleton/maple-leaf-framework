@@ -51,7 +51,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return int
      */
     @Override
-    public Integer checkRecordIsExists(String tableName, Dict condition) {
+    public Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         return repository.checkRecordIsExists(tableName, condition);
     }
 
@@ -63,7 +63,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return int
      */
     @Override
-    public Integer checkRecordIsUnique(String tableName, Dict condition) {
+    public Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         return repository.checkRecordIsUnique(tableName, condition);
     }
 
@@ -123,7 +123,9 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
-        return 1 == checkRecordIsExists(tableName, Dict.create().set(fieldName, value));
+        Table<String, String, Object> condition = HashBasedTable.create();
+        condition.put(fieldName, "=", value);
+        return 1 == checkRecordIsExists(tableName, condition);
     }
 
     /**
@@ -141,7 +143,9 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
-        return checkRecordIsUnique(tableName, Dict.create().set(fieldName, value)) > 1;
+        Table<String, String, Object> condition = HashBasedTable.create();
+        condition.put(fieldName, "=", value);
+        return checkRecordIsUnique(tableName, condition) > 1;
     }
 
     /**

@@ -3,11 +3,12 @@ package cn.maple.core.datasource.service;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.repository.GXBaseRepository;
-import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
+import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
+import com.google.common.collect.Table;
 
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param condition 条件
      * @return int
      */
-    Integer checkRecordIsExists(String tableName, Dict condition);
+    Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition);
 
     /**
      * 检测给定条件的记录是否唯一
@@ -38,7 +39,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param condition 条件
      * @return int
      */
-    Integer checkRecordIsUnique(String tableName, Dict condition);
+    Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition);
 
     /**
      * 通过SQL更新表中的数据
