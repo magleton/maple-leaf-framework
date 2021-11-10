@@ -9,7 +9,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXPaginationProtocol<T> extends GXBaseResProtocol {
+public class GXPaginationResProtocol<T> extends GXBaseResProtocol {
     private static final long serialVersionUID = -6977700102950116740L;
 
     @GXFieldComment(zhDesc = "总记录数")
@@ -35,7 +35,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
      * @param pageSize   每页记录数
      * @param currPage   当前页数
      */
-    public GXPaginationProtocol(List<T> list, long totalCount, long pageSize, long currPage) {
+    public GXPaginationResProtocol(List<T> list, long totalCount, long pageSize, long currPage) {
         this.records = list;
         this.total = totalCount;
         this.pageSize = pageSize;
@@ -46,7 +46,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
     /**
      * 分页
      */
-    public GXPaginationProtocol(GXPaginationResDto<T> page) {
+    public GXPaginationResProtocol(GXPaginationResDto<T> page) {
         this.records = page.getRecords();
         this.total = page.getTotal();
         this.pageSize = page.getPageSize();
@@ -57,7 +57,7 @@ public class GXPaginationProtocol<T> extends GXBaseResProtocol {
     /**
      * 分页
      */
-    public GXPaginationProtocol(List<T> list) {
+    public GXPaginationResProtocol(List<T> list) {
         this.records = list;
     }
 }
