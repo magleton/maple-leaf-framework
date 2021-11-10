@@ -13,7 +13,7 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * 保存数据
      *
      * @param saveData 需要保存的数据
-     * @return R
+     * @return ID
      */
     Integer create(E saveData);
 
@@ -21,7 +21,7 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * 保存数据
      *
      * @param updateData 需要更新的数据
-     * @return R
+     * @return ID
      */
     Integer update(E updateData);
 
@@ -29,27 +29,18 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * 保存数据
      *
      * @param data 需要更新或者保存的数据
-     * @return R
+     * @return ID
      */
     Integer updateOrCreate(E data);
 
     /**
-     * 获取所有数据
+     * 根据条件获取所有数据
      *
      * @param columns   需要获取的列
      * @param condition 条件
      * @return 列表
      */
-    List<R> all(Set<String> columns, Table<String, String, Object> condition);
-
-    /**
-     * 获取第一条数据
-     *
-     * @param columns   需要获取的列
-     * @param condition 条件
-     * @return 列表
-     */
-    R first(Set<String> columns, Table<String, String, Object> condition);
+    List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition);
 
     /**
      * 根据条件获取数据
@@ -57,7 +48,7 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param whereCondition 查询条件
      * @return R 返回数据
      */
-    R findByCondition(Table<String, String, Object> whereCondition);
+    R findOneByCondition(Table<String, String, Object> whereCondition);
 
     /**
      * 分页数据
