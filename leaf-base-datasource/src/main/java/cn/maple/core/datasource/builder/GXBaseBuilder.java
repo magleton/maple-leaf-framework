@@ -197,25 +197,27 @@ public interface GXBaseBuilder {
      * @param condition 条件
      */
     static void dealSQLCondition(SQL sql, Table<String, String, Object> condition) {
-        Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-        conditionMap.forEach((column, datum) -> {
-            List<String> wheres = new ArrayList<>();
-            datum.forEach((operator, value) -> {
-                if (Objects.nonNull(value)) {
-                    String whereStr = "";
-                    if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
-                        whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
-                    } else {
-                        whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+        if (Objects.nonNull(condition)) {
+            Map<String, Map<String, Object>> conditionMap = condition.rowMap();
+            conditionMap.forEach((column, datum) -> {
+                List<String> wheres = new ArrayList<>();
+                datum.forEach((operator, value) -> {
+                    if (Objects.nonNull(value)) {
+                        String whereStr = "";
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
+                            whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
+                        } else {
+                            whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+                        }
+                        wheres.add(whereStr);
+                        wheres.add("or");
                     }
-                    wheres.add(whereStr);
-                    wheres.add("or");
-                }
+                });
+                wheres.remove(wheres.size() - 1);
+                String whereStr = String.join(" ", wheres);
+                sql.WHERE(whereStr);
             });
-            wheres.remove(wheres.size() - 1);
-            String whereStr = String.join(" ", wheres);
-            sql.WHERE(whereStr);
-        });
+        }
     }
 
     /**
