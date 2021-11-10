@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.dto.inner.req.GXPagingReqDto;
+import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
 import cn.maple.core.framework.dto.protocol.req.GXBaseSearchReqProtocol;
 import cn.maple.core.framework.event.GXBaseEvent;
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
@@ -648,7 +648,7 @@ public class GXCommonUtils {
      * @param <T>               目标对象类型
      * @return GXBasePagingReqDto
      */
-    public static <T extends GXPagingReqDto> T searchConvertSpecialTargetObject(GXBaseSearchReqProtocol searchReqProtocol, Class<T> clazz) {
+    public static <T extends GXQueryParamReqDto> T searchConvertSpecialTargetObject(GXBaseSearchReqProtocol searchReqProtocol, Class<T> clazz) {
         Dict pagingInfo = searchReqProtocol.getPagingInfo();
         Integer page = pagingInfo.getInt("page");
         Integer pageSize = pagingInfo.getInt("pageSize");
