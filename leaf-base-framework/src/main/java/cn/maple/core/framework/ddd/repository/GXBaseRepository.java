@@ -48,16 +48,18 @@ public interface GXBaseRepository<E extends GXBaseReqDto, R extends GXBaseResDto
      * @param whereCondition 查询条件
      * @return R 返回数据
      */
-    R findOneByCondition(Table<String, String, Object> whereCondition);
+    R findOneByCondition(Set<String> columns, Table<String, String, Object> whereCondition);
 
     /**
-     * 分页数据
+     * 根据条件获取分页数据
      *
-     * @param limit   限制条数
-     * @param columns 需要的数据列
+     * @param columns        需要的数据列
+     * @param page           当前页
+     * @param pageSize       每页大小
+     * @param whereCondition 查询条件
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(Integer limit, Set<String> columns);
+    GXPaginationResDto<R> paginate(Set<String> columns, Integer page, Integer pageSize, Table<String, String, Object> whereCondition);
 
     /**
      * 根据条件删除

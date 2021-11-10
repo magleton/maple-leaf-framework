@@ -13,11 +13,13 @@ import cn.maple.core.datasource.service.GXAlterTableService;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.datasource.service.impl.GXDBBaseServiceImpl;
 import cn.maple.core.datasource.util.GXDataSourceCommonUtils;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Table;
 import org.slf4j.LoggerFactory;
@@ -334,7 +336,26 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     public List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
         return baseMapper.getPageByCondition(page, tableName, fieldSet, condition);
     }
-    
+
+    /**
+     * 构造分页对象
+     *
+     * @param page     当前页
+     * @param pageSize 每页大小
+     * @return 分页对象
+     */
+    public IPage<R> constructPageObject(Integer page, Integer pageSize) {
+        int defaultCurrentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
+        int defaultPageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
+        if (page < 0) {
+            page = defaultCurrentPage;
+        }
+        if (pageSize > defaultPageSize || pageSize <= 0) {
+            pageSize = defaultPageSize;
+        }
+        return new Page<>(page, pageSize);
+    }
+
     /**
      * 获取表名字
      *
