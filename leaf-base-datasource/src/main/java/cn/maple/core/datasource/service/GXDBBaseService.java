@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
-import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
+import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
@@ -66,7 +66,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    GXPaginationResDto<S> paginate(GXQueryParamReqDto searchReqDto);
+    GXPaginationResDto<S> paginate(GXBaseQueryParamReqDto searchReqDto);
 
     /**
      * 获取 Primary Key

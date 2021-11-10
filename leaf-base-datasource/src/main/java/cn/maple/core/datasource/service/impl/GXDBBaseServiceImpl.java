@@ -6,8 +6,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.datasource.service.GXDBBaseService;
+import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
-import cn.maple.core.framework.dto.inner.req.GXQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -98,17 +97,14 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
     /**
      * 列表或者搜索(分页)
      *
-     * @param searchReqDto 参数
+     * @param queryParamReqDto 参数
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<S> paginate(GXQueryParamReqDto searchReqDto) {
-        Integer page = searchReqDto.getPage();
-        Integer pageSize = searchReqDto.getPageSize();
-        Table<String, String, Object> queryCondition = searchReqDto.getQueryCondition();
-        if (Objects.isNull(queryCondition)) {
-            queryCondition = HashBasedTable.create();
-        }
+    public GXPaginationResDto<S> paginate(GXBaseQueryParamReqDto queryParamReqDto) {
+        Integer page = queryParamReqDto.getPage();
+        Integer pageSize = queryParamReqDto.getPageSize();
+        Table<String, String, Object> queryCondition = HashBasedTable.create();
         return repository.paginate(page, pageSize, queryCondition, CollUtil.newHashSet("*"));
     }
 

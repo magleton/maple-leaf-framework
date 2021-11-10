@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXQueryParamReqDto extends GXBaseReqDto {
+public class GXBaseQueryParamReqDto extends GXBaseReqDto {
     private static final long serialVersionUID = 8088371218041701430L;
 
     /**
