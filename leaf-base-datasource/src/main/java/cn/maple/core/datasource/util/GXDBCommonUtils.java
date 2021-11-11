@@ -87,7 +87,7 @@ public class GXDBCommonUtils {
      * @param records 分页数据
      * @return GXPagination
      */
-    public static <R> GXPaginationResDto<R> convertPageToTarget(IPage<R> page, List<R> records) {
+    public static <R> GXPaginationResDto<R> convertPageToPaginationResDto(IPage<R> page, List<R> records) {
         long pages = page.getPages();
         long currentPage = page.getCurrent();
         long pageSize = page.getSize();
