@@ -46,14 +46,12 @@
         <caffeine.version>3.0.4</caffeine.version>
         <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <knife4j.version>3.0.2</knife4j.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
     </properties>
 
-    <!-- 子模块继承之后，提供作用：锁定版本+子module不用写groupId和version  -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -74,14 +72,6 @@
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--knife4j-->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-dependencies</artifactId>
-                <version>${knife4j.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
