@@ -1,7 +1,9 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
@@ -16,12 +18,20 @@ import java.util.Set;
 /**
  * 业务DB基础Service
  *
- * @param <R> 仓库对象型
+ * @param <P> 仓库对象类型
+ * @param <M> Mapper类型
+ * @param <D> DAO类型
+ * @param <T> 实体类型
  * @param <Q> 请求对象型
- * @param <S> 响应对象类型
+ * @param <R> 响应对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXBaseEntity, Q extends GXBaseReqDto, S extends GXBaseResDto>
+public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R>,
+        M extends GXBaseMapper<T, R>,
+        D extends GXBaseDao<M, T, R>,
+        T extends GXBaseEntity,
+        Q extends GXBaseReqDto,
+        R extends GXBaseResDto>
         extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 检测给定条件的记录是否存在
@@ -67,7 +77,7 @@ public interface GXDBBaseService<R extends GXBaseRepository<T, S>, T extends GXB
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    GXPaginationResDto<S> paginate(GXBaseQueryParamReqDto searchReqDto);
+    GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto searchReqDto);
 
     /**
      * 获取 Primary Key

@@ -82,6 +82,22 @@ public class GXCommonUtils {
     }
 
     /**
+     * 获取Dict中指定的key的值
+     *
+     * @param param 目标dict
+     * @param key   需要获取的key名字
+     * @param clazz 返回的数据类型
+     * @return R
+     */
+    public static <R> R getValueFromDict(Dict param, String key, Class<R> clazz) {
+        Object obj = param.getObj(key);
+        if (Objects.nonNull(obj)) {
+            return Convert.convert(clazz, obj);
+        }
+        return null;
+    }
+
+    /**
      * 根据key获取配置文件中的配置信息
      *
      * @param key Key
@@ -736,7 +752,6 @@ public class GXCommonUtils {
         return GXSingletonUtils.getAsyncCaffeine(configNameKey, cacheLoader);
     }
 
-
     /**
      * 验证手机号码
      *
@@ -767,7 +782,7 @@ public class GXCommonUtils {
      */
     public static Dict convertAnyObjectToDict(Object obj) {
         try {
-            return Convert.convert(new cn.hutool.core.lang.TypeReference<Dict>() {
+            return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
             }, obj);
         } catch (ConvertException e) {
             LOG.error("转换出错了", e);
@@ -784,7 +799,6 @@ public class GXCommonUtils {
     public static void registerSingleton(String beanName, Object singletonObject) {
         GXSpringContextUtils.registerSingleton(beanName, singletonObject);
     }
-
 
     /**
      * 获取AES对象

@@ -1,6 +1,7 @@
 package cn.maple.core.datasource.repository;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -8,11 +9,14 @@ import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Set;
 
@@ -125,6 +129,44 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     }
 
     /**
+     * 实现验证注解(返回true表示数据已经存在)
+     *
+     * @param value                      The value to check for
+     * @param fieldName                  The name of the field for which to check if the value exists
+     * @param constraintValidatorContext The ValidatorContext
+     * @param param                      param
+     * @return boolean
+     */
+    public boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
+        String tableName = GXCommonUtils.getValueFromDict(param, "tableName", String.class);
+        if (CharSequenceUtil.isBlank(tableName)) {
+            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
+        }
+        Table<String, String, Object> condition = HashBasedTable.create();
+        condition.put(fieldName, "=", value);
+        return checkRecordIsExists(tableName, condition);
+    }
+
+    /**
+     * 验证数据的唯一性 (返回true表示数据已经存在)
+     *
+     * @param value                      值
+     * @param fieldName                  字段名字
+     * @param constraintValidatorContext 验证上下文对象
+     * @param param                      参数
+     * @return boolean
+     */
+    public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
+        String tableName = GXCommonUtils.getValueFromDict(param, "tableName", String.class);
+        if (CharSequenceUtil.isBlank(tableName)) {
+            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
+        }
+        Table<String, String, Object> condition = HashBasedTable.create();
+        condition.put(fieldName, "=", value);
+        return checkRecordIsUnique(tableName, condition);
+    }
+
+    /**
      * 批量插入数据
      *
      * @param tableName 表名
@@ -147,5 +189,14 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      */
     public Integer updateDataByCondition(String tableName, Set<String> fieldSet, List<Dict> dataList, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 获取 Primary Key
+     *
+     * @return String
+     */
+    public String getPrimaryKey() {
+        return "id";
     }
 }

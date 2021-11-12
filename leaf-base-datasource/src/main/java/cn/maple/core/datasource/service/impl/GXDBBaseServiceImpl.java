@@ -2,15 +2,15 @@ package cn.maple.core.datasource.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.datasource.service.GXDBBaseService;
 import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -24,13 +24,18 @@ import java.util.Set;
 /**
  * 业务基础Service
  *
- * @param <R> 仓库对象类型
+ * @param <P> 仓库对象类型
  * @param <Q> 请求参数类型
- * @param <S> 响应数据类型
+ * @param <R> 响应数据类型
  */
-public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXBaseEntity, Q extends GXBaseReqDto, S extends GXBaseResDto>
+public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R>,
+        M extends GXBaseMapper<T, R>,
+        D extends GXBaseDao<M, T, R>,
+        T extends GXBaseEntity,
+        Q extends GXBaseReqDto,
+        R extends GXBaseResDto>
         extends GXDBCommonServiceImpl
-        implements GXDBBaseService<R, T, Q, S> {
+        implements GXDBBaseService<P, M, D, T, Q, R> {
     /**
      * 日志对象
      */
@@ -41,7 +46,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      */
     @Autowired
     @SuppressWarnings("all")
-    protected R repository;
+    protected P repository;
 
     /**
      * 检测给定条件的记录是否存在
@@ -101,7 +106,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<S> paginate(GXBaseQueryParamReqDto queryParamReqDto) {
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto queryParamReqDto) {
         Integer page = queryParamReqDto.getPage();
         Integer pageSize = queryParamReqDto.getPageSize();
         Table<String, String, Object> queryCondition = HashBasedTable.create();
@@ -119,13 +124,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      */
     @Override
     public boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
-        String tableName = param.getStr("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
-        }
-        Table<String, String, Object> condition = HashBasedTable.create();
-        condition.put(fieldName, "=", value);
-        return checkRecordIsExists(tableName, condition);
+        return repository.validateExists(value, fieldName, constraintValidatorContext, param);
     }
 
     /**
@@ -139,13 +138,7 @@ public class GXDBBaseServiceImpl<R extends GXBaseRepository<T, S>, T extends GXB
      */
     @Override
     public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        String tableName = param.getStr("tableName");
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
-        }
-        Table<String, String, Object> condition = HashBasedTable.create();
-        condition.put(fieldName, "=", value);
-        return checkRecordIsUnique(tableName, condition);
+        return repository.validateUnique(value, fieldName, constraintValidatorContext, param);
     }
 
     /**
