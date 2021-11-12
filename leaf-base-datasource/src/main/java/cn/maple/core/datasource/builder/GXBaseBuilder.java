@@ -147,6 +147,35 @@ public interface GXBaseBuilder {
     }
 
     /**
+     * 通过条件获取数据列表
+     *
+     * @param tableName 表名字
+     * @param fieldSet  需要查询的字段
+     * @param condition 条件
+     *                  <code>
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                  condition.put("level" , "=" , "1111");
+     *                  findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                  findByCondition("test", condition , CollUtil.newHashSet("id" , "username"));
+     *                  </code>
+     * @return SQL语句
+     */
+    static String findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        String selectStr = "*";
+        if (CollUtil.isNotEmpty(fieldSet)) {
+            selectStr = String.join(",", fieldSet);
+        }
+        SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
+        dealSQLCondition(sql, condition);
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        return sql.toString();
+    }
+
+    /**
      * 通过条件获取分类数据
      *
      * @param tableName 表名字
@@ -157,14 +186,35 @@ public interface GXBaseBuilder {
      *                  condition.put("path" , "like" , "aaa%");
      *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
      *                  condition.put("level" , "=" , "1111");
-     *                  getDataByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition);
+     *                  findByCondition(Page , "test" , condition, CollUtil.newHashSet("id" , "username"));
+     *                  condition1.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                  findByCondition("test" , condition1, CollUtil.newHashSet("id" , "username"));
      *                  </code>
      * @return SQL语句
      */
-    static String getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    static <R> String paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return findByCondition(tableName, condition, fieldSet);
+    }
+
+    /**
+     * 通过条件获取数据列表
+     *
+     * @param tableName 表名字
+     * @param fieldSet  需要查询的字段
+     * @param condition 条件
+     *                  <code>
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("path" , "like" , "aaa%");
+     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                  condition.put("level" , "=" , "1111");
+     *                  findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
+     *                  Table<String, String, Object> condition = HashBasedTable.create();
+     *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                  findByCondition("test", condition , CollUtil.newHashSet("id" , "username"));
+     *                  </code>
+     * @return SQL语句
+     */
+    static String findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
         String selectStr = "*";
         if (CollUtil.isNotEmpty(fieldSet)) {
             selectStr = String.join(",", fieldSet);
@@ -172,6 +222,7 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
         dealSQLCondition(sql, condition);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        sql.LIMIT(1);
         return sql.toString();
     }
 
@@ -203,27 +254,6 @@ public interface GXBaseBuilder {
                 sql.WHERE(whereStr);
             });
         }
-    }
-
-    /**
-     * 通过条件获取分类数据
-     *
-     * @param tableName 表名字
-     * @param fieldSet  需要查询的字段
-     * @param condition 条件
-     *                  <code>
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("path" , "like" , "aaa%");
-     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     *                  condition.put("level" , "=" , "1111");
-     *                  getDataByCondition(Page , "test" , CollUtil.newHashSet("id" , "username"), condition);
-     *                  condition1.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition1);
-     *                  </code>
-     * @return SQL语句
-     */
-    static <R> String paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return getDataByCondition(tableName, condition, fieldSet);
     }
 
     /**

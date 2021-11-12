@@ -27,13 +27,13 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
     Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
     R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
