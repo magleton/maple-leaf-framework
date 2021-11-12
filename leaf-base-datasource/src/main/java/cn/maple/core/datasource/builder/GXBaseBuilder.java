@@ -222,7 +222,7 @@ public interface GXBaseBuilder {
      *                  </code>
      * @return SQL语句
      */
-    static <R> String paginateByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    static <R> String paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
         return getDataByCondition(tableName, condition, fieldSet);
     }
 
