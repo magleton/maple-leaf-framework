@@ -227,6 +227,42 @@ public interface GXBaseBuilder {
     }
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return SQL语句
+     */
+    static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+        SQL sql = new SQL().UPDATE(tableName);
+        sql.SET("is_deleted = id");
+        dealSQLCondition(sql, condition);
+        return sql.toString();
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return SQL语句
+     */
+    static String deleteWhere(String tableName, Table<String, String, Object> condition) {
+        SQL sql = new SQL().DELETE_FROM(tableName);
+        dealSQLCondition(sql, condition);
+        return sql.toString();
+    }
+
+    /**
+     * 默认的搜索条件
+     *
+     * @return Dict
+     */
+    static Dict getDefaultSearchField() {
+        return Dict.create();
+    }
+
+    /**
      * 获取请求对象中的搜索条件数据
      *
      * @param param 参数
@@ -422,14 +458,5 @@ public interface GXBaseBuilder {
         final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         assert schemaService != null;
         return schemaService.getSelectFieldStr(tableName, targetSet, remove);
-    }
-
-    /**
-     * 默认的搜索条件
-     *
-     * @return Dict
-     */
-    default Dict getDefaultSearchField() {
-        return Dict.create();
     }
 }

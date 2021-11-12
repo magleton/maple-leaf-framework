@@ -216,4 +216,26 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     private String getTableName(Class<T> clazz) {
         return GXDBCommonUtils.getTableName(clazz);
     }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+        return baseMapper.deleteSoftWhere(tableName, condition);
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
+        return baseMapper.deleteWhere(tableName, condition);
+    }
 }

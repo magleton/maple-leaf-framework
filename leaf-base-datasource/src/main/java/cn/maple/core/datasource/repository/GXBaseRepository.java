@@ -98,13 +98,25 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     }
 
     /**
-     * 根据条件删除
+     * 根据条件软(逻辑)删除
      *
-     * @param whereCondition 删除条件
+     * @param tableName 表名
+     * @param condition 删除条件
      * @return 影响行数
      */
-    public Integer deleteWhere(Table<String, String, Object> whereCondition) {
-        throw new GXBusinessException("自定义实现");
+    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+        return baseDao.deleteSoftWhere(tableName, condition);
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
+        return baseDao.deleteWhere(tableName, condition);
     }
 
     /**
