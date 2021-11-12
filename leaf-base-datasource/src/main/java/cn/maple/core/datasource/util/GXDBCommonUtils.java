@@ -94,4 +94,18 @@ public class GXDBCommonUtils {
         long totalCount = page.getTotal();
         return new GXPaginationResDto<>(records, totalCount, pages, pageSize, currentPage);
     }
+
+    /**
+     * 获取分页对象信息
+     *
+     * @param page 分页对象
+     * @return GXPagination
+     */
+    public static <R> GXPaginationResDto<R> convertPageToPaginationResDto(IPage<R> page) {
+        long pages = page.getPages();
+        long currentPage = page.getCurrent();
+        long pageSize = page.getSize();
+        long totalCount = page.getTotal();
+        return new GXPaginationResDto<>(page.getRecords(), totalCount, pages, pageSize, currentPage);
+    }
 }

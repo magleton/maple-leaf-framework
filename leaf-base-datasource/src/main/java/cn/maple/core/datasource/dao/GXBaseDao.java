@@ -30,11 +30,11 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 分页  返回实体对象
      *
-     * @param param            参数
+     * @param condition        条件
      * @param mapperMethodName Mapper方法
      * @return GXPagination
      */
-    public IPage<R> generatePage(IPage<R> riPage, Dict param, String mapperMethodName) {
+    public IPage<R> paginate(IPage<R> riPage, Table<String, String, Object> condition, String mapperMethodName) {
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
             Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
@@ -44,7 +44,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
             }
             throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
         }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, param);
+        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, condition);
         riPage.setRecords(list);
         return riPage;
     }
@@ -118,8 +118,8 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
-    public Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        return baseMapper.checkRecordIsUnique(tableName, condition);
+    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
+        return baseMapper.checkRecordIsUnique(tableName, condition) > 1;
     }
 
     /**

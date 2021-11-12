@@ -1,16 +1,28 @@
 package cn.maple.core.datasource.repository;
 
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.mapper.GXBaseMapper;
+import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Table;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto> {
+public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto> {
+    /**
+     * 基础DAO
+     */
+    @Autowired
+    protected D baseDao;
+
     /**
      * 保存数据
      *
@@ -18,7 +30,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer create(T entity, Table<String, String, Object> condition) {
+    public Integer create(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -29,7 +41,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer update(T entity, Table<String, String, Object> condition) {
+    public Integer update(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -40,7 +52,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    default Integer updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public Integer updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -51,7 +63,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 条件
      * @return 列表
      */
-    default List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
+    public List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -61,7 +73,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 查询条件
      * @return R 返回数据
      */
-    default R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
+    public R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -74,8 +86,10 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    default GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
-        throw new GXBusinessException("自定义实现");
+    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+        Page<R> iPage = new Page<>(page, pageSize);
+        IPage<R> paginate = baseDao.paginate(iPage, condition, "paginate");
+        return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
     /**
@@ -84,7 +98,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param whereCondition 删除条件
      * @return 影响行数
      */
-    default Integer deleteWhere(Table<String, String, Object> whereCondition) {
+    public Integer deleteWhere(Table<String, String, Object> whereCondition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -95,8 +109,8 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 查询条件
      * @return 1 存在 0 不存在
      */
-    default boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+        return baseDao.checkRecordIsExists(tableName, condition);
     }
 
     /**
@@ -106,8 +120,8 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 查询条件
      * @return 1 不唯一 0 唯一
      */
-    default boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
+        return baseDao.checkRecordIsUnique(tableName, condition);
     }
 
     /**
@@ -118,7 +132,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param dataList  数据集合
      * @return 影响行数
      */
-    default Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
+    public Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -131,7 +145,7 @@ public interface GXBaseRepository<T extends GXBaseEntity, R extends GXBaseResDto
      * @param condition 更新条件
      * @return 更新的条数
      */
-    default Integer updateDataByCondition(String tableName, Set<String> fieldSet, List<Dict> dataList, Table<String, String, Object> condition) {
+    public Integer updateDataByCondition(String tableName, Set<String> fieldSet, List<Dict> dataList, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 }
