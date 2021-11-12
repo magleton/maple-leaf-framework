@@ -35,6 +35,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return GXPagination
      */
     public IPage<R> paginate(IPage<R> riPage, Table<String, String, Object> condition, String mapperMethodName) {
+        if (CharSequenceUtil.isEmpty(mapperMethodName)) {
+            mapperMethodName = "paginate";
+        }
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
             Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
@@ -156,7 +159,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return 列表
      */
     public R getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.getDataByCondition(tableName, condition, fieldSet);
+        return baseMapper.findOneByCondition(tableName, condition, fieldSet);
     }
 
     /**
@@ -168,7 +171,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return 列表
      */
     public List<R> getListByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.getListByCondition(tableName, condition, fieldSet);
+        return baseMapper.findByCondition(tableName, condition, fieldSet);
     }
 
     /**
@@ -180,7 +183,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return 列表
      */
     public List<R> getPageByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.getPageByCondition(page, tableName, condition, fieldSet);
+        return baseMapper.paginate(page, tableName, condition, fieldSet);
     }
 
     /**

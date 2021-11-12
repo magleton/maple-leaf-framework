@@ -31,17 +31,17 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    R getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "getDataByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> getListByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "getPageByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "paginateByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> getPageByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 }
