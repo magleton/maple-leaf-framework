@@ -44,7 +44,7 @@ public interface GXBaseBuilder {
      * @return String
      */
     @SuppressWarnings("all")
-    static String updateFieldByCondition(String tableName, Dict data, Dict whereData) {
+    static String updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         final SQL sql = new SQL().UPDATE(tableName);
         final Set<String> fieldNames = data.keySet();
         for (String fieldName : fieldNames) {
@@ -82,15 +82,8 @@ public interface GXBaseBuilder {
                 sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.STR_EQ, fieldName, value));
             }
         }
-        whereData.keySet().forEach(conditionKey -> {
-            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
-            final String value = whereData.getStr(conditionKey);
-            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
-            }
-            sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
-        });
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
+        dealSQLCondition(sql, condition);
         return sql.toString();
     }
 
@@ -101,17 +94,9 @@ public interface GXBaseBuilder {
      * @param condition 条件
      * @return String
      */
-    static String checkRecordIsExists(String tableName, Dict condition) {
+    static String checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        final Set<String> conditionKeys = condition.keySet();
-        for (String conditionKey : conditionKeys) {
-            String template = "{} " + GXBaseBuilderConstant.STR_EQ;
-            final String value = condition.getStr(conditionKey);
-            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value)) {
-                template = "{} " + GXBaseBuilderConstant.NUMBER_EQ;
-            }
-            sql.WHERE(CharSequenceUtil.format(template, conditionKey, value));
-        }
+        dealSQLCondition(sql, condition);
         sql.LIMIT(1);
         return CharSequenceUtil.format("SELECT IFNULL(({}) , 0)", sql.toString());
     }
@@ -123,7 +108,7 @@ public interface GXBaseBuilder {
      * @param condition 条件
      * @return String
      */
-    static String checkRecordIsUnique(String tableName, Dict condition) {
+    static String checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         return checkRecordIsExists(tableName, condition);
     }
 

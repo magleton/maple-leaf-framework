@@ -58,7 +58,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return boolean
      */
-    public boolean updateSingleField(Class<T> clazz, String path, Object value, Dict condition) {
+    public boolean updateSingleField(Class<T> clazz, String path, Object value, Table<String, String, Object> condition) {
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         String mainPath = CharSequenceUtil.sub(path, 0, index);
         String subPath = CharSequenceUtil.sub(path, index + 1, path.length());
@@ -74,7 +74,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 更新条件
      * @return boolean
      */
-    public boolean updateMultiFields(Class<T> clazz, Dict data, Dict condition) {
+    public boolean updateMultiFields(Class<T> clazz, Dict data, Table<String, String, Object> condition) {
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
@@ -85,8 +85,8 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
-    public Integer checkRecordIsExists(Class<T> clazz, Dict condition) {
-        return baseMapper.checkRecordIsExists(getTableName(clazz), condition);
+    public boolean checkRecordIsExists(Class<T> clazz, Table<String, String, Object> condition) {
+        return baseMapper.checkRecordIsExists(getTableName(clazz), condition) == 1;
     }
 
     /**
@@ -96,8 +96,8 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
-    public Integer checkRecordIsExists(String tableName, Dict condition) {
-        return baseMapper.checkRecordIsExists(tableName, condition);
+    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+        return baseMapper.checkRecordIsExists(tableName, condition) == 1;
     }
 
     /**
@@ -107,7 +107,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
-    public Integer checkRecordIsUnique(Class<T> clazz, Dict condition) {
+    public Integer checkRecordIsUnique(Class<T> clazz, Table<String, String, Object> condition) {
         return baseMapper.checkRecordIsUnique(getTableName(clazz), condition);
     }
 
@@ -118,7 +118,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
-    public Integer checkRecordIsUnique(String tableName, Dict condition) {
+    public Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         return baseMapper.checkRecordIsUnique(tableName, condition);
     }
 
@@ -130,7 +130,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 更新条件
      * @return boolean
      */
-    public boolean updateFieldByCondition(Class<T> clazz, Dict data, Dict condition) {
+    public boolean updateFieldByCondition(Class<T> clazz, Dict data, Table<String, String, Object> condition) {
         return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
