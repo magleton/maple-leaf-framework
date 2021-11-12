@@ -32,9 +32,10 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      *
      * @param condition        条件
      * @param mapperMethodName Mapper方法
+     * @param fieldSet         需要获取的字段
      * @return GXPagination
      */
-    public IPage<R> paginate(IPage<R> riPage, Table<String, String, Object> condition, String mapperMethodName) {
+    public IPage<R> paginate(IPage<R> riPage, Table<String, String, Object> condition, String mapperMethodName, Set<String> fieldSet) {
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
@@ -47,9 +48,21 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
             }
             throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
         }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, condition);
+        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, condition, fieldSet);
         riPage.setRecords(list);
         return riPage;
+    }
+
+    /**
+     * 通过条件获取分页数据列表
+     *
+     * @param tableName 表名
+     * @param condition 查询条件
+     * @param fieldSet  需要获取的字段
+     * @return 列表
+     */
+    public List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return baseMapper.paginate(page, tableName, condition, fieldSet);
     }
 
     /**
@@ -158,7 +171,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param fieldSet  需要获取的字段
      * @return 列表
      */
-    public R getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
         return baseMapper.findOneByCondition(tableName, condition, fieldSet);
     }
 
@@ -170,20 +183,8 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param fieldSet  需要获取的字段
      * @return 列表
      */
-    public List<R> getListByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
         return baseMapper.findByCondition(tableName, condition, fieldSet);
-    }
-
-    /**
-     * 通过条件获取分页数据列表
-     *
-     * @param tableName 表名
-     * @param condition 查询条件
-     * @param fieldSet  需要获取的字段
-     * @return 列表
-     */
-    public List<R> getPageByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.paginate(page, tableName, condition, fieldSet);
     }
 
     /**
@@ -196,10 +197,11 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     public IPage<R> constructPageObject(Integer page, Integer pageSize) {
         int defaultCurrentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
         int defaultPageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
+        int defaultMaxPageSize = GXCommonConstant.DEFAULT_MAX_PAGE_SIZE;
         if (page < 0) {
             page = defaultCurrentPage;
         }
-        if (pageSize > defaultPageSize || pageSize <= 0) {
+        if (pageSize > defaultMaxPageSize || pageSize <= 0) {
             pageSize = defaultPageSize;
         }
         return new Page<>(page, pageSize);

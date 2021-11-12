@@ -69,7 +69,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return 列表
      */
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        return baseDao.getListByCondition(tableName, condition, columns);
+        return baseDao.findByCondition(tableName, condition, columns);
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return R 返回数据
      */
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        return baseDao.getDataByCondition(tableName, condition, columns);
+        return baseDao.findOneByCondition(tableName, condition, columns);
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      */
     public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
         Page<R> iPage = new Page<>(page, pageSize);
-        IPage<R> paginate = baseDao.paginate(iPage, condition, "paginate");
+        IPage<R> paginate = baseDao.paginate(iPage, condition, "paginate", columns);
         return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
