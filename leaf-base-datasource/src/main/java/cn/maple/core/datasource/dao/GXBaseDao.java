@@ -151,36 +151,36 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * 通过条件获取数据
      *
      * @param tableName 表名
-     * @param fieldSet  需要获取的字段
      * @param condition 查询条件
+     * @param fieldSet  需要获取的字段
      * @return 列表
      */
-    public R getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
-        return baseMapper.getDataByCondition(tableName, fieldSet, condition);
+    public R getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return baseMapper.getDataByCondition(tableName, condition, fieldSet);
     }
 
     /**
      * 通过条件获取数据列表
      *
      * @param tableName 表名
-     * @param fieldSet  需要获取的字段
      * @param condition 查询条件
+     * @param fieldSet  需要获取的字段
      * @return 列表
      */
-    public List<R> getListByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
-        return baseMapper.getListByCondition(tableName, fieldSet, condition);
+    public List<R> getListByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return baseMapper.getListByCondition(tableName, condition, fieldSet);
     }
 
     /**
      * 通过条件获取分页数据列表
      *
      * @param tableName 表名
-     * @param fieldSet  需要获取的字段
      * @param condition 查询条件
+     * @param fieldSet  需要获取的字段
      * @return 列表
      */
-    public List<R> getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
-        return baseMapper.getPageByCondition(page, tableName, fieldSet, condition);
+    public List<R> getPageByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return baseMapper.getPageByCondition(page, tableName, condition, fieldSet);
     }
 
     /**

@@ -24,6 +24,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 基础DAO
      */
+    @SuppressWarnings("all")
     @Autowired
     protected D baseDao;
 
@@ -67,8 +68,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 条件
      * @return 列表
      */
-    public List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        return baseDao.getListByCondition(tableName, condition, columns);
     }
 
     /**
@@ -77,8 +78,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 查询条件
      * @return R 返回数据
      */
-    public R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        return baseDao.getDataByCondition(tableName, condition, columns);
     }
 
     /**

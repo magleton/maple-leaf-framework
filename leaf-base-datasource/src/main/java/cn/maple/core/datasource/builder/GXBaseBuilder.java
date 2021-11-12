@@ -157,14 +157,14 @@ public interface GXBaseBuilder {
      *                  condition.put("path" , "like" , "aaa%");
      *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
      *                  condition.put("level" , "=" , "1111");
-     *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition);
+     *                  getDataByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
      *                  Table<String, String, Object> condition = HashBasedTable.create();
      *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
      *                  getDataByCondition("test" , CollUtil.newHashSet("id" , "username"), condition);
      *                  </code>
      * @return SQL语句
      */
-    static String getDataByCondition(String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
+    static String getDataByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
         String selectStr = "*";
         if (CollUtil.isNotEmpty(fieldSet)) {
             selectStr = String.join(",", fieldSet);
@@ -222,8 +222,8 @@ public interface GXBaseBuilder {
      *                  </code>
      * @return SQL语句
      */
-    static <R> String getPageByCondition(IPage<R> page, String tableName, Set<String> fieldSet, Table<String, String, Object> condition) {
-        return getDataByCondition(tableName, fieldSet, condition);
+    static <R> String getPageByCondition(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        return getDataByCondition(tableName, condition, fieldSet);
     }
 
     /**
