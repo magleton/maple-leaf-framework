@@ -12,10 +12,10 @@ public class GXBaseEntity extends GXBaseData {
     private static final long serialVersionUID = 2923482261586642602L;
 
     @TableField(fill = FieldFill.INSERT)
-    private Long createdAt;
+    private Integer createdAt;
 
     @TableField(fill = FieldFill.UPDATE)
-    private Long updatedAt;
+    private Integer updatedAt;
 
     @TableField(fill = FieldFill.INSERT)
     private String createdBy;
