@@ -6,7 +6,6 @@ import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
-import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
@@ -22,7 +21,6 @@ import java.util.Set;
  * @param <M> Mapper类型
  * @param <D> DAO类型
  * @param <T> 实体类型
- * @param <Q> 请求对象型
  * @param <R> 响应对象类型
  * @author britton chen <britton@126.com>
  */
@@ -30,9 +28,8 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R>,
         M extends GXBaseMapper<T, R>,
         D extends GXBaseDao<M, T, R>,
         T extends GXBaseEntity,
-        Q extends GXBaseReqDto,
         R extends GXBaseResDto>
-        extends GXBusinessService, GXDBCommonService, GXValidateDBExistsService, GXValidateDBUniqueService {
+        extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 检测给定条件的记录是否存在
      *
@@ -78,6 +75,14 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R>,
      * @return GXPagination
      */
     GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto searchReqDto);
+
+    /**
+     * 获取实体的表明
+     *
+     * @param clazz Class对象
+     * @return String
+     */
+    String getTableName(Class<T> clazz);
 
     /**
      * 获取 Primary Key

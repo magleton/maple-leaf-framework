@@ -20,7 +20,7 @@ public interface GXBaseController {
      * @param clazz  目标对象类型
      * @return T
      */
-    default <S extends GXBaseReqProtocol, T extends GXBaseReqDto> T convertSourceToTarget(S source, Class<T> clazz) {
+    default <S extends GXBaseReqProtocol, Q extends GXBaseReqDto> Q convertSourceToTarget(S source, Class<Q> clazz) {
         return BeanUtil.copyProperties(source, clazz);
     }
 
