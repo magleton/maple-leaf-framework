@@ -35,7 +35,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public Integer create(T entity, Table<String, String, Object> condition) {
+    public <E> E create(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -46,7 +46,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public Integer update(T entity, Table<String, String, Object> condition) {
+    public <E> E update(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -57,7 +57,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public Integer updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public <E> E updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -104,7 +104,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 删除条件
      * @return 影响行数
      */
-    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+    public <E> E deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         return baseDao.deleteSoftWhere(tableName, condition);
     }
 
@@ -115,7 +115,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 删除条件
      * @return 影响行数
      */
-    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
+    public <E> E deleteWhere(String tableName, Table<String, String, Object> condition) {
         return baseDao.deleteWhere(tableName, condition);
     }
 
