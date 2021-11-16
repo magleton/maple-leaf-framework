@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
 import javax.validation.ValidationException;
 import java.sql.SQLException;
@@ -46,12 +45,6 @@ public class GXExceptionHandler {
     public GXResultUtils<String> handlerNoFoundException(Exception e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
-    }
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    public GXResultUtils<String> handleDuplicateKeyException(DuplicateKeyException e) {
-        log.error(e.getMessage(), e);
-        return GXResultUtils.error("数据库中已存在该记录");
     }
 
     @ExceptionHandler(Exception.class)

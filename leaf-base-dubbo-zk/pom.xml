@@ -14,8 +14,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <dubbo.version>3.0.2.1</dubbo.version>
-        <nacos-config-spring-boot.version>0.2.9</nacos-config-spring-boot.version>
+        <dubbo.version>3.0.4</dubbo.version>
     </properties>
     <dependencies>
         <dependency>
@@ -33,11 +32,16 @@
             <artifactId>dubbo-dependencies-zookeeper</artifactId>
             <version>${dubbo.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alibaba.boot</groupId>
             <artifactId>nacos-config-spring-boot-starter</artifactId>
-            <version>${nacos-config-spring-boot.version}</version>
         </dependency>
     </dependencies>
 </project>

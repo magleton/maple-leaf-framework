@@ -14,6 +14,8 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.util.unit.DataSize;
 
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @ComponentScan("cn.maple")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GXFrameworkConfig {
     @Bean
     @ConditionalOnExpression("'${enable-fileupload-progress}'.equals('false')")
