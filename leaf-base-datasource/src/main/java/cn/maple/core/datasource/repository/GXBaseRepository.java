@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.repository;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.dao.GXBaseDao;
@@ -64,8 +65,20 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 根据条件获取所有数据
      *
-     * @param columns   需要获取的列
+     * @param tableName 表名字
      * @param condition 条件
+     * @return 列表
+     */
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        return baseDao.findByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @param columns   需要获取的列
      * @return 列表
      */
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
@@ -75,7 +88,20 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 根据条件获取数据
      *
+     * @param tableName 表名字
      * @param condition 查询条件
+     * @return R 返回数据
+     */
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
+        return baseDao.findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param columns   需要查询的列
      * @return R 返回数据
      */
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
