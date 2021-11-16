@@ -257,6 +257,17 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     }
 
     /**
+     * 构造分页对象
+     *
+     * @param page     当前页
+     * @param pageSize 每页大小
+     * @return 分页对象
+     */
+    public IPage<R> constructPageObject(Integer page, Integer pageSize) {
+        return baseDao.constructPageObject(page, pageSize);
+    }
+
+    /**
      * 获取 Primary Key
      *
      * @return String
