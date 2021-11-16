@@ -28,13 +28,14 @@ import java.util.Set;
  * @param <P> 仓库对象类型
  * @param <R> 响应数据类型
  */
-public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R>,
+public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
         D extends GXBaseDao<M, T, R>,
         T extends GXBaseEntity,
-        R extends GXBaseResDto>
+        R extends GXBaseResDto,
+        ID>
         extends GXBusinessServiceImpl
-        implements GXDBBaseService<P, M, D, T, R> {
+        implements GXDBBaseService<P, M, D, T, R, ID> {
     /**
      * 日志对象
      */
@@ -109,7 +110,7 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R>,
         Integer page = queryParamReqDto.getPage();
         Integer pageSize = queryParamReqDto.getPageSize();
         Table<String, String, Object> queryCondition = HashBasedTable.create();
-        return repository.paginate(page, pageSize, queryCondition, CollUtil.newHashSet("*"));
+        return repository.paginate(page, pageSize, queryCondition, "paginate", CollUtil.newHashSet("*"));
     }
 
     /**

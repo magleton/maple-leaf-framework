@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.dao;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -39,6 +40,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
+        if (Objects.isNull(fieldSet)) {
+            fieldSet = CollUtil.newHashSet("*");
+        }
         Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
         if (Objects.isNull(mapperMethod)) {
             Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
@@ -62,6 +66,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return 列表
      */
     public List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+        if (Objects.isNull(fieldSet)) {
+            fieldSet = CollUtil.newHashSet("*");
+        }
         return baseMapper.paginate(page, tableName, condition, fieldSet);
     }
 

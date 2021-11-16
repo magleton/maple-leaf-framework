@@ -19,9 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto> {
+public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto, ID> {
     /**
      * 基础DAO
      */
@@ -36,7 +37,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public <E> E create(T entity, Table<String, String, Object> condition) {
+    public ID create(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -47,7 +48,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public <E> E update(T entity, Table<String, String, Object> condition) {
+    public ID update(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -58,7 +59,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    public <E> E updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
 
@@ -117,10 +118,35 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, String mapperMethodName, Set<String> columns) {
+        if (Objects.isNull(mapperMethodName)) {
+            mapperMethodName = "paginate";
+        }
+        if (Objects.isNull(columns)) {
+            columns = CollUtil.newHashSet("*");
+        }
         Page<R> iPage = new Page<>(page, pageSize);
-        IPage<R> paginate = baseDao.paginate(iPage, condition, "paginate", columns);
+        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, columns);
         return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
+    }
+
+    /**
+     * 根据条件获取分页数据
+     *
+     * @param page      当前页
+     * @param pageSize  每页大小
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param columns   需要的数据列
+     * @return 分页对象
+     */
+    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        if (Objects.isNull(columns)) {
+            columns = CollUtil.newHashSet("*");
+        }
+        Page<R> iPage = new Page<>(page, pageSize);
+        List<R> paginate = baseDao.paginate(iPage, tableName, condition, columns);
+        return GXDBCommonUtils.convertPageToPaginationResDto(iPage, paginate);
     }
 
     /**

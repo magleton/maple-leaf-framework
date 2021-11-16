@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        final long timestamp = DateUtil.currentSeconds();
+        final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("createdAt", timestamp, metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        final long timestamp = DateUtil.currentSeconds();
+        final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("updatedAt", timestamp, metaObject);
     }
 }

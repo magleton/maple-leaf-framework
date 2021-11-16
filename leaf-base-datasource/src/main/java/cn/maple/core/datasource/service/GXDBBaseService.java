@@ -24,11 +24,12 @@ import java.util.Set;
  * @param <R> 响应对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R>,
+public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
         D extends GXBaseDao<M, T, R>,
         T extends GXBaseEntity,
-        R extends GXBaseResDto>
+        R extends GXBaseResDto,
+        ID>
         extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
     /**
      * 检测给定条件的记录是否存在
