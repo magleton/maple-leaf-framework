@@ -46,8 +46,8 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftWhere")
-    <E> E deleteSoftWhere(String tableName, Table<String, String, Object> condition);
+    Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition);
 
     @DeleteProvider(type = GXBaseBuilder.class, method = "deleteWhere")
-    <E> E deleteWhere(String tableName, Table<String, String, Object> condition);
+    Integer deleteWhere(String tableName, Table<String, String, Object> condition);
 }

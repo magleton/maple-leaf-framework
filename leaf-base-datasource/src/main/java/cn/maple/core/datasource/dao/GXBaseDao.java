@@ -224,7 +224,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 删除条件
      * @return 影响行数
      */
-    public <E> E deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         return baseMapper.deleteSoftWhere(tableName, condition);
     }
 
@@ -235,7 +235,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 删除条件
      * @return 影响行数
      */
-    public <E> E deleteWhere(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
         return baseMapper.deleteWhere(tableName, condition);
     }
 }
