@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -95,6 +98,7 @@ public class GXSpringContextUtils {
     }
 
     @Component
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     @SuppressWarnings("all")
     private static class GXApplicationContextAware implements ApplicationContextAware {
         @Override
