@@ -1,12 +1,12 @@
-package cn.maple.core.framework.util;
+package cn.maple.core.framework.event.event;
 
 import com.google.common.eventbus.EventBus;
 
 @SuppressWarnings("unused")
-public class GXSyncEventBusCenterUtils {
+public class SyncEventBusCenter {
     private static final EventBus syncEventBus = new EventBus("sync-britton");
 
-    private GXSyncEventBusCenterUtils() {
+    private SyncEventBusCenter() {
     }
 
     public static EventBus getInstance() {
@@ -24,4 +24,4 @@ public class GXSyncEventBusCenterUtils {
     public static void post(Object obj) {
         syncEventBus.post(obj);
     }
-}  
+}

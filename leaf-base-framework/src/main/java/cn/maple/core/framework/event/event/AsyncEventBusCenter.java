@@ -1,4 +1,4 @@
-package cn.maple.core.framework.util;
+package cn.maple.core.framework.event.event;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -6,11 +6,10 @@ import com.google.common.eventbus.EventBus;
 import java.util.concurrent.Executors;
 
 @SuppressWarnings("unused")
-public class GXAsyncEventBusCenterUtils {
-
+public class AsyncEventBusCenter {
     private static final AsyncEventBus asyncEventBus = new AsyncEventBus("async-britton", Executors.newFixedThreadPool(5));
 
-    private GXAsyncEventBusCenterUtils() {
+    private AsyncEventBusCenter() {
     }
 
     public static EventBus getInstance() {
@@ -28,4 +27,4 @@ public class GXAsyncEventBusCenterUtils {
     public static void post(Object obj) {
         asyncEventBus.post(obj);
     }
-}  
+}
