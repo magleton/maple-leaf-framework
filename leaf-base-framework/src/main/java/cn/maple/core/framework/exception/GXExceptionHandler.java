@@ -30,19 +30,19 @@ public class GXExceptionHandler {
      * 处理自定义异常
      */
     @ExceptionHandler(GXBusinessException.class)
-    public GXResultUtils<Dict> handleRRException(GXBusinessException e) {
+    public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
-    public GXResultUtils<Dict> handleRRBeanValidateException(GXBeanValidateException e) {
+    public GXResultUtils<Dict> handleBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getDict());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public GXResultUtils<String> handlerNoFoundException(Exception e) {
+    public GXResultUtils<String> handlerNoFoundException(NoHandlerFoundException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
     }
@@ -106,8 +106,14 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(SQLSyntaxErrorException.class)
-    public GXResultUtils<String> handleSQLException(SQLSyntaxErrorException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtils<String> handleSQLSyntaxErrorException(SQLSyntaxErrorException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "SQL语句异常");
+    }
+
+    @ExceptionHandler(GXDBNotExistsException.class)
+    public GXResultUtils<String> handleDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
 }
