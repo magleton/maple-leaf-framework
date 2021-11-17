@@ -14,7 +14,7 @@ public enum GXResultCode {
     SMS_SEND_FAILURE(1009, "短信发送失败"),
     USER_NAME_EXIST(1010, "用户名已存在"),
     PARAMETER_VALIDATION_ERROR(1011, "参数验证错误"),
-    TOKEN_TIMEOUT_EXIT(1012, "您已长时间未进行操作, 请重新登录~~~"),
+    TOKEN_TIMEOUT_EXIT(1012, "登录信息已过期, 请重新登录~~~"),
     FILE_ERROR(1013, "不正确的文件"),
     PARSE_REQUEST_JSON_ERROR(1014, "解析请求的JSON参数出错"),
     REQUEST_JSON_NOT_BODY(1015, "请求的JSON参数出错为空"),

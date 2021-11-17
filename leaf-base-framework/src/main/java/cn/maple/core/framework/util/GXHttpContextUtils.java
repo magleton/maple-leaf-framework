@@ -1,6 +1,8 @@
 package cn.maple.core.framework.util;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
@@ -104,14 +106,32 @@ public class GXHttpContextUtils {
     /**
      * 从token中获取用户ID
      *
-     * @param tokenName   Token的名字
-     * @param tokenIdName Token中包含的ID名字
-     * @return Long
+     * @param tokenName   header中Token的名字 eg : Authorization、token、adminToken
+     * @param tokenIdName Token中包含的ID名字 eg : id、userId、adminId....
+     * @param clazz       返回值类型
+     * @param secretKey   加解密KEY
+     * @return R
      */
-    public static long getUserIdFromToken(String tokenName, String tokenIdName) {
-        final String token = ServletUtil.getHeader(Objects.requireNonNull(getHttpServletRequest()), tokenName, CharsetUtil.UTF_8);
-        String s = GXAuthCodeUtils.authCodeDecode(token, GXTokenConstant.KEY);
-        return 0;
+    public static <R> R getUserIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
+        HttpServletRequest httpServletRequest = Objects.requireNonNull(getHttpServletRequest());
+        Object attribute = httpServletRequest.getAttribute(tokenIdName);
+        if (Objects.nonNull(attribute)) {
+            return Convert.convert(clazz, attribute);
+        }
+        if (Objects.isNull(secretKey)) {
+            secretKey = GXTokenConstant.KEY;
+        }
+        final String token = ServletUtil.getHeader(httpServletRequest, tokenName, CharsetUtil.UTF_8);
+        String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
+        if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
+            return null;
+        }
+        Dict dict = JSONUtil.toBean(s, Dict.class);
+        Object retValue = dict.getObj(tokenIdName);
+        if (Objects.nonNull(retValue)) {
+            return Convert.convert(clazz, retValue);
+        }
+        return null;
     }
 
     /**
