@@ -71,10 +71,13 @@ public class GXMyBatisPlusConfig {
         // 乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // sql性能规范插件
-        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        boolean illegalSQLEnable = Boolean.TRUE.equals(applicationContext.getEnvironment().getProperty("illegal.sql.enable", boolean.class));
+        if (illegalSQLEnable) {
+            interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        }
         // 多租户插件(请在相应的表中新增tenant_id字段)
-        Boolean tenantEnable = applicationContext.getEnvironment().getProperty("tenant.enable", boolean.class);
-        if (Objects.nonNull(tenantEnable) && tenantEnable) {
+        boolean tenantEnable = Boolean.TRUE.equals(applicationContext.getEnvironment().getProperty("tenant.enable", boolean.class));
+        if (tenantEnable) {
             interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
         }
         // interceptor.addInnerInterceptor(new TenantLineInnerInterceptor());
