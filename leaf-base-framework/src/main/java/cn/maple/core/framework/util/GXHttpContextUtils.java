@@ -104,7 +104,7 @@ public class GXHttpContextUtils {
     }
 
     /**
-     * 从token中获取用户ID
+     * 从token中获取登录用户ID
      *
      * @param tokenName   header中Token的名字 eg : Authorization、token、adminToken
      * @param tokenIdName Token中包含的ID名字 eg : id、userId、adminId....
@@ -112,7 +112,7 @@ public class GXHttpContextUtils {
      * @param secretKey   加解密KEY
      * @return R
      */
-    public static <R> R getUserIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
+    public static <R> R getLoginIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
         HttpServletRequest httpServletRequest = Objects.requireNonNull(getHttpServletRequest());
         Object attribute = httpServletRequest.getAttribute(tokenIdName);
         if (Objects.nonNull(attribute)) {
