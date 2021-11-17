@@ -38,7 +38,7 @@ public class GXMapStructExpressionUtils {
      * @param jsonStr 字符串
      * @return Dict
      */
-    public static Dict convertJsonStringToDict(@NotNull String jsonStr) {
+    public static Dict convertJsonStrToDict(@NotNull String jsonStr) {
         Dict retData = Dict.create();
         if (JSONUtil.isJson(jsonStr)) {
             Dict data = JSONUtil.toBean(jsonStr, Dict.class);
@@ -56,7 +56,7 @@ public class GXMapStructExpressionUtils {
      * @param <T>         数据元素类型
      * @return List
      */
-    public static <T> List<T> convertJsonStringToList(@NotNull String jsonStr, Class<T> elementType) {
+    public static <T> List<T> convertJsonStrToList(@NotNull String jsonStr, Class<T> elementType) {
         List<T> list = new ArrayList<>();
         if (JSONUtil.isJsonArray(jsonStr)) {
             list = JSONUtil.toList(jsonStr, elementType);

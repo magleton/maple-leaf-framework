@@ -203,7 +203,6 @@ public class GXCommonUtils {
         return classDefaultValue;
     }
 
-
     /**
      * 通过路径获取对象中的值
      * <pre>{@code
@@ -600,8 +599,7 @@ public class GXCommonUtils {
         }
         return Convert.convert(clazz, parse.remove(path));
     }
-
-
+    
     /**
      * 移除JSON中任意路径的值
      *

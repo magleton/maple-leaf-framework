@@ -28,7 +28,7 @@ public class GXConcurrentToolsUtils {
      * 日志对象
      */
     private static final Logger LOG = LoggerFactory.getLogger(GXConcurrentToolsUtils.class);
-    
+
     /**
      * 线程池对象
      */
@@ -80,7 +80,7 @@ public class GXConcurrentToolsUtils {
      */
     public static void allOf(List<CompletableFuture<?>> completableFutures, int timeOut, TimeUnit unit) {
         try {
-            CompletableFuture.allOf(completableFutures.stream().toArray(value -> new CompletableFuture[completableFutures.size()])).get(timeOut, unit);
+            CompletableFuture.allOf(completableFutures.toArray(value -> new CompletableFuture[completableFutures.size()])).get(timeOut, unit);
         } catch (InterruptedException e) {
             LOG.error("InterruptedException: ", e);
             Thread.currentThread().interrupt();

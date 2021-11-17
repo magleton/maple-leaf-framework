@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class GXSignatureUtils {
      */
     public static String generateSignature(final Map<String, String> data, String key) throws Exception {
         Set<String> keySet = data.keySet();
-        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        String[] keyArray = keySet.toArray(new String[0]);
         Arrays.sort(keyArray);
         StringBuilder sb = new StringBuilder();
         for (String k : keyArray) {
@@ -55,7 +56,7 @@ public class GXSignatureUtils {
      * @param data 待处理数据
      * @return MD5结果
      */
-    private static String md5(String data) throws Exception {
+    private static String md5(String data) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] array = md.digest(data.getBytes(StandardCharsets.UTF_8));
         StringBuilder sb = new StringBuilder();
