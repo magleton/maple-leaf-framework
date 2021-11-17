@@ -12,23 +12,19 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -42,7 +38,7 @@ public class GXCommonUtils {
      * 根据key获取配置文件中的配置信息
      * <pre>
      *     {@code
-     *     getEnvironmentValue(" alipay.appId ", String.class)
+     *     getEnvironmentValue("alipay.appId", String.class)
      *     }
      * </pre>
      *
@@ -63,7 +59,7 @@ public class GXCommonUtils {
      * 根据key获取配置文件中的配置信息
      * <pre>
      *     {@code
-     *     getEnvironmentValue(" alipay.appId ", String.class, " ")
+     *     getEnvironmentValue("alipay.appId", String.class, " ")
      *     }
      *     </pre>
      *
@@ -118,34 +114,6 @@ public class GXCommonUtils {
      */
     public static String getActiveProfile() {
         return GXSpringContextUtils.getEnvironment().getActiveProfiles()[0];
-    }
-
-    /**
-     * JSON字符串转Dict
-     *
-     * @param jsonStr JSON字符串
-     * @return Dict
-     */
-    public static Dict jsonConvertDict(String jsonStr) {
-        return jsonConvertAnyObject(jsonStr, Dict.class);
-    }
-
-    /**
-     * JSON转换为List<Dict>
-     *
-     * @param jsonStr JSON字符串
-     * @return List
-     */
-    public static List<Dict> jsonConvertDictList(String jsonStr) {
-        if (!JSONUtil.isJson(jsonStr)) {
-            LOG.error("jsonConvertDict : {}", "请传递正确的JSON格式的字符串");
-            return Collections.emptyList();
-        }
-        if (JSONUtil.isJsonArray(jsonStr)) {
-            return jsonConvertAnyObject(jsonStr, new TypeReference<List<Dict>>() {
-            });
-        }
-        return Collections.emptyList();
     }
 
     /**
@@ -206,7 +174,7 @@ public class GXCommonUtils {
     /**
      * 通过路径获取对象中的值
      * <pre>{@code
-     *     getDataByPath(Dict.create ().set(" aaa ", " bbbb "),"aaa" ,String.class)
+     *     getDataByPath(Dict.create().set("aaa", "bbbb"),"aaa" ,String.class)
      *     }
      * </pre>
      *
@@ -223,70 +191,6 @@ public class GXCommonUtils {
             return getClassDefaultValue(clazzType);
         }
         return value;
-    }
-
-    /**
-     * 获取一个接口实现的所有接口
-     * <pre>{@code
-     * getInterfaces(UUserService.class, targetList)
-     * }
-     * </pre>
-     *
-     * @param clazz      Class 对象
-     * @param targetList 目标Class列表
-     */
-    public static void getInterfaces(Class<?> clazz, List<Class<?>> targetList) {
-        for (Class<?> clz : clazz.getInterfaces()) {
-            targetList.add(clz);
-            if (clz.getInterfaces().length > 0) {
-                getInterfaces(clz, targetList);
-            }
-        }
-    }
-
-    /**
-     * 处理Class的字段信息
-     *
-     * @param clz  Class 对象
-     * @param data 数据
-     */
-    @SuppressWarnings("all")
-    public static void clazzFields(Class<?> clz, Dict data) {
-        final Field[] fields = ReflectUtil.getFields(clz);
-        for (Field field : fields) {
-            final GXFieldComment fieldAnnotation = field.getAnnotation(GXFieldComment.class);
-            if (null == fieldAnnotation) {
-                continue;
-            }
-            if (fieldAnnotation.isShow()) {
-                final String fieldName = field.getName();
-                final boolean isShow = fieldAnnotation.isShow();
-                final String fieldComment = fieldAnnotation.value();
-                final long fieldCode = fieldAnnotation.code();
-                data.putIfAbsent(fieldName, Dict.create()
-                        .set("code", fieldCode)
-                        .set("isShow", isShow)
-                        .set("comment", fieldComment)
-                );
-            }
-        }
-    }
-
-    /**
-     * 获取当前接口的常量字段信息
-     *
-     * @param clazz Class对象
-     * @return Dict
-     */
-    public static Dict getConstantsFields(Class<?> clazz) {
-        final Dict data = Dict.create();
-        final ArrayList<Class<?>> clazzInterfaces = new ArrayList<>();
-        clazzInterfaces.add(clazz);
-        getInterfaces(clazz, clazzInterfaces);
-        for (Class<?> clz : clazzInterfaces) {
-            clazzFields(clz, data);
-        }
-        return data;
     }
 
     /**
@@ -389,17 +293,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 将实体的某个JSON字段转换为一个Dict
-     *
-     * @param entity    实体对象
-     * @param mainField 主字段 (数据库字段)
-     * @return Dict
-     */
-    public static Dict entityJSONFieldToDict(Object entity, String mainField) {
-        return Convert.convert(Dict.class, Convert.convert(Dict.class, entity).get(mainField));
-    }
-
-    /**
      * 将一个新key放入已经存在的json字符串中
      *
      * @param jsonStr  JSON字符串
@@ -408,29 +301,11 @@ public class GXCommonUtils {
      * @param override 是否复写已经存在的值
      * @return JSONObject
      */
-    public static JSONObject putDataToJSONStr(String jsonStr, String jsonPath, Object object, boolean override) {
+    public static JSONObject putDataToJsonStr(String jsonStr, String jsonPath, Object object, boolean override) {
         if (!JSONUtil.isJsonObj(jsonStr)) {
             return new JSONObject();
         }
         final JSONObject jsonObject = new JSONObject(jsonStr);
-        if (override) {
-            jsonObject.putByPath(jsonPath, object);
-        } else {
-            jsonObject.putIfAbsent(jsonPath, object);
-        }
-        return jsonObject;
-    }
-
-    /**
-     * 将一个新key放入已经存在的json字符串中
-     *
-     * @param jsonObject JSON对象
-     * @param jsonPath   JSON路径
-     * @param object     Object
-     * @param override   是否复写已经存在的值
-     * @return JSONObject
-     */
-    public static JSONObject putDataToJSONStr(JSONObject jsonObject, String jsonPath, Object object, boolean override) {
         if (override) {
             jsonObject.putByPath(jsonPath, object);
         } else {
@@ -447,7 +322,7 @@ public class GXCommonUtils {
      * @param <R>     R
      * @return R
      */
-    public static <R> R jsonConvertAnyObject(String jsonStr, Class<R> clazz) {
+    public static <R> R jsonStrConvertToTarget(String jsonStr, Class<R> clazz) {
         if (!JSONUtil.isJson(jsonStr)) {
             LOG.error("不合法的JSON字符串 : {}", jsonStr);
             return getClassDefaultValue(clazz);
@@ -470,7 +345,7 @@ public class GXCommonUtils {
      * @param <R>       R
      * @return R
      */
-    public static <R> R jsonConvertAnyObject(String jsonStr, TypeReference<R> reference) {
+    public static <R> R jsonStrConvertToTarget(String jsonStr, TypeReference<R> reference) {
         if (!JSONUtil.isJson(jsonStr)) {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(reference);
@@ -503,7 +378,7 @@ public class GXCommonUtils {
      * @param <R>     R
      * @return R
      */
-    public static <R> R getJSONValueByAnyPath(String jsonStr, String path, Class<R> clazz) {
+    public static <R> R getJsonValueByAnyPath(String jsonStr, String path, Class<R> clazz) {
         if (!JSONUtil.isJson(jsonStr)) {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(clazz);
@@ -563,8 +438,8 @@ public class GXCommonUtils {
      * @return R
      */
     @SuppressWarnings("unchecked")
-    public static <R> R getJSONValueByAnyPath(String jsonStr, String path, TypeReference<R> reference) {
-        return (R) getJSONValueByAnyPath(jsonStr, path, TypeUtil.getClass(reference.getType()));
+    public static <R> R getJsonValueByAnyPath(String jsonStr, String path, TypeReference<R> reference) {
+        return (R) getJsonValueByAnyPath(jsonStr, path, TypeUtil.getClass(reference.getType()));
     }
 
     /**
@@ -577,7 +452,7 @@ public class GXCommonUtils {
      * @return R
      */
     @SuppressWarnings("all")
-    public static <R> R removeJSONStrAnyPath(String jsonStr, String path, Class<R> clazz) {
+    public static <R> R removeJsonStrAnyPath(String jsonStr, String path, Class<R> clazz) {
         final JSONObject parse = JSONUtil.parseObj(jsonStr);
         int index = CharSequenceUtil.indexOf(path, '.');
         if (index != -1) {
@@ -599,15 +474,15 @@ public class GXCommonUtils {
         }
         return Convert.convert(clazz, parse.remove(path));
     }
-    
+
     /**
      * 移除JSON中任意路径的值
      *
      * @param jsonStr JSON字符串
      * @param path    路径
      */
-    public static void removeJSONStrAnyPath(String jsonStr, String path) {
-        removeJSONStrAnyPath(jsonStr, path, Object.class);
+    public static void removeJsonStrAnyPath(String jsonStr, String path) {
+        removeJsonStrAnyPath(jsonStr, path, Object.class);
     }
 
     /**
@@ -620,7 +495,7 @@ public class GXCommonUtils {
      * @return R
      */
     @SuppressWarnings("all")
-    public static <R> R removeJSONObjectAnyPath(JSONObject parse, String path, Class<R> clazz) {
+    public static <R> R removeJsonObjectAnyPath(JSONObject parse, String path, Class<R> clazz) {
         int index = CharSequenceUtil.indexOf(path, '.');
         if (index != -1) {
             String mainPath = CharSequenceUtil.sub(path, 0, CharSequenceUtil.lastIndexOfIgnoreCase(path, "."));
@@ -648,106 +523,8 @@ public class GXCommonUtils {
      * @param parse JSON对象
      * @param path  路径
      */
-    public static void removeJSONObjectAnyPath(JSONObject parse, String path) {
-        removeJSONObjectAnyPath(parse, path, Object.class);
-    }
-
-    /**
-     * 获取指定缓存中的值
-     *
-     * @param cacheName 缓存名字
-     * @param key       缓存key
-     * @param clazz     返回值的类型
-     * @param <R>       泛型的类型
-     * @return R
-     */
-    public static <R> R getSpringCacheValue(String cacheName, String key, Class<R> clazz) {
-        Cache cache = getSpringCache(cacheName);
-        return Objects.requireNonNull(cache).get(key, clazz);
-    }
-
-    /**
-     * 设置缓存的值
-     *
-     * @param cacheName 缓存的名字
-     * @param key       缓存的键
-     * @param value     缓存的值
-     */
-    public static void setSpringCacheValue(String cacheName, String key, Object value) {
-        Cache springCache = getSpringCache(cacheName);
-        Objects.requireNonNull(springCache).put(key, value);
-    }
-
-    /**
-     * 获取指定缓存中的值
-     *
-     * @param cacheName    缓存名字
-     * @param key          缓存key
-     * @param clazz        返回值的类型
-     * @param <R>          泛型的类型
-     * @param defaultValue 默认值
-     * @return R
-     */
-    public static <R> R getSpringCacheValue(String cacheName, String key, Class<R> clazz, R defaultValue) {
-        Cache cache = getSpringCache(cacheName);
-        if (Objects.requireNonNull(cache).get(key) == null) {
-            return defaultValue;
-        }
-        return getSpringCacheValue(cacheName, key, clazz);
-    }
-
-    /**
-     * 获取Spring的Cache实例
-     *
-     * @param cacheName cache的名字
-     * @return Cache
-     */
-    public static Cache getSpringCache(String cacheName) {
-        final CacheManager cacheManager = GXSpringContextUtils.getBean(CacheManager.class);
-        assert cacheManager != null;
-        return cacheManager.getCache(cacheName);
-    }
-
-    /**
-     * 获取Caffeine的Cache对象
-     *
-     * @param configNameKey 缓存名字的KEY【可以是配置文件中配置的key也可以是缓存名字】
-     * @return Cache
-     */
-    public static <K, V> com.github.benmanes.caffeine.cache.Cache<K, V> getCaffeine(String configNameKey) {
-        return GXSingletonUtils.getCaffeineCache(configNameKey);
-    }
-
-    /**
-     * 获取Caffeine的Cache对象
-     *
-     * @param configNameKey 缓存名字的KEY【可以是配置文件中配置的key也可以是缓存名字】
-     * @param cacheLoader   CacheLoader对象
-     * @return LoadingCache
-     */
-    public static <K, V> com.github.benmanes.caffeine.cache.LoadingCache<K, V> getCaffeine(String configNameKey, CacheLoader<K, V> cacheLoader) {
-        return GXSingletonUtils.getCaffeineCache(configNameKey, cacheLoader);
-    }
-
-    /**
-     * 获取Caffeine的Cache对象
-     *
-     * @param configNameKey 缓存名字的KEY【可以是配置文件中配置的key也可以是缓存名字】
-     * @return AsyncCache
-     */
-    public static <K, V> com.github.benmanes.caffeine.cache.AsyncCache<K, V> getAsyncCaffeine(String configNameKey) {
-        return GXSingletonUtils.getAsyncCaffeine(configNameKey);
-    }
-
-    /**
-     * 获取Caffeine的Cache对象
-     *
-     * @param configNameKey 缓存名字的KEY【可以是配置文件中配置的key也可以是缓存名字】
-     * @param cacheLoader   CacheLoader对象
-     * @return AsyncLoadingCache
-     */
-    public static <K, V> AsyncLoadingCache<K, V> getAsyncCaffeine(String configNameKey, CacheLoader<K, V> cacheLoader) {
-        return GXSingletonUtils.getAsyncCaffeine(configNameKey, cacheLoader);
+    public static void removeJsonObjectAnyPath(JSONObject parse, String path) {
+        removeJsonObjectAnyPath(parse, path, Object.class);
     }
 
     /**
@@ -896,7 +673,7 @@ public class GXCommonUtils {
      * strToDict("{\"type\":\"news\" , \"phone\":\"13800138000\"}")
      *
      * @param str 字符串
-     * @return
+     * @return Dict
      */
     public static Dict strToDict(String str) {
         if (CharSequenceUtil.isBlank(str)) {
@@ -905,7 +682,7 @@ public class GXCommonUtils {
         if (JSONUtil.isJson(str)) {
             return JSONUtil.toBean(str, Dict.class);
         }
-        return Convert.convert(new cn.hutool.core.lang.TypeReference<Dict>() {
+        return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
         }, convertStrToMap(str));
     }
 
@@ -920,96 +697,5 @@ public class GXCommonUtils {
      */
     public static long getCurrentSessionUserId() {
         return 0L;
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logInfo(Logger logger, String desc, Object data) {
-        String threadName = Thread.currentThread().getName();
-        String jsonStr = "";
-        if (Objects.nonNull(data)) {
-            jsonStr = JSONUtil.toJsonStr(data);
-        }
-        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
-        logger.info(s);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logDebug(Logger logger, String desc, Object data) {
-        String threadName = Thread.currentThread().getName();
-        String jsonStr = "";
-        if (Objects.nonNull(data)) {
-            jsonStr = JSONUtil.toJsonStr(data);
-        }
-        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
-        logger.debug(format);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logError(Logger logger, String desc, Object data) {
-        String threadName = Thread.currentThread().getName();
-        String jsonStr = "";
-        if (Objects.nonNull(data)) {
-            jsonStr = JSONUtil.toJsonStr(data);
-        }
-        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
-        logger.error(format);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param t      异常信息
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logError(Logger logger, String desc, Throwable t) {
-        String threadName = Thread.currentThread().getName();
-        String format = CharSequenceUtil.format("{} : {}", threadName, desc);
-        logger.error(format, t);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logWarn(Logger logger, String desc, Object data) {
-        String threadName = Thread.currentThread().getName();
-        String jsonStr = "";
-        if (Objects.nonNull(data)) {
-            jsonStr = JSONUtil.toJsonStr(data);
-        }
-        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
-        logger.warn(s);
     }
 }

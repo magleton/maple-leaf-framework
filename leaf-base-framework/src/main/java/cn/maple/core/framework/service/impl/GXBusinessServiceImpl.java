@@ -5,14 +5,12 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
-import org.springframework.cache.Cache;
 
-import java.util.*;
+import java.util.Map;
 
 public class GXBusinessServiceImpl implements GXBusinessService {
     /**
@@ -52,28 +50,6 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     }
 
     /**
-     * 从请求参数中获取分页的信息
-     *
-     * @param param 参数
-     * @return Dict
-     */
-    @Override
-    public Dict getPageDictFromParam(Dict param) {
-        int currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
-        int pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
-        final Dict pagingInfo = Convert.convert(Dict.class, param.getObj("pagingInfo"));
-        if (null != pagingInfo) {
-            if (null != pagingInfo.getInt("page")) {
-                currentPage = pagingInfo.getInt("page");
-            }
-            if (null != pagingInfo.getInt("pageSize")) {
-                pageSize = pagingInfo.getInt("pageSize");
-            }
-        }
-        return Dict.create().set("page", currentPage).set("pageSize", pageSize);
-    }
-
-    /**
      * 派发事件 (异步事件可以通过在监听器上面添加@Async注解实现)
      *
      * @param event ApplicationEvent对象
@@ -81,23 +57,6 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     @Override
     public <R> void publishEvent(GXBaseEvent<R> event) {
         GXCommonUtils.publishEvent(event);
-    }
-
-    /**
-     * 获取当前接口的常量字段信息
-     *
-     * @return Dict
-     */
-    @SuppressWarnings("unused")
-    @Override
-    public Dict getConstantsFields() {
-        final Dict data = Dict.create();
-        final List<Class<?>> clazzInterfaces = new ArrayList<>();
-        GXCommonUtils.getInterfaces(getClass(), clazzInterfaces);
-        for (Class<?> clz : clazzInterfaces) {
-            GXCommonUtils.clazzFields(clz, data);
-        }
-        return data;
     }
 
     /**
@@ -117,8 +76,8 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      * @return R
      */
     @Override
-    public <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, int coreModelId) {
-        return getSingleFieldValueByEntity(entity, path, type, GXCommonUtils.getClassDefaultValue(type), coreModelId);
+    public <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type) {
+        return getSingleFieldValueByEntity(entity, path, type, GXCommonUtils.getClassDefaultValue(type));
     }
 
     /**
@@ -129,7 +88,6 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      *       GoodsEntity,
      *       "ext.name",
      *       Integer.class
-     *       0
      *       )
      *     }
      * </pre>
@@ -140,7 +98,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      * @return R
      */
     @Override
-    public <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue, int coreModelId) {
+    public <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue) {
         JSON json = JSONUtil.parse(JSONUtil.toJsonStr(entity));
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         if (index == -1) {
@@ -164,80 +122,10 @@ public class GXBusinessServiceImpl implements GXBusinessService {
             throw new GXBusinessException(CharSequenceUtil.format("实体的主字段{}不存在!", mainField));
         }
         String subField = CharSequenceUtil.sub(path, index + 2, path.length());
-
         JSON parse = JSONUtil.parse(json.getByPath(mainField));
         if (null == parse) {
             return defaultValue;
         }
         return Convert.convert(type, parse.getByPath(subField), defaultValue);
-    }
-
-    /**
-     * 获取实体的多个JSON值
-     *
-     * @param entity 实体对象
-     * @param dict   需要获取的数据
-     * @return Dict
-     */
-    @Override
-    public <T> Dict getMultiFieldsValueByEntity(T entity, Dict dict, int coreModelId) {
-        final Set<String> keySet = dict.keySet();
-        final Dict data = Dict.create();
-        for (String key : keySet) {
-            final Object value = getSingleFieldValueByEntity(entity, key, (Class<?>) dict.getObj(key), coreModelId);
-            if (Objects.isNull(value)) {
-                continue;
-            }
-            final String[] strings = CharSequenceUtil.splitToArray(key, "::");
-            Object o = data.get(strings[0]);
-            if (strings.length > 1) {
-                if (null != o) {
-                    Dict convert = Convert.convert(Dict.class, o);
-                    convert.set(strings[strings.length - 1], value);
-                    data.set(strings[0], convert);
-                } else {
-                    data.set(strings[0], Dict.create().set(strings[strings.length - 1], value));
-                }
-            } else {
-                data.set(strings[strings.length - 1], value);
-            }
-        }
-        return data;
-    }
-
-    /**
-     * 获取Spring Cache对象
-     *
-     * @param cacheName 缓存名字
-     * @return Cache
-     */
-    @Override
-    public Cache getSpringCache(String cacheName) {
-        return GXCommonUtils.getSpringCache(cacheName);
-    }
-
-    /**
-     * 处理相同前缀的Dict
-     *
-     * @param dict 要处理的Dict
-     * @return Dict
-     */
-    @Override
-    public Dict handleSamePrefixDict(Dict dict) {
-        String fieldSeparator = "::";
-        final Set<Map.Entry<String, Object>> entries = dict.entrySet();
-        final Dict retDict = Dict.create();
-        for (Map.Entry<String, Object> entry : entries) {
-            final String key = entry.getKey();
-            final Object object = entry.getValue();
-            if (CharSequenceUtil.contains(key, fieldSeparator)) {
-                String[] keys = CharSequenceUtil.splitToArray(key, fieldSeparator);
-                Dict data = Convert.convert(Dict.class, Optional.ofNullable(retDict.getObj(keys[0])).orElse(Dict.create()));
-                retDict.set(CharSequenceUtil.toCamelCase(keys[0]), data.set(CharSequenceUtil.toCamelCase(keys[1]), object));
-            } else {
-                retDict.set(CharSequenceUtil.toCamelCase(key), object);
-            }
-        }
-        return retDict;
     }
 }

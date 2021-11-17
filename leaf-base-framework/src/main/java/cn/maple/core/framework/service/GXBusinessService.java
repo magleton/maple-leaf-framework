@@ -1,8 +1,6 @@
 package cn.maple.core.framework.service;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.event.GXBaseEvent;
-import org.springframework.cache.Cache;
 
 public interface GXBusinessService {
     /**
@@ -33,27 +31,12 @@ public interface GXBusinessService {
     String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar);
 
     /**
-     * 从请求参数中获取分页的信息
-     *
-     * @param param 参数
-     * @return Dict
-     */
-    Dict getPageDictFromParam(Dict param);
-
-    /**
      * 派发事件 (异步事件可以通过在监听器上面添加@Async注解实现)
      *
      * @param event ApplicationEvent对象
      */
     <R> void publishEvent(GXBaseEvent<R> event);
 
-    /**
-     * 获取当前接口的常量字段信息
-     *
-     * @return Dict
-     */
-    Dict getConstantsFields();
-    
     /**
      * 获取实体中指定指定的值
      * <pre>
@@ -70,7 +53,7 @@ public interface GXBusinessService {
      * @param path   路径
      * @return R
      */
-    <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, int coreModelId);
+    <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type);
 
     /**
      * 获取实体中指定指定的值
@@ -80,7 +63,6 @@ public interface GXBusinessService {
      *       GoodsEntity,
      *       "ext.name",
      *       Integer.class
-     *       0
      *       )
      *     }
      * </pre>
@@ -90,30 +72,5 @@ public interface GXBusinessService {
      * @param defaultValue 默认值
      * @return R
      */
-    <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue, int coreModelId);
-
-    /**
-     * 获取实体的多个JSON值
-     *
-     * @param entity 实体对象
-     * @param dict   需要获取的数据
-     * @return Dict
-     */
-    <T> Dict getMultiFieldsValueByEntity(T entity, Dict dict, int coreModelId);
-
-    /**
-     * 获取Spring Cache对象
-     *
-     * @param cacheName 缓存名字
-     * @return Cache
-     */
-    Cache getSpringCache(String cacheName);
-
-    /**
-     * 处理相同前缀的Dict
-     *
-     * @param dict 要处理的Dict
-     * @return Dict
-     */
-    Dict handleSamePrefixDict(Dict dict);
+    <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue);
 }
