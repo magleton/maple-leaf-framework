@@ -7,7 +7,6 @@ import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.datasource.service.GXDBBaseService;
-import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
@@ -30,12 +29,12 @@ import java.util.Set;
  */
 public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
-        D extends GXBaseDao<M, T, R>,
         T extends GXBaseEntity,
+        D extends GXBaseDao<M, T, R>,
         R extends GXBaseResDto,
         ID>
         extends GXBusinessServiceImpl
-        implements GXDBBaseService<P, M, D, T, R, ID> {
+        implements GXDBBaseService<P, M, T, D, R, ID> {
     /**
      * 日志对象
      */
@@ -139,17 +138,6 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
     @Override
     public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
         return repository.validateUnique(value, fieldName, constraintValidatorContext, param);
-    }
-
-    /**
-     * 获取实体的表明
-     *
-     * @param clazz Class对象
-     * @return String
-     */
-    @Override
-    public String getTableName(Class<T> clazz) {
-        return GXDBCommonUtils.getTableName(clazz);
     }
 
     /**

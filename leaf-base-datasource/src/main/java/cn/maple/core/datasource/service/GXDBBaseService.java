@@ -26,8 +26,8 @@ import java.util.Set;
  */
 public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
-        D extends GXBaseDao<M, T, R>,
         T extends GXBaseEntity,
+        D extends GXBaseDao<M, T, R>,
         R extends GXBaseResDto,
         ID>
         extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
@@ -76,14 +76,6 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return GXPagination
      */
     GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto searchReqDto);
-
-    /**
-     * 获取实体的表明
-     *
-     * @param clazz Class对象
-     * @return String
-     */
-    String getTableName(Class<T> clazz);
 
     /**
      * 获取 Primary Key
