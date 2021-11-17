@@ -10,10 +10,10 @@ public class GXTokenConstant {
     public static final int USER_EXPIRES_REFRESH = 60 * 60 * 7;
 
     @GXFieldComment(zhDesc = "Admin登录用的token标签")
-    public static final String ADMIN_ID = "admin_id";
+    public static final String ADMIN_ID = "adminId";
 
     @GXFieldComment(zhDesc = "用户登录用的token标签")
-    public static final String USER_ID = "user_id";
+    public static final String USER_ID = "userId";
 
     @GXFieldComment(zhDesc = "管理员token的名字")
     public static final String ADMIN_TOKEN = "admin-token";
@@ -26,6 +26,12 @@ public class GXTokenConstant {
 
     @GXFieldComment(zhDesc = "ADMIN端TOKEN即将过期的刷新时间")
     public static final int ADMIN_EXPIRES_REFRESH = 24 * 60;
+
+    @GXFieldComment(zhDesc = "登录时间")
+    public static final String LOGIN_AT_FIELD = "loginAt";
+
+    @GXFieldComment(zhDesc = "平台")
+    public static final String PLATFORM = "platform";
 
     private GXTokenConstant() {
     }

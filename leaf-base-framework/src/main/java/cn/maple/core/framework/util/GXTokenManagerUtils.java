@@ -1,5 +1,6 @@
 package cn.maple.core.framework.util;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
@@ -16,18 +17,21 @@ public class GXTokenManagerUtils {
      *
      * <pre>
      *     {@code
-     *     generateUserToken(1 , Dict.create().set("phone" , "13800138000"))
+     *     generateUserToken(1 , Dict.create().set("phone" , "13800138000"),"df5386b5e634" , 120)
      *     }
      * </pre>
      *
-     * @param adminId 管理员ID
-     * @param param   附加信息
+     * @param adminId   管理员ID
+     * @param param     附加信息
+     * @param secretKey 加解密key
+     * @param expires   过期时间
      * @return String
      */
-    public static String generateAdminToken(long adminId, Dict param) {
+    public static String generateAdminToken(Object adminId, Dict param, String secretKey, int expires) {
         param.putIfAbsent(GXTokenConstant.ADMIN_ID, adminId);
-        param.putIfAbsent("platform", "GEO_XUS");
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY, GXTokenConstant.ADMIN_EXPIRES_REFRESH);
+        param.set(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }
 
     /**
@@ -35,29 +39,34 @@ public class GXTokenManagerUtils {
      *
      * <pre>
      *     {@code
-     *     generateUserToken(1 , Dict.create().set("phone" , "13800138000"))
+     *     generateUserToken(1 , Dict.create().set("phone" , "13800138000") , "5e6344e6c264f7601802c6" , 600)
      *     }
      * </pre>
      *
-     * @param userId 前端用户的ID
-     * @param param  附加信息
+     * @param userId    前端用户的ID
+     * @param param     附加信息
+     * @param secretKey 加解密KEY
+     * @param expires   过期时间
      * @return String
      */
-    public static String generateUserToken(long userId, Dict param) {
+    public static String generateUserToken(Object userId, Dict param, String secretKey, int expires) {
         param.putIfAbsent(GXTokenConstant.USER_ID, userId);
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
+        param.set(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }
 
     /**
      * 解码前端用户的TOKEN字符串
      * 注意: 由于前端用户需要保持长时间的登录信息, 在生成token字符串时, 不需要指定token的过期时间, 过期时间时存放在s_user_token表中进行维护
      *
-     * @param source 加密TOKEN字符串
+     * @param source    加密TOKEN字符串
+     * @param secretKey 加解密KEY
      * @return Dict
      */
-    public static Dict decodeUserToken(String source) {
+    public static Dict decodeUserToken(String source, String secretKey) {
         try {
-            String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstant.KEY);
+            String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
             return Dict.create();
@@ -68,12 +77,13 @@ public class GXTokenManagerUtils {
      * 解码后端用户的加密TOKEN字符串
      * 注意: 由于后端用户不需要保持长时间的登录操作, 所以在生成token时, 为token指定了过期时间
      *
-     * @param source 加密TOKEN字符串
+     * @param source    加密TOKEN字符串
+     * @param secretKey 加解密KEY
      * @return Dict
      */
-    public static Dict decodeAdminToken(String source) {
+    public static Dict decodeAdminToken(String source, String secretKey) {
         try {
-            String s = GXAuthCodeUtils.authCodeDecode(source, GXTokenConstant.KEY);
+            String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
             log.error(exception.getMessage());

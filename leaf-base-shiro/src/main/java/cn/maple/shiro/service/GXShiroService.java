@@ -65,6 +65,15 @@ public interface GXShiroService {
     }
 
     /**
+     * 获取加解密KEY
+     *
+     * @return String
+     */
+    default String getSecretKey() {
+        return "";
+    }
+
+    /**
      * 进行附加处理
      *
      * @param data 管理员数据

@@ -57,7 +57,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
         log.info("用户登录时认证 --> GXOAuth2Realm.doGetAuthenticationInfo() ,  principal = {} : credentials = {}", token.getPrincipal(), token.getCredentials());
         String accessToken = token.getPrincipal().toString();
         // 根据accessToken, 获取token中的值
-        Dict dict = GXTokenManagerUtils.decodeAdminToken(accessToken);
+        Dict dict = GXTokenManagerUtils.decodeAdminToken(accessToken, shiroService.getSecretKey());
         // 判断token是否失效
         if (null == dict || dict.isEmpty()) {
             throw new IncorrectCredentialsException("长时间未操作, 请重新登录~~~");
