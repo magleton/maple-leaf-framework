@@ -1,17 +1,11 @@
 package cn.maple.core.framework.util;
 
+import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -78,32 +72,5 @@ public class GXSpringContextUtils {
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
-    }
-
-    private enum GXApplicationContextSingleton {
-        INSTANCE;
-
-        ApplicationContext applicationContext;
-
-        GXApplicationContextSingleton() {
-        }
-
-        public ApplicationContext getApplicationContext() {
-            return applicationContext;
-        }
-
-        private void setApplicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
-        }
-    }
-
-    @Component
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @SuppressWarnings("all")
-    private static class GXApplicationContextAware implements ApplicationContextAware {
-        @Override
-        public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-            GXApplicationContextSingleton.INSTANCE.setApplicationContext(applicationContext);
-        }
     }
 }
