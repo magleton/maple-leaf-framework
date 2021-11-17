@@ -97,8 +97,13 @@ public class GXMyBatisPlusConfig {
         return GXMyBatisPlusConfig::customize;
     }
 
+    /**
+     * 自定义多租户插件类
+     *
+     * @author britton
+     * @since 2021-11-17
+     */
     private static class GXTenantLineHandler implements TenantLineHandler {
-
         /**
          * 获取租户 ID 值表达式，只支持单个 ID 值
          * <p>
