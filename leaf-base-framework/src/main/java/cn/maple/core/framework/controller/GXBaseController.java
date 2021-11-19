@@ -1,6 +1,5 @@
 package cn.maple.core.framework.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
@@ -8,6 +7,7 @@ import cn.maple.core.framework.dto.protocol.req.GXBaseReqProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXHttpContextUtils;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface GXBaseController {
      * @return T
      */
     default <S extends GXBaseReqProtocol, Q extends GXBaseReqDto> Q convertSourceToTarget(S source, Class<Q> clazz) {
-        return BeanUtil.copyProperties(source, clazz);
+        return GXCommonUtils.convertSourceToTarget(source, clazz);
     }
 
     /**

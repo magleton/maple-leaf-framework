@@ -1,5 +1,6 @@
 package cn.maple.core.framework.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.Dict;
@@ -14,6 +15,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
+import cn.maple.core.framework.exception.GXBusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -440,6 +442,31 @@ public class GXCommonUtils {
     @SuppressWarnings("unchecked")
     public static <R> R getJsonValueByAnyPath(String jsonStr, String path, TypeReference<R> reference) {
         return (R) getJsonValueByAnyPath(jsonStr, path, TypeUtil.getClass(reference.getType()));
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     * <p>
+     * {@code}
+     * eg:
+     * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
+     * convertSourceToTarget( source , PersonResDto.class);
+     * OR
+     * PersonReqProtocol req = new PersonReqProtocol();
+     * req.setUsername("britton");
+     * req.setRealName("枫叶思源")；
+     * convertSourceToTarget(req ,  PersonResDto.class);
+     * {code}
+     *
+     * @param source 源对象
+     * @param clazz  目标对象类型
+     * @return 目标对象
+     */
+    public static <R> R convertSourceToTarget(Object source, Class<R> clazz) {
+        if (Objects.isNull(source)) {
+            throw new GXBusinessException("源对象不能为null");
+        }
+        return BeanUtil.copyProperties(source, clazz);
     }
 
     /**
