@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * <p>
  * 触发验证一个对象的动作
  * eg:
- * test(@GXManualValidated TestReqDto reqDto)
+ * test(TestReqDto reqDto)
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

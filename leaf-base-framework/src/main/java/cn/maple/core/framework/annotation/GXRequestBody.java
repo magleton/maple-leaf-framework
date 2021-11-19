@@ -12,11 +12,7 @@ public @interface GXRequestBody {
 
     Class<?>[] groups() default {};
 
-    boolean fillJSONField() default true;
-
     boolean validateTarget() default true;
-
-    boolean validateCoreModelId() default true;
 
     String primaryKey() default "id";
 }
