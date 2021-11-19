@@ -46,10 +46,11 @@ public interface GXBaseController {
      * @param mapStruct   转换器
      * @return GXPaginationResProtocol对象
      */
-    default <S extends GXBaseResDto, T extends GXBaseResProtocol> GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination,
-                                                                                                                            Class<S> sourceClazz,
-                                                                                                                            Class<T> targetClazz,
-                                                                                                                            GXBaseMapStruct<S, T> mapStruct) {
+    default <S extends GXBaseResDto, T extends GXBaseResProtocol>
+    GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination,
+                                                              GXBaseMapStruct<S, T> mapStruct,
+                                                              Class<S> sourceClazz,
+                                                              Class<T> targetClazz) {
         List<S> records = pagination.getRecords();
         long total = pagination.getTotal();
         long pages = pagination.getPages();
