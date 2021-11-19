@@ -1,6 +1,7 @@
 package cn.maple.core.framework.util;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.Dict;
@@ -17,23 +18,22 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
+    /**
+     * 日志对象
+     */
     private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
 
     private GXCommonUtils() {
-
     }
 
     /**
@@ -96,20 +96,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 根据key获取配置文件中的配置信息
-     *
-     * @param key Key
-     * @return String
-     */
-    public static String getEnvironmentValue(String key) {
-        final String property = GXSpringContextUtils.getEnvironment().getProperty(key);
-        if (null == property) {
-            return "";
-        }
-        return property;
-    }
-
-    /**
      * 获取激活的Profile
      *
      * @return String
@@ -143,34 +129,6 @@ public class GXCommonUtils {
         Class<?> aClass = TypeUtil.getClass(clazzType);
         Object o = ReflectUtil.newInstanceIfPossible(aClass);
         return Convert.convert(clazzType, o);
-    }
-
-    /**
-     * 获取Class的JVM默认值
-     *
-     * @param clazzType Class 对象
-     * @param <R>       R
-     * @return R
-     */
-    public static <R> R getClassDefaultValue(TypeReference<R> clazzType) {
-        Class<?> aClass = TypeUtil.getClass(clazzType.getType());
-        Object o = ReflectUtil.newInstanceIfPossible(aClass);
-        return Convert.convert(clazzType.getType(), o);
-    }
-
-    /**
-     * 获取Class的JVM默认值
-     *
-     * @param clazzType Class 对象
-     * @param <R>       R
-     * @return R
-     */
-    public static <R> R getClassDefaultValue(TypeReference<R> clazzType, R defaultValue) {
-        R classDefaultValue = getClassDefaultValue(clazzType);
-        if (Objects.isNull(classDefaultValue)) {
-            return defaultValue;
-        }
-        return classDefaultValue;
     }
 
     /**
@@ -340,29 +298,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 将json字符串转换为任意对象
-     *
-     * @param jsonStr   JSON字符串
-     * @param reference 需要转换的到类型
-     * @param <R>       R
-     * @return R
-     */
-    public static <R> R jsonStrConvertToTarget(String jsonStr, TypeReference<R> reference) {
-        if (!JSONUtil.isJson(jsonStr)) {
-            LOG.error("不合法的JSON字符串");
-            return getClassDefaultValue(reference);
-        }
-        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
-        try {
-            assert objectMapper != null;
-            return objectMapper.readValue(jsonStr, reference);
-        } catch (JsonProcessingException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        return getClassDefaultValue(reference);
-    }
-
-    /**
      * 获取json字符串中的任意一个key的数据
      * <pre>
      *     {@code
@@ -380,7 +315,7 @@ public class GXCommonUtils {
      * @param <R>     R
      * @return R
      */
-    public static <R> R getJsonValueByAnyPath(String jsonStr, String path, Class<R> clazz) {
+    public static <R> R getJsonValueByPath(String jsonStr, String path, Class<R> clazz) {
         if (!JSONUtil.isJson(jsonStr)) {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(clazz);
@@ -425,26 +360,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 获取json字符串中的任意一个key的数据
-     * <pre>
-     *     {@code
-     *      String str = GXCommonUtils.getJSONValueByAnyPath(s, "data.data1.data2.name", new TypeReference<String>() {});
-     *      System.out.println(str);
-     *     }
-     * </pre>
-     *
-     * @param jsonStr   JSON字符串
-     * @param path      路径
-     * @param reference 需要转换到的类型
-     * @param <R>       泛型类型
-     * @return R
-     */
-    @SuppressWarnings("unchecked")
-    public static <R> R getJsonValueByAnyPath(String jsonStr, String path, TypeReference<R> reference) {
-        return (R) getJsonValueByAnyPath(jsonStr, path, TypeUtil.getClass(reference.getType()));
-    }
-
-    /**
      * 将任意对象转换为指定类型的对象
      * <p>
      * {@code}
@@ -458,15 +373,31 @@ public class GXCommonUtils {
      * convertSourceToTarget(req ,  PersonResDto.class);
      * {code}
      *
-     * @param source 源对象
-     * @param clazz  目标对象类型
+     * @param source           源对象
+     * @param clazz            目标对象类型
+     * @param ignoreProperties 需要忽略的属性
      * @return 目标对象
      */
-    public static <R> R convertSourceToTarget(Object source, Class<R> clazz) {
+    public static <R> R convertSourceToTarget(Object source, Class<R> clazz, String... ignoreProperties) {
         if (Objects.isNull(source)) {
             throw new GXBusinessException("源对象不能为null");
         }
-        return BeanUtil.copyProperties(source, clazz);
+        return BeanUtil.copyProperties(source, clazz, ignoreProperties);
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
+     * @param collection  需要转换的对象列表
+     * @param clazz       目标对象的类型
+     * @param copyOptions 需要拷贝的选项
+     * @return List
+     */
+    public static <R> List<R> convertSourceToTarget(Collection<?> collection, Class<R> clazz, CopyOptions copyOptions) {
+        if (Objects.isNull(copyOptions)) {
+            return BeanUtil.copyToList(collection, clazz);
+        }
+        return BeanUtil.copyToList(collection, clazz, copyOptions);
     }
 
     /**
@@ -513,48 +444,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 移除JSON中任意路径的值
-     *
-     * @param parse JSON对象
-     * @param path  路径
-     * @param clazz Type对象
-     * @param <R>   泛型
-     * @return R
-     */
-    @SuppressWarnings("all")
-    public static <R> R removeJsonObjectAnyPath(JSONObject parse, String path, Class<R> clazz) {
-        int index = CharSequenceUtil.indexOf(path, '.');
-        if (index != -1) {
-            String mainPath = CharSequenceUtil.sub(path, 0, CharSequenceUtil.lastIndexOfIgnoreCase(path, "."));
-            String subPath = CharSequenceUtil.sub(path, CharSequenceUtil.lastIndexOfIgnoreCase(path, ".") + 1, path.length());
-            final Object o = parse.getByPath(mainPath);
-            if (Objects.nonNull(o)) {
-                if (JSONUtil.isJsonArray(o.toString()) && NumberUtil.isInteger(subPath)) {
-                    final int delIndex = Integer.parseInt(subPath);
-                    if (null != parse.getByPath(mainPath, JSONArray.class)) {
-                        parse.getByPath(mainPath, JSONArray.class).remove(delIndex);
-                    }
-                } else if (null != parse.getByPath(mainPath, JSONObject.class)) {
-                    final Object remove = parse.getByPath(mainPath, JSONObject.class).remove(subPath);
-                    return Convert.convert(clazz, remove);
-                }
-            }
-            return getClassDefaultValue(clazz);
-        }
-        return Convert.convert(clazz, parse.remove(path));
-    }
-
-    /**
-     * 移除JSON中任意路径的值
-     *
-     * @param parse JSON对象
-     * @param path  路径
-     */
-    public static void removeJsonObjectAnyPath(JSONObject parse, String path) {
-        removeJsonObjectAnyPath(parse, path, Object.class);
-    }
-
-    /**
      * 验证手机号码
      *
      * @param phone 手机号码
@@ -579,13 +468,13 @@ public class GXCommonUtils {
     /**
      * 将任意对象转换成Dict
      *
-     * @param obj 需要转换的对象
+     * @param source 需要转换的源对象
      * @return Dict
      */
-    public static Dict convertAnyObjectToDict(Object obj) {
+    public static Dict convertSourceToDict(Object source) {
         try {
             return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
-            }, obj);
+            }, source);
         } catch (ConvertException e) {
             LOG.error("转换出错了", e);
         }

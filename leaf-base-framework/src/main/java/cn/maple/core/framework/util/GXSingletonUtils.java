@@ -100,7 +100,7 @@ public class GXSingletonUtils {
      * @return Caffeine
      */
     private static <K, V> Caffeine<K, V> getCaffeine(String cacheNameKey) {
-        String spec = GXCommonUtils.getEnvironmentValue(cacheNameKey);
+        String spec = GXCommonUtils.getEnvironmentValue(cacheNameKey, String.class);
         if (CharSequenceUtil.isBlank(spec)) {
             spec = "maximumSize=1024";
         }

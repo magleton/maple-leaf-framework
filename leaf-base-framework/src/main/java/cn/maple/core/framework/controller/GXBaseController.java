@@ -1,15 +1,15 @@
 package cn.maple.core.framework.controller;
 
-import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
-import cn.maple.core.framework.dto.protocol.req.GXBaseReqProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXHttpContextUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface GXBaseController {
@@ -20,8 +20,20 @@ public interface GXBaseController {
      * @param clazz  目标对象类型
      * @return T
      */
-    default <S extends GXBaseReqProtocol, Q extends GXBaseReqDto> Q convertSourceToTarget(S source, Class<Q> clazz) {
+    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz) {
         return GXCommonUtils.convertSourceToTarget(source, clazz);
+    }
+
+    /**
+     * 将源对象转换为目标对象
+     *
+     * @param collection  需要转换的对象列表
+     * @param clazz       目标对象的类型
+     * @param copyOptions 需要拷贝的选项
+     * @return List
+     */
+    default <S, Q> List<Q> convertSourceToTarget(Collection<S> collection, Class<Q> clazz, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceToTarget(collection, clazz, copyOptions);
     }
 
     /**
