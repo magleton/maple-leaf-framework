@@ -2,7 +2,7 @@ package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.pojo.GXResultCode;
+import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.util.GXResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;

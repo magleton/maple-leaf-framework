@@ -1,6 +1,6 @@
 package cn.maple.core.framework.exception;
 
-import cn.maple.core.framework.pojo.GXResultCode;
+import cn.maple.core.framework.code.GXResultCode;
 
 public class GXTokenEmptyException extends GXBusinessException {
     public GXTokenEmptyException(String msg) {

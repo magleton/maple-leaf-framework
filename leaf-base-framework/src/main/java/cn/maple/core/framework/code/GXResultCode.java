@@ -1,4 +1,4 @@
-package cn.maple.core.framework.pojo;
+package cn.maple.core.framework.code;
 
 public enum GXResultCode {
     OK(0, "操作成功"),

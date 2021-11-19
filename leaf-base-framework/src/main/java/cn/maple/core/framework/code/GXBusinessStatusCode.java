@@ -1,4 +1,4 @@
-package cn.maple.core.framework.pojo;
+package cn.maple.core.framework.code;
 
 public enum GXBusinessStatusCode {
     NORMAL(0x0, "正常状态", "公用状态"),

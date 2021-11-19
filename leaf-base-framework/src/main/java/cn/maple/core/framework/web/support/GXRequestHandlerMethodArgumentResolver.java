@@ -7,7 +7,7 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.pojo.GXResultCode;
+import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package cn.maple.shiro.service;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.pojo.GXBusinessStatusCode;
+import cn.maple.core.framework.code.GXBusinessStatusCode;
 import cn.maple.core.framework.util.GXCommonUtils;
 import org.apache.shiro.authc.LockedAccountException;
 
