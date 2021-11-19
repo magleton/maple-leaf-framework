@@ -6,8 +6,8 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.annotation.GXRequestBody;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -58,11 +60,31 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(@NonNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
-        final Object bean = Convert.convert(parameterType, JSONUtil.toBean(body, parameterType));
-        final GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
+        if (JSONUtil.isJsonArray(body)) {
+            Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
+            List<?> bean = JSONUtil.toList(body, actualTypeArgument);
+            bean.forEach(dto -> {
+                dealSingleBean(dto, parameter, actualTypeArgument);
+            });
+            return bean;
+        }
+        Object bean = Convert.convert(parameterType, JSONUtil.toBean(body, parameterType));
+        dealSingleBean(bean, parameter, parameterType);
+        return bean;
+    }
+
+    /**
+     * 处理单个bean数据
+     *
+     * @param bean          bean对象
+     * @param parameter     请求参数对象
+     * @param parameterType 请求参数类型
+     * @return bean
+     */
+    private void dealSingleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
+        GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
         final String value = Objects.requireNonNull(requestBody).value();
         boolean validateTarget = requestBody.validateTarget();
-
         // 对请求数据进行验证之前的修复处理
         callUserDefinedMethod(parameterType, bean, BEFORE_REPAIR_METHOD);
 
@@ -80,7 +102,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         // 调用目标bean对象的修复方法对数据进行最后的修复
         callUserDefinedMethod(parameterType, bean, AFTER_REPAIR_METHOD);
-        return bean;
+        return;
     }
 
     /**
