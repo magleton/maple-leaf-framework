@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Aspect
 @Component
-public class GXValidatedAspect {
+public class GXManualValidatedAspect {
     @Pointcut("@annotation(cn.maple.core.framework.annotation.GXManualValidated)")
     public void pointCut() {
         //标识切面的入口
