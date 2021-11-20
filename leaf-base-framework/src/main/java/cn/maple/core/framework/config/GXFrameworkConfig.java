@@ -39,8 +39,8 @@ public class GXFrameworkConfig {
         return factory.createMultipartConfig();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(ObjectMapper.class)
+   /* @Bean
+    @ConditionalOnMissingBean(ObjectMapper.class)*/
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         final ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         final SerializerProvider serializerProvider = objectMapper.getSerializerProvider();
