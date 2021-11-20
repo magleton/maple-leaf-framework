@@ -424,14 +424,15 @@ public class GXCommonUtils {
      * @param params     参数
      * @param <R>        对象类型
      */
-    public static <R> void reflectCallObjectMethod(R object, String methodName, Object... params) {
+    public static <R> Object reflectCallObjectMethod(R object, String methodName, Object... params) {
         if (CharSequenceUtil.isEmpty(methodName)) {
             methodName = "customizeProcess";
         }
         Method method = ReflectUtil.getMethod(object.getClass(), methodName);
+        Object retVal = null;
         if (Objects.nonNull(method)) {
             try {
-                ReflectUtil.invoke(object, method, params);
+                retVal = ReflectUtil.invoke(object, method, params);
             } catch (UtilException e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof InvocationTargetException) {
@@ -443,6 +444,7 @@ public class GXCommonUtils {
                 throw new GXBusinessException(e.getMessage(), cause);
             }
         }
+        return retVal;
     }
 
     /**
