@@ -386,7 +386,8 @@ public class GXCommonUtils {
      */
     public static <R> R convertSourceToTarget(Object source, Class<R> clazz, String methodName, String... ignoreProperties) {
         if (Objects.isNull(source)) {
-            throw new GXBusinessException("源对象不能为null");
+            LOG.info("源对象不能为null");
+            return null;
         }
         R r = BeanUtil.copyProperties(source, clazz, ignoreProperties);
         reflectCallObjectMethod(r, methodName);
@@ -402,9 +403,10 @@ public class GXCommonUtils {
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    public static <R> List<R> convertSourceToTarget(Collection<?> collection, Class<R> clazz, String methodName, CopyOptions copyOptions) {
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> clazz, String methodName, CopyOptions copyOptions) {
         if (CollUtil.isEmpty(collection)) {
-            throw new GXBusinessException("源对象不能为null");
+            LOG.info("源对象不能为null");
+            return null;
         }
         if (Objects.isNull(copyOptions)) {
             return BeanUtil.copyToList(collection, clazz);

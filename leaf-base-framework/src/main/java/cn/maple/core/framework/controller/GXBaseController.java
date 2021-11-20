@@ -33,7 +33,7 @@ public interface GXBaseController {
      * @return List
      */
     default <S, Q> List<Q> convertSourceToTarget(Collection<S> collection, Class<Q> clazz, CopyOptions copyOptions) {
-        return GXCommonUtils.convertSourceToTarget(collection, clazz, null, copyOptions);
+        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, null, copyOptions);
     }
 
     /**
