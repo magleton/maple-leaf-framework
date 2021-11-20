@@ -21,7 +21,7 @@ public interface GXBaseController {
      * @return T
      */
     default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz) {
-        return GXCommonUtils.convertSourceToTarget(source, clazz);
+        return GXCommonUtils.convertSourceToTarget(source, clazz, null);
     }
 
     /**
@@ -33,7 +33,7 @@ public interface GXBaseController {
      * @return List
      */
     default <S, Q> List<Q> convertSourceToTarget(Collection<S> collection, Class<Q> clazz, CopyOptions copyOptions) {
-        return GXCommonUtils.convertSourceToTarget(collection, clazz, copyOptions);
+        return GXCommonUtils.convertSourceToTarget(collection, clazz, null, copyOptions);
     }
 
     /**

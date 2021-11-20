@@ -2,8 +2,10 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -16,12 +18,15 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.event.GXBaseEvent;
+import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -375,14 +380,17 @@ public class GXCommonUtils {
      *
      * @param source           源对象
      * @param clazz            目标对象类型
+     * @param methodName       需要条用的方法名字
      * @param ignoreProperties 需要忽略的属性
      * @return 目标对象
      */
-    public static <R> R convertSourceToTarget(Object source, Class<R> clazz, String... ignoreProperties) {
+    public static <R> R convertSourceToTarget(Object source, Class<R> clazz, String methodName, String... ignoreProperties) {
         if (Objects.isNull(source)) {
             throw new GXBusinessException("源对象不能为null");
         }
-        return BeanUtil.copyProperties(source, clazz, ignoreProperties);
+        R r = BeanUtil.copyProperties(source, clazz, ignoreProperties);
+        reflectCallObjectMethod(r, methodName);
+        return r;
     }
 
     /**
@@ -390,14 +398,49 @@ public class GXCommonUtils {
      *
      * @param collection  需要转换的对象列表
      * @param clazz       目标对象的类型
+     * @param methodName  需要条用的方法名字
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    public static <R> List<R> convertSourceToTarget(Collection<?> collection, Class<R> clazz, CopyOptions copyOptions) {
+    public static <R> List<R> convertSourceToTarget(Collection<?> collection, Class<R> clazz, String methodName, CopyOptions copyOptions) {
+        if (CollUtil.isEmpty(collection)) {
+            throw new GXBusinessException("源对象不能为null");
+        }
         if (Objects.isNull(copyOptions)) {
             return BeanUtil.copyToList(collection, clazz);
         }
-        return BeanUtil.copyToList(collection, clazz, copyOptions);
+        List<R> rs = BeanUtil.copyToList(collection, clazz, copyOptions);
+        rs.forEach(r -> reflectCallObjectMethod(r, methodName));
+        return rs;
+    }
+
+    /**
+     * 动态调用对象中的方法
+     *
+     * @param object     对象
+     * @param methodName 对象中的方法
+     * @param params     参数
+     * @param <R>        对象类型
+     */
+    public static <R> void reflectCallObjectMethod(R object, String methodName, Object... params) {
+        if (CharSequenceUtil.isEmpty(methodName)) {
+            methodName = "customizeProcess";
+        }
+        Method method = ReflectUtil.getMethod(object.getClass(), methodName);
+        if (Objects.nonNull(method)) {
+            try {
+                ReflectUtil.invoke(object, method, params);
+            } catch (UtilException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof InvocationTargetException) {
+                    Throwable targetException = ((InvocationTargetException) cause).getTargetException();
+                    if (targetException instanceof GXBeanValidateException) {
+                        throw (GXBeanValidateException) targetException;
+                    }
+                }
+                throw new GXBusinessException(e.getMessage(), cause);
+            }
+        }
     }
 
     /**
