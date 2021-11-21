@@ -408,9 +408,6 @@ public class GXCommonUtils {
             LOG.info("源对象不能为null");
             return null;
         }
-        if (Objects.isNull(copyOptions)) {
-            return BeanUtil.copyToList(collection, clazz);
-        }
         List<R> rs = BeanUtil.copyToList(collection, clazz, copyOptions);
         rs.forEach(r -> reflectCallObjectMethod(r, methodName));
         return rs;
