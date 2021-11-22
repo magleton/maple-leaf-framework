@@ -453,14 +453,11 @@ public class GifEncoder {
         } else {
             // specify normal LCT
             // 1 local color table  1=yes
-            out.write(0x80 |
-                    // 2 interlace - 0=no
-                    0 |
-                    // 3 sorted - 0=no
-                    0 |
-                    // 4-5 reserved
-                    0 |
-                    palSize); // 6-8 size of color table
+            // 2 interlace - 0=no
+            // 3 sorted - 0=no
+            // 4-5 reserved
+            // 6-8 size of color table
+            out.write(0x80 | palSize);
         }
     }
 
@@ -474,11 +471,11 @@ public class GifEncoder {
         writeShort(width);
         writeShort(height);
         // packed fields
-        out.write((0x80 | // 1   : global color table flag = 1 (gct used)
-                0x70 | // 2-4 : color resolution = 7
-                0x00 | // 5   : gct sort flag = 0
-                palSize)); // 6-8 : gct size
-
+        // 1   : global color table flag = 1 (gct used)
+        // 2-4 : color resolution = 7
+        // 5   : gct sort flag = 0
+        // 6-8 : gct size
+        out.write((0x80 | 0x70 | palSize));
         out.write(0); // background color index
         out.write(0); // pixel aspect ratio - assume 1:1
     }

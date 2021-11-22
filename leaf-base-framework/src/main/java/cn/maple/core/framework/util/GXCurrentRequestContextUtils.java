@@ -44,7 +44,7 @@ public class GXCurrentRequestContextUtils {
      * @return String
      */
     public static String getDomain() {
-        HttpServletRequest request = getHttpServletRequest();
+        HttpServletRequest request = Objects.requireNonNull(getHttpServletRequest());
         StringBuffer url = Objects.requireNonNull(request).getRequestURL();
         return url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
     }

@@ -13,52 +13,33 @@ import java.io.OutputStream;
  */
 public class Encoder {
 
-    private static final int EOF = -1;
-    /**
-     * 图片的宽高
-     */
-    private int imgW, imgH;
-    private byte[] pixAry;
-    /**
-     * 验证码位数
-     */
-    private int initCodeSize;
-    /**
-     * 剩余数量
-     */
-    private int remaining;
-    /**
-     * 像素
-     */
-    private int curPixel;
     static final int BITS = 12;
     /**
      * 80% 占用率
      */
     static final int HSIZE = 5003;
+    private static final int EOF = -1;
     /**
      * number of bits/code
      */
-    int n_bits;
+    int nBits;
     /**
      * user settable max # bits/code
      */
-    int maxbits = BITS;
+    int maxBits = BITS;
     /**
      * maximum code, given n_bits
      */
-    int maxcode;
+    int maxCode;
     /**
      * should NEVER generate this code
      */
-    int maxmaxcode = 1 << BITS;
-
-    int[] htab = new int[HSIZE];
-    int[] codetab = new int[HSIZE];
-    int hsize = HSIZE;
-    int free_ent = 0;
-    boolean clear_flg = false;
-
+    int maxMaxCode = 1 << BITS;
+    int[] hTab = new int[HSIZE];
+    int[] codeTab = new int[HSIZE];
+    int hSize = HSIZE;
+    int freeEnt = 0;
+    boolean clearFlg = false;
     // Algorithm:  use open addressing double hashing (no chaining) on the
     // prefix code / next character combination.  We do a variant of Knuth's
     // algorithm D (vol. 3, sec. 6.4) along with G. Knott's relatively-prime
@@ -70,30 +51,12 @@ public class Encoder {
     // for the decompressor.  Late addition:  construct the table according to
     // file size for noticeable speed improvement on small files.  Please direct
     // questions about this implementation to ames!jaw.
-    int g_init_bits;
-
-    int ClearCode;
-    int EOFCode;
-
-    // output
-    //
-    // Output the given code.
-    // Inputs:
-    //      code:   A n_bits-bit integer.  If == -1, then EOF.  This assumes
-    //              that n_bits =< wordsize - 1.
-    // Outputs:
-    //      Outputs code to the file.
-    // Assumptions:
-    //      Chars are 8 bits long.
-    // Algorithm:
-    //      Maintain a BITS character long buffer (so that 8 codes will
-    // fit in it exactly).  Use the VAX insv instruction to insert each
-    // code in turn.  When the buffer fills up empty it and start over.
-
-    int cur_accum = 0;
-    int cur_bits = 0;
-
-    int masks[] = {
+    int gInitBits;
+    int clearCode;
+    int eofCode;
+    int curAccum = 0;
+    int curBits = 0;
+    int[] masks = {
             0x0000,
             0x0001,
             0x0003,
@@ -114,27 +77,60 @@ public class Encoder {
     /**
      * Number of characters so far in this 'packet'
      */
-    int a_count;
+    int aCount;
     /**
      * Define the storage for the packet accumulator
      */
     byte[] accum = new byte[256];
+
+    // output
+    //
+    // Output the given code.
+    // Inputs:
+    //      code:   A n_bits-bit integer.  If == -1, then EOF.  This assumes
+    //              that n_bits =< wordsize - 1.
+    // Outputs:
+    //      Outputs code to the file.
+    // Assumptions:
+    //      Chars are 8 bits long.
+    // Algorithm:
+    //      Maintain a BITS character long buffer (so that 8 codes will
+    // fit in it exactly).  Use the VAX insv instruction to insert each
+    // code in turn.  When the buffer fills up empty it and start over.
+    /**
+     * 图片的宽高
+     */
+    private final int imgW;
+    private final int imgH;
+    private final byte[] pixAry;
+    /**
+     * 验证码位数
+     */
+    private final int initCodeSize;
+    /**
+     * 剩余数量
+     */
+    private int remaining;
+    /**
+     * 像素
+     */
+    private int curPixel;
 
     /**
      * <p>
      * 编码器
      * </p>
      *
-     * @param width       宽度
-     * @param height      高度
-     * @param pixels      像素
-     * @param color_depth 颜色
+     * @param width      宽度
+     * @param height     高度
+     * @param pixels     像素
+     * @param colorDepth 颜色
      */
-    Encoder(int width, int height, byte[] pixels, int color_depth) {
+    Encoder(int width, int height, byte[] pixels, int colorDepth) {
         imgW = width;
         imgH = height;
         pixAry = pixels;
-        initCodeSize = Math.max(2, color_depth);
+        initCodeSize = Math.max(2, colorDepth);
     }
 
     // Add a character to the end of the current packet, and if it is 254
@@ -145,10 +141,10 @@ public class Encoder {
      * @param outs 输出流
      * @throws IOException IO异常
      */
-    void char_out(byte c, OutputStream outs) throws IOException {
-        accum[a_count++] = c;
-        if (a_count >= 254) {
-            flush_char(outs);
+    void charOut(byte c, OutputStream outs) throws IOException {
+        accum[aCount++] = c;
+        if (aCount >= 254) {
+            flushChar(outs);
         }
     }
 
@@ -156,19 +152,19 @@ public class Encoder {
 
     // table clear for block compress
 
-    void cl_block(OutputStream outs) throws IOException {
-        cl_hash(hsize);
-        free_ent = ClearCode + 2;
-        clear_flg = true;
+    void clBlock(OutputStream outs) throws IOException {
+        clHash(hSize);
+        freeEnt = clearCode + 2;
+        clearFlg = true;
 
-        output(ClearCode, outs);
+        output(clearCode, outs);
     }
 
     // reset code table
 
-    void cl_hash(int hsize) {
-        for (int i = 0; i < hsize; ++i) {
-            htab[i] = -1;
+    void clHash(int hSize) {
+        for (int i = 0; i < hSize; ++i) {
+            hTab[i] = -1;
         }
     }
 
@@ -177,88 +173,88 @@ public class Encoder {
      * 压缩
      * </p>
      *
-     * @param init_bits int
-     * @param outs      输出流
+     * @param initBits int
+     * @param outs     输出流
      * @throws IOException IO异常
      */
-    void compress(int init_bits, OutputStream outs) throws IOException {
+    void compress(int initBits, OutputStream outs) throws IOException {
         int fcode;
         int i /* = 0 */;
         int c;
         int ent;
         int disp;
-        int hsize_reg;
+        int hSizeReg;
         int hshift;
 
         // Set up the globals:  g_init_bits - initial number of bits
-        g_init_bits = init_bits;
+        gInitBits = initBits;
 
         // Set up the necessary values
-        clear_flg = false;
-        n_bits = g_init_bits;
-        maxcode = MAXCODE(n_bits);
+        clearFlg = false;
+        nBits = gInitBits;
+        maxCode = maxCode(nBits);
 
-        ClearCode = 1 << (init_bits - 1);
-        EOFCode = ClearCode + 1;
-        free_ent = ClearCode + 2;
+        clearCode = 1 << (initBits - 1);
+        eofCode = clearCode + 1;
+        freeEnt = clearCode + 2;
 
         // clear packet
-        a_count = 0;
+        aCount = 0;
 
         ent = nextPixel();
 
         hshift = 0;
-        for (fcode = hsize; fcode < 65536; fcode *= 2) {
+        for (fcode = hSize; fcode < 65536; fcode *= 2) {
             ++hshift;
         }
         // set hash code range bound
         hshift = 8 - hshift;
 
-        hsize_reg = hsize;
+        hSizeReg = hSize;
         // clear hash table
-        cl_hash(hsize_reg);
+        clHash(hSizeReg);
 
-        output(ClearCode, outs);
+        output(clearCode, outs);
 
         outer_loop:
         while ((c = nextPixel()) != EOF) {
-            fcode = (c << maxbits) + ent;
+            fcode = (c << maxBits) + ent;
             // xor hashing
             i = (c << hshift) ^ ent;
-            if (htab[i] == fcode) {
-                ent = codetab[i];
+            if (hTab[i] == fcode) {
+                ent = codeTab[i];
                 continue;
             }
             // non-empty slot
-            else if (htab[i] >= 0) {
+            else if (hTab[i] >= 0) {
                 // secondary hash (after G. Knott)
-                disp = hsize_reg - i;
+                disp = hSizeReg - i;
                 if (i == 0) {
                     disp = 1;
                 }
                 do {
                     if ((i -= disp) < 0) {
-                        i += hsize_reg;
+                        i += hSizeReg;
                     }
-                    if (htab[i] == fcode) {
-                        ent = codetab[i];
+                    if (hTab[i] == fcode) {
+                        ent = codeTab[i];
                         continue outer_loop;
                     }
-                } while (htab[i] >= 0);
+                } while (hTab[i] >= 0);
             }
             output(ent, outs);
             ent = c;
-            if (free_ent < maxmaxcode) {
+            if (freeEnt < maxMaxCode) {
                 // code -> hashtable
-                codetab[i] = free_ent++;
-                htab[i] = fcode;
+                codeTab[i] = freeEnt++;
+                hTab[i] = fcode;
             } else {
-                cl_block(outs);
+                clBlock(outs);
             }
         }
         // Put out the final code.
         output(ent, outs);
-        output(EOFCode, outs);
+        output(eofCode, outs);
     }
 
     void encode(OutputStream os) throws IOException {
@@ -276,16 +272,16 @@ public class Encoder {
         os.write(0);
     }
 
-    void flush_char(OutputStream outs) throws IOException {
-        if (a_count > 0) {
-            outs.write(a_count);
-            outs.write(accum, 0, a_count);
-            a_count = 0;
+    void flushChar(OutputStream outs) throws IOException {
+        if (aCount > 0) {
+            outs.write(aCount);
+            outs.write(accum, 0, aCount);
+            aCount = 0;
         }
     }
 
-    final int MAXCODE(int n_bits) {
-        return (1 << n_bits) - 1;
+    final int maxCode(int nBits) {
+        return (1 << nBits) - 1;
     }
 
     //----------------------------------------------------------------------------
@@ -302,42 +298,42 @@ public class Encoder {
     }
 
     void output(int code, OutputStream outs) throws IOException {
-        cur_accum &= masks[cur_bits];
-        if (cur_bits > 0) {
-            cur_accum |= (code << cur_bits);
+        curAccum &= masks[curBits];
+        if (curBits > 0) {
+            curAccum |= (code << curBits);
         } else {
-            cur_accum = code;
+            curAccum = code;
         }
-        cur_bits += n_bits;
-        while (cur_bits >= 8) {
-            char_out((byte) (cur_accum & 0xff), outs);
-            cur_accum >>= 8;
-            cur_bits -= 8;
+        curBits += nBits;
+        while (curBits >= 8) {
+            charOut((byte) (curAccum & 0xff), outs);
+            curAccum >>= 8;
+            curBits -= 8;
         }
 
         // If the next entry is going to be too big for the code size,
         // then increase it, if possible.
-        if (free_ent > maxcode || clear_flg) {
-            if (clear_flg) {
-                maxcode = MAXCODE(n_bits = g_init_bits);
-                clear_flg = false;
+        if (freeEnt > maxCode || clearFlg) {
+            if (clearFlg) {
+                maxCode = maxCode(nBits = gInitBits);
+                clearFlg = false;
             } else {
-                ++n_bits;
-                if (n_bits == maxbits) {
-                    maxcode = maxmaxcode;
+                ++nBits;
+                if (nBits == maxBits) {
+                    maxCode = maxMaxCode;
                 } else {
-                    maxcode = MAXCODE(n_bits);
+                    maxCode = maxCode(nBits);
                 }
             }
         }
-        if (code == EOFCode) {
+        if (code == eofCode) {
             // At EOF, write the rest of the buffer.
-            while (cur_bits > 0) {
-                char_out((byte) (cur_accum & 0xff), outs);
-                cur_accum >>= 8;
-                cur_bits -= 8;
+            while (curBits > 0) {
+                charOut((byte) (curAccum & 0xff), outs);
+                curAccum >>= 8;
+                curBits -= 8;
             }
-            flush_char(outs);
+            flushChar(outs);
         }
     }
 }
