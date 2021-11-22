@@ -1,5 +1,6 @@
 package cn.maple.core.framework.dto.menu;
 
+import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
