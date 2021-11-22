@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GXHttpContextUtils {
+public class GXCurrentRequestContextUtils {
     @GXFieldComment(zhDesc = "日志对象")
-    private static final Logger LOG = LoggerFactory.getLogger(GXHttpContextUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXCurrentRequestContextUtils.class);
 
-    private GXHttpContextUtils() {
+    private GXCurrentRequestContextUtils() {
     }
 
     /**
@@ -154,8 +154,8 @@ public class GXHttpContextUtils {
      */
     public static String getClientIP() {
         String ip = "";
-        if (null != GXHttpContextUtils.getHttpServletRequest()) {
-            ip = ServletUtil.getClientIP(GXHttpContextUtils.getHttpServletRequest());
+        if (null != GXCurrentRequestContextUtils.getHttpServletRequest()) {
+            ip = ServletUtil.getClientIP(GXCurrentRequestContextUtils.getHttpServletRequest());
         }
         return ip;
     }

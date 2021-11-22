@@ -7,7 +7,7 @@ import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXHttpContextUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +46,7 @@ public interface GXBaseController {
      * @return R
      */
     default <R> R getLoginIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
-        return GXHttpContextUtils.getLoginIdFromToken(tokenName, tokenIdName, clazz, secretKey);
+        return GXCurrentRequestContextUtils.getLoginIdFromToken(tokenName, tokenIdName, clazz, secretKey);
     }
 
     /**
