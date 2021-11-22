@@ -25,7 +25,6 @@ import java.io.*;
  * https://github.com/rtyley/animated-gif-lib-for-java
  */
 public class GifEncoder {
-
     protected int width;
     protected int height;
     protected Color transparent;
@@ -161,7 +160,6 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-
         return ok;
     }
 
@@ -192,7 +190,6 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-
         return ok;
     }
 
@@ -280,7 +277,8 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-        return started = ok;
+        started = ok;
+        return started;
     }
 
     /**
@@ -298,7 +296,8 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-        return started = ok;
+        started = ok;
+        return started;
     }
 
     /**
@@ -416,13 +415,10 @@ public class GifEncoder {
 
         // packed fields
         // 1:3 reserved
-        out.write(0 |
-                // 4:6 disposal
-                disp |
-                // 7   user input - 0 = none
-                0 |
-                // 8   transparency flag
-                transp);
+        // 4:6 disposal
+        // 7   user input - 0 = none
+        // 8   transparency flag
+        out.write(disp | transp);
 
         // delay x 1/100 sec
         writeShort(delay);

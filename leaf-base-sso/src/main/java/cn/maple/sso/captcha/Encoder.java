@@ -17,7 +17,7 @@ public class Encoder {
     /**
      * 80% 占用率
      */
-    static final int HSIZE = 5003;
+    static final int H_SIZE = 5003;
     private static final int EOF = -1;
     /**
      * number of bits/code
@@ -35,9 +35,8 @@ public class Encoder {
      * should NEVER generate this code
      */
     int maxMaxCode = 1 << BITS;
-    int[] hTab = new int[HSIZE];
-    int[] codeTab = new int[HSIZE];
-    int hSize = HSIZE;
+    int[] hTab = new int[H_SIZE];
+    int[] codeTab = new int[H_SIZE];
     int freeEnt = 0;
     boolean clearFlg = false;
     // Algorithm:  use open addressing double hashing (no chaining) on the
@@ -153,7 +152,7 @@ public class Encoder {
     // table clear for block compress
 
     void clBlock(OutputStream outs) throws IOException {
-        clHash(hSize);
+        clHash(H_SIZE);
         freeEnt = clearCode + 2;
         clearFlg = true;
 
@@ -192,7 +191,7 @@ public class Encoder {
         // Set up the necessary values
         clearFlg = false;
         nBits = gInitBits;
-        maxCode = maxCode(nBits);
+        maxCode = calMaxCode(nBits);
 
         clearCode = 1 << (initBits - 1);
         eofCode = clearCode + 1;
@@ -204,13 +203,13 @@ public class Encoder {
         ent = nextPixel();
 
         hshift = 0;
-        for (fcode = hSize; fcode < 65536; fcode *= 2) {
+        for (fcode = H_SIZE; fcode < 65536; fcode *= 2) {
             ++hshift;
         }
         // set hash code range bound
         hshift = 8 - hshift;
 
-        hSizeReg = hSize;
+        hSizeReg = H_SIZE;
         // clear hash table
         clHash(hSizeReg);
 
@@ -280,7 +279,7 @@ public class Encoder {
         }
     }
 
-    final int maxCode(int nBits) {
+    final int calMaxCode(int nBits) {
         return (1 << nBits) - 1;
     }
 
@@ -315,14 +314,14 @@ public class Encoder {
         // then increase it, if possible.
         if (freeEnt > maxCode || clearFlg) {
             if (clearFlg) {
-                maxCode = maxCode(nBits = gInitBits);
+                maxCode = calMaxCode(nBits = gInitBits);
                 clearFlg = false;
             } else {
                 ++nBits;
                 if (nBits == maxBits) {
                     maxCode = maxMaxCode;
                 } else {
-                    maxCode = maxCode(nBits);
+                    maxCode = calMaxCode(nBits);
                 }
             }
         }
