@@ -406,7 +406,7 @@ public class GXCommonUtils {
     public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> clazz, String methodName, CopyOptions copyOptions) {
         if (CollUtil.isEmpty(collection)) {
             LOG.info("源对象不能为null");
-            return null;
+            return Collections.emptyList();
         }
         List<R> rs = BeanUtil.copyToList(collection, clazz, copyOptions);
         rs.forEach(r -> reflectCallObjectMethod(r, methodName));
