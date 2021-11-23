@@ -82,7 +82,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param fieldName 需要查询的字段
      * @return 列表
      */
-    public <E> List<E> findSingleFieldByCondition(String tableName, Table<String, String, Object> condition, String fieldName) {
+    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, String fieldName) {
         return baseDao.findByCondition(tableName, condition, fieldName);
     }
 
