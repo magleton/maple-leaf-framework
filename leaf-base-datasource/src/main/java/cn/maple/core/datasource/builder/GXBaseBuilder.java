@@ -254,7 +254,7 @@ public interface GXBaseBuilder {
                         //wheres.add("or");
                     }
                 });
-                wheres.remove(wheres.size() - 1);
+                //wheres.remove(wheres.size() - 1);
                 String whereStr = String.join(" ", wheres);
                 sql.WHERE(whereStr);
             });
