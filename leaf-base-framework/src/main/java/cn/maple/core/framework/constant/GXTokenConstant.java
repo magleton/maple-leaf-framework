@@ -7,15 +7,29 @@ public class GXTokenConstant {
     public static final String TOKEN_NAME = "token";
 
     /**
+     * Token永不过期
+     */
+    public static final Integer TOKEN_NEVER_EXPIRE = 0;
+
+    /**
      * TOKEN过期时间
      * 15天
      */
     public static final int USER_EXPIRE = 24 * 60 * 60 * 15;
 
     /**
-     * USER端TOKEN即将过期刷新时间
+     * USER端TOKEN即将过期刷新阈值
+     * 当用户的token过期时间小于该值时
+     * 需要刷新缓存中的token过期时间
      */
-    public static final int USER_EXPIRE_REFRESH_INTERVAL = 24 * 60 * 60 * 7;
+    public static final int USER_EXPIRE_REFRESH_THRESHOLD = 24 * 60 * 60 * 3;
+
+    /**
+     * 用户端的token续期时间
+     * 当用户的token小于USER_EXPIRE_REFRESH_THRESHOLD时
+     * 需要将用户的token过期时间设置为 currentDate + USER_TOKEN_RENEWAL
+     */
+    public static final int USER_TOKEN_RENEWAL = 24 * 60 * 60 * 7;
 
     /**
      * USER端缓存桶的名字(redisson)
@@ -53,9 +67,18 @@ public class GXTokenConstant {
     public static final String KEY = "GEO_XUS_SHIRO_TOKEN_KEY";
 
     /**
-     * ADMIN端TOKEN即将过期刷新时间
+     * ADMIN端TOKEN即将过期刷新阈值
+     * 当admin的token过期时间小于该值时
+     * 需要刷新缓存中的token过期时间
      */
-    public static final int ADMIN_EXPIRE_REFRESH_INTERVAL = 24 * 60;
+    public static final int ADMIN_EXPIRE_REFRESH_THRESHOLD = 24 * 60;
+
+    /**
+     * 管理端的token续期时间
+     * 当管理员的token小于ADMIN_EXPIRE_REFRESH_THRESHOLD时
+     * 需要将管理员的token过期时间设置为 currentDate + ADMIN_TOKEN_RENEWAL
+     */
+    public static final int ADMIN_TOKEN_RENEWAL = 12 * 60 * 60;
 
     /**
      * 登录时间
