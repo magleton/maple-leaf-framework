@@ -39,6 +39,9 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     })
     List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
 
+    @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
+    <E> List<E> findSingleFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)

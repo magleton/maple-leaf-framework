@@ -195,6 +195,18 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     }
 
     /**
+     * 通过条件获取数据列表
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param fieldName 需要查询的字段
+     * @return SQL语句
+     */
+    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, String fieldName) {
+        return baseMapper.findSingleFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName));
+    }
+
+    /**
      * 构造分页对象
      *
      * @param page     当前页

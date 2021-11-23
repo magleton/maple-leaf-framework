@@ -227,7 +227,8 @@ public interface GXBaseBuilder {
      * {@code
      * Table<String, String, Object> condition = HashBasedTable.create();
      * condition.put(GXAdminConstant.PRIMARY_KEY, GXBaseBuilderConstant.NUMBER_EQ, 22);
-     * condition.put("created_at", GXBaseBuilderConstant.TIME_RANGE_WITH_END_EQ, Arrays.asList("11111", "222222"));
+     * condition.put("created_at", GXBaseBuilderConstant.NUMBER_LE, 11111);
+     * condition.put("created_at", GXBaseBuilderConstant.NUMBER_GE, 22222);
      * condition.put("username", GXBaseBuilderConstant.RIGHT_LIKE, "jetty");
      * dealSQLWhereCondition(sql , condition);
      * }
@@ -246,17 +247,11 @@ public interface GXBaseBuilder {
                         if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
                             whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                         } else {
-                            if (CharSequenceUtil.startWith(operator, "{}")) {
-                                // 处理类似于  {} > {} and {} <= {}
-                                // value的类型是List<Object>
-                                List<Object> objects = Convert.toList(Object.class, value);
-                                whereStr = CharSequenceUtil.format(operator, column, objects.get(0), column, objects.get(1));
-                            } else {
-                                whereStr = CharSequenceUtil.format("{} " + operator, column, value);
-                            }
+                            //whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+                            whereStr = CharSequenceUtil.format("{} " + operator, column, value);
                         }
                         wheres.add(whereStr);
-                        wheres.add("or");
+                        //wheres.add("or");
                     }
                 });
                 wheres.remove(wheres.size() - 1);
