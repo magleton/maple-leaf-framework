@@ -9,20 +9,16 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.annotation.GXDataSource;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
-import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public interface GXBaseBuilder {
     /**
@@ -83,7 +79,7 @@ public interface GXBaseBuilder {
             }
         }
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         return sql.toString();
     }
 
@@ -96,7 +92,7 @@ public interface GXBaseBuilder {
      */
     static String checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         sql.LIMIT(1);
         return CharSequenceUtil.format("SELECT IFNULL(({}) , 0)", sql.toString());
     }
@@ -152,7 +148,7 @@ public interface GXBaseBuilder {
      * @param tableName 表名字
      * @param fieldSet  需要查询的字段
      * @param condition 条件
-     *                  <code>
+     *                  {@code
      *                  Table<String, String, Object> condition = HashBasedTable.create();
      *                  condition.put("path" , "like" , "aaa%");
      *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
@@ -161,7 +157,7 @@ public interface GXBaseBuilder {
      *                  Table<String, String, Object> condition = HashBasedTable.create();
      *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
      *                  findByCondition("test", condition , CollUtil.newHashSet("id" , "username"));
-     *                  </code>
+     *                  }
      * @return SQL语句
      */
     static String findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
@@ -170,7 +166,7 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", fieldSet);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
         return sql.toString();
     }
@@ -220,7 +216,7 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", fieldSet);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
         sql.LIMIT(1);
         return sql.toString();
@@ -228,11 +224,18 @@ public interface GXBaseBuilder {
 
     /**
      * 处理SQL语句
+     * {@code
+     * Table<String, String, Object> condition = HashBasedTable.create();
+     * condition.put(GXAdminConstant.PRIMARY_KEY, GXBaseBuilderConstant.NUMBER_EQ, 22);
+     * condition.put("created_at", GXBaseBuilderConstant.TIME_RANGE_WITH_END_EQ, Arrays.asList("11111", "222222"));
+     * condition.put("username", GXBaseBuilderConstant.RIGHT_LIKE, "jetty");
+     * dealSQLWhereCondition(sql , condition);
+     * }
      *
      * @param sql       SQL语句
      * @param condition 条件
      */
-    static void dealSQLCondition(SQL sql, Table<String, String, Object> condition) {
+    static void dealSQLWhereCondition(SQL sql, Table<String, String, Object> condition) {
         if (Objects.nonNull(condition)) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
             conditionMap.forEach((column, datum) -> {
@@ -243,7 +246,14 @@ public interface GXBaseBuilder {
                         if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
                             whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                         } else {
-                            whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
+                            if (CharSequenceUtil.startWith(operator, "{}")) {
+                                // 处理类似于  {} > {} and {} <= {}
+                                // value的类型是List<Object>
+                                List<Object> objects = Convert.toList(Object.class, value);
+                                whereStr = CharSequenceUtil.format(operator, column, objects.get(0), column, objects.get(1));
+                            } else {
+                                whereStr = CharSequenceUtil.format("{} " + operator, column, value);
+                            }
                         }
                         wheres.add(whereStr);
                         wheres.add("or");
@@ -266,7 +276,7 @@ public interface GXBaseBuilder {
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id");
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         return sql.toString();
     }
 
@@ -279,171 +289,8 @@ public interface GXBaseBuilder {
      */
     static String deleteWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
-        dealSQLCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition);
         return sql.toString();
-    }
-
-    /**
-     * 默认的搜索条件
-     *
-     * @return Dict
-     */
-    static Dict getDefaultSearchField() {
-        return Dict.create();
-    }
-
-    /**
-     * 获取请求对象中的搜索条件数据
-     *
-     * @param param 参数
-     * @return Dict
-     */
-    @SuppressWarnings("all")
-    default Dict getRequestSearchCondition(Dict param) {
-        Dict searchConditionDict = Convert.convert(Dict.class, param.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME));
-        Dict retDict = Dict.create();
-        if (Objects.isNull(searchConditionDict)) {
-            return retDict;
-        }
-        searchConditionDict.forEach((key, value) -> {
-            if (Objects.nonNull(value)) {
-                String className = value.getClass().getName();
-                if (CharSequenceUtil.containsIgnoreCase(className, "java.util.ArrayList")) {
-                    List<Object> list = Convert.toList(Object.class, value);
-                    if (!list.isEmpty()) {
-                        retDict.set(key, value);
-                    }
-                } else if (CharSequenceUtil.containsIgnoreCase(className, "java.util.LinkedHashMap")) {
-                    Map<String, Object> map = Convert.toMap(String.class, Object.class, value);
-                    if (!map.isEmpty()) {
-                        retDict.set(key, value);
-                    }
-                } else if (CharSequenceUtil.containsIgnoreCase(className, "java.lang.String")
-                        && CharSequenceUtil.isNotBlank(value.toString())) {
-                    retDict.set(key, value);
-                } else {
-                    retDict.set(key, value);
-                }
-            }
-        });
-
-        return retDict;
-    }
-
-    /**
-     * 组合时间查询SQL
-     * <pre>
-     *     {@code
-     *     processTimeField("created_at", "created_at > {} and created_at < {}", {start=2019-12-20,end=2019-12-31})
-     *     }
-     * </pre>
-     *
-     * @param fieldName    字段名字
-     * @param conditionStr 查询条件
-     * @param param        参数
-     * @return String
-     */
-    default String processTimeField(String fieldName, String conditionStr, Object param) {
-        final String today = DateUtil.today();
-        Long start = DateUtil.parse(CharSequenceUtil.format("{} 0:0:0", today)).getTime();
-        Long end = DateUtil.parse(CharSequenceUtil.format("{} 23:59:59", today)).getTime();
-        final Dict dict = Convert.convert(Dict.class, param);
-        if (null != dict.getLong("start")) {
-            start = dict.getLong("start");
-        }
-        if (null != dict.getLong("end")) {
-            end = dict.getLong("end");
-        }
-        return CharSequenceUtil.format(conditionStr, fieldName, start, fieldName, end);
-    }
-
-    /**
-     * 给现有查询条件新增查询条件
-     *
-     * @param requestParam 请求参数
-     * @param key          key
-     * @param value        value
-     * @return Dict
-     */
-    default Dict addSearchCondition(Dict requestParam, String key, Object value) {
-        return GXDBCommonUtils.addSearchCondition(requestParam, key, value, false);
-    }
-
-    /**
-     * 给现有查询条件新增查询条件
-     *
-     * @param requestParam 请求参数
-     * @param sourceData   数据源
-     * @return Dict
-     */
-    default Dict addSearchCondition(Dict requestParam, Dict sourceData) {
-        return GXDBCommonUtils.addSearchCondition(requestParam, sourceData, false);
-    }
-
-    /**
-     * 获取时间字段配置
-     *
-     * @return Dict
-     */
-    default Dict getTimeFields() {
-        return Dict.create()
-                .set("createdAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
-                .set("updatedAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
-                .set("cancelAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
-                .set("payAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ)
-                .set("completeAt", GXBaseBuilderConstant.TIME_RANGE_WITH_EQ);
-    }
-
-    /**
-     * 合并搜索条件到SQL对象中
-     *
-     * @param sql                      SQL对象
-     * @param requestParam             请求参数
-     * @param isMergeDBSearchCondition 是否合并数据库配置的搜索条件
-     */
-    @SuppressWarnings("all")
-    @GXDataSource("framework")
-    default void mergeSearchConditionToSql(SQL sql, Dict requestParam, Boolean isMergeDBSearchCondition) {
-        Dict searchField = getDefaultSearchField();
-        Dict requestSearchCondition = getRequestSearchCondition(requestParam);
-        final Dict timeFields = getTimeFields();
-        Set<String> keySet = requestSearchCondition.keySet();
-        for (String key : keySet) {
-            boolean timeFieldFlag = false;
-            String underLineKey = CharSequenceUtil.toUnderlineCase(key);
-            Object value = Optional.ofNullable(requestSearchCondition.getObj(key)).orElse(requestSearchCondition.getObj(underLineKey));
-            boolean flag = (value instanceof Collection) && !((Collection<?>) value).isEmpty();
-            if (Objects.nonNull(value) && (flag || CharSequenceUtil.isNotBlank(value.toString()))) {
-                String operator = Optional.ofNullable(searchField.getStr(key)).orElse(searchField.getStr(underLineKey));
-                if (Objects.isNull(operator)) {
-                    operator = Optional.ofNullable(timeFields.getStr(key)).orElse(timeFields.getStr(underLineKey));
-                    timeFieldFlag = true;
-                }
-                if (Objects.isNull(operator)) {
-                    GXCommonUtils.getLogger(GXBaseBuilder.class).warn("{}字段没有配置搜索条件", underLineKey);
-                    continue;
-                }
-                if (timeFieldFlag) {
-                    final String s = processTimeField(underLineKey, operator, value);
-                    sql.WHERE(s);
-                    continue;
-                }
-                if (flag) {
-                    value = CollUtil.join(((Collection<?>) value).stream().map(d -> {
-                        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, d.toString())) {
-                            return d;
-                        }
-                        return "\"" + d + "\"";
-                    }).collect(Collectors.toSet()), ",");
-                }
-                String lastKey = ReUtil.replaceAll(underLineKey, "[!<>*^$@#%&]", "");
-                if (CharSequenceUtil.contains(underLineKey, ".")) {
-                    sql.WHERE(CharSequenceUtil.format("({} ".concat(operator) + ")", lastKey, value));
-                    continue;
-                }
-                sql.WHERE(CharSequenceUtil.format("(`{}` ".concat(operator) + ")", lastKey, value));
-            }
-        }
     }
 
     /**
