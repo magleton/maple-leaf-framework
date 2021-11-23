@@ -40,13 +40,13 @@ public interface GXBaseController {
      * 从token中获取登录用户ID
      *
      * @param tokenName   header中Token的名字 eg : Authorization、token、adminToken
-     * @param tokenIdName Token中包含的ID名字 eg : id、userId、adminId....
+     * @param tokenFieldName Token中包含的ID名字 eg : id、userId、adminId....
      * @param clazz       返回值类型
      * @param secretKey   加解密KEY
      * @return R
      */
-    default <R> R getLoginIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
-        return GXCurrentRequestContextUtils.getLoginIdFromToken(tokenName, tokenIdName, clazz, secretKey);
+    default <R> R getLoginFieldFromToken(String tokenName, String tokenFieldName, Class<R> clazz, String secretKey) {
+        return GXCurrentRequestContextUtils.getLoginFieldFromToken(tokenName, tokenFieldName, clazz, secretKey);
     }
 
     /**

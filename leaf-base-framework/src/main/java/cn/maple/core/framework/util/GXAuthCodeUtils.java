@@ -2,6 +2,7 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 
@@ -182,7 +183,7 @@ public class GXAuthCodeUtils {
      */
     private static String authCode(String source, String key, GXAuthCodeMode operation, int expiry) {
         try {
-            if (source == null || key == null) {
+            if (CharSequenceUtil.isEmpty(source) || CharSequenceUtil.isEmpty(key)) {
                 return "{}";
             }
             int cKeyLength = 4;

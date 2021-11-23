@@ -99,35 +99,40 @@ public class GXCurrentRequestContextUtils {
      * @return String
      */
     public static String getHeader(String headerName) {
-        HttpServletRequest request = getHttpServletRequest();
-        return Objects.requireNonNull(request).getHeader(headerName);
+        HttpServletRequest request = Objects.requireNonNull(getHttpServletRequest());
+        return ServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
     }
 
     /**
-     * 从token中获取登录用户ID
+     * 从token中获取登录用户的指定字段的值
+     * <p>
+     * {@code
+     * getLoginFieldFromToken("token" , "username" , String.class , "123456");
+     * getLoginFieldFromToken("token" , "userId" , Integer.class , "123456");
+     * }
      *
-     * @param tokenName   header中Token的名字 eg : Authorization、token、adminToken
-     * @param tokenIdName Token中包含的ID名字 eg : id、userId、adminId....
-     * @param clazz       返回值类型
-     * @param secretKey   加解密KEY
+     * @param tokenName      header中Token的名字 eg : Authorization、token、adminToken
+     * @param tokenFieldName Token中包含的ID名字 eg : id、userId、adminId、username、nickname....
+     * @param clazz          返回值类型
+     * @param secretKey      加解密KEY
      * @return R
      */
-    public static <R> R getLoginIdFromToken(String tokenName, String tokenIdName, Class<R> clazz, String secretKey) {
+    public static <R> R getLoginFieldFromToken(String tokenName, String tokenFieldName, Class<R> clazz, String secretKey) {
         HttpServletRequest httpServletRequest = Objects.requireNonNull(getHttpServletRequest());
-        Object attribute = httpServletRequest.getAttribute(tokenIdName);
+        Object attribute = httpServletRequest.getAttribute(tokenFieldName);
         if (Objects.nonNull(attribute)) {
             return Convert.convert(clazz, attribute);
         }
         if (Objects.isNull(secretKey)) {
             secretKey = GXTokenConstant.KEY;
         }
-        final String token = ServletUtil.getHeader(httpServletRequest, tokenName, CharsetUtil.UTF_8);
+        final String token = getHeader(tokenName);
         String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
             return null;
         }
         Dict dict = JSONUtil.toBean(s, Dict.class);
-        Object retValue = dict.getObj(tokenIdName);
+        Object retValue = dict.getObj(tokenFieldName);
         if (Objects.nonNull(retValue)) {
             return Convert.convert(clazz, retValue);
         }
@@ -154,8 +159,9 @@ public class GXCurrentRequestContextUtils {
      */
     public static String getClientIP() {
         String ip = "";
-        if (null != GXCurrentRequestContextUtils.getHttpServletRequest()) {
-            ip = ServletUtil.getClientIP(GXCurrentRequestContextUtils.getHttpServletRequest());
+        HttpServletRequest httpServletRequest = GXCurrentRequestContextUtils.getHttpServletRequest();
+        if (Objects.nonNull(httpServletRequest)) {
+            ip = getClientIP(httpServletRequest);
         }
         return ip;
     }

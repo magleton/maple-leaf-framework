@@ -1,4 +1,4 @@
-package cn.maple.core.framework.interceptor;
+package cn.maple.core.framework.web.interceptor;
 
 import cn.maple.core.framework.util.GXTraceIdContextUtils;
 import org.springframework.stereotype.Component;

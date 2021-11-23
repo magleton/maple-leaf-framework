@@ -36,7 +36,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param fieldSet         需要获取的字段
      * @return GXPagination
      */
-    public IPage<R> paginate(IPage<R> riPage, Table<String, String, Object> condition, String mapperMethodName, Set<String> fieldSet) {
+    public IPage<R> paginate(IPage<R> page, Table<String, String, Object> condition, String mapperMethodName, Set<String> fieldSet) {
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
@@ -52,9 +52,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
             }
             throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
         }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, riPage, condition, fieldSet);
-        riPage.setRecords(list);
-        return riPage;
+        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, page, condition, fieldSet);
+        page.setRecords(list);
+        return page;
     }
 
     /**

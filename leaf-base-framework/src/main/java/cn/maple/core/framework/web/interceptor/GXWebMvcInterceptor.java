@@ -25,6 +25,9 @@ public class GXWebMvcInterceptor implements WebMvcConfigurer {
     private GXWebMvcProperties webMvcConfig;
 
     @Resource
+    private GXTraceIdInterceptor traceIdInterceptor;
+
+    @Resource
     private GXRequestHandlerMethodArgumentResolver requestHandlerMethodArgumentResolver;
 
     @Override
@@ -40,6 +43,7 @@ public class GXWebMvcInterceptor implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         final List<String> list = webMvcConfig.getUrlPatterns();
+        registry.addInterceptor(traceIdInterceptor);
         if (Objects.nonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))) {
             registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))).addPathPatterns(list);
         }
