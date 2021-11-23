@@ -31,7 +31,7 @@ public class GXTokenManagerUtils {
      */
     public static String generateAdminToken(Object adminId, Dict param, String secretKey, int expires) {
         param.putIfAbsent(GXTokenConstant.ADMIN_ID, adminId);
-        param.set(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }
@@ -48,7 +48,7 @@ public class GXTokenManagerUtils {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
-                throw new GXBusinessException("非法token!!!");
+                throw new GXBusinessException("无效用户身份!!!");
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
@@ -74,7 +74,7 @@ public class GXTokenManagerUtils {
      */
     public static String generateUserToken(Object userId, Dict param, String secretKey, int expires) {
         param.putIfAbsent(GXTokenConstant.USER_ID, userId);
-        param.set(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }
@@ -91,7 +91,7 @@ public class GXTokenManagerUtils {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
-                throw new GXBusinessException("非法token!!!");
+                throw new GXBusinessException("无效用户身份!!!");
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
