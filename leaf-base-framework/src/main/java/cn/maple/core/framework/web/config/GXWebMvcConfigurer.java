@@ -1,7 +1,9 @@
-package cn.maple.core.framework.web.interceptor;
+package cn.maple.core.framework.web.config;
 
 import cn.maple.core.framework.properties.web.GXWebMvcProperties;
 import cn.maple.core.framework.util.GXSpringContextUtils;
+import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
+import cn.maple.core.framework.web.interceptor.GXTraceIdInterceptor;
 import cn.maple.core.framework.web.support.GXCustomerHandlerMethodArgumentResolver;
 import cn.maple.core.framework.web.support.GXRequestHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,9 +23,9 @@ import java.util.Objects;
  */
 @Configuration
 @Slf4j
-public class GXWebMvcInterceptor implements WebMvcConfigurer {
+public class GXWebMvcConfigurer implements WebMvcConfigurer {
     @Resource
-    private GXWebMvcProperties webMvcConfig;
+    private GXWebMvcProperties webMvcProperties;
 
     @Resource
     private GXTraceIdInterceptor traceIdInterceptor;
@@ -42,14 +45,24 @@ public class GXWebMvcInterceptor implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final List<String> list = webMvcConfig.getUrlPatterns();
+        Map<String, GXWebMvcProperties.WebMvcItemProperties> map = webMvcProperties.getPlatform();
+        map.forEach((key, value) -> {
+            String beanName = value.getBeanName();
+            List<String> urlPatterns = value.getUrlPatterns();
+            List<String> resourcePatterns = value.getResourcePatterns();
+            GXAuthorizationInterceptor authorizationInterceptor = GXSpringContextUtils.getBean(beanName, GXAuthorizationInterceptor.class);
+            if (Objects.nonNull(authorizationInterceptor)) {
+                registry.addInterceptor(authorizationInterceptor).addPathPatterns(urlPatterns);
+            }
+        });
+        /*final List<String> list = webMvcProperties.getUrlPatterns();
         registry.addInterceptor(traceIdInterceptor);
         if (Objects.nonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))) {
             registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtils.getBean(GXAuthorizationInterceptor.class))).addPathPatterns(list);
         }
         if (Objects.nonNull(GXSpringContextUtils.getBean(GXBaseSSOPermissionInterceptor.class))) {
             registry.addInterceptor(Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseSSOPermissionInterceptor.class))).addPathPatterns(list);
-        }
+        }*/
     }
 
     @Override

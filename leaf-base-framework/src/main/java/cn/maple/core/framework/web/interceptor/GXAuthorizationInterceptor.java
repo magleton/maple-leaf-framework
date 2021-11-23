@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 前端用户Token验证
+ * 登录用户验证拦截器
+ *
+ * @author britton
  */
 @Slf4j
 @SuppressWarnings("all")

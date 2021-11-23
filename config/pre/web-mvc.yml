@@ -1,6 +1,17 @@
 web-mvc:
-  urlPatterns:
-    - /**/frontend/**
-    - /**/pc/**
-  resourcePatterns:
-    - /media/path/**
+  platform:
+    admin:
+      beanName: GXMyAuthorizationInterceptor
+      urlPatterns:
+        - /**/admin/**
+      resourcePatterns:
+        - /media/path/**
+        - /
+    frontend:
+      beanName:
+      urlPatterns:
+        - /**/frontend/**
+        - /**/pc/**
+      resourcePatterns:
+        - /media/path/**
+        - /
