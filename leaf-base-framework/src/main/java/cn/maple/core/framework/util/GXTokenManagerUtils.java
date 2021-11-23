@@ -2,9 +2,11 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,6 +34,27 @@ public class GXTokenManagerUtils {
         param.set(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
+    }
+
+    /**
+     * 解码后端用户的加密TOKEN字符串
+     * 注意: 由于后端用户不需要保持长时间的登录操作, 所以在生成token时, 为token指定了过期时间
+     *
+     * @param source    加密TOKEN字符串
+     * @param secretKey 加解密KEY
+     * @return Dict
+     */
+    public static Dict decodeAdminToken(String source, String secretKey) {
+        try {
+            String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
+            if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
+                throw new GXBusinessException("非法token!!!");
+            }
+            return JSONUtil.toBean(s, Dict.class);
+        } catch (JSONException exception) {
+            log.error(exception.getMessage());
+        }
+        return Dict.create();
     }
 
     /**
@@ -67,27 +90,12 @@ public class GXTokenManagerUtils {
     public static Dict decodeUserToken(String source, String secretKey) {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
+            if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
+                throw new GXBusinessException("非法token!!!");
+            }
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
             return Dict.create();
         }
-    }
-
-    /**
-     * 解码后端用户的加密TOKEN字符串
-     * 注意: 由于后端用户不需要保持长时间的登录操作, 所以在生成token时, 为token指定了过期时间
-     *
-     * @param source    加密TOKEN字符串
-     * @param secretKey 加解密KEY
-     * @return Dict
-     */
-    public static Dict decodeAdminToken(String source, String secretKey) {
-        try {
-            String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
-            return JSONUtil.toBean(s, Dict.class);
-        } catch (JSONException exception) {
-            log.error(exception.getMessage());
-        }
-        return Dict.create();
     }
 }

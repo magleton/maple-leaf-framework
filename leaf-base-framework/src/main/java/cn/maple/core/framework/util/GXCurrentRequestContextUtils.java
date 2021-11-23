@@ -118,8 +118,7 @@ public class GXCurrentRequestContextUtils {
      * @return R
      */
     public static <R> R getLoginFieldFromToken(String tokenName, String tokenFieldName, Class<R> clazz, String secretKey) {
-        HttpServletRequest httpServletRequest = Objects.requireNonNull(getHttpServletRequest());
-        Object attribute = httpServletRequest.getAttribute(tokenFieldName);
+        Object attribute = getHttpServletRequestAttribute(tokenFieldName, clazz);
         if (Objects.nonNull(attribute)) {
             return Convert.convert(clazz, attribute);
         }
@@ -187,11 +186,10 @@ public class GXCurrentRequestContextUtils {
      * @return T
      */
     public static <T> T getHttpServletRequestAttribute(String attributeName, Class<T> clazz) {
-        final HttpServletRequest servletRequest = getHttpServletRequest();
-        assert servletRequest != null;
+        final HttpServletRequest servletRequest = Objects.requireNonNull(getHttpServletRequest());
         final Object attributeValue = servletRequest.getAttribute(attributeName);
         if (null == attributeValue) {
-            return GXCommonUtils.getClassDefaultValue(clazz);
+            return null;
         }
         return Convert.convert(clazz, attributeValue);
     }

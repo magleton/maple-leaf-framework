@@ -38,7 +38,7 @@ public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandl
         // 获取用户ID
         Object object = request.getAttribute(GXTokenConstant.USER_ID, RequestAttributes.SCOPE_REQUEST);
         if (object == null) {
-            final String header = request.getHeader(GXTokenConstant.USER_TOKEN);
+            final String header = request.getHeader(GXTokenConstant.USER_TOKEN_NAME);
             if (null == header) {
                 return null;
             }

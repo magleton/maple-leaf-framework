@@ -73,9 +73,9 @@ public class GXOAuth2Filter extends AuthenticatingFilter {
      * 获取请求的token
      */
     private String getRequestToken(HttpServletRequest httpRequest) {
-        String token = httpRequest.getHeader(GXTokenConstant.ADMIN_TOKEN);
+        String token = httpRequest.getHeader(GXTokenConstant.ADMIN_TOKEN_NAME);
         if (StrUtil.isBlank(token)) {
-            token = httpRequest.getParameter(GXTokenConstant.ADMIN_TOKEN);
+            token = httpRequest.getParameter(GXTokenConstant.ADMIN_TOKEN_NAME);
         }
         return token;
     }
