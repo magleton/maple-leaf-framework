@@ -34,12 +34,13 @@ public class GXDBQueryParamInnerDto extends GXBaseDto {
     private transient Table<String, String, Object> condition;
 
     /**
-     * 需要返回的数据列
+     * 需要查询的数据列
      */
     private Set<String> columns;
 
     /**
      * 排序字段
+     * eg:
      * Dict.create().set("created_at" , "desc").set("username" , "asc);
      */
     private Dict orderByField;
