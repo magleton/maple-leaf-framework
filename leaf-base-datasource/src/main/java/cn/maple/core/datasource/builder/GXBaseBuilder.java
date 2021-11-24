@@ -112,8 +112,13 @@ public interface GXBaseBuilder {
         if (dataList.isEmpty()) {
             throw new GXBusinessException("批量插入数据为空");
         }
+        dataList.forEach(dict -> {
+            dict.set("created_at", DateUtil.currentSeconds());
+            if (Objects.isNull(dict.getObj("ext"))) {
+                dict.set("ext", "{}");
+            }
+        });
         final Set<String> fieldSet = new HashSet<>(dataList.get(0).keySet());
-        fieldSet.add("created_at");
         String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
         StringBuilder values = new StringBuilder();
         for (Dict dict : dataList) {
@@ -121,13 +126,16 @@ public interface GXBaseBuilder {
             int key = 0;
             values.append("('");
             for (String field : fieldSet) {
+                Object value = dict.getObj(field);
+                if (!ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
+                    value = GXSQLFilter.sqlInject(value.toString());
+                }
                 if (++key == len) {
-                    values.append(GXSQLFilter.sqlInject(dict.getStr(field))).append("'");
+                    values.append(value).append("'");
                 } else {
-                    values.append(GXSQLFilter.sqlInject(dict.getStr(field))).append("','");
+                    values.append(value).append("','");
                 }
             }
-            values.append(DateUtil.currentSeconds()).append(",");
             values.append("),");
         }
         return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
