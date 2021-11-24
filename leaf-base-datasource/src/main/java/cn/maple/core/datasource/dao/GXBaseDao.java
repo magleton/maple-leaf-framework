@@ -89,14 +89,14 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     }
 
     /**
-     * 更新JSON字段中的某多个值
+     * 通过SQL更新表中的数据
      *
      * @param tableName 表名字
      * @param data      需要更新的数据
      * @param condition 更新条件
      * @return boolean
      */
-    public boolean updateMultiFields(String tableName, Dict data, Table<String, String, Object> condition) {
+    public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         return baseMapper.updateFieldByCondition(tableName, data, condition);
     }
 
@@ -142,18 +142,6 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      */
     public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
         return baseMapper.checkRecordIsUnique(tableName, condition) > 1;
-    }
-
-    /**
-     * 通过SQL更新表中的数据
-     *
-     * @param clazz     Class 对象
-     * @param data      需要更新的数据
-     * @param condition 更新条件
-     * @return boolean
-     */
-    public boolean updateFieldByCondition(Class<T> clazz, Dict data, Table<String, String, Object> condition) {
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
     }
 
     /**
