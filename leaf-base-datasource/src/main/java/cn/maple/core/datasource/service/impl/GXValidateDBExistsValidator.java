@@ -2,10 +2,10 @@ package cn.maple.core.datasource.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
@@ -51,9 +51,8 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
             throw new GXBusinessException(CharSequenceUtil.format("字段<{}>的值<{}>需要指定相应的Service进行验证...", fieldName, o));
         }
         Dict param = Dict.create()
-                .set("tableName", tableName)
                 .set("condition", condition)
                 .set("spEL", spEL);
-        return service.validateExists(o, fieldName, constraintValidatorContext, param);
+        return service.validateExists(o, tableName, fieldName, constraintValidatorContext, param);
     }
 }

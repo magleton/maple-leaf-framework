@@ -5,11 +5,14 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -181,36 +184,85 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
      *
-     * @param mapperMethodName mapper中的方法名字
-     * @param dbQueryInnerDto  查询信息
+     * @param mapperMethodName     mapper中的方法名字
+     * @param dbQueryParamInnerDto 查询信息
      * @return
      */
-    public GXPaginationResDto<R> paginate(String mapperMethodName, GXDBQueryParamInnerDto dbQueryInnerDto) {
+    public GXPaginationResDto<R> paginate(String mapperMethodName, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
-        if (Objects.isNull(dbQueryInnerDto.getColumns())) {
-            dbQueryInnerDto.setColumns(CollUtil.newHashSet("*"));
+        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
+            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Table<String, String, Object> condition = dbQueryInnerDto.getCondition();
-        IPage<R> iPage = constructPageObject(dbQueryInnerDto.getPage(), dbQueryInnerDto.getPageSize());
-        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, dbQueryInnerDto.getColumns());
+        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
+        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, dbQueryParamInnerDto.getColumns());
         return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
     /**
      * 根据条件获取分页数据
      *
-     * @param dbQueryInnerDto 条件查询
+     * @param page      当前页
+     * @param pageSize  每页大小
+     * @param condition 查询条件
+     * @param columns   需要的数据列
+     * @return 分页对象
+     */
+    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, String mapperMethodName, Set<String> columns) {
+        if (Objects.isNull(mapperMethodName)) {
+            mapperMethodName = "paginate";
+        }
+        if (Objects.isNull(columns)) {
+            columns = CollUtil.newHashSet("*");
+        }
+        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .columns(columns)
+                .condition(condition)
+                .build();
+        return paginate(mapperMethodName, queryParamInnerDto);
+    }
+
+    /**
+     * 根据条件获取分页数据
+     *
+     * @param dbQueryParamInnerDto 条件查询
      * @return 分页数据
      */
-    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto dbQueryInnerDto) {
-        if (Objects.isNull(dbQueryInnerDto.getColumns())) {
-            dbQueryInnerDto.setColumns(CollUtil.newHashSet("*"));
+    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
+            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        IPage<R> iPage = constructPageObject(dbQueryInnerDto.getPage(), dbQueryInnerDto.getPageSize());
-        List<R> paginate = baseDao.paginate(iPage, dbQueryInnerDto);
+        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
+        List<R> paginate = baseDao.paginate(iPage, dbQueryParamInnerDto);
         return GXDBCommonUtils.convertPageToPaginationResDto(iPage, paginate);
+    }
+
+    /**
+     * 根据条件获取分页数据
+     *
+     * @param page      当前页
+     * @param pageSize  每页大小
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param columns   需要的数据列
+     * @return 分页对象
+     */
+    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        if (Objects.isNull(columns)) {
+            columns = CollUtil.newHashSet("*");
+        }
+        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .tableName(tableName)
+                .condition(condition)
+                .columns(columns)
+                .build();
+        return paginate(queryParamInnerDto);
     }
 
     /**
@@ -261,18 +313,22 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
+     * @param tableName                  database table name
      * @param fieldName                  The name of the field for which to check if the value exists
      * @param constraintValidatorContext The ValidatorContext
      * @param param                      param
      * @return boolean
      */
-    public boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
-        String tableName = GXCommonUtils.getValueFromDict(param, "tableName", String.class);
+    public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         Table<String, String, Object> condition = HashBasedTable.create();
-        condition.put(fieldName, "=", value);
+        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
+            condition.put(fieldName, GXBaseBuilderConstant.NUMBER_EQ, value);
+        } else {
+            condition.put(fieldName, GXBaseBuilderConstant.STR_EQ, value);
+        }
         return checkRecordIsExists(tableName, condition);
     }
 
@@ -280,18 +336,22 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * 验证数据的唯一性 (返回true表示数据已经存在)
      *
      * @param value                      值
+     * @param tableName                  database table name
      * @param fieldName                  字段名字
      * @param constraintValidatorContext 验证上下文对象
      * @param param                      参数
      * @return boolean
      */
-    public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        String tableName = GXCommonUtils.getValueFromDict(param, "tableName", String.class);
+    public boolean validateUnique(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         Table<String, String, Object> condition = HashBasedTable.create();
-        condition.put(fieldName, "=", value);
+        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
+            condition.put(fieldName, GXBaseBuilderConstant.NUMBER_EQ, value);
+        } else {
+            condition.put(fieldName, GXBaseBuilderConstant.STR_EQ, value);
+        }
         return checkRecordIsUnique(tableName, condition);
     }
 

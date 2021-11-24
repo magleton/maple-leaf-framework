@@ -123,28 +123,30 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
+     * @param tableName                  database table name
      * @param fieldName                  The name of the field for which to check if the value exists
      * @param constraintValidatorContext The ValidatorContext
      * @param param                      param
      * @return boolean
      */
     @Override
-    public boolean validateExists(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
-        return repository.validateExists(value, fieldName, constraintValidatorContext, param);
+    public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
+        return repository.validateExists(value, tableName, fieldName, constraintValidatorContext, param);
     }
 
     /**
      * 验证数据的唯一性 (返回true表示数据已经存在)
      *
      * @param value                      值
+     * @param tableName                  database table name
      * @param fieldName                  字段名字
      * @param constraintValidatorContext 验证上下文对象
      * @param param                      参数
      * @return boolean
      */
     @Override
-    public boolean validateUnique(Object value, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        return repository.validateUnique(value, fieldName, constraintValidatorContext, param);
+    public boolean validateUnique(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
+        return repository.validateUnique(value, tableName, fieldName, constraintValidatorContext, param);
     }
 
     /**
