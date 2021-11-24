@@ -193,9 +193,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
-        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, dbQueryParamInnerDto.getColumns());
+        IPage<R> paginate = baseDao.paginate(dbQueryParamInnerDto, mapperMethodName);
         return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
@@ -234,9 +232,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        List<R> paginate = baseDao.paginate(iPage, dbQueryParamInnerDto);
-        return GXDBCommonUtils.convertPageToPaginationResDto(iPage, paginate);
+        IPage<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
+        return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
     /**

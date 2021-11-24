@@ -33,19 +33,20 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 分页  返回实体对象
      *
-     * @param condition        条件
-     * @param mapperMethodName Mapper方法
-     * @param fieldSet         需要获取的字段
+     * @param dbQueryParamInnerDto 查询条件
+     * @param mapperMethodName     Mapper方法
      * @return GXPagination
      */
-    public IPage<R> paginate(IPage<R> page, Table<String, String, Object> condition, String mapperMethodName, Set<String> fieldSet) {
+    public IPage<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
+        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
+        Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
         if (Objects.isNull(fieldSet)) {
-            fieldSet = CollUtil.newHashSet("*");
+            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Method mapperMethod = ReflectUtil.getMethodByName(baseMapper.getClass(), mapperMethodName);
+        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.isNull(mapperMethod)) {
             Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
             if (interfaces.length > 0) {
@@ -54,9 +55,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
             }
             throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
         }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, page, condition, fieldSet);
-        page.setRecords(list);
-        return page;
+        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+        iPage.setRecords(list);
+        return iPage;
     }
 
     /**
@@ -65,11 +66,14 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public List<R> paginate(IPage<R> iPage, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    public IPage<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return baseMapper.paginate(iPage, dbQueryParamInnerDto);
+        List<R> paginate = baseMapper.paginate(iPage, dbQueryParamInnerDto);
+        iPage.setRecords(paginate);
+        return iPage;
     }
 
     /**
