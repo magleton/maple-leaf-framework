@@ -14,6 +14,8 @@ import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
@@ -103,18 +105,14 @@ public interface GXBaseBuilder {
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名
-     * @param fieldSet  字段集合
      * @param dataList  需要插入的数据列表
      * @return String
      */
-    static String batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
+    static String batchInsert(String tableName, List<Dict> dataList) {
         if (dataList.isEmpty()) {
-            return "";
+            throw new GXBusinessException("批量插入数据为空");
         }
-        final Set<String> newFieldSet = new HashSet<>(dataList.get(0).keySet());
-        if (!fieldSet.retainAll(newFieldSet)) {
-            fieldSet = newFieldSet;
-        }
+        final Set<String> fieldSet = new HashSet<>(dataList.get(0).keySet());
         String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
         StringBuilder values = new StringBuilder();
         for (Dict dict : dataList) {
@@ -123,9 +121,9 @@ public interface GXBaseBuilder {
             values.append("('");
             for (String field : fieldSet) {
                 if (++key == len) {
-                    values.append(dict.getObj(field)).append("'");
+                    values.append(GXSQLFilter.sqlInject(dict.getStr(field))).append("'");
                 } else {
-                    values.append(dict.getObj(field)).append("','");
+                    values.append(GXSQLFilter.sqlInject(dict.getStr(field))).append("','");
                 }
             }
             values.append("),");

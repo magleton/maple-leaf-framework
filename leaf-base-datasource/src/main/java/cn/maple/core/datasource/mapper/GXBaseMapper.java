@@ -12,7 +12,6 @@ import com.google.common.collect.Table;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper
 public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> extends BaseMapper<T> {
@@ -21,9 +20,9 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(GXDBQueryParamInnerDto queryParamInnerDto);
-    
+
     @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
-    Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList);
+    Integer batchInsert(String tableName, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     @Results(value = {

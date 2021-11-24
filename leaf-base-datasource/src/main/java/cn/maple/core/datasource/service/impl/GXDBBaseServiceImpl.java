@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 业务基础Service
@@ -77,14 +76,13 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名
-     * @param fieldSet  字段集合
      * @param dataList  数据集合
      * @return int
      */
     @SuppressWarnings("all")
     @Override
-    public Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
-        return repository.batchInsert(tableName, fieldSet, dataList);
+    public Integer batchInsert(String tableName, List<Dict> dataList) {
+        return repository.batchInsert(tableName, dataList);
     }
 
     /**

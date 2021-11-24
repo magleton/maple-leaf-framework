@@ -12,7 +12,6 @@ import cn.maple.core.framework.service.GXBusinessService;
 import com.google.common.collect.Table;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 业务DB基础Service
@@ -39,7 +38,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return int
      */
     boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
-    
+
     /**
      * 通过SQL更新表中的数据
      *
@@ -54,11 +53,10 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名
-     * @param fieldSet  字段集合
      * @param dataList  数据集合
      * @return int
      */
-    Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList);
+    Integer batchInsert(String tableName, List<Dict> dataList);
 
     /**
      * 列表或者搜索(分页)

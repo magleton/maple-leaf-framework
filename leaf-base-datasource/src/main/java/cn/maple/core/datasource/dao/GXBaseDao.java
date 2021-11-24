@@ -106,15 +106,14 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 通过SQL语句批量插入数据
      *
-     * @param clazz    实体的Class
-     * @param fieldSet 字段集合
-     * @param dataList 数据集合
+     * @param tableName 表名字
+     * @param dataList  数据集合
      * @return int
      */
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchInsert(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
-        return baseMapper.batchInsert(getTableName(clazz), fieldSet, dataList);
+    public Integer batchInsert(String tableName, List<Dict> dataList) {
+        return baseMapper.batchInsert(tableName, dataList);
     }
 
     /**

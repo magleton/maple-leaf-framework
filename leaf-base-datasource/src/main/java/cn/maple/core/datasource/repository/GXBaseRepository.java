@@ -323,12 +323,11 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * 批量插入数据
      *
      * @param tableName 表名
-     * @param fieldSet  需要插入的字段集合
      * @param dataList  数据集合
      * @return 影响行数
      */
-    public Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList) {
-        throw new GXBusinessException("自定义实现");
+    public Integer batchInsert(String tableName, List<Dict> dataList) {
+        return baseDao.batchInsert(tableName, dataList);
     }
 
     /**
