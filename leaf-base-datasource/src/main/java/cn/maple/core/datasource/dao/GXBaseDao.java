@@ -74,30 +74,30 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 更新JSON字段中的某一个值
      *
-     * @param clazz     Class对象
+     * @param tableName 表名字
      * @param path      路径
      * @param value     值
      * @param condition 条件
      * @return boolean
      */
-    public boolean updateSingleField(Class<T> clazz, String path, Object value, Table<String, String, Object> condition) {
+    public boolean updateSingleField(String tableName, String path, Object value, Table<String, String, Object> condition) {
         int index = CharSequenceUtil.indexOfIgnoreCase(path, "::");
         String mainPath = CharSequenceUtil.sub(path, 0, index);
         String subPath = CharSequenceUtil.sub(path, index + 1, path.length());
         final Dict data = Dict.create().set(mainPath, Dict.create().set(subPath, value));
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
+        return baseMapper.updateFieldByCondition(tableName, data, condition);
     }
 
     /**
      * 更新JSON字段中的某多个值
      *
-     * @param clazz     Class对象
+     * @param tableName 表名字
      * @param data      需要更新的数据
      * @param condition 更新条件
      * @return boolean
      */
-    public boolean updateMultiFields(Class<T> clazz, Dict data, Table<String, String, Object> condition) {
-        return baseMapper.updateFieldByCondition(getTableName(clazz), data, condition);
+    public boolean updateMultiFields(String tableName, Dict data, Table<String, String, Object> condition) {
+        return baseMapper.updateFieldByCondition(tableName, data, condition);
     }
 
     /**
