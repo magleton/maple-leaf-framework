@@ -3,6 +3,7 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXBaseDao;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
@@ -109,7 +110,13 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
         Integer page = queryParamReqDto.getPage();
         Integer pageSize = queryParamReqDto.getPageSize();
         Table<String, String, Object> queryCondition = HashBasedTable.create();
-        return repository.paginate(page, pageSize, queryCondition, "paginate", CollUtil.newHashSet("*"));
+        GXDBQueryParamInnerDto queryInnerDto = GXDBQueryParamInnerDto.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .columns(CollUtil.newHashSet("*"))
+                .condition(queryCondition)
+                .build();
+        return repository.paginate("paginate", queryInnerDto);
     }
 
     /**

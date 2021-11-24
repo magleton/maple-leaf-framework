@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
@@ -26,7 +27,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 日志对象
      */
-    private static final Logger logger = LoggerFactory.getLogger(GXBaseDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GXBaseDao.class);
 
     /**
      * 分页  返回实体对象
@@ -60,16 +61,14 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 通过条件获取分页数据列表
      *
-     * @param tableName 表名
-     * @param condition 查询条件
-     * @param fieldSet  需要获取的字段
+     * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        if (Objects.isNull(fieldSet)) {
-            fieldSet = CollUtil.newHashSet("*");
+    public List<R> paginate(IPage<R> iPage, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
+            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return baseMapper.paginate(page, tableName, condition, fieldSet);
+        return baseMapper.paginate(iPage, dbQueryParamInnerDto);
     }
 
     /**
@@ -173,37 +172,21 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 通过条件获取数据
      *
-     * @param tableName 表名
-     * @param condition 查询条件
-     * @param fieldSet  需要获取的字段
+     * @param dbQueryParamInnerDto 查询参数
      * @return 列表
      */
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.findOneByCondition(tableName, condition, fieldSet);
+    public R findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        return baseMapper.findOneByCondition(dbQueryParamInnerDto);
     }
 
     /**
      * 通过条件获取数据列表
      *
-     * @param tableName 表名
-     * @param condition 查询条件
-     * @param fieldSet  需要获取的字段
+     * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return baseMapper.findByCondition(tableName, condition, fieldSet);
-    }
-
-    /**
-     * 通过条件获取数据列表
-     *
-     * @param tableName 表名字
-     * @param condition 查询条件
-     * @param fieldName 需要查询的字段
-     * @return SQL语句
-     */
-    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, String fieldName) {
-        return baseMapper.findSingleFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName));
+    public List<R> findByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        return baseMapper.findByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -217,10 +200,10 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
         int defaultCurrentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
         int defaultPageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
         int defaultMaxPageSize = GXCommonConstant.DEFAULT_MAX_PAGE_SIZE;
-        if (page < 0) {
+        if (Objects.isNull(page) || page < 0) {
             page = defaultCurrentPage;
         }
-        if (pageSize > defaultMaxPageSize || pageSize <= 0) {
+        if (Objects.isNull(pageSize) || pageSize > defaultMaxPageSize || pageSize <= 0) {
             pageSize = defaultPageSize;
         }
         return new Page<>(page, pageSize);

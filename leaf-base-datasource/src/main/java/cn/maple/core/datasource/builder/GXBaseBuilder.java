@@ -10,6 +10,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -86,11 +87,12 @@ public interface GXBaseBuilder {
     /**
      * 判断给定条件的值是否存在
      *
-     * @param tableName 表名
-     * @param condition 条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return String
      */
-    static String checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    static String checkRecordIsExists(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        String tableName = dbQueryParamInnerDto.getTableName();
+        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         dealSQLWhereCondition(sql, condition);
         sql.LIMIT(1);
@@ -100,12 +102,11 @@ public interface GXBaseBuilder {
     /**
      * 判断给定条件的值是否存在
      *
-     * @param tableName 表名
-     * @param condition 条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return String
      */
-    static String checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        return checkRecordIsExists(tableName, condition);
+    static String checkRecordIsUnique(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        return checkRecordIsExists(dbQueryParamInnerDto);
     }
 
     /**
@@ -145,75 +146,118 @@ public interface GXBaseBuilder {
     /**
      * 通过条件获取数据列表
      *
-     * @param tableName 表名字
-     * @param fieldSet  需要查询的字段
-     * @param condition 条件
-     *                  {@code
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("path" , "like" , "aaa%");
-     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     *                  condition.put("level" , "=" , "1111");
-     *                  findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     *                  findByCondition("test", condition , CollUtil.newHashSet("id" , "username"));
-     *                  }
+     * @param dbQueryParamInnerDto 查询条件
+     *                             {@code
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("path" , "like" , "aaa%");
+     *                             condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                             condition.put("level" , "=" , "1111");
+     *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
+     *                             .columns(CollUtil.newHashSet("*"))
+     *                             .tableName("s_admin")
+     *                             .condition(condition)
+     *                             .groupByField(CollUtil.newHashSet("created_at", "nickname"))
+     *                             .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
+     *                             findByCondition(queryInnerDto);
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
+     *                             .columns(CollUtil.newHashSet("id" , "username"))
+     *                             .tableName("s_admin")
+     *                             .condition(condition)
+     *                             .groupByField(CollUtil.newHashSet("created_at", "nickname"))
+     *                             .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
+     *                             findByCondition(queryInnerDto);
+     *                             }
      * @return SQL语句
      */
-    static String findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    static String findByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        Set<String> columns = dbQueryParamInnerDto.getColumns();
+        String tableName = dbQueryParamInnerDto.getTableName();
+        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        Set<String> groupByField = dbQueryParamInnerDto.getGroupByField();
+        Dict orderByField = dbQueryParamInnerDto.getOrderByField();
         String selectStr = "*";
-        if (CollUtil.isNotEmpty(fieldSet)) {
-            selectStr = String.join(",", fieldSet);
+        if (CollUtil.isNotEmpty(columns)) {
+            selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
         dealSQLWhereCondition(sql, condition);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        // 处理分组
+        if (CollUtil.isNotEmpty(groupByField)) {
+            sql.GROUP_BY(groupByField.toArray(new String[0]));
+        }
+        // 处理排序
+        if (Objects.nonNull(orderByField) && !orderByField.isEmpty()) {
+            String[] orderColumns = new String[orderByField.size()];
+            Integer[] idx = new Integer[]{0};
+            orderByField.forEach((k, v) -> orderColumns[idx[0]++] = CharSequenceUtil.format("{} {}", k, v));
+            sql.ORDER_BY(orderColumns);
+        }
         return sql.toString();
     }
 
     /**
      * 通过条件获取分类数据
      *
-     * @param tableName 表名字
-     * @param fieldSet  需要查询的字段
-     * @param condition 条件
-     *                  <code>
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("path" , "like" , "aaa%");
-     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     *                  condition.put("level" , "=" , "1111");
-     *                  findByCondition(Page , "test" , condition, CollUtil.newHashSet("id" , "username"));
-     *                  condition1.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     *                  findByCondition("test" , condition1, CollUtil.newHashSet("id" , "username"));
-     *                  </code>
+     * @param page                 分页对象
+     * @param dbQueryParamInnerDto 查询对象
+     *                             {@code
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("path" , "like" , "aaa%");
+     *                             condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                             condition.put("level" , "=" , "1111");
+     *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
+     *                             .columns(CollUtil.newHashSet("*"))
+     *                             .tableName("s_admin")
+     *                             .condition(condition)
+     *                             .groupByField(CollUtil.newHashSet("created_at", "nickname"))
+     *                             .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
+     *                             paginate(page , queryInnerDto);
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
+     *                             .columns(CollUtil.newHashSet("id" , "username"))
+     *                             .tableName("s_admin")
+     *                             .condition(condition)
+     *                             .groupByField(CollUtil.newHashSet("created_at", "nickname"))
+     *                             .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
+     *                             paginate(page , queryInnerDto);
+     *                             }
      * @return SQL语句
      */
-    static <R> String paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
-        return findByCondition(tableName, condition, fieldSet);
+    static <R> String paginate(IPage<R> page, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        return findByCondition(dbQueryParamInnerDto);
     }
 
     /**
      * 通过条件获取数据列表
      *
-     * @param tableName 表名字
-     * @param fieldSet  需要查询的字段
-     * @param condition 条件
-     *                  <code>
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("path" , "like" , "aaa%");
-     *                  condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     *                  condition.put("level" , "=" , "1111");
-     *                  findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
-     *                  Table<String, String, Object> condition = HashBasedTable.create();
-     *                  condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     *                  findByCondition("test", condition , CollUtil.newHashSet("id" , "username"));
-     *                  </code>
+     * @param dbQueryParamInnerDto 查询条件
+     *                             <code>
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("path" , "like" , "aaa%");
+     *                             condition.put("path" , "in" , "(1,2,3,4,5,6)");
+     *                             condition.put("level" , "=" , "1111");
+     *                             findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
+     *                             Table<String, String, Object> condition = HashBasedTable.create();
+     *                             condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
+     *                             .tableName("test")
+     *                             .condition(condition)
+     *                             .columns( CollUtil.newHashSet("id" , "username")).build();
+     *                             findByCondition(queryInnerDto);
+     *                             </code>
      * @return SQL语句
      */
-    static String findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet) {
+    static String findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        Set<String> columns = dbQueryParamInnerDto.getColumns();
+        String tableName = dbQueryParamInnerDto.getTableName();
         String selectStr = "*";
-        if (CollUtil.isNotEmpty(fieldSet)) {
-            selectStr = String.join(",", fieldSet);
+        if (CollUtil.isNotEmpty(columns)) {
+            selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
         dealSQLWhereCondition(sql, condition);

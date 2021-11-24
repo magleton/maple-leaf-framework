@@ -1,9 +1,12 @@
 package cn.maple.core.datasource.repository;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.maple.core.datasource.dao.GXBaseDao;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
@@ -12,12 +15,12 @@ import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -66,24 +69,47 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 根据条件获取所有数据
      *
-     * @param tableName 表名字
-     * @param condition 条件
+     * @param dbQueryInnerDto 查询对象
      * @return 列表
      */
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
-        return baseDao.findByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    public <E> List<E> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+        Set<String> columns = dbQueryInnerDto.getColumns();
+        if (columns.size() > 1 && ClassUtil.isSimpleTypeOrArray(targetClazz)) {
+            throw new GXBusinessException("接收的数据类型不正确");
+        }
+        List<R> rList = baseDao.findByCondition(dbQueryInnerDto);
+        if (columns.size() == 1 && ClassUtil.isSimpleTypeOrArray(targetClazz)) {
+            ArrayList<E> list = new ArrayList<>();
+            rList.forEach(data -> {
+                Dict dict = GXCommonUtils.convertSourceToDict(data);
+                E value = null;
+                for (String key : columns) {
+                    value = Convert.convert(targetClazz, dict.getObj(key));
+                }
+                list.add(value);
+            });
+            return list;
+        }
+        ArrayList<Dict> dictList = new ArrayList<>();
+        rList.forEach(data -> {
+            Dict dict = GXCommonUtils.convertSourceToDict(data);
+            Dict tmpDict = Dict.create();
+            for (String key : columns) {
+                tmpDict.set(key, dict.getObj(key));
+            }
+            dictList.add(tmpDict);
+        });
+        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, null, null);
     }
 
     /**
      * 根据条件获取所有数据
      *
-     * @param tableName 表名字
-     * @param condition 条件
-     * @param fieldName 需要查询的字段
+     * @param dbQueryInnerDto 查询条件
      * @return 列表
      */
-    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, String fieldName) {
-        return baseDao.findByCondition(tableName, condition, fieldName);
+    public List<R> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto) {
+        return baseDao.findByCondition(dbQueryInnerDto);
     }
 
     /**
@@ -95,7 +121,33 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return 列表
      */
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        return baseDao.findByCondition(tableName, condition, columns);
+        GXDBQueryParamInnerDto paramInnerDto = GXDBQueryParamInnerDto.builder()
+                .tableName(tableName)
+                .condition(condition)
+                .columns(columns)
+                .build();
+        return findByCondition(paramInnerDto);
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @return 列表
+     */
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        return findByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param dbQueryParamInnerDto 查询参数
+     * @return R 返回数据
+     */
+    public R findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        return baseDao.findOneByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -106,7 +158,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return R 返回数据
      */
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
-        return baseDao.findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
+        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -118,46 +170,46 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return R 返回数据
      */
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        return baseDao.findOneByCondition(tableName, condition, columns);
+        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+                .tableName(tableName)
+                .condition(condition)
+                .columns(columns)
+                .build();
+        return findOneByCondition(queryParamInnerDto);
     }
 
     /**
-     * 根据条件获取分页数据
+     * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
      *
-     * @param page      当前页
-     * @param pageSize  每页大小
-     * @param condition 查询条件
-     * @param columns   需要的数据列
-     * @return 分页对象
+     * @param mapperMethodName mapper中的方法名字
+     * @param dbQueryInnerDto  查询信息
+     * @return
      */
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, String mapperMethodName, Set<String> columns) {
+    public GXPaginationResDto<R> paginate(String mapperMethodName, GXDBQueryParamInnerDto dbQueryInnerDto) {
         if (Objects.isNull(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
-        if (Objects.isNull(columns)) {
-            columns = CollUtil.newHashSet("*");
+        if (Objects.isNull(dbQueryInnerDto.getColumns())) {
+            dbQueryInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Page<R> iPage = new Page<>(page, pageSize);
-        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, columns);
+        Table<String, String, Object> condition = dbQueryInnerDto.getCondition();
+        IPage<R> iPage = constructPageObject(dbQueryInnerDto.getPage(), dbQueryInnerDto.getPageSize());
+        IPage<R> paginate = baseDao.paginate(iPage, condition, mapperMethodName, dbQueryInnerDto.getColumns());
         return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
     }
 
     /**
      * 根据条件获取分页数据
      *
-     * @param page      当前页
-     * @param pageSize  每页大小
-     * @param tableName 表名字
-     * @param condition 查询条件
-     * @param columns   需要的数据列
-     * @return 分页对象
+     * @param dbQueryInnerDto 条件查询
+     * @return 分页数据
      */
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        if (Objects.isNull(columns)) {
-            columns = CollUtil.newHashSet("*");
+    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto dbQueryInnerDto) {
+        if (Objects.isNull(dbQueryInnerDto.getColumns())) {
+            dbQueryInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Page<R> iPage = new Page<>(page, pageSize);
-        List<R> paginate = baseDao.paginate(iPage, tableName, condition, columns);
+        IPage<R> iPage = constructPageObject(dbQueryInnerDto.getPage(), dbQueryInnerDto.getPageSize());
+        List<R> paginate = baseDao.paginate(iPage, dbQueryInnerDto);
         return GXDBCommonUtils.convertPageToPaginationResDto(iPage, paginate);
     }
 

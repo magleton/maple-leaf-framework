@@ -2,6 +2,7 @@ package cn.maple.core.datasource.mapper;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -31,22 +32,19 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    R findOneByCondition(GXDBQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
-
-    @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
-    <E> List<E> findSingleFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
-
+    List<R> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto);
+    
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> paginate(IPage<R> page, String tableName, Table<String, String, Object> condition, Set<String> fieldSet);
+    List<R> paginate(IPage<R> page, GXDBQueryParamInnerDto dbQueryInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftWhere")
     Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition);

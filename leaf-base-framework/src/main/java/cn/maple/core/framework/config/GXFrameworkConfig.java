@@ -1,6 +1,7 @@
 package cn.maple.core.framework.config;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,31 +49,33 @@ public class GXFrameworkConfig {
             @Override
             public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
                 String fieldName = jsonGenerator.getOutputContext().getCurrentName();
-                try {
-                    // 反射获取字段类型
-                    Field field = jsonGenerator.getCurrentValue().getClass().getDeclaredField(fieldName);
-                    if (CharSequence.class.isAssignableFrom(field.getType())) {
-                        // 字符串型空值""
-                        jsonGenerator.writeString("");
-                        return;
-                    } else if (Collection.class.isAssignableFrom(field.getType())) {
-                        // 列表型空值返回[]
-                        // jsonGenerator.writeStartArray();
-                        // jsonGenerator.writeEndArray();
-                        // 返回一个null值
-                        jsonGenerator.writeNull();
-                        return;
-                    } else if (Map.class.isAssignableFrom(field.getType())) {
-                        // map型空值或者bean对象返回"{}"
-                        jsonGenerator.writeStartObject();
-                        jsonGenerator.writeEndObject();
-                        return;
+                if (CharSequenceUtil.isNotEmpty(fieldName)) {
+                    try {
+                        // 反射获取字段类型
+                        Field field = jsonGenerator.getCurrentValue().getClass().getDeclaredField(fieldName);
+                        if (CharSequence.class.isAssignableFrom(field.getType())) {
+                            // 字符串型空值""
+                            jsonGenerator.writeString("");
+                            return;
+                        } else if (Collection.class.isAssignableFrom(field.getType())) {
+                            // 列表型空值返回[]
+                            // jsonGenerator.writeStartArray();
+                            // jsonGenerator.writeEndArray();
+                            // 返回一个null值
+                            jsonGenerator.writeNull();
+                            return;
+                        } else if (Map.class.isAssignableFrom(field.getType())) {
+                            // map型空值或者bean对象返回"{}"
+                            jsonGenerator.writeStartObject();
+                            jsonGenerator.writeEndObject();
+                            return;
+                        }
+                    } catch (NoSuchFieldException noSuchFieldException) {
+                        //LOG.info(noSuchFieldException.getMessage());
                     }
-                } catch (NoSuchFieldException noSuchFieldException) {
-                    //LOG.info(noSuchFieldException.getMessage());
+                    //jsonGenerator.writeString("");
+                    jsonGenerator.writeNull();
                 }
-                //jsonGenerator.writeString("");
-                jsonGenerator.writeNull();
             }
         });
         return objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
