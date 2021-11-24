@@ -113,6 +113,7 @@ public interface GXBaseBuilder {
             throw new GXBusinessException("批量插入数据为空");
         }
         final Set<String> fieldSet = new HashSet<>(dataList.get(0).keySet());
+        fieldSet.add("created_at");
         String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
         StringBuilder values = new StringBuilder();
         for (Dict dict : dataList) {
@@ -126,6 +127,7 @@ public interface GXBaseBuilder {
                     values.append(GXSQLFilter.sqlInject(dict.getStr(field))).append("','");
                 }
             }
+            values.append(DateUtil.currentSeconds()).append(",");
             values.append("),");
         }
         return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
