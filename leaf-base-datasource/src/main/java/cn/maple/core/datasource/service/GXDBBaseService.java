@@ -30,7 +30,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
         D extends GXBaseDao<M, T, R>,
         R extends GXBaseResDto,
         ID>
-        extends GXBusinessService, GXValidateDBExistsService, GXValidateDBUniqueService {
+        extends GXBusinessService, GXValidateDBExistsService {
     /**
      * 检测给定条件的记录是否存在
      *
@@ -39,16 +39,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return int
      */
     boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
-
-    /**
-     * 检测给定条件的记录是否唯一
-     *
-     * @param tableName 数据库表名字
-     * @param condition 条件
-     * @return int
-     */
-    boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition);
-
+    
     /**
      * 通过SQL更新表中的数据
      *

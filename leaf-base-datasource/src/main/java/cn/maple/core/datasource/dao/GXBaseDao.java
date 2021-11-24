@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -79,7 +80,11 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 更新条件
      * @return boolean
      */
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            throw new GXBusinessException("更新数据需要指定条件");
+        }
         return baseMapper.updateFieldByCondition(tableName, data, condition);
     }
 
@@ -91,18 +96,11 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return int
      */
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        return baseMapper.checkRecordIsExists(tableName, condition) == 1;
-    }
-
-    /**
-     * 检测给定条件的记录是否唯一
-     *
-     * @param tableName 数据库表名字
-     * @param condition 条件
-     * @return int
-     */
-    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        return baseMapper.checkRecordIsUnique(tableName, condition) > 1;
+        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+                .tableName(tableName)
+                .condition(condition)
+                .build();
+        return baseMapper.checkRecordIsExists(queryParamInnerDto) == 1;
     }
 
     /**
@@ -114,6 +112,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return int
      */
     @SuppressWarnings("all")
+    @Transactional(rollbackFor = Exception.class)
     public Integer batchInsert(Class<T> clazz, Set<String> fieldSet, List<Dict> dataList) {
         return baseMapper.batchInsert(getTableName(clazz), fieldSet, dataList);
     }

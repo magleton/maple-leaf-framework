@@ -20,11 +20,8 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
-    Integer checkRecordIsExists(String tableName, Table<String, String, Object> condition);
-
-    @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsUnique")
-    Integer checkRecordIsUnique(String tableName, Table<String, String, Object> condition);
-
+    Integer checkRecordIsExists(GXDBQueryParamInnerDto queryParamInnerDto);
+    
     @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
     Integer batchInsert(String tableName, Set<String> fieldSet, List<Dict> dataList);
 

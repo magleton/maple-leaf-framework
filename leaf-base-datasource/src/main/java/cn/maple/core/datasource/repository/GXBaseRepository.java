@@ -297,17 +297,6 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     }
 
     /**
-     * 检测数据是否唯一
-     *
-     * @param tableName 表名字
-     * @param condition 查询条件
-     * @return 1 不唯一 0 唯一
-     */
-    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        return baseDao.checkRecordIsUnique(tableName, condition);
-    }
-
-    /**
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
@@ -331,29 +320,6 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     }
 
     /**
-     * 验证数据的唯一性 (返回true表示数据已经存在)
-     *
-     * @param value                      值
-     * @param tableName                  database table name
-     * @param fieldName                  字段名字
-     * @param constraintValidatorContext 验证上下文对象
-     * @param param                      参数
-     * @return boolean
-     */
-    public boolean validateUnique(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
-        }
-        Table<String, String, Object> condition = HashBasedTable.create();
-        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-            condition.put(fieldName, GXBaseBuilderConstant.NUMBER_EQ, value);
-        } else {
-            condition.put(fieldName, GXBaseBuilderConstant.STR_EQ, value);
-        }
-        return checkRecordIsUnique(tableName, condition);
-    }
-
-    /**
      * 批量插入数据
      *
      * @param tableName 表名
@@ -369,13 +335,15 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * 通过条件更新数据
      *
      * @param tableName 需要更新的表名
-     * @param fieldSet  需要更新的字段集合
-     * @param dataList  数据集合
+     * @param data      需要更新的数据
      * @param condition 更新条件
      * @return 更新的条数
      */
-    public Integer updateDataByCondition(String tableName, Set<String> fieldSet, List<Dict> dataList, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+    public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            throw new GXBusinessException("更新数据需要指定条件");
+        }
+        return baseDao.updateFieldByCondition(tableName, data, condition);
     }
 
     /**

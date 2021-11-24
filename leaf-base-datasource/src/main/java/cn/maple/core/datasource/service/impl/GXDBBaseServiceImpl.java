@@ -61,18 +61,6 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
     }
 
     /**
-     * 检测给定条件的记录是否唯一
-     *
-     * @param tableName 数据库表名字
-     * @param condition 条件
-     * @return int
-     */
-    @Override
-    public boolean checkRecordIsUnique(String tableName, Table<String, String, Object> condition) {
-        return repository.checkRecordIsUnique(tableName, condition);
-    }
-
-    /**
      * 通过SQL更新表中的数据
      *
      * @param tableName 表名
@@ -132,21 +120,6 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
     @Override
     public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
         return repository.validateExists(value, tableName, fieldName, constraintValidatorContext, param);
-    }
-
-    /**
-     * 验证数据的唯一性 (返回true表示数据已经存在)
-     *
-     * @param value                      值
-     * @param tableName                  database table name
-     * @param fieldName                  字段名字
-     * @param constraintValidatorContext 验证上下文对象
-     * @param param                      参数
-     * @return boolean
-     */
-    @Override
-    public boolean validateUnique(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) {
-        return repository.validateUnique(value, tableName, fieldName, constraintValidatorContext, param);
     }
 
     /**

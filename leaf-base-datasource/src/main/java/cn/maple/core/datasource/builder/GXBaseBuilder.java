@@ -100,16 +100,6 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 判断给定条件的值是否存在
-     *
-     * @param dbQueryParamInnerDto 查询条件
-     * @return String
-     */
-    static String checkRecordIsUnique(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
-        return checkRecordIsExists(dbQueryParamInnerDto);
-    }
-
-    /**
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名
