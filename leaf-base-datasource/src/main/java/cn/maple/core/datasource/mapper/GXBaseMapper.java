@@ -39,7 +39,7 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
     List<R> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto);
-    
+
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)

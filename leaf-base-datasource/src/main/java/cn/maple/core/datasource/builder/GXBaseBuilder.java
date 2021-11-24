@@ -281,7 +281,7 @@ public interface GXBaseBuilder {
      * @param condition 条件
      */
     static void dealSQLWhereCondition(SQL sql, Table<String, String, Object> condition) {
-        if (Objects.nonNull(condition)) {
+        if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
             conditionMap.forEach((column, datum) -> {
                 List<String> wheres = new ArrayList<>();

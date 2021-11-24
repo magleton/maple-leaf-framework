@@ -85,11 +85,9 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
             ArrayList<E> list = new ArrayList<>();
             rList.forEach(data -> {
                 Dict dict = GXCommonUtils.convertSourceToDict(data);
-                E value = null;
                 for (String key : columns) {
-                    value = Convert.convert(targetClazz, dict.getObj(key));
+                    list.add(Convert.convert(targetClazz, dict.getObj(key)));
                 }
-                list.add(value);
             });
             return list;
         }
