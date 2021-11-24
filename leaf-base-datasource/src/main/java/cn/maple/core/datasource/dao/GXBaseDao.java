@@ -86,34 +86,12 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     /**
      * 检测给定条件的记录是否存在
      *
-     * @param clazz     实体的Class
-     * @param condition 条件
-     * @return int
-     */
-    public boolean checkRecordIsExists(Class<T> clazz, Table<String, String, Object> condition) {
-        return baseMapper.checkRecordIsExists(getTableName(clazz), condition) == 1;
-    }
-
-    /**
-     * 检测给定条件的记录是否存在
-     *
      * @param tableName 数据库表名字
      * @param condition 条件
      * @return int
      */
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         return baseMapper.checkRecordIsExists(tableName, condition) == 1;
-    }
-
-    /**
-     * 检测给定条件的记录是否唯一
-     *
-     * @param clazz     实体的Class
-     * @param condition 条件
-     * @return int
-     */
-    public Integer checkRecordIsUnique(Class<T> clazz, Table<String, String, Object> condition) {
-        return baseMapper.checkRecordIsUnique(getTableName(clazz), condition);
     }
 
     /**
