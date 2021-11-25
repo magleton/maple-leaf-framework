@@ -38,7 +38,7 @@ public class GXBusinessException extends RuntimeException {
     }
 
     public GXBusinessException(String msg, int code) {
-        this(msg, code, Dict.create());
+        this(msg, code, (Dict) null);
     }
 
     public GXBusinessException(String msg) {
