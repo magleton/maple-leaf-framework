@@ -1,7 +1,7 @@
 package cn.maple.mongodb.datasource.properties;
 
+import com.alibaba.nacos.api.config.ConfigType;
 import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,7 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@NacosPropertySource(dataId = "mongodb.yml", autoRefreshed = true, groupId = "DEFAULT_GROUP")
-@NacosConfigurationProperties(prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true)
+@NacosConfigurationProperties(groupId = "DEFAULT_GROUP", prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXMongoDynamicDataSourceProperties {
     protected Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 }
