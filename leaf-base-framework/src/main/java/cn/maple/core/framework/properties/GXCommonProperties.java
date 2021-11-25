@@ -1,17 +1,14 @@
 package cn.maple.core.framework.properties;
 
-import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Data
 @Configuration
 @SuppressWarnings("all")
-//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
-@PropertySource(value = "classpath:/${spring.profiles.active}/common.yml",
-        factory = GXYamlPropertySourceFactory.class,
-        encoding = "utf-8",
-        ignoreResourceNotFound = true)
+@NacosPropertySource(dataId = "common.yml", autoRefreshed = true, groupId = "DEFAULT_GROUP")
+@NacosConfigurationProperties(dataId = "common.yml", autoRefreshed = true)
 public class GXCommonProperties {
 }

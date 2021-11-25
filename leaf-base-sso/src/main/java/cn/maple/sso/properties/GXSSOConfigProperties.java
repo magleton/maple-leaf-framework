@@ -1,21 +1,16 @@
 package cn.maple.sso.properties;
 
-import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
 import cn.maple.sso.config.GXSSOConfig;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Data
 @Configuration
-@PropertySource(value = {"classpath:/${spring.profiles.active}/sso.yml"},
-        factory = GXYamlPropertySourceFactory.class,
-        encoding = "utf-8",
-        ignoreResourceNotFound = true)
-//@ConditionalOnMissingClass({"com.alibaba.nacos.api.config.ConfigFactory"})
-@ConfigurationProperties(prefix = "sso")
+@NacosPropertySource(dataId = "sso.yml", autoRefreshed = true, groupId = "DEFAULT_GROUP")
+@NacosConfigurationProperties(prefix = "sso", dataId = "sso.yml", autoRefreshed = true)
 public class GXSSOConfigProperties {
     @NestedConfigurationProperty
     private GXSSOConfig config;

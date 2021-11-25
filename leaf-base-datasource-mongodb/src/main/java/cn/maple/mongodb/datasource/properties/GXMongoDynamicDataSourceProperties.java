@@ -1,9 +1,8 @@
 package cn.maple.mongodb.datasource.properties;
 
-import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -15,11 +14,8 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@PropertySource(value = {"classpath:/${spring.profiles.active}/mongodb.yml"},
-        factory = GXYamlPropertySourceFactory.class,
-        ignoreResourceNotFound = false)
-@ConfigurationProperties(prefix = "mongodb")
-//@ConditionalOnMissingClass({"com.alibaba.nacos.api.config.ConfigFactory"})
+@NacosPropertySource(dataId = "mongodb.yml", autoRefreshed = true, groupId = "DEFAULT_GROUP")
+@NacosConfigurationProperties(prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true)
 public class GXMongoDynamicDataSourceProperties {
     protected Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 }

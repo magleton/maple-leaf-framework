@@ -1,11 +1,10 @@
 package cn.maple.redisson.properties;
 
-import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -16,12 +15,8 @@ import java.util.Map;
 @SuppressWarnings("all")
 @Component
 @ConditionalOnClass(name = {"org.redisson.Redisson"})
-//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
-@PropertySource(value = {"classpath:/${spring.profiles.active}/redisson.yml"},
-        factory = GXYamlPropertySourceFactory.class,
-        encoding = "utf-8",
-        ignoreResourceNotFound = true)
-@ConfigurationProperties(prefix = "redisson")
+@NacosPropertySource(dataId = "redisson.yml", autoRefreshed = true, groupId = "DEFAULT_GROUP")
+@NacosConfigurationProperties(prefix = "redisson", dataId = "redisson.yml", autoRefreshed = true)
 public class GXRedissonProperties {
     private Map<String, GXRedissonConnectProperties> config = new LinkedHashMap<>();
 }

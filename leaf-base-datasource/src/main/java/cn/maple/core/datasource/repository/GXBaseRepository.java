@@ -94,7 +94,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
             Dict dict = GXCommonUtils.convertSourceToDict(data);
             Dict tmpDict = Dict.create();
             for (String key : columns) {
-                tmpDict.set(key, dict.getObj(key));
+                Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(GXCommonUtils.toCamelCase(key)));
+                tmpDict.set(key, obj);
             }
             dictList.add(tmpDict);
         });

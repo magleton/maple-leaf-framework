@@ -3,7 +3,6 @@ package cn.maple.redisson.properties;
 import lombok.Data;
 
 @Data
-//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonConnectProperties {
     /**
      * 链接地址
