@@ -39,18 +39,6 @@ public class GXBaseBuilderConstant {
     @GXFieldComment(zhDesc = "数字大于等于")
     public static final String NUMBER_GE = " >= {}";
 
-    @GXFieldComment(zhDesc = "时间区间 开始结束都带等号")
-    public static final String TIME_RANGE_WITH_EQ = "{} >= {} AND {} <= {}";
-
-    @GXFieldComment(zhDesc = "时间区间 开始带等号")
-    public static final String TIME_RANGE_WITH_START_EQ = "{} >= {} AND {} < {}";
-
-    @GXFieldComment(zhDesc = "时间区间 结束带等号")
-    public static final String TIME_RANGE_WITH_END_EQ = "{} > {} AND {} <= {}";
-
-    @GXFieldComment(zhDesc = "时间区间 开始结束不带等号")
-    public static final String TIME_RANGE_WITHOUT_EQ = "{} > {} AND {} < {}";
-
     @GXFieldComment(zhDesc = "IN条件")
     public static final String IN = " IN ({})";
 
