@@ -1,8 +1,6 @@
 package cn.maple.core.framework.web.config;
 
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXTraceIdInterceptor;
-import cn.maple.core.framework.web.support.GXCustomerHandlerMethodArgumentResolver;
 import cn.maple.core.framework.web.support.GXRequestHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +11,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * WEB MVC配置
  */
 @Configuration
 @Slf4j
-public abstract class GXWebMvcConfigurer implements WebMvcConfigurer {
+public class GXWebMvcConfigurer implements WebMvcConfigurer {
     @Resource
     private GXTraceIdInterceptor traceIdInterceptor;
 
@@ -40,16 +37,20 @@ public abstract class GXWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(traceIdInterceptor);
-        registerCustomer(registry);
+        registerCustomerInterceptors(registry);
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(requestHandlerMethodArgumentResolver);
-        if (Objects.nonNull(GXSpringContextUtils.getBean(GXCustomerHandlerMethodArgumentResolver.class))) {
-            argumentResolvers.add(GXSpringContextUtils.getBean(GXCustomerHandlerMethodArgumentResolver.class));
-        }
+        registerCustomerArgumentResolvers(argumentResolvers);
     }
 
-    protected abstract void registerCustomer(InterceptorRegistry registry);
+    protected void registerCustomerInterceptors(InterceptorRegistry registry) {
+
+    }
+
+    protected void registerCustomerArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+
+    }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 @Slf4j
 public class GXShiroWebMvcInterceptorConfig extends GXWebMvcConfigurer {
     @Override
-    protected void registerCustomer(InterceptorRegistry registry) {
+    protected void registerCustomerInterceptors(InterceptorRegistry registry) {
 
     }
 }

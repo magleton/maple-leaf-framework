@@ -1,6 +1,5 @@
 package cn.maple.core.framework.web.support;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
@@ -9,6 +8,9 @@ import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -32,6 +34,11 @@ import java.util.Objects;
 public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @GXFieldComment(zhDesc = "请求中的参数名字")
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
+
+    /**
+     * JACKSON数据转换对象
+     */
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 进行参数验证之前对数据进行修复的方法名字
@@ -62,14 +69,14 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         final Class<?> parameterType = parameter.getParameterType();
         if (JSONUtil.isJsonArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
-            List<?> bean = JSONUtil.toList(body, actualTypeArgument);
-            bean.forEach(dto -> {
-                dealSingleBean(dto, parameter, actualTypeArgument);
-            });
+            List<?> bean = jsonToTargetList(body, actualTypeArgument);//JSONUtil.toList(body, actualTypeArgument);
+            bean.forEach(dto -> dealSingleBean(dto, parameter, actualTypeArgument));
             return bean;
         }
-        Object bean = Convert.convert(parameterType, JSONUtil.toBean(body, parameterType));
-        dealSingleBean(bean, parameter, parameterType);
+        Object bean = jsonToTarget(body, parameterType);//Convert.convertWithCheck(parameterType, JSONUtil.toBean(body, parameterType), null, false);
+        if (Objects.nonNull(bean)) {
+            dealSingleBean(bean, parameter, parameterType);
+        }
         return bean;
     }
 
@@ -79,7 +86,6 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param bean          bean对象
      * @param parameter     请求参数对象
      * @param parameterType 请求参数类型
-     * @return bean
      */
     private void dealSingleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
         GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
@@ -102,7 +108,6 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         // 调用目标bean对象的修复方法对数据进行最后的修复
         callUserDefinedMethod(parameterType, bean, AFTER_REPAIR_METHOD);
-        return;
     }
 
     /**
@@ -142,5 +147,36 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             throw new GXBusinessException(GXResultCode.REQUEST_JSON_NOT_BODY);
         }
         return jsonBody;
+    }
+
+    /**
+     * 将json结果集转化为对象
+     *
+     * @param jsonData json数据
+     * @param beanType 对象中的object类型
+     * @return 目标对象
+     */
+    private <T> T jsonToTarget(String jsonData, Class<T> beanType) throws JsonProcessingException {
+        try {
+            return OBJECT_MAPPER.readValue(jsonData, beanType);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 将json数据转换成pojo对象list
+     *
+     * @param jsonData JSON数据字符串
+     * @param beanType 目标类型
+     * @return 列表
+     */
+    public <T> List<T> jsonToTargetList(String jsonData, Class<T> beanType) throws JsonProcessingException {
+        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
+        try {
+            return OBJECT_MAPPER.readValue(jsonData, javaType);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

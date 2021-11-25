@@ -23,10 +23,7 @@ import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto, ID> {
     /**
@@ -86,7 +83,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
             rList.forEach(data -> {
                 Dict dict = GXCommonUtils.convertSourceToDict(data);
                 for (String key : columns) {
-                    list.add(Convert.convert(targetClazz, dict.getObj(key)));
+                    Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(GXCommonUtils.toCamelCase(key)));
+                    list.add(Convert.convert(targetClazz, obj));
                 }
             });
             return list;

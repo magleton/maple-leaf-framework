@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.util.GXResultUtils;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -26,13 +27,16 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class GXExceptionHandler {
-    /**
-     * 处理自定义异常
-     */
     @ExceptionHandler(GXBusinessException.class)
     public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+    }
+
+    @ExceptionHandler(MismatchedInputException.class)
+    public GXResultUtils<String> handleMismatchedInputException(MismatchedInputException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "参数错误,请确认参数类型是否匹配!");
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
