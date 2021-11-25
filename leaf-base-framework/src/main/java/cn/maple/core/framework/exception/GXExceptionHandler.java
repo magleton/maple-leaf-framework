@@ -36,7 +36,7 @@ public class GXExceptionHandler {
     @ExceptionHandler(MismatchedInputException.class)
     public GXResultUtils<String> handleMismatchedInputException(MismatchedInputException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "参数错误,请确认参数类型是否匹配!");
+        return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "参数错误!");
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
