@@ -8,9 +8,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GXParam {
-    @GXFieldComment(zhDesc = "参数名字")
+    /**
+     * 参数名字
+     */
     String[] paramNames();
 
-    @GXFieldComment(zhDesc = "是否必须")
+    /**
+     * 是否必须
+     */
     boolean require() default true;
 }

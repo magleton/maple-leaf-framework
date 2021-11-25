@@ -7,7 +7,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class GXCurrentRequestContextUtils {
-    @GXFieldComment(zhDesc = "日志对象")
+    /**
+     * 日志对象
+     */
     private static final Logger LOG = LoggerFactory.getLogger(GXCurrentRequestContextUtils.class);
 
     private GXCurrentRequestContextUtils() {

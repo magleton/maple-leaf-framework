@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 
 import javax.validation.ConstraintViolation;
@@ -21,7 +20,9 @@ import java.util.Set;
  * 参考文档：http://docs.jboss.org/hibernate/validator/5.4/reference/en-US/html_single/
  */
 public class GXValidatorUtils {
-    @GXFieldComment(zhDesc = "验证器")
+    /**
+     * 验证器
+     */
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private GXValidatorUtils() {

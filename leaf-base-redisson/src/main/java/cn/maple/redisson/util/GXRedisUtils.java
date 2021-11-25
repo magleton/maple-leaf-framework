@@ -1,7 +1,6 @@
 package cn.maple.redisson.util;
 
 import cn.hutool.core.convert.Convert;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.redisson.api.*;
 import org.slf4j.Logger;
@@ -10,10 +9,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 public class GXRedisUtils {
-    @GXFieldComment(zhDesc = "Logger对象")
+    /**
+     * Logger对象
+     */
     private static final Logger LOG = LoggerFactory.getLogger(GXRedisUtils.class);
 
-    @GXFieldComment("计数器缓存的名字")
+    /**
+     * 计数器缓存的名字
+     */
     private static final String COUNTER_MAP_CACHE_NAME = "counter_map_cache_name";
 
     private GXRedisUtils() {

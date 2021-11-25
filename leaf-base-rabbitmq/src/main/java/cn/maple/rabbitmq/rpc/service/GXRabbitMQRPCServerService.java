@@ -1,13 +1,14 @@
 package cn.maple.rabbitmq.rpc.service;
 
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.springframework.amqp.core.Message;
 
 import java.util.Optional;
 
 public interface GXRabbitMQRPCServerService {
-    @GXFieldComment("默认队列的名字")
+    /**
+     * 默认队列的名字
+     */
     String DEFAULT_QUEUE_NAME = "java_rpc_queue";
 
     /**

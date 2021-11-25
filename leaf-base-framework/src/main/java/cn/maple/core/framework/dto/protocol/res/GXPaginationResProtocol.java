@@ -1,6 +1,5 @@
 package cn.maple.core.framework.dto.protocol.res;
 
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,19 +11,29 @@ import java.util.List;
 public class GXPaginationResProtocol<T> extends GXBaseResProtocol {
     private static final long serialVersionUID = -6977700102950116740L;
 
-    @GXFieldComment(zhDesc = "总记录数")
+    /**
+     * 总记录数
+     */
     private long total;
 
-    @GXFieldComment(zhDesc = "每页记录数")
+    /**
+     * 每页记录数
+     */
     private long pageSize;
 
-    @GXFieldComment(zhDesc = "总页数")
+    /**
+     * 总页数
+     */
     private long pages;
 
-    @GXFieldComment(zhDesc = "当前页数")
+    /**
+     * 当前页数
+     */
     private long currentPage;
 
-    @GXFieldComment(zhDesc = "列表数据")
+    /**
+     * 列表数据
+     */
     private transient List<T> records;
 
     /**

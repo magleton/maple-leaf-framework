@@ -1,7 +1,6 @@
 package cn.maple.rabbitmq.rpc.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.MessageProperties;
@@ -27,10 +26,14 @@ import java.util.concurrent.Executors;
 @Slf4j
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
 public class GXRabbitMQRPCServerConfig {
-    @GXFieldComment(zhDesc = "当前系统的处理器个数")
+    /**
+     * 当前系统的处理器个数
+     */
     private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-    @GXFieldComment(zhDesc = "线程池中线程的个数")
+    /**
+     * 线程池中线程的个数
+     */
     private static final int THREAD_POOL_NUMBER = AVAILABLE_PROCESSORS * 5;
 
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();

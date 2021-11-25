@@ -2,7 +2,6 @@ package cn.maple.core.framework.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -20,10 +19,14 @@ import java.util.Map;
  * XSS过滤处理
  */
 public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    @GXFieldComment(zhDesc = "HTML过滤")
+    /**
+     * HTML过滤
+     */
     private static final GXHTMLFilter htmlFilter = new GXHTMLFilter();
 
-    @GXFieldComment(zhDesc = "没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)")
+    /**
+     * 没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)
+     */
     HttpServletRequest orgRequest;
 
     public GXXssHttpServletRequestWrapper(HttpServletRequest request) {

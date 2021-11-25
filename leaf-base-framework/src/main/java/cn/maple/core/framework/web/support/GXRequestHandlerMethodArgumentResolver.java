@@ -3,7 +3,6 @@ package cn.maple.core.framework.web.support;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -32,7 +31,9 @@ import java.util.Objects;
 
 @Component
 public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    @GXFieldComment(zhDesc = "请求中的参数名字")
+    /**
+     * 请求中的参数名字
+     */
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
     /**
@@ -55,7 +56,9 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      */
     private static final String AFTER_REPAIR_METHOD = "afterRepair";
 
-    @GXFieldComment(zhDesc = "日志对象")
+    /**
+     * 日志对象
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
 
     @Override

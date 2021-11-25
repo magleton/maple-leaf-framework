@@ -2,7 +2,6 @@ package cn.maple.core.framework.event;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
@@ -10,13 +9,19 @@ import org.springframework.core.ResolvableTypeProvider;
 import java.lang.reflect.Type;
 
 public abstract class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
-    @GXFieldComment(zhDesc = "附加参数")
+    /**
+     * 附加参数
+     */
     protected transient Dict param;
 
-    @GXFieldComment(zhDesc = "场景值,用于区分同一个事件的不同使用场景")
+    /**
+     * 场景值,用于区分同一个事件的不同使用场景
+     */
     protected transient Object scene;
 
-    @GXFieldComment(zhDesc = "事件名字")
+    /**
+     * 事件名字
+     */
     protected transient String eventName;
 
     protected GXBaseEvent(T source, String eventName, Dict param, Object scene) {

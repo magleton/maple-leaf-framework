@@ -26,9 +26,9 @@ public class GXDynamicDataSourceConfig {
 
     @Bean
     public GXDataSourceProperties dataSourceProperties() {
-        GXDataSourceProperties gxDataSourceProperties = new GXDataSourceProperties();
-        if (!CharSequenceUtil.isEmpty(gxDataSourceProperties.getUrl())) {
-            return gxDataSourceProperties;
+        GXDataSourceProperties dataSourceProperties = new GXDataSourceProperties();
+        if (!CharSequenceUtil.isEmpty(dataSourceProperties.getUrl())) {
+            return dataSourceProperties;
         }
         return dynamicDataSourceProperties.getDatasource().get("framework");
     }

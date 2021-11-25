@@ -1,6 +1,5 @@
 package cn.maple.core.framework.dto.inner.res;
 
-import cn.maple.core.framework.annotation.GXFieldComment;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,19 +9,29 @@ import java.util.List;
 @Data
 @SuppressWarnings("all")
 public class GXPaginationResDto<T> extends GXBaseResDto {
-    @GXFieldComment(zhDesc = "总记录数")
+    /**
+     * 总记录数
+     */
     private long total;
 
-    @GXFieldComment(zhDesc = "每页记录数")
+    /**
+     * 每页记录数
+     */
     private long pageSize;
 
-    @GXFieldComment(zhDesc = "总页数")
+    /**
+     * 总页数
+     */
     private long pages;
 
-    @GXFieldComment(zhDesc = "当前页数")
+    /**
+     * 当前页数
+     */
     private long currentPage;
 
-    @GXFieldComment(zhDesc = "列表数据")
+    /**
+     * 列表数据
+     */
     private List<T> records;
 
     /**

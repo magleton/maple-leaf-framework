@@ -3,7 +3,6 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,13 +20,19 @@ import java.util.*;
 @Slf4j
 @Service
 public class GXDBSchemaServiceImpl implements GXDBSchemaService {
-    @GXFieldComment(zhDesc = "获取索引SQL模板")
+    /**
+     * 获取索引SQL模板
+     */
     private static final String SHOW_INDEX_SQL = "SHOW INDEX FROM `{}`";
 
-    @GXFieldComment(zhDesc = "删除索引SQL模板")
+    /**
+     * 删除索引SQL模板
+     */
     private static final String DROP_INDEX_SQL = "DROP INDEX `{}` on `{}`";
 
-    @GXFieldComment(zhDesc = "数据源对象")
+    /**
+     * 数据源对象
+     */
     @Resource
     private DataSource dataSource;
 
@@ -39,7 +44,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
             String databaseName = connection.getCatalog();
             final String sql = "SELECT column_name,data_type,column_type FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME ='{}'";
             try (final Statement statement = connection.createStatement();
-                 final ResultSet resultSet = statement.executeQuery(StrUtil.format(sql, databaseName, tableName))) {
+                 final ResultSet resultSet = statement.executeQuery(CharSequenceUtil.format(sql, databaseName, tableName))) {
                 while (resultSet.next()) {
                     final TableField tableField = new TableField();
                     final String columnName = resultSet.getString("column_name");
@@ -148,14 +153,14 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
             }
             return "*";
         }
-        if(!remove){
+        if (!remove) {
             return String.join(",", targetSet);
         }
         final Set<String> result = new HashSet<>();
         final List<TableField> tableFields = getTableColumn(tableName);
         for (TableField tableField : tableFields) {
             final String columnName = tableField.getColumnName();
-            if(CollUtil.contains(targetSet , columnName)){
+            if (CollUtil.contains(targetSet, columnName)) {
                 continue;
             }
             result.add(columnName);

@@ -4,7 +4,6 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
-import cn.maple.core.framework.annotation.GXFieldComment;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,7 +14,9 @@ import java.util.List;
 
 @SuppressWarnings({"unused"})
 public class GXDBCommonUtils {
-    @GXFieldComment(zhDesc = "日志对象")
+    /**
+     * 日志对象
+     */
     private static final Logger LOG = LoggerFactory.getLogger(GXDBCommonUtils.class);
 
     private GXDBCommonUtils() {

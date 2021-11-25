@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GXManualValidated {
-    @GXFieldComment(zhDesc = "验证的组")
+    /**
+     * 验证的组
+     */
     Class<?>[] groups() default {};
 }

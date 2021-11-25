@@ -1,6 +1,5 @@
 package cn.maple.core.framework.util;
 
-import cn.maple.core.framework.annotation.GXFieldComment;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,9 @@ import java.util.Set;
  * @author zj chen <britton@126.com>
  */
 public class GXSignatureUtils {
-    @GXFieldComment(zhDesc = "logger对象")
+    /**
+     * logger对象
+     */
     private static final Logger logger = GXCommonUtils.getLogger(GXSignatureUtils.class);
 
     private GXSignatureUtils() {
