@@ -22,6 +22,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>cn.maple.framework</groupId>
+            <artifactId>leaf-base-nacos</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
