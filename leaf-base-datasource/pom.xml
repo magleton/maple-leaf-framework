@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.maple.framework</groupId>
-            <artifactId>leaf-base-framework</artifactId>
+            <artifactId>leaf-base-nacos</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

@@ -1,0 +1,1 @@
+注意: 如果使用spring-cloud中的nacos配置包 , 需要排除leaf-base-nacos依赖中的nacos-config-spring-boot-starter
