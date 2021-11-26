@@ -1,6 +1,7 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.util.GXResultUtils;
@@ -70,11 +71,16 @@ public class GXExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public GXResultUtils<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
+        String firstKey = null;
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
+            if (CharSequenceUtil.isEmpty(firstKey)) {
+                firstKey = error.getField();
+            }
         }
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, errors);
+        Object orDefault = errors.getOrDefault(firstKey, "");
+        return GXResultUtils.error(GXResultCode.PARAMETER_VALIDATION_ERROR.getCode(), GXResultCode.PARAMETER_VALIDATION_ERROR.getMsg() + " : " + orDefault);
     }
 
     @ExceptionHandler(ValidationException.class)
