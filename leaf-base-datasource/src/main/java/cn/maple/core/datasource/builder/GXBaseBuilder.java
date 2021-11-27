@@ -16,6 +16,7 @@ import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.filter.GXSQLFilter;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
@@ -181,7 +182,7 @@ public interface GXBaseBuilder {
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
         dealSQLWhereCondition(sql, condition);
-        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
@@ -259,7 +260,7 @@ public interface GXBaseBuilder {
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
         dealSQLWhereCondition(sql, condition);
-        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", GXCommonConstant.NOT_DELETED_MARK));
+        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
         sql.LIMIT(1);
         return sql.toString();
     }
@@ -328,6 +329,19 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().DELETE_FROM(tableName);
         dealSQLWhereCondition(sql, condition);
         return sql.toString();
+    }
+
+    /**
+     * 获取数据库未删除的值
+     *
+     * @return Object
+     */
+    static Object getIsNotDeletedValue() {
+        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
+        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
+            return GXCommonConstant.NOT_STR_DELETED_MARK;
+        }
+        return GXCommonConstant.NOT_INT_DELETED_MARK;
     }
 
     /**

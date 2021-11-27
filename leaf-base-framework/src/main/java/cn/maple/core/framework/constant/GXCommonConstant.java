@@ -27,9 +27,14 @@ public class GXCommonConstant {
     public static final String PHONE_ENCRYPT_KEY = "B78D32BTR1CHEN15AC1F19C46A9B533986";
 
     /**
-     * 未删除的标识
+     * 未删除的标识值,整形类型
      */
-    public static final Object NOT_DELETED_MARK = 0;
+    public static final Integer NOT_INT_DELETED_MARK = 0;
+
+    /**
+     * 未删除的标识值,字符串类型
+     */
+    public static final String NOT_STR_DELETED_MARK = "'0'";
 
     /**
      * 日志格式
