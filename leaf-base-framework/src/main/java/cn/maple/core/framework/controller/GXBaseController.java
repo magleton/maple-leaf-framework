@@ -24,7 +24,44 @@ public interface GXBaseController {
      * @return T
      */
     default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz) {
-        return GXCommonUtils.convertSourceToTarget(source, clazz, null);
+        return convertSourceToTarget(source, clazz, null, null);
+    }
+
+    /**
+     * 将源对象转换为目标对象
+     *
+     * @param source     源对象
+     * @param clazz      目标对象类型
+     * @param methodName 回调的方法名字
+     * @return T
+     */
+    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, String methodName) {
+        return convertSourceToTarget(source, clazz, methodName, null);
+    }
+
+    /**
+     * 将源对象转换为目标对象
+     *
+     * @param source      源对象
+     * @param clazz       目标对象类型
+     * @param copyOptions 复制选项
+     * @return T
+     */
+    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, CopyOptions copyOptions) {
+        return convertSourceToTarget(source, clazz, null, copyOptions);
+    }
+
+    /**
+     * 将源对象转换为目标对象
+     *
+     * @param source      源对象
+     * @param clazz       目标对象类型
+     * @param methodName  回调的方法名字
+     * @param copyOptions 复制选项
+     * @return T
+     */
+    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, String methodName, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions);
     }
 
     /**

@@ -370,28 +370,31 @@ public class GXCommonUtils {
      * {@code}
      * eg:
      * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
-     * convertSourceToTarget( source , PersonResDto.class);
+     * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
      * OR
      * PersonReqProtocol req = new PersonReqProtocol();
      * req.setUsername("britton");
      * req.setRealName("枫叶思源")；
-     * convertSourceToTarget(req ,  PersonResDto.class);
+     * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
      * {code}
      *
-     * @param source           源对象
-     * @param clazz            目标对象类型
-     * @param methodName       需要条用的方法名字
-     * @param ignoreProperties 需要忽略的属性
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
      * @return 目标对象
      */
-    public static <R> R convertSourceToTarget(Object source, Class<R> clazz, String methodName, String... ignoreProperties) {
+    public static <R> R convertSourceToTarget(Object source, Class<R> tClass, String methodName, CopyOptions copyOptions) {
         if (Objects.isNull(source)) {
             LOG.info("源对象不能为null");
             return null;
         }
-        R r = BeanUtil.copyProperties(source, clazz, ignoreProperties);
-        reflectCallObjectMethod(r, methodName);
-        return r;
+        R target = ReflectUtil.newInstanceIfPossible(tClass);
+        BeanUtil.copyProperties(source, target, copyOptions);
+        if (CharSequenceUtil.isNotEmpty(methodName)) {
+            reflectCallObjectMethod(target, methodName);
+        }
+        return target;
     }
 
     /**
@@ -409,7 +412,9 @@ public class GXCommonUtils {
             return Collections.emptyList();
         }
         List<R> rs = BeanUtil.copyToList(collection, clazz, copyOptions);
-        rs.forEach(r -> reflectCallObjectMethod(r, methodName));
+        if (CharSequenceUtil.isNotEmpty(methodName)) {
+            rs.forEach(r -> reflectCallObjectMethod(r, methodName));
+        }
         return rs;
     }
 
