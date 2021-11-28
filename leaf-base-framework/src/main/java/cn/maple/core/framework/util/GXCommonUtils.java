@@ -389,7 +389,7 @@ public class GXCommonUtils {
             LOG.info("源对象不能为null");
             return null;
         }
-        reflectCallObjectMethod(source, "beforeMapping");
+        reflectCallObjectMethod(source, "beforeMapping", copyOptions);
         R target = ReflectUtil.newInstanceIfPossible(tClass);
         BeanUtil.copyProperties(source, target, copyOptions);
         reflectCallObjectMethod(target, "afterMapping");
@@ -413,16 +413,15 @@ public class GXCommonUtils {
             LOG.info("源对象不能为null");
             return Collections.emptyList();
         }
-        collection.forEach(source -> reflectCallObjectMethod(source, "beforeMapping"));
-        List<R> rs = BeanUtil.copyToList(collection, clazz, copyOptions);
-        rs.forEach(target -> {
+        collection.forEach(source -> reflectCallObjectMethod(source, "beforeMapping", copyOptions));
+        List<R> rsList = BeanUtil.copyToList(collection, clazz, copyOptions);
+        rsList.forEach(target -> {
             reflectCallObjectMethod(target, "afterMapping");
             if (CharSequenceUtil.isNotEmpty(methodName)) {
                 reflectCallObjectMethod(target, methodName);
             }
         });
-
-        return rs;
+        return rsList;
     }
 
     /**
