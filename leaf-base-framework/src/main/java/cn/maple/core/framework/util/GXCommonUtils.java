@@ -384,17 +384,17 @@ public class GXCommonUtils {
      * @param copyOptions 复制选项
      * @return 目标对象
      */
-    public static <R> R convertSourceToTarget(Object source, Class<R> tClass, String methodName, CopyOptions copyOptions) {
+    public static <S , T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
         if (Objects.isNull(source)) {
             LOG.info("源对象不能为null");
             return null;
         }
         copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
         reflectCallObjectMethod(source, "beforeMapping", copyOptions);
-        R target = ReflectUtil.newInstanceIfPossible(tClass);
+        T target = ReflectUtil.newInstanceIfPossible(tClass);
         reflectCallObjectMethod(target, "beforeMapping", copyOptions);
         BeanUtil.copyProperties(source, target, copyOptions);
-        reflectCallObjectMethod(target, "afterMapping");
+        reflectCallObjectMethod(target, "afterMapping", source);
         if (CharSequenceUtil.isNotEmpty(methodName)) {
             reflectCallObjectMethod(target, methodName);
         }

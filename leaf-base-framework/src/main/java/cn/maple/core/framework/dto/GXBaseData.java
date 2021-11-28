@@ -1,7 +1,6 @@
 package cn.maple.core.framework.dto;
 
 import cn.hutool.core.bean.copier.CopyOptions;
-import org.mapstruct.AfterMapping;
 
 import java.io.Serializable;
 
@@ -38,8 +37,7 @@ public abstract class GXBaseData implements Serializable {
     /**
      * 转换完成之后的回调
      */
-    @AfterMapping
-    protected void afterMapping() {
+    protected void afterMapping(Object source) {
         customizeProcess();
     }
 
