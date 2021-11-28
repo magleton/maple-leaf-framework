@@ -389,8 +389,10 @@ public class GXCommonUtils {
             LOG.info("源对象不能为null");
             return null;
         }
-        reflectCallObjectMethod(source, "beforeMapping", copyOptions);
+        copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
+        reflectCallObjectMethod(source, "beforeMapping");
         R target = ReflectUtil.newInstanceIfPossible(tClass);
+        reflectCallObjectMethod(target, "beforeMapping", copyOptions);
         BeanUtil.copyProperties(source, target, copyOptions);
         reflectCallObjectMethod(target, "afterMapping");
         if (CharSequenceUtil.isNotEmpty(methodName)) {
@@ -403,25 +405,19 @@ public class GXCommonUtils {
      * 将任意对象转换为指定类型的对象
      *
      * @param collection  需要转换的对象列表
-     * @param clazz       目标对象的类型
+     * @param tClass      目标对象的类型
      * @param methodName  需要条用的方法名字
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> clazz, String methodName, CopyOptions copyOptions) {
+    @SuppressWarnings("all")
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
         if (CollUtil.isEmpty(collection)) {
             LOG.info("源对象不能为null");
             return Collections.emptyList();
         }
-        collection.forEach(source -> reflectCallObjectMethod(source, "beforeMapping", copyOptions));
-        List<R> rsList = BeanUtil.copyToList(collection, clazz, copyOptions);
-        rsList.forEach(target -> {
-            reflectCallObjectMethod(target, "afterMapping");
-            if (CharSequenceUtil.isNotEmpty(methodName)) {
-                reflectCallObjectMethod(target, methodName);
-            }
-        });
-        return rsList;
+        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions)).collect(Collectors.toList());
+        return rList;
     }
 
     /**
