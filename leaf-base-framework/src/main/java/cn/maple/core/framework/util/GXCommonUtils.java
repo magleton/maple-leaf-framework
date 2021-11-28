@@ -392,6 +392,7 @@ public class GXCommonUtils {
         copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
         reflectCallObjectMethod(source, "beforeMapping", copyOptions);
         R target = ReflectUtil.newInstanceIfPossible(tClass);
+        reflectCallObjectMethod(target, "beforeMapping", copyOptions);
         BeanUtil.copyProperties(source, target, copyOptions);
         reflectCallObjectMethod(target, "afterMapping");
         if (CharSequenceUtil.isNotEmpty(methodName)) {
@@ -431,7 +432,14 @@ public class GXCommonUtils {
         if (CharSequenceUtil.isEmpty(methodName)) {
             methodName = "customizeProcess";
         }
-        Method method = ReflectUtil.getMethod(object.getClass(), methodName);
+        if (params == null) {
+            params = new Object[0];
+        }
+        Class<?>[] classes = new Class<?>[params.length];
+        for (int i = 0; i < params.length; i++) {
+            classes[i] = params[i].getClass();
+        }
+        Method method = ReflectUtil.getMethod(object.getClass(), methodName, classes);
         Object retVal = null;
         if (Objects.nonNull(method)) {
             try {
