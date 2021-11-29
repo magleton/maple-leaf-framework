@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@NacosConfigurationProperties(groupId = "${nacos.config.group}", prefix = "dynamic", dataId = "datasource.yml", autoRefreshed = true, type = ConfigType.YAML)
+@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "dynamic", dataId = "datasource.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXDynamicDataSourceProperties {
     protected Map<String, GXDataSourceProperties> datasource = new LinkedHashMap<>();
 }

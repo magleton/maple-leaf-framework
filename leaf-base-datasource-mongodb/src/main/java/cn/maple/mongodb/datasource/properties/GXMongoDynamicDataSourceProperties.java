@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @SuppressWarnings("all")
 @Component
-@NacosConfigurationProperties(groupId = "${nacos.config.group}", prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true, type = ConfigType.YAML)
+@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXMongoDynamicDataSourceProperties {
     protected Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 }

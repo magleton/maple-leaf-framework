@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@NacosConfigurationProperties(groupId = "${nacos.config.group}", prefix = "sso", dataId = "sso.yml", autoRefreshed = true, type = ConfigType.YAML)
+@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "sso", dataId = "sso.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXSSOConfigProperties {
     @NestedConfigurationProperty
     private GXSSOConfig config;

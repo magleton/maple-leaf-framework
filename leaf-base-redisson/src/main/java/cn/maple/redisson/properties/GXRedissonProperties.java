@@ -13,7 +13,7 @@ import java.util.Map;
 @Configuration
 @SuppressWarnings("all")
 @Component
-@NacosConfigurationProperties(groupId = "${nacos.config.group}", prefix = "redisson", dataId = "redisson.yml", autoRefreshed = true, type = ConfigType.YAML)
+@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "redisson", dataId = "redisson.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXRedissonProperties {
     private Map<String, GXRedissonConnectProperties> config = new LinkedHashMap<>();
 }
