@@ -384,7 +384,7 @@ public class GXCommonUtils {
      * @param copyOptions 复制选项
      * @return 目标对象
      */
-    public static <S , T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
+    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
         if (Objects.isNull(source)) {
             LOG.info("源对象不能为null");
             return null;
@@ -671,5 +671,50 @@ public class GXCommonUtils {
      */
     public static long getCurrentSessionUserId() {
         return 0L;
+    }
+
+    /**
+     * 构建菜单树
+     *
+     * @param sourceList      源列表
+     * @param rootParentValue 根父级的值, 一般是 0
+     * @param <R>             返回的数据类型
+     * @return 列表
+     */
+    public static <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
+        // JDK8的stream处理, 把根分类区分出来
+        List<R> roots = sourceList.stream().filter(obj -> {
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, "getParentId");
+            return Objects.equals(parentId, rootParentValue);
+        }).collect(Collectors.toList());
+        // 把非根分类区分出来
+        List<R> subs = sourceList.stream().filter(obj -> {
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, "getParentId");
+            return !Objects.equals(parentId, rootParentValue);
+        }).collect(Collectors.toList());
+        // 递归构建结构化的分类信息
+        roots.forEach(root -> buildSubs(root, subs));
+        return roots;
+    }
+
+    /**
+     * 构建菜单树的子级
+     *
+     * @param parent 父结点
+     * @param subs   子结点
+     * @param <R>    元素类型
+     */
+    private static <R> void buildSubs(R parent, List<R> subs) {
+        List<R> children = subs.stream().filter(sub -> {
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(sub, "getParentId");
+            Object id = GXCommonUtils.reflectCallObjectMethod(parent, "getId");
+            return Objects.equals(parentId, id);
+        }).collect(Collectors.toList());
+        if (!CollUtil.isEmpty(children)) {
+            // 有子分类的情况
+            GXCommonUtils.reflectCallObjectMethod(parent, "setChildren", children);
+            // 再次递归构建
+            children.forEach(child -> buildSubs(child, subs));
+        }
     }
 }

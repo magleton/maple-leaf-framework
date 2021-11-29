@@ -313,7 +313,7 @@ public interface GXBaseBuilder {
      */
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
-        sql.SET("is_deleted = id");
+        sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         dealSQLWhereCondition(sql, condition);
         return sql.toString();
     }

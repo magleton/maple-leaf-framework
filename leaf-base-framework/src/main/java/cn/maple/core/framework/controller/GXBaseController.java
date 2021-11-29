@@ -115,4 +115,16 @@ public interface GXBaseController {
         List<T> list = mapStruct.sourceToTarget(records);
         return new GXPaginationResProtocol<>(list, total, pages, pageSize, currentPage);
     }
+
+    /**
+     * 构建菜单树
+     *
+     * @param sourceList      源列表
+     * @param rootParentValue 根父级的值, 一般是 0
+     * @param <R>             返回的数据类型
+     * @return 列表
+     */
+    default <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
+        return GXCommonUtils.buildDeptTree(sourceList, rootParentValue);
+    }
 }
