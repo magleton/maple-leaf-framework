@@ -17,6 +17,7 @@ import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -47,6 +48,18 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 保存数据
      *
+     * @param entity 需要保存的数据
+     * @return ID
+     */
+    @SuppressWarnings("all")
+    public ID create(T entity) {
+        baseDao.save(entity);
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+    }
+
+    /**
+     * 保存数据
+     *
      * @param entity    需要更新的数据
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
@@ -58,12 +71,45 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
     /**
      * 保存数据
      *
+     * @param entity        需要更新的数据
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    @SuppressWarnings("all")
+    public ID update(T entity, UpdateWrapper<T> updateWrapper) {
+        if (Objects.isNull(updateWrapper)) {
+            throw new GXBusinessException("请传递更新对象");
+        }
+        baseDao.update(entity, updateWrapper);
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+    }
+
+    /**
+     * 保存数据
+     *
      * @param entity    需要更新或者保存的数据
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param entity        需要更新或者保存的数据
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    @SuppressWarnings("all")
+    public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
+        if (Objects.nonNull(updateWrapper)) {
+            baseDao.update(entity, updateWrapper);
+        } else {
+            baseDao.save(entity);
+        }
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
     }
 
     /**

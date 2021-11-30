@@ -124,7 +124,7 @@ public interface GXBaseController {
      * @param <R>             返回的数据类型
      * @return 列表
      */
-    default <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
+    default <R extends GXBaseResProtocol> List<R> buildTree(List<R> sourceList, Object rootParentValue) {
         return GXCommonUtils.buildDeptTree(sourceList, rootParentValue);
     }
 }
