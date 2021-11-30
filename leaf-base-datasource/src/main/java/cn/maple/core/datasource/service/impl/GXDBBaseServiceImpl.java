@@ -8,12 +8,11 @@ import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
 import cn.maple.core.datasource.service.GXDBBaseService;
-import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
-import com.google.common.collect.HashBasedTable;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,17 +91,90 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto queryParamReqDto) {
-        Integer page = queryParamReqDto.getPage();
-        Integer pageSize = queryParamReqDto.getPageSize();
-        Table<String, String, Object> queryCondition = HashBasedTable.create();
-        GXDBQueryParamInnerDto queryInnerDto = GXDBQueryParamInnerDto.builder()
-                .page(page)
-                .pageSize(pageSize)
-                .columns(CollUtil.newHashSet("*"))
-                .condition(queryCondition)
-                .build();
-        return repository.paginate("paginate", queryInnerDto);
+    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto queryParamReqDto) {
+        queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
+        return repository.paginate("paginate", queryParamReqDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param searchReqDto 搜索条件
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(GXDBQueryParamInnerDto searchReqDto) {
+        return repository.findByCondition(searchReqDto);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param searchReqDto 搜索条件
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(GXDBQueryParamInnerDto searchReqDto) {
+        return repository.findOneByCondition(searchReqDto);
+    }
+
+    /**
+     * 创建数据
+     *
+     * @param entity 数据实体
+     * @return ID
+     */
+    @Override
+    public ID create(T entity) {
+        return repository.create(entity);
+    }
+
+    /**
+     * 更新数据
+     *
+     * @param entity    数据实体
+     * @param condition 更新条件
+     * @return ID
+     */
+    @Override
+    public ID update(T entity, Table<String, String, Object> condition) {
+        return repository.update(entity, condition);
+    }
+
+    /**
+     * 更新数据
+     *
+     * @param entity        数据实体
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    @Override
+    public ID update(T entity, UpdateWrapper<T> updateWrapper) {
+        return repository.update(entity, updateWrapper);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param entity    数据实体
+     * @param condition 更新条件
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+        return repository.updateOrCreate(entity, condition);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param entity        数据实体
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
+        return repository.updateOrCreate(entity, updateWrapper);
     }
 
     /**

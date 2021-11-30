@@ -2,13 +2,14 @@ package cn.maple.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXBaseDao;
+import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXBaseRepository;
-import cn.maple.core.framework.dto.inner.req.GXBaseQueryParamReqDto;
 import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 
 import java.util.List;
@@ -64,7 +65,67 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamReqDto searchReqDto);
+    GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto searchReqDto);
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param searchReqDto 搜索条件
+     * @return List
+     */
+    List<R> findByCondition(GXDBQueryParamInnerDto searchReqDto);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param searchReqDto 搜索条件
+     * @return 一条数据
+     */
+    R findOneByCondition(GXDBQueryParamInnerDto searchReqDto);
+
+    /**
+     * 创建数据
+     *
+     * @param entity 数据实体
+     * @return ID
+     */
+    ID create(T entity);
+
+    /**
+     * 更新数据
+     *
+     * @param entity    数据实体
+     * @param condition 更新条件
+     * @return ID
+     */
+    ID update(T entity, Table<String, String, Object> condition);
+
+    /**
+     * 更新数据
+     *
+     * @param entity        数据实体
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    ID update(T entity, UpdateWrapper<T> updateWrapper);
+
+    /**
+     * 创建或者更新
+     *
+     * @param entity    数据实体
+     * @param condition 更新条件
+     * @return ID
+     */
+    ID updateOrCreate(T entity, Table<String, String, Object> condition);
+
+    /**
+     * 创建或者更新
+     *
+     * @param entity        数据实体
+     * @param updateWrapper 更新条件
+     * @return ID
+     */
+    ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper);
 
     /**
      * 获取 Primary Key
