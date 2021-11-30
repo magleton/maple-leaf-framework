@@ -1,6 +1,10 @@
 package cn.maple.core.framework.service;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.event.GXBaseEvent;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface GXBusinessService {
     /**
@@ -73,4 +77,37 @@ public interface GXBusinessService {
      * @return R
      */
     <T, R> R getSingleFieldValueByEntity(T entity, String path, Class<R> type, R defaultValue);
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     * <p>
+     * {@code}
+     * eg:
+     * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
+     * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
+     * OR
+     * PersonReqProtocol req = new PersonReqProtocol();
+     * req.setUsername("britton");
+     * req.setRealName("枫叶思源")；
+     * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
+     * {code}
+     *
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @return 目标对象
+     */
+    <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions);
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
+     * @param collection  需要转换的对象列表
+     * @param tClass      目标对象的类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 需要拷贝的选项
+     * @return List
+     */
+    <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions);
 }

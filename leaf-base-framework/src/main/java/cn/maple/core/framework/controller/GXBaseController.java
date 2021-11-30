@@ -69,11 +69,23 @@ public interface GXBaseController {
      *
      * @param collection  需要转换的对象列表
      * @param clazz       目标对象的类型
+     * @param methodName  回调方法的名字
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    default <S, Q> List<Q> convertSourceToTarget(Collection<S> collection, Class<Q> clazz, CopyOptions copyOptions) {
-        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, null, copyOptions);
+    default <S, Q> List<Q> convertSourceListToTargetList(Collection<S> collection, Class<Q> clazz, String methodName, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions);
+    }
+
+    /**
+     * 将源对象转换为目标对象
+     *
+     * @param collection 需要转换的对象列表
+     * @param clazz      目标对象的类型
+     * @return List
+     */
+    default <S, Q> List<Q> convertSourceListToTargetList(Collection<S> collection, Class<Q> clazz) {
+        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, null, null);
     }
 
     /**

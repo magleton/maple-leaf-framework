@@ -1,5 +1,6 @@
 package cn.maple.core.framework.service.impl;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -10,6 +11,8 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class GXBusinessServiceImpl implements GXBusinessService {
@@ -127,5 +130,44 @@ public class GXBusinessServiceImpl implements GXBusinessService {
             return defaultValue;
         }
         return Convert.convert(type, parse.getByPath(subField), defaultValue);
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     * <p>
+     * {@code}
+     * eg:
+     * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
+     * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
+     * OR
+     * PersonReqProtocol req = new PersonReqProtocol();
+     * req.setUsername("britton");
+     * req.setRealName("枫叶思源")；
+     * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
+     * {code}
+     *
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @return 目标对象
+     */
+    @Override
+    public <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceToTarget(source, tClass, methodName, copyOptions);
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
+     * @param collection  需要转换的对象列表
+     * @param tClass      目标对象的类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 需要拷贝的选项
+     * @return List
+     */
+    @Override
+    public <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceListToTargetList(collection, tClass, methodName, copyOptions);
     }
 }
