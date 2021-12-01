@@ -7,6 +7,8 @@ import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,12 +30,6 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class GXExceptionHandler {
-    @ExceptionHandler(GXBusinessException.class)
-    public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
-        log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
-    }
-
     @ExceptionHandler(MismatchedInputException.class)
     public GXResultUtils<String> handleMismatchedInputException(MismatchedInputException e) {
         log.error(e.getMessage(), e);
@@ -50,12 +46,6 @@ public class GXExceptionHandler {
     public GXResultUtils<String> handlerNoFoundException(NoHandlerFoundException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public GXResultUtils<String> handleException(Exception e) {
-        log.error(e.getMessage(), e);
-        return GXResultUtils.error("系统错误");
     }
 
     @ExceptionHandler(BindException.class)
@@ -125,5 +115,11 @@ public class GXExceptionHandler {
     public GXResultUtils<String> handleDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(GXBusinessException.class)
+    public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
     }
 }
