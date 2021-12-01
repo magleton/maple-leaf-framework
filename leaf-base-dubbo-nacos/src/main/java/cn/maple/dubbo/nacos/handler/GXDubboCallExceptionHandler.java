@@ -15,7 +15,7 @@ public class GXDubboCallExceptionHandler extends GXExceptionHandler {
     @ExceptionHandler(RpcException.class)
     public GXResultUtils<Dict> handleRpcException(RpcException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.ok("服务端没有正常启动");
+        return GXResultUtils.ok("服务端没有运行不正常,请联系运维人员!");
     }
 
     @ExceptionHandler(GXSentinelFlowException.class)
