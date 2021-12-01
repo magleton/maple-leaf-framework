@@ -36,7 +36,7 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                     Dict data = Dict.create().set("methodName", invocation.getMethodName())
                             .set("arguments", CollUtil.toList(invocation.getArguments()))
                             .set("interfaceName", invocation.getInvoker().getInterface());
-                    exception = new GXSentinelFlowException("SentinelFlowException", HttpStatus.HTTP_NOT_ACCEPTABLE, data);
+                    exception = new GXSentinelFlowException("服务限流异常", HttpStatus.HTTP_NOT_ACCEPTABLE, data);
                     appResponse.setException(exception);
                     return;
                 }
