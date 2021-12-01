@@ -39,6 +39,10 @@
                     <groupId>org.apache.dubbo</groupId>
                     <artifactId>dubbo</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--使用sentinel dashboard导入-->
@@ -46,6 +50,12 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-transport-simple-http</artifactId>
             <version>${sentinel.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- sentinel Dubbo DataSource Nacos-->
         <dependency>
@@ -59,6 +69,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- sentinel 集群服务服务端 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-cluster-server-default</artifactId>
+            <version>${sentinel.version}</version>
+        </dependency>
+        <!-- sentinel 集群服务客户端 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-cluster-client-default</artifactId>
+            <version>${sentinel.version}</version>
+        </dependency>
         <!-- SentinelResource注解的处理器 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
@@ -68,6 +90,18 @@
                 <exclusion>
                     <groupId>org.aspectj</groupId>
                     <artifactId>aspectjweaver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-test</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
