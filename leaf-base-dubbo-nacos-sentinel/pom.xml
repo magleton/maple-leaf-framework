@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>leaf-base-dubbo-sentinel</artifactId>
+    <artifactId>leaf-base-dubbo-nacos-sentinel</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,16 +59,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- sentinel 集群服务服务端 -->
+        <!-- SentinelResource注解的处理器 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-cluster-server-default</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-        <!-- sentinel 集群服务客户端 -->
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-cluster-client-default</artifactId>
+            <artifactId>sentinel-annotation-aspectj</artifactId>
             <version>${sentinel.version}</version>
         </dependency>
     </dependencies>
