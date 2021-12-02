@@ -82,8 +82,8 @@ public interface GXBaseBuilder {
                 sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.STR_EQ, fieldName, value));
             }
         }
-        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
-        dealSQLWhereCondition(sql, condition);
+        sql.SET(CharSequenceUtil.format(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds())));
+        dealSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -95,9 +95,10 @@ public interface GXBaseBuilder {
      */
     static String checkRecordIsExists(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
         String tableName = dbQueryParamInnerDto.getTableName();
+        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        dealSQLWhereCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);
         return CharSequenceUtil.format("SELECT IFNULL(({}) , 0)", sql.toString());
     }
@@ -193,7 +194,7 @@ public interface GXBaseBuilder {
         }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            dealSQLWhereCondition(sql, condition);
+            dealSQLWhereCondition(sql, condition, tableNameAlias);
         }
         sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         // 处理分组
@@ -295,12 +296,13 @@ public interface GXBaseBuilder {
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
+        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         String selectStr = "*";
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
-        dealSQLWhereCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition, tableNameAlias);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
         sql.LIMIT(1);
         return sql.toString();
@@ -317,10 +319,11 @@ public interface GXBaseBuilder {
      * dealSQLWhereCondition(sql , condition);
      * }
      *
-     * @param sql       SQL语句
-     * @param condition 条件
+     * @param sql            SQL语句
+     * @param condition      条件
+     * @param tableNameAlias 表的别名
      */
-    static void dealSQLWhereCondition(SQL sql, Table<String, String, Object> condition) {
+    static void dealSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
             conditionMap.forEach((column, datum) -> {
@@ -328,21 +331,32 @@ public interface GXBaseBuilder {
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr = "";
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, dealWhereColumn(column, tableNameAlias))) {
                             whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                         } else {
-                            //whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);
-                            whereStr = CharSequenceUtil.format("{} " + operator, column, value);
+                            whereStr = CharSequenceUtil.format("{} " + operator, dealWhereColumn(column, tableNameAlias), value);
                         }
                         wheres.add(whereStr);
-                        //wheres.add("or");
                     }
                 });
-                //wheres.remove(wheres.size() - 1);
                 String whereStr = String.join(" ", wheres);
                 sql.WHERE(whereStr);
             });
         }
+    }
+
+    /**
+     * 处理where条件的字段列名字
+     *
+     * @param column         字段名字
+     * @param tableNameAlias 表的别名
+     * @return String
+     */
+    static String dealWhereColumn(String column, String tableNameAlias) {
+        if (CharSequenceUtil.isNotEmpty(tableNameAlias) && !CharSequenceUtil.contains(column, '.')) {
+            column = CharSequenceUtil.format("{}.{}", tableNameAlias, column);
+        }
+        return column;
     }
 
     /**
@@ -355,7 +369,7 @@ public interface GXBaseBuilder {
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
-        dealSQLWhereCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -368,7 +382,7 @@ public interface GXBaseBuilder {
      */
     static String deleteWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
-        dealSQLWhereCondition(sql, condition);
+        dealSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
