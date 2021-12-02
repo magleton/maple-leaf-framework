@@ -1,12 +1,10 @@
 package cn.maple.core.framework.config.web;
 
 import cn.maple.core.framework.filter.GXTraceIdRequestLoggingFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class GXTraceIdRequestLoggingConfig {
-    @Bean
+    //@Bean
     public GXTraceIdRequestLoggingFilter traceIdRequestLoggingFilter() {
         return new GXTraceIdRequestLoggingFilter();
     }
