@@ -57,6 +57,12 @@ public class GXDBQueryParamInnerDto extends GXBaseDto {
 
     /**
      * JOIN链接信息
+     * {@code
+     * Table<String, String, Table<String, String, Dict>> joins = HashBasedTable.create();
+     * HashBasedTable<String, String, Dict> joinData = HashBasedTable.create();
+     * joinData.put("子表别名" , "主表别名" , Dict.create().set("子表字段" , "主表字段"))
+     * joins.put("链接类型" , "子表名字" , joinData);
+     * }
      */
     private transient Table<String, String, Table<String, String, Dict>> joins;
 }

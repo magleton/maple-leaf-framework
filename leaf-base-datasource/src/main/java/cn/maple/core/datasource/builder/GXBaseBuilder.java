@@ -162,9 +162,12 @@ public interface GXBaseBuilder {
      *                             Table<String, String, Object> condition = HashBasedTable.create();
      *                             condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
      *                             Table<String, String, Object> joins = HashBasedTable.create();
-     *                             joins.put("right", "d", "d.c_id = c.id");
-     *                             joins.put("inner", "b", "a.id = b.a_id");
-     *                             joins.put("left", "c", "c.b_id = b.id");
+     *                             HashBasedTable<String, String, Dict> joinAdmin = HashBasedTable.create();
+     *                             joinAdmin.put("子表别名", "主表别名", Dict.create()
+     *                             .set("子表字段名字A", "主表表字段名字A")
+     *                             .set("子表字段名字B", "主表表字段名字B")
+     *                             .set("子表字段名字C", "主表表字段名字C"));
+     *                             joins.put("链接类型A", "子表名字A", joinAdmin);
      *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
      *                             .columns(CollUtil.newHashSet("id" , "username"))
      *                             .tableName("s_admin")
@@ -219,10 +222,10 @@ public interface GXBaseBuilder {
      *              {@code
      *              Table<String, String, Object> joins = HashBasedTable.create();
      *              HashBasedTable<String, String, Dict> joinAdmin = HashBasedTable.create();
-     *              joinAdmin.put("mainTableAlias", "targetAliasTable", Dict.create()
-     *              .set("mainColumnA", "targetColumnA")
-     *              .set("mainColumnB", "targetColumnB")
-     *              .set("mainColumnC", "targetColumnC"));
+     *              joinAdmin.put("子表别名", "主表别名", Dict.create()
+     *              .set("子表字段名字A", "主表表字段名字A")
+     *              .set("子表字段名字B", "主表表字段名字B")
+     *              .set("子表字段名字C", "主表表字段名字C"));
      *              joins.put("right", "s_admin", joinAdmin);
      *              handleSQLJoin(sql , joins);
      *              }
@@ -243,10 +246,10 @@ public interface GXBaseBuilder {
      * @param join         JOIN信息
      *                     {@code
      *                     HashBasedTable<String, String, Dict> joinInfo = HashBasedTable.create();
-     *                     joinInfo.put("mainTableAlias", "targetAliasTable", Dict.create()
-     *                     .set("mainColumnA", "targetColumnA")
-     *                     .set("mainColumnB", "targetColumnB")
-     *                     .set("mainColumnC", "targetColumnC"));
+     *                     joinInfo.put("子表别名", "主表别名", Dict.create()
+     *                     .set("子表字段名字A", "主表表字段名字A")
+     *                     .set("子表字段名字B", "主表表字段名字B")
+     *                     .set("子表字段名字C", "主表表字段名字C"));
      *                     handleJoinOnSpecification(sql , "left" , "address" , joinInfo);
      *                     }
      */
@@ -256,7 +259,7 @@ public interface GXBaseBuilder {
             String[] joinOnStr = new String[]{""};
             rowMap.forEach((subTableAlias, joinInfo) -> joinInfo.forEach((mainTableAlias, joinSpecification) -> {
                 List<String> joinOnList = CollUtil.newArrayList();
-                joinSpecification.forEach((k, v) -> joinOnList.add(CharSequenceUtil.format("{}.{} = {}.{}", mainTableAlias, k, subTableAlias, v)));
+                joinSpecification.forEach((subTableField, mainTableField) -> joinOnList.add(CharSequenceUtil.format("{}.{} = {}.{}", subTableAlias, subTableField, mainTableAlias, mainTableField)));
                 joinOnStr[0] = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, subTableName, subTableAlias, CollUtil.join(joinOnList, " and "));
             }));
             if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {
