@@ -28,7 +28,7 @@
 
     <jmxConfigurator/>
 
-    <contextName>geoxus_logback</contextName>
+    <contextName>maple_logback</contextName>
 
     <!-- 加载 Spring 配置文件信息 -->
     <springProperty scope="context" name="applicationName" source="spring.application.name"/>
