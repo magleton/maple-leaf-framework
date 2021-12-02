@@ -19,7 +19,7 @@ public class GXBuilderConstant {
     /**
      * 全模糊查询
      */
-    public static final String FULL_LIKE = " like '%{}%'";
+    public static final String LIKE = " like '%{}%'";
 
     /**
      * 字符串相等
