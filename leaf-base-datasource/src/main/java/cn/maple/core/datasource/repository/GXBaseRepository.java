@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
+import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dao.GXBaseDao;
 import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
@@ -354,9 +354,9 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
         }
         Table<String, String, Object> condition = HashBasedTable.create();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-            condition.put(fieldName, GXBaseBuilderConstant.NUMBER_EQ, value);
+            condition.put(fieldName, GXBuilderConstant.NUMBER_EQ, value);
         } else {
-            condition.put(fieldName, GXBaseBuilderConstant.STR_EQ, value);
+            condition.put(fieldName, GXBuilderConstant.STR_EQ, value);
         }
         return checkRecordIsExists(tableName, condition);
     }

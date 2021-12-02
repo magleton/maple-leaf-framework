@@ -9,7 +9,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
+import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
@@ -77,9 +77,9 @@ public interface GXBaseBuilder {
                 value = JSONUtil.toJsonStr(value);
             }
             if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.NUMBER_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.NUMBER_EQ, fieldName, value));
             } else {
-                sql.SET(CharSequenceUtil.format("{} " + GXBaseBuilderConstant.STR_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.STR_EQ, fieldName, value));
             }
         }
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
@@ -160,9 +160,15 @@ public interface GXBaseBuilder {
      *                             findByCondition(queryInnerDto);
      *                             Table<String, String, Object> condition = HashBasedTable.create();
      *                             condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     *                             Table<String, String, Object> joins = HashBasedTable.create();
+     *                             joins.put("right", "d", "d.c_id = c.id");
+     *                             joins.put("inner", "b", "a.id = b.a_id");
+     *                             joins.put("left", "c", "c.b_id = b.id");
      *                             GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
      *                             .columns(CollUtil.newHashSet("id" , "username"))
      *                             .tableName("s_admin")
+     *                             .tableNameAlias("admin")
+     *                             .joins(joins)
      *                             .condition(condition)
      *                             .groupByField(CollUtil.newHashSet("created_at", "nickname"))
      *                             .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
@@ -173,16 +179,23 @@ public interface GXBaseBuilder {
     static String findByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
-        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Set<String> groupByField = dbQueryParamInnerDto.getGroupByField();
         Dict orderByField = dbQueryParamInnerDto.getOrderByField();
-        String selectStr = "*";
+        String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
         }
-        SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
-        dealSQLWhereCondition(sql, condition);
-        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
+        SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
+        Table<String, String, Object> joins = dbQueryParamInnerDto.getJoins();
+        if (Objects.nonNull(joins) && !joins.isEmpty()) {
+            dealSQLJoin(sql, joins);
+        }
+        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        if (Objects.nonNull(condition) && !condition.isEmpty()) {
+            dealSQLWhereCondition(sql, condition);
+        }
+        sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
@@ -195,6 +208,34 @@ public interface GXBaseBuilder {
             sql.ORDER_BY(orderColumns);
         }
         return sql.toString();
+    }
+
+    /**
+     * 处理JOIN表
+     *
+     * @param sql   SQL语句
+     * @param joins joins信息
+     *              {@code
+     *              Table<String, String, Object> joins = HashBasedTable.create();
+     *              joins.put("right", "d", "d.c_id = c.id");
+     *              joins.put("inner", "b", "a.id = b.a_id");
+     *              joins.put("left", "c", "c.b_id = b.id");
+     *              dealSQLJoin(sql , joins);
+     *              }
+     */
+    static void dealSQLJoin(SQL sql, Table<String, String, Object> joins) {
+        if (Objects.nonNull(joins) && !joins.isEmpty()) {
+            Map<String, Map<String, Object>> conditionMap = joins.rowMap();
+            conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((tableName, joinSpecification) -> {
+                if (CharSequenceUtil.equalsIgnoreCase("left", joinType)) {
+                    sql.LEFT_OUTER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
+                } else if (CharSequenceUtil.equalsIgnoreCase("right", joinType)) {
+                    sql.RIGHT_OUTER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
+                } else if (CharSequenceUtil.equalsIgnoreCase("inner", joinType)) {
+                    sql.INNER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
+                }
+            }));
+        }
     }
 
     /**
@@ -287,7 +328,7 @@ public interface GXBaseBuilder {
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr = "";
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBaseBuilderConstant.T_FUNC_MARK, column)) {
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
                             whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                         } else {
                             //whereStr = CharSequenceUtil.format("{} {} {} ", column, operator, value);

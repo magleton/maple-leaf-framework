@@ -1,6 +1,6 @@
 package cn.maple.core.datasource.constant;
 
-public class GXBaseBuilderConstant {
+public class GXBuilderConstant {
     /**
      * 搜索条件的名字
      */
@@ -76,6 +76,6 @@ public class GXBaseBuilderConstant {
      */
     public static final String T_FUNC_MARK = "T_FUNC";
 
-    private GXBaseBuilderConstant() {
+    private GXBuilderConstant() {
     }
 }

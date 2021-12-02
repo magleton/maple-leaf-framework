@@ -3,7 +3,7 @@ package cn.maple.core.datasource.util;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.datasource.constant.GXBaseBuilderConstant;
+import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -32,14 +32,14 @@ public class GXDBCommonUtils {
      * @return Dict
      */
     public static Dict addSearchCondition(Dict requestParam, String key, Object value, boolean returnRequestParam) {
-        final Object obj = requestParam.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME);
+        final Object obj = requestParam.getObj(GXBuilderConstant.SEARCH_CONDITION_NAME);
         if (null == obj) {
             return requestParam;
         }
         final Dict data = Convert.convert(Dict.class, obj);
         data.set(key, value);
         if (returnRequestParam) {
-            requestParam.put(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, data);
+            requestParam.put(GXBuilderConstant.SEARCH_CONDITION_NAME, data);
             return requestParam;
         }
         return data;
@@ -54,14 +54,14 @@ public class GXDBCommonUtils {
      * @return Dict
      */
     public static Dict addSearchCondition(Dict requestParam, Dict sourceData, boolean returnRequestParam) {
-        final Object obj = requestParam.getObj(GXBaseBuilderConstant.SEARCH_CONDITION_NAME);
+        final Object obj = requestParam.getObj(GXBuilderConstant.SEARCH_CONDITION_NAME);
         if (null == obj) {
             return requestParam;
         }
         final Dict data = Convert.convert(Dict.class, obj);
         data.putAll(sourceData);
         if (returnRequestParam) {
-            requestParam.put(GXBaseBuilderConstant.SEARCH_CONDITION_NAME, data);
+            requestParam.put(GXBuilderConstant.SEARCH_CONDITION_NAME, data);
             return requestParam;
         }
         return data;

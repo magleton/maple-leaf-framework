@@ -14,9 +14,14 @@ import java.util.Set;
 @Builder
 public class GXDBQueryParamInnerDto extends GXBaseDto {
     /**
-     * 需要查询的表名字
+     * 需要查询的主表名字 , 在有join查询时
      */
     private String tableName;
+
+    /**
+     * 需要查询的主表名字的别名 , 在有join查询时
+     */
+    private String tableNameAlias;
 
     /**
      * 当前页
@@ -49,4 +54,9 @@ public class GXDBQueryParamInnerDto extends GXBaseDto {
      * 分组字段
      */
     private Set<String> groupByField;
+
+    /**
+     * JOIN链接信息
+     */
+    private transient Table<String, String, Object> joins;
 }
