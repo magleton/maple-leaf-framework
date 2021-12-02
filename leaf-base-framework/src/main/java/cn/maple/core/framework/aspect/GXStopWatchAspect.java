@@ -3,6 +3,7 @@ package cn.maple.core.framework.aspect;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.util.GXTraceIdContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -34,6 +35,8 @@ public class GXStopWatchAspect {
 
     @Around("stopWatchPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
+        String traceIdKey = GXTraceIdContextUtils.TRACE_ID_KEY;
+        String traceId = GXTraceIdContextUtils.getTraceId();
         long start = System.currentTimeMillis();
         MethodSignature signature = (MethodSignature) point.getSignature();
         Class<?> targetClass = point.getTarget().getClass();
@@ -53,10 +56,10 @@ public class GXStopWatchAspect {
         }
         String callInfo = CharSequenceUtil.format("{}.{}", simpleName, name);
         String threadName = Thread.currentThread().getName();
-        log.info("{} : 调用{}方法的请求参数 ---- > {}", threadName, callInfo, JSONUtil.toJsonStr(parametersDict));
+        log.info("{} {} {} : 调用{}方法的请求参数 ---- > {}", traceIdKey, traceId, threadName, callInfo, JSONUtil.toJsonStr(parametersDict));
         Object o = point.proceed();
-        log.info("{} : 调用{}方法的响应数据 ---- > {}", threadName, callInfo, JSONUtil.toJsonStr(o));
-        log.info("{} : 调用{}方法总共运行{}秒", threadName, callInfo, last);
+        log.info("{} {} {} : 调用{}方法的响应数据 ---- > {}", traceIdKey, traceId, threadName, callInfo, JSONUtil.toJsonStr(o));
+        log.info("{} {} {} : 调用{}方法总共运行{}秒", traceIdKey, traceId, threadName, callInfo, last);
         return o;
     }
 }

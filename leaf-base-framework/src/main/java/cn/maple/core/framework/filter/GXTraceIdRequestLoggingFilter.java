@@ -6,16 +6,17 @@ import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 public class GXTraceIdRequestLoggingFilter extends AbstractRequestLoggingFilter {
     @Override
     protected void beforeRequest(HttpServletRequest request, @NotNull String message) {
-        String requestId = request.getHeader(GXTraceIdContextUtils.TRACE_ID_KEY);
-        if (CharSequenceUtil.isNotEmpty(requestId)) {
-            GXTraceIdContextUtils.setTraceId(requestId);
-        } else {
-            GXTraceIdContextUtils.setTraceId(GXTraceIdContextUtils.GXTraceIdGenerator.getTraceId());
+        String requestId = Optional.ofNullable(request.getHeader(GXTraceIdContextUtils.TRACE_ID_KEY)).orElse(GXTraceIdContextUtils.getTraceId());
+        if (!CharSequenceUtil.isNotEmpty(requestId)) {
+            requestId = GXTraceIdContextUtils.generateTraceId();
         }
+        GXTraceIdContextUtils.setTraceId(requestId);
+        request.setAttribute(GXTraceIdContextUtils.TRACE_ID_KEY, requestId);
     }
 
     @Override

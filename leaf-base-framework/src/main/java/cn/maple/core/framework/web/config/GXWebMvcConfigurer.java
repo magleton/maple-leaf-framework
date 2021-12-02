@@ -1,6 +1,5 @@
 package cn.maple.core.framework.web.config;
 
-import cn.maple.core.framework.web.interceptor.GXTraceIdInterceptor;
 import cn.maple.core.framework.web.support.GXRequestHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +17,8 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class GXWebMvcConfigurer implements WebMvcConfigurer {
-    @Resource
-    private GXTraceIdInterceptor traceIdInterceptor;
+    //@Resource
+    //private GXTraceIdInterceptor traceIdInterceptor;
 
     @Resource
     private GXRequestHandlerMethodArgumentResolver requestHandlerMethodArgumentResolver;
@@ -36,7 +35,7 @@ public class GXWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(traceIdInterceptor);
+        //registry.addInterceptor(traceIdInterceptor);
         registerCustomerInterceptors(registry);
     }
 
