@@ -188,7 +188,7 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
-        Table<String, String, Object> joins = dbQueryParamInnerDto.getJoins();
+        Table<String, String, Table<String, String, Dict>> joins = dbQueryParamInnerDto.getJoins();
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             handleSQLJoin(sql, joins);
         }
@@ -218,24 +218,54 @@ public interface GXBaseBuilder {
      * @param joins joins信息
      *              {@code
      *              Table<String, String, Object> joins = HashBasedTable.create();
-     *              joins.put("right", "d", "d.c_id = c.id");
-     *              joins.put("inner", "b", "a.id = b.a_id");
-     *              joins.put("left", "c", "c.b_id = b.id");
+     *              HashBasedTable<String, String, Dict> joinAdmin = HashBasedTable.create();
+     *              joinAdmin.put("mainTableAlias", "targetAliasTable", Dict.create()
+     *              .set("mainColumnA", "targetColumnA")
+     *              .set("mainColumnB", "targetColumnB")
+     *              .set("mainColumnC", "targetColumnC"));
+     *              joins.put("right", "s_admin", joinAdmin);
      *              handleSQLJoin(sql , joins);
      *              }
      */
-    static void handleSQLJoin(SQL sql, Table<String, String, Object> joins) {
+    static void handleSQLJoin(SQL sql, Table<String, String, Table<String, String, Dict>> joins) {
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
-            Map<String, Map<String, Object>> conditionMap = joins.rowMap();
-            conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((tableName, joinSpecification) -> {
-                if (CharSequenceUtil.equalsIgnoreCase("left", joinType)) {
-                    sql.LEFT_OUTER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
-                } else if (CharSequenceUtil.equalsIgnoreCase("right", joinType)) {
-                    sql.RIGHT_OUTER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
-                } else if (CharSequenceUtil.equalsIgnoreCase("inner", joinType)) {
-                    sql.INNER_JOIN(CharSequenceUtil.format("{} ON {}", tableName, joinSpecification));
-                }
+            Map<String, Map<String, Table<String, String, Dict>>> conditionMap = joins.rowMap();
+            conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((subTableName, joinSpecification) -> handleJoinOnSpecification(sql, joinType, subTableName, joinSpecification)));
+        }
+    }
+
+    /**
+     * 处理JOIN后面的ON条件
+     *
+     * @param sql          SQL语句
+     * @param joinType     链接类型
+     * @param subTableName 子表名字(需要链接的表的名字)
+     * @param join         JOIN信息
+     *                     {@code
+     *                     HashBasedTable<String, String, Dict> joinInfo = HashBasedTable.create();
+     *                     joinInfo.put("mainTableAlias", "targetAliasTable", Dict.create()
+     *                     .set("mainColumnA", "targetColumnA")
+     *                     .set("mainColumnB", "targetColumnB")
+     *                     .set("mainColumnC", "targetColumnC"));
+     *                     handleJoinOnSpecification(sql , "left" , "address" , joinInfo);
+     *                     }
+     */
+    static void handleJoinOnSpecification(SQL sql, String joinType, String subTableName, Table<String, String, Dict> join) {
+        if (Objects.nonNull(join) && !join.isEmpty()) {
+            Map<String, Map<String, Dict>> rowMap = join.rowMap();
+            String[] joinOnStr = new String[]{""};
+            rowMap.forEach((subTableAlias, joinInfo) -> joinInfo.forEach((mainTableAlias, joinSpecification) -> {
+                List<String> joinOnList = CollUtil.newArrayList();
+                joinSpecification.forEach((k, v) -> joinOnList.add(CharSequenceUtil.format("{}.{} = {}.{}", mainTableAlias, k, subTableAlias, v)));
+                joinOnStr[0] = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, subTableName, subTableAlias, CollUtil.join(joinOnList, " and "));
             }));
+            if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {
+                sql.LEFT_OUTER_JOIN(joinOnStr[0]);
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.RIGHT_JOIN_TYPE, joinType)) {
+                sql.RIGHT_OUTER_JOIN(joinOnStr[0]);
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.INNER_JOIN_TYPE, joinType)) {
+                sql.INNER_JOIN(joinOnStr[0]);
+            }
         }
     }
 

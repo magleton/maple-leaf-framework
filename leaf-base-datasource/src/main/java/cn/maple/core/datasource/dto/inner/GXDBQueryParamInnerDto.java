@@ -58,5 +58,5 @@ public class GXDBQueryParamInnerDto extends GXBaseDto {
     /**
      * JOIN链接信息
      */
-    private transient Table<String, String, Object> joins;
+    private transient Table<String, String, Table<String, String, Dict>> joins;
 }
