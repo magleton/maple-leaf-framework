@@ -83,7 +83,7 @@ public interface GXBaseBuilder {
             }
         }
         sql.SET(CharSequenceUtil.format(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds())));
-        dealSQLWhereCondition(sql, condition, "");
+        handleSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -98,7 +98,7 @@ public interface GXBaseBuilder {
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        dealSQLWhereCondition(sql, condition, tableNameAlias);
+        handleSQLWhereCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);
         return CharSequenceUtil.format("SELECT IFNULL(({}) , 0)", sql.toString());
     }
@@ -190,11 +190,11 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
         Table<String, String, Object> joins = dbQueryParamInnerDto.getJoins();
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
-            dealSQLJoin(sql, joins);
+            handleSQLJoin(sql, joins);
         }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            dealSQLWhereCondition(sql, condition, tableNameAlias);
+            handleSQLWhereCondition(sql, condition, tableNameAlias);
         }
         sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         // 处理分组
@@ -221,10 +221,10 @@ public interface GXBaseBuilder {
      *              joins.put("right", "d", "d.c_id = c.id");
      *              joins.put("inner", "b", "a.id = b.a_id");
      *              joins.put("left", "c", "c.b_id = b.id");
-     *              dealSQLJoin(sql , joins);
+     *              handleSQLJoin(sql , joins);
      *              }
      */
-    static void dealSQLJoin(SQL sql, Table<String, String, Object> joins) {
+    static void handleSQLJoin(SQL sql, Table<String, String, Object> joins) {
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = joins.rowMap();
             conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((tableName, joinSpecification) -> {
@@ -302,7 +302,7 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
-        dealSQLWhereCondition(sql, condition, tableNameAlias);
+        handleSQLWhereCondition(sql, condition, tableNameAlias);
         sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
         sql.LIMIT(1);
         return sql.toString();
@@ -316,14 +316,14 @@ public interface GXBaseBuilder {
      * condition.put("created_at", GXBaseBuilderConstant.NUMBER_LE, 11111);
      * condition.put("created_at", GXBaseBuilderConstant.NUMBER_GE, 22222);
      * condition.put("username", GXBaseBuilderConstant.RIGHT_LIKE, "jetty");
-     * dealSQLWhereCondition(sql , condition);
+     * handleSQLWhereCondition(sql , condition);
      * }
      *
      * @param sql            SQL语句
      * @param condition      条件
      * @param tableNameAlias 表的别名
      */
-    static void dealSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
+    static void handleSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
             conditionMap.forEach((column, datum) -> {
@@ -331,10 +331,10 @@ public interface GXBaseBuilder {
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr = "";
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, dealWhereColumn(column, tableNameAlias))) {
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, handleWhereColumn(column, tableNameAlias))) {
                             whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                         } else {
-                            whereStr = CharSequenceUtil.format("{} " + operator, dealWhereColumn(column, tableNameAlias), value);
+                            whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value);
                         }
                         wheres.add(whereStr);
                     }
@@ -352,7 +352,7 @@ public interface GXBaseBuilder {
      * @param tableNameAlias 表的别名
      * @return String
      */
-    static String dealWhereColumn(String column, String tableNameAlias) {
+    static String handleWhereColumn(String column, String tableNameAlias) {
         if (CharSequenceUtil.isNotEmpty(tableNameAlias) && !CharSequenceUtil.contains(column, '.')) {
             column = CharSequenceUtil.format("{}.{}", tableNameAlias, column);
         }
@@ -369,7 +369,7 @@ public interface GXBaseBuilder {
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
-        dealSQLWhereCondition(sql, condition, "");
+        handleSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -382,7 +382,7 @@ public interface GXBaseBuilder {
      */
     static String deleteWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
-        dealSQLWhereCondition(sql, condition, "");
+        handleSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
 
