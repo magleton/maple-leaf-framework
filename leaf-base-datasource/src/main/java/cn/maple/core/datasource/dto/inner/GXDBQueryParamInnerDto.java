@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,6 +17,7 @@ public class GXDBQueryParamInnerDto extends GXBaseDto {
     /**
      * 需要查询的主表名字 , 在有join查询时
      */
+    @NotNull(message = "表名字必填")
     private String tableName;
 
     /**

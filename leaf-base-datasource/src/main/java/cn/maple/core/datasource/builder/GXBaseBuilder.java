@@ -18,6 +18,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
+import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
@@ -326,6 +327,7 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+        GXValidatorUtils.validateEntity(dbQueryParamInnerDto);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
@@ -334,9 +336,9 @@ public interface GXBaseBuilder {
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
         }
-        SQL sql = new SQL().SELECT(selectStr).FROM(tableName);
+        SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
         handleSQLWhereCondition(sql, condition, tableNameAlias);
-        sql.WHERE(CharSequenceUtil.format("is_deleted = {}", getIsNotDeletedValue()));
+        sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         sql.LIMIT(1);
         return sql.toString();
     }
@@ -349,6 +351,12 @@ public interface GXBaseBuilder {
      * condition.put("created_at", GXBaseBuilderConstant.NUMBER_LE, 11111);
      * condition.put("created_at", GXBaseBuilderConstant.NUMBER_GE, 22222);
      * condition.put("username", GXBaseBuilderConstant.RIGHT_LIKE, "jetty");
+     * HashBasedTable<String, String, Object> multiColumn = HashBasedTable.create();
+     * multiColumn.put("username , '-' , nickname", GXBuilderConstant.RIGHT_LIKE, "77777");
+     * multiColumn.put("username ,'-' , real_name", GXBuilderConstant.RIGHT_LIKE, "99999");
+     * condition.put("T_FUNC" , "concat" , multiColumn);
+     * condition.put("T_FUNC" , "JSON_OVERLAPS", "items->'$.zipcode', CAST('[94536]' AS JSON)");
+     * condition.put("T_FUNC" , "JSON_OVERLAPS", CollUtil.newHashSet("items->'$.zipcode', CAST('[94536]' AS JSON)", "items->'$.zipcode1', CAST('[94537]' AS JSON)"));
      * handleSQLWhereCondition(sql , condition);
      * }
      *
@@ -364,15 +372,29 @@ public interface GXBaseBuilder {
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr = "";
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, handleWhereColumn(column, tableNameAlias))) {
-                            whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
+                            if (value instanceof Table) {
+                                Table<String, String, Object> table = Convert.convert(Table.class, value);
+                                Map<String, Map<String, Object>> rowMap = table.rowMap();
+                                rowMap.forEach((c, op) -> {
+                                    op.forEach((k, v) -> {
+                                        wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v));
+                                    });
+                                });
+                            } else if (value instanceof Set) {
+                                Set<String> stringSet = Convert.toSet(String.class, value);
+                                stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, v)));
+                            } else {
+                                whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
+                                wheres.add(whereStr);
+                            }
                         } else {
                             whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value);
+                            wheres.add(whereStr);
                         }
-                        wheres.add(whereStr);
                     }
                 });
-                String whereStr = String.join(" ", wheres);
+                String whereStr = String.join(" AND ", wheres);
                 sql.WHERE(whereStr);
             });
         }
@@ -402,7 +424,7 @@ public interface GXBaseBuilder {
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
-        condition.put("is_deleted", GXBuilderConstant.NUMBER_NOT_EQ, getIsNotDeletedValue());
+        condition.put("is_deleted", GXBuilderConstant.NUMBER_EQ, getIsNotDeletedValue());
         handleSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }
