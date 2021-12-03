@@ -392,20 +392,16 @@ public interface GXBaseBuilder {
                             if (value instanceof Table) {
                                 Table<String, String, Object> table = Convert.convert(Table.class, value);
                                 Map<String, Map<String, Object>> rowMap = table.rowMap();
-                                rowMap.forEach((c, op) -> {
-                                    op.forEach((k, v) -> {
-                                        wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v));
-                                    });
-                                });
+                                rowMap.forEach((c, op) -> op.forEach((k, v) -> wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), GXSQLFilter.sqlInject(v.toString())))));
                             } else if (value instanceof Set) {
                                 Set<String> stringSet = Convert.toSet(String.class, value);
-                                stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, v)));
+                                stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, GXSQLFilter.sqlInject(v))));
                             } else {
                                 whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
                                 wheres.add(whereStr);
                             }
                         } else {
-                            whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value);
+                            whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
                             wheres.add(whereStr);
                         }
                     }
