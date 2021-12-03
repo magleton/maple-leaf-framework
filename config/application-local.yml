@@ -19,4 +19,8 @@ spring:
       - aaaa
       - bbbb
 
+# 日志文件的存放路径
+logging:
+  path: /tmp/log
+
 debug: false
