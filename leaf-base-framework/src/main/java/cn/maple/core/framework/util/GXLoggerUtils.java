@@ -105,7 +105,7 @@ public class GXLoggerUtils {
      */
     private static JSONObject addTraceIdToData(Object data) {
         data = Optional.ofNullable(data).orElse(Dict.create());
-        if (GXTypeOfUtils.typeof(data).getName().equalsIgnoreCase("java.lang.String")) {
+        if (CharSequenceUtil.equalsIgnoreCase(GXTypeOfUtils.typeof(data).getName(), String.class.getName())) {
             data = Dict.create().set("message", data);
         }
         JSONObject parse = JSONUtil.parseObj(data);
