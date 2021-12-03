@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.repository;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
@@ -145,7 +146,9 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
             }
             dictList.add(tmpDict);
         });
-        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, null, null);
+        String methodName = dbQueryInnerDto.getMethodName();
+        CopyOptions copyOptions = dbQueryInnerDto.getCopyOptions();
+        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions);
     }
 
     /**
