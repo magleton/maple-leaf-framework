@@ -1,6 +1,5 @@
 package cn.maple.core.framework.util;
 
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import org.slf4j.Logger;
@@ -56,7 +55,6 @@ public class GXTraceIdContextUtils {
             return;
         }
         MDC.remove(TRACE_ID_KEY);
-        GXLoggerUtils.logInfo(LOG, "销毁的TraceId是:", Dict.create().set(TRACE_ID_KEY, traceId));
     }
 
     /**
@@ -72,9 +70,7 @@ public class GXTraceIdContextUtils {
      * @return String
      */
     public static String generateTraceId() {
-        String traceId = GXTraceIdGenerator.generateTraceId();
-        GXLoggerUtils.logInfo(LOG, "生成的TraceId是:", Dict.create().set(TRACE_ID_KEY, traceId));
-        return traceId;
+        return GXTraceIdGenerator.generateTraceId();
     }
 
     /**
