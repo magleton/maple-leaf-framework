@@ -146,9 +146,6 @@ public interface GXBaseBuilder {
 
     /**
      * 通过条件获取数据列表
-     *
-     *
-     *
      * <pre>
      * {@code
      * Table<String, String, Object> condition = HashBasedTable.create();
