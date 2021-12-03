@@ -397,7 +397,7 @@ public interface GXBaseBuilder {
                                 Set<String> stringSet = Convert.toSet(String.class, value);
                                 stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, GXSQLFilter.sqlInject(v))));
                             } else {
-                                whereStr = CharSequenceUtil.format("{} ({}) ", operator, value);
+                                whereStr = CharSequenceUtil.format("{} ({}) ", operator, GXSQLFilter.sqlInject(value.toString()));
                                 wheres.add(whereStr);
                             }
                         } else {
