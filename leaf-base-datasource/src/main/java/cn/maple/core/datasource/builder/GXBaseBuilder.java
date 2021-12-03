@@ -15,7 +15,6 @@ import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
@@ -131,7 +130,7 @@ public interface GXBaseBuilder {
             for (String field : fieldSet) {
                 Object value = dict.getObj(field);
                 if (!ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                    value = GXSQLFilter.sqlInject(value.toString());
+                    value = value.toString();
                 }
                 if (++key == len) {
                     values.append(value).append("'");
