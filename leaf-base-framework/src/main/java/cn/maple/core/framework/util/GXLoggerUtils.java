@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class GXLoggerUtils {
     /**
      * 私有构造函数
@@ -28,7 +29,7 @@ public class GXLoggerUtils {
     public static void logInfo(Logger logger, String desc, Object data) {
         String threadName = Thread.currentThread().getName();
         String jsonStr = JSONUtil.toJsonStr(addTraceIdToData(data));
-        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
+        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, data);
         logger.info(s);
     }
 
@@ -44,7 +45,7 @@ public class GXLoggerUtils {
     public static void logDebug(Logger logger, String desc, Object data) {
         String threadName = Thread.currentThread().getName();
         String jsonStr = JSONUtil.toJsonStr(addTraceIdToData(data));
-        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
+        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, data);
         logger.debug(format);
     }
 
@@ -60,7 +61,7 @@ public class GXLoggerUtils {
     public static void logError(Logger logger, String desc, Object data) {
         String threadName = Thread.currentThread().getName();
         String jsonStr = JSONUtil.toJsonStr(addTraceIdToData(data));
-        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
+        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, data);
         logger.error(format);
     }
 
@@ -92,7 +93,7 @@ public class GXLoggerUtils {
     public static void logWarn(Logger logger, String desc, Object data) {
         String threadName = Thread.currentThread().getName();
         String jsonStr = JSONUtil.toJsonStr(addTraceIdToData(data));
-        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
+        String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, data);
         logger.warn(s);
     }
 

@@ -7,11 +7,13 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 import org.springframework.core.Ordered;
 
+import java.util.Optional;
+
 @Activate(group = {CommonConstants.CONSUMER}, order = Ordered.LOWEST_PRECEDENCE)
 public class GXDubboClientTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        String traceIdAttachment = invocation.getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+        String traceIdAttachment = Optional.ofNullable(invocation.getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)).orElse(GXTraceIdContextUtils.getTraceId());
         if (CharSequenceUtil.isEmpty(traceIdAttachment)) {
             traceIdAttachment = GXTraceIdContextUtils.generateTraceId();
         }
