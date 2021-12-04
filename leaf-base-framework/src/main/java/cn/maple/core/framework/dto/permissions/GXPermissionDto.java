@@ -1,0 +1,26 @@
+package cn.maple.core.framework.dto.permissions;
+
+import cn.maple.core.framework.dto.GXBaseDto;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
+public class GXPermissionDto extends GXBaseDto {
+    /**
+     * 权限名字
+     */
+    private String permissionName;
+
+    /**
+     * 权限码
+     */
+    private String permissionCode;
+
+    /**
+     * 权限所属模块
+     */
+    private String permissionModule;
+}
