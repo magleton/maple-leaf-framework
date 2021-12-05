@@ -20,7 +20,12 @@ public class GXPermissionDto extends GXBaseDto {
     private String permissionCode;
 
     /**
-     * 权限所属模块
+     * 权限所属模块名字
      */
-    private String permissionModule;
+    private String moduleName;
+
+    /**
+     * 权限所属模块code
+     */
+    private String moduleCode;
 }

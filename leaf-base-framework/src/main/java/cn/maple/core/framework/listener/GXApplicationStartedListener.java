@@ -1,7 +1,9 @@
 package cn.maple.core.framework.listener;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.annotation.GXPermission;
+import cn.maple.core.framework.annotation.GXPermissionCtl;
 import cn.maple.core.framework.dto.permissions.GXPermissionDto;
 import cn.maple.core.framework.event.GXPermissionEvent;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -9,7 +11,6 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,17 +25,29 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
         ConcurrentHashMap<String, List<GXPermissionDto>> concurrentHashMap = new ConcurrentHashMap<>();
-        Map<String, Object> beansWithAnnotation = applicationStartedEvent.getApplicationContext().getBeanFactory().getBeansWithAnnotation(RestController.class);
+        Map<String, Object> beansWithAnnotation = applicationStartedEvent.getApplicationContext().getBeanFactory().getBeansWithAnnotation(GXPermissionCtl.class);
         beansWithAnnotation.forEach((k, v) -> {
             Method[] declaredMethods = v.getClass().getDeclaredMethods();
+            GXPermissionCtl permissionCtl = v.getClass().getAnnotation(GXPermissionCtl.class);
+            String moduleCode = permissionCtl.moduleCode();
+            String moduleName = permissionCtl.moduleName();
             List<GXPermissionDto> permissionDtoList = new ArrayList<>();
             for (Method declaredMethod : declaredMethods) {
                 GXPermission permissionAction = declaredMethod.getAnnotation(GXPermission.class);
                 if (Objects.nonNull(permissionAction)) {
+                    String permissionModuleCode = permissionAction.moduleCode();
+                    String permissionModuleName = permissionAction.moduleName();
+                    if (CharSequenceUtil.isEmpty(permissionModuleCode)) {
+                        permissionModuleCode = moduleCode;
+                    }
+                    if (CharSequenceUtil.isEmpty(permissionModuleName)) {
+                        permissionModuleName = moduleName;
+                    }
                     GXPermissionDto permissionDto = GXPermissionDto.builder()
                             .permissionCode(permissionAction.permissionCode())
                             .permissionName(permissionAction.permissionName())
-                            .permissionModule(permissionAction.permissionModule())
+                            .moduleName(permissionModuleName)
+                            .moduleCode(permissionModuleCode)
                             .build();
                     permissionDtoList.add(permissionDto);
                 }

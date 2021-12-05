@@ -19,5 +19,10 @@ public @interface GXPermission {
     /**
      * 权限所属模块
      */
-    String permissionModule();
+    String moduleCode() default "";
+
+    /**
+     * 权限所属模块名字
+     */
+    String moduleName() default "";
 }
