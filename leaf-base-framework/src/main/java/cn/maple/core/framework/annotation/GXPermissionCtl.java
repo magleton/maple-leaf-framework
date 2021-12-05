@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 public @interface GXPermissionCtl {
     /**
      * 权限所属模块的名字
