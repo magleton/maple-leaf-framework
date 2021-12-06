@@ -25,6 +25,7 @@
         <module>leaf-base-statemachine</module>
         <module>leaf-base-nacos</module>
         <module>leaf-base-dubbo-nacos-sentinel</module>
+        <module>leaf-base-skywalking</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->
