@@ -1,4 +1,4 @@
-package cn.maple.core.framework.dto.permissions;
+package cn.maple.core.framework.dto.inner.permission;
 
 import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class GXPermissionDto extends GXBaseDto {
+public class GXBasePermissionInnerDto extends GXBaseDto {
     /**
      * 权限名字
      */

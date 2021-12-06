@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.annotation.GXPermission;
 import cn.maple.core.framework.annotation.GXPermissionCtl;
-import cn.maple.core.framework.dto.permissions.GXPermissionDto;
+import cn.maple.core.framework.dto.inner.permission.GXBasePermissionInnerDto;
 import cn.maple.core.framework.event.GXPermissionEvent;
 import cn.maple.core.framework.util.GXCommonUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -24,14 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GXApplicationStartedListener implements ApplicationListener<ApplicationStartedEvent> {
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
-        ConcurrentHashMap<String, List<GXPermissionDto>> concurrentHashMap = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String, List<GXBasePermissionInnerDto>> concurrentHashMap = new ConcurrentHashMap<>();
         Map<String, Object> beansWithAnnotation = applicationStartedEvent.getApplicationContext().getBeanFactory().getBeansWithAnnotation(GXPermissionCtl.class);
         beansWithAnnotation.forEach((k, v) -> {
             Method[] declaredMethods = v.getClass().getDeclaredMethods();
             GXPermissionCtl permissionCtl = v.getClass().getAnnotation(GXPermissionCtl.class);
             String moduleCode = permissionCtl.moduleCode();
             String moduleName = permissionCtl.moduleName();
-            List<GXPermissionDto> permissionDtoList = new ArrayList<>();
+            List<GXBasePermissionInnerDto> permissionDtoList = new ArrayList<>();
             for (Method declaredMethod : declaredMethods) {
                 GXPermission permissionAction = declaredMethod.getAnnotation(GXPermission.class);
                 if (Objects.nonNull(permissionAction)) {
@@ -43,7 +43,7 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
                     if (CharSequenceUtil.isEmpty(permissionModuleName)) {
                         permissionModuleName = moduleName;
                     }
-                    GXPermissionDto permissionDto = GXPermissionDto.builder()
+                    GXBasePermissionInnerDto permissionDto = GXBasePermissionInnerDto.builder()
                             .permissionCode(permissionAction.permissionCode())
                             .permissionName(permissionAction.permissionName())
                             .moduleName(permissionModuleName)
@@ -54,7 +54,7 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
             }
             concurrentHashMap.putIfAbsent(k, permissionDtoList);
         });
-        GXPermissionEvent<Map<String, List<GXPermissionDto>>> permissionEvent = new GXPermissionEvent<>(concurrentHashMap, Dict.create());
+        GXPermissionEvent<Map<String, List<GXBasePermissionInnerDto>>> permissionEvent = new GXPermissionEvent<>(concurrentHashMap, Dict.create());
         GXCommonUtils.publishEvent(permissionEvent);
     }
 }

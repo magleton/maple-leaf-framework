@@ -1,4 +1,4 @@
-package cn.maple.core.datasource.dto.inner;
+package cn.maple.core.framework.dto.inner;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
@@ -8,17 +8,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class GXDBQueryParamInnerDto extends GXBaseDto {
+public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * 需要查询的主表名字 , 在有join查询时
      */
-    @NotNull(message = "表名字必填")
     private String tableName;
 
     /**

@@ -3,13 +3,13 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXBaseDao;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.repository.GXBaseRepository;
-import cn.maple.core.datasource.service.GXDBBaseService;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.datasource.repository.GXMyBatisRepository;
+import cn.maple.core.datasource.service.GXMyBatisBaseService;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -26,18 +26,18 @@ import java.util.List;
  * @param <P> 仓库对象类型
  * @param <R> 响应数据类型
  */
-public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
+public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
         T extends GXBaseEntity,
         D extends GXBaseDao<M, T, R>,
         R extends GXBaseResDto,
         ID>
         extends GXBusinessServiceImpl
-        implements GXDBBaseService<P, M, T, D, R, ID> {
+        implements GXMyBatisBaseService<P, M, T, D, R, ID> {
     /**
      * 日志对象
      */
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXDBBaseServiceImpl.class);
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXMyBatisBaseServiceImpl.class);
 
     /**
      * 仓库类型
@@ -91,7 +91,7 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto queryParamReqDto) {
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
         queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         return repository.paginate("paginate", queryParamReqDto);
     }
@@ -103,7 +103,7 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return List
      */
     @Override
-    public List<R> findByCondition(GXDBQueryParamInnerDto searchReqDto) {
+    public List<R> findByCondition(GXBaseQueryParamInnerDto searchReqDto) {
         return repository.findByCondition(searchReqDto);
     }
 
@@ -114,7 +114,7 @@ public class GXDBBaseServiceImpl<P extends GXBaseRepository<M, T, D, R, ID>,
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(GXDBQueryParamInnerDto searchReqDto) {
+    public R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto) {
         return repository.findOneByCondition(searchReqDto);
     }
 

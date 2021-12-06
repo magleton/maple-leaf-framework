@@ -4,12 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -37,7 +37,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param mapperMethodName     Mapper方法
      * @return GXPagination
      */
-    public IPage<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
+    public IPage<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
@@ -66,7 +66,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public IPage<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    public IPage<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
@@ -100,7 +100,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @return int
      */
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)
                 .condition(condition)
                 .build();
@@ -126,7 +126,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询参数
      * @return 列表
      */
-    public R findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findOneByCondition(dbQueryParamInnerDto);
     }
 
@@ -136,7 +136,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public List<R> findByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findByCondition(dbQueryParamInnerDto);
     }
 

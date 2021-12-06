@@ -2,12 +2,12 @@ package cn.maple.core.datasource.service;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXBaseDao;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.repository.GXBaseRepository;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.datasource.repository.GXMyBatisRepository;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
@@ -24,7 +24,7 @@ import java.util.List;
  * @param <R> 响应对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
+public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>,
         M extends GXBaseMapper<T, R>,
         T extends GXBaseEntity,
         D extends GXBaseDao<M, T, R>,
@@ -65,7 +65,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @param searchReqDto 参数
      * @return GXPagination
      */
-    GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto searchReqDto);
+    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
      * 通过条件查询列表信息
@@ -73,7 +73,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @param searchReqDto 搜索条件
      * @return List
      */
-    List<R> findByCondition(GXDBQueryParamInnerDto searchReqDto);
+    List<R> findByCondition(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
      * 通过条件获取一条数据
@@ -81,7 +81,7 @@ public interface GXDBBaseService<P extends GXBaseRepository<M, T, D, R, ID>,
      * @param searchReqDto 搜索条件
      * @return 一条数据
      */
-    R findOneByCondition(GXDBQueryParamInnerDto searchReqDto);
+    R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
      * 创建数据

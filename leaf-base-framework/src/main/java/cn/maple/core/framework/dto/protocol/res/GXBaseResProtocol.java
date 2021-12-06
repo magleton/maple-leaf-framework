@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.res;
 
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 
 /**
  * @author britton

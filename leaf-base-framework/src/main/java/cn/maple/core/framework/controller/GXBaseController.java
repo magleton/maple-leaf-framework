@@ -2,8 +2,8 @@ package cn.maple.core.framework.controller;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;

@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.res;
 
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

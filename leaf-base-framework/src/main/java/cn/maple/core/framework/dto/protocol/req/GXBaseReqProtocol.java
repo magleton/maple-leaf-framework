@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.req;
 
-import cn.maple.core.framework.dto.inner.req.GXBaseReqDto;
+import cn.maple.core.framework.dto.req.GXBaseReqDto;
 
 /**
  * @author britton

@@ -1,4 +1,4 @@
-package cn.maple.core.framework.dto.inner.req;
+package cn.maple.core.framework.dto.req;
 
 import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Data;

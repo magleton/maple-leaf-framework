@@ -10,10 +10,10 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.constant.GXBuilderConstant;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -93,7 +93,7 @@ public interface GXBaseBuilder {
      * @param dbQueryParamInnerDto 查询条件
      * @return String
      */
-    static String checkRecordIsExists(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    static String checkRecordIsExists(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
@@ -182,7 +182,7 @@ public interface GXBaseBuilder {
      * @param dbQueryParamInnerDto 查询条件
      * @return SQL语句
      */
-    static String findByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    static String findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
@@ -309,7 +309,7 @@ public interface GXBaseBuilder {
      * @param dbQueryParamInnerDto 查询对象
      * @return SQL语句
      */
-    static <R> String paginate(IPage<R> page, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    static <R> String paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return findByCondition(dbQueryParamInnerDto);
     }
 
@@ -336,7 +336,7 @@ public interface GXBaseBuilder {
      * @param dbQueryParamInnerDto 查询条件
      * @return SQL语句
      */
-    static String findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    static String findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         GXValidatorUtils.validateEntity(dbQueryParamInnerDto);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         Set<String> columns = dbQueryParamInnerDto.getColumns();

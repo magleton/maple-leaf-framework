@@ -1,4 +1,4 @@
-package cn.maple.core.framework.dto.inner.req;
+package cn.maple.core.framework.dto.req;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.constant.GXCommonConstant;

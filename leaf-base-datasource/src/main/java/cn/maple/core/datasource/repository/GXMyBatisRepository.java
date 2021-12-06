@@ -9,13 +9,14 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dao.GXBaseDao;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
-import cn.maple.core.framework.dto.inner.res.GXPaginationResDto;
+import cn.maple.core.framework.ddd.repository.GXBaseRepository;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -27,7 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 
-public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto, ID> {
+public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto, ID>
+        implements GXBaseRepository<T, R, ID> {
     /**
      * 基础DAO
      */
@@ -42,6 +44,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
+    @Override
     public ID create(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
@@ -53,6 +56,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return ID
      */
     @SuppressWarnings("all")
+    @Override
     public ID create(T entity) {
         baseDao.save(entity);
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
@@ -65,6 +69,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
+    @Override
     public ID update(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
@@ -92,6 +97,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
+    @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         throw new GXBusinessException("自定义实现");
     }
@@ -119,7 +125,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dbQueryInnerDto 查询对象
      * @return 列表
      */
-    public <E> List<E> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+    @Override
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleTypeOrArray(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
@@ -157,7 +164,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dbQueryInnerDto 查询条件
      * @return 列表
      */
-    public List<R> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto) {
+    @Override
+    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
         return baseDao.findByCondition(dbQueryInnerDto);
     }
 
@@ -170,7 +178,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @return 列表
      */
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        GXDBQueryParamInnerDto paramInnerDto = GXDBQueryParamInnerDto.builder()
+        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)
                 .condition(condition)
                 .columns(columns)
@@ -185,6 +193,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 条件
      * @return 列表
      */
+    @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
         return findByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
@@ -195,7 +204,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dbQueryParamInnerDto 查询参数
      * @return R 返回数据
      */
-    public R findOneByCondition(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    @Override
+    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseDao.findOneByCondition(dbQueryParamInnerDto);
     }
 
@@ -206,6 +216,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 查询条件
      * @return R 返回数据
      */
+    @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
         return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
@@ -218,8 +229,9 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param columns   需要查询的列
      * @return R 返回数据
      */
+    @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
-        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)
                 .condition(condition)
                 .columns(columns)
@@ -234,7 +246,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dbQueryParamInnerDto 查询信息
      * @return
      */
-    public GXPaginationResDto<R> paginate(String mapperMethodName, GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    public GXPaginationResDto<R> paginate(String mapperMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(mapperMethodName)) {
             mapperMethodName = "paginate";
         }
@@ -261,7 +273,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
-        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
                 .page(page)
                 .pageSize(pageSize)
                 .columns(columns)
@@ -276,7 +288,8 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dbQueryParamInnerDto 条件查询
      * @return 分页数据
      */
-    public GXPaginationResDto<R> paginate(GXDBQueryParamInnerDto dbQueryParamInnerDto) {
+    @Override
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
@@ -294,11 +307,12 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param columns   需要的数据列
      * @return 分页对象
      */
+    @Override
     public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
-        GXDBQueryParamInnerDto queryParamInnerDto = GXDBQueryParamInnerDto.builder()
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
                 .page(page)
                 .pageSize(pageSize)
                 .tableName(tableName)
@@ -315,6 +329,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 删除条件
      * @return 影响行数
      */
+    @Override
     public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         return baseDao.deleteSoftWhere(tableName, condition);
     }
@@ -326,6 +341,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 删除条件
      * @return 影响行数
      */
+    @Override
     public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
         return baseDao.deleteWhere(tableName, condition);
     }
@@ -337,6 +353,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 查询条件
      * @return 1 存在 0 不存在
      */
+    @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         return baseDao.checkRecordIsExists(tableName, condition);
     }
@@ -351,6 +368,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param param                      param
      * @return boolean
      */
+    @Override
     public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
@@ -371,6 +389,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param dataList  数据集合
      * @return 影响行数
      */
+    @Override
     public Integer batchInsert(String tableName, List<Dict> dataList) {
         return baseDao.batchInsert(tableName, dataList);
     }
@@ -383,6 +402,7 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      * @param condition 更新条件
      * @return 更新的条数
      */
+    @Override
     public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         if (Objects.isNull(condition) || condition.isEmpty()) {
             throw new GXBusinessException("更新数据需要指定条件");
@@ -399,14 +419,5 @@ public abstract class GXBaseRepository<M extends GXBaseMapper<T, R>, T extends G
      */
     public IPage<R> constructPageObject(Integer page, Integer pageSize) {
         return baseDao.constructPageObject(page, pageSize);
-    }
-
-    /**
-     * 获取 Primary Key
-     *
-     * @return String
-     */
-    public String getPrimaryKey() {
-        return "id";
     }
 }

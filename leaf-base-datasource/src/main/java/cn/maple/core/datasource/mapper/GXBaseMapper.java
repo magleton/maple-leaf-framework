@@ -2,9 +2,9 @@ package cn.maple.core.datasource.mapper;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
-import cn.maple.core.datasource.dto.inner.GXDBQueryParamInnerDto;
 import cn.maple.core.datasource.entity.GXBaseEntity;
-import cn.maple.core.framework.dto.inner.res.GXBaseResDto;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -19,7 +19,7 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
-    Integer checkRecordIsExists(GXDBQueryParamInnerDto queryParamInnerDto);
+    Integer checkRecordIsExists(GXBaseQueryParamInnerDto queryParamInnerDto);
 
     @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
     Integer batchInsert(String tableName, List<Dict> dataList);
@@ -28,19 +28,19 @@ public interface GXBaseMapper<T extends GXBaseEntity, R extends GXBaseResDto> ex
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    R findOneByCondition(GXDBQueryParamInnerDto dbQueryInnerDto);
+    R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> findByCondition(GXDBQueryParamInnerDto dbQueryInnerDto);
+    List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
     @Results(value = {
             @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
     })
-    List<R> paginate(IPage<R> page, GXDBQueryParamInnerDto dbQueryInnerDto);
+    List<R> paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftWhere")
     Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition);
