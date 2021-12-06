@@ -177,6 +177,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param columns   需要获取的列
      * @return 列表
      */
+    @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)

@@ -41,6 +41,30 @@ public class GXCommonConstant {
      */
     public static final String LOGGER_FORMAT = "{} : {} ---> {}";
 
+    /**
+     * 服务运行的环境
+     * 个人开发环境
+     */
+    public static final String RUN_ENV_LOCAL = "dev";
+
+    /**
+     * 服务运行的环境
+     * 开发模式
+     */
+    public static final String RUN_ENV_DEV = "dev";
+
+    /**
+     * 服务运行的环境
+     * 测试模式
+     */
+    public static final String RUN_ENV_TEST = "test";
+
+    /**
+     * 服务运行的环境
+     * 生产模式
+     */
+    public static final String RUN_ENV_PROD = "prod";
+
     private GXCommonConstant() {
     }
 }

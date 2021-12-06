@@ -1,7 +1,9 @@
 package cn.maple.core.datasource.config;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -67,8 +70,9 @@ public class GXMyBatisPlusConfig {
         // 乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // sql性能规范插件
-        boolean illegalSQLEnable = Boolean.TRUE.equals(applicationContext.getEnvironment().getProperty("illegal.sql.enable", boolean.class));
-        if (illegalSQLEnable) {
+        List<String> activeProfiles = Convert.toList(String.class, applicationContext.getEnvironment().getActiveProfiles());
+        // 除去正式环境,其他环境都开启sql性能规范插件
+        if (!CollUtil.contains(activeProfiles, GXCommonConstant.RUN_ENV_PROD)) {
             interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
