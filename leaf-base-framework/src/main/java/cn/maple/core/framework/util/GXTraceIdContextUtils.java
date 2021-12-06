@@ -2,6 +2,7 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.maple.core.framework.service.GXGenerateTraceIdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -70,23 +71,11 @@ public class GXTraceIdContextUtils {
      * @return String
      */
     public static String generateTraceId() {
-        return GXTraceIdGenerator.generateTraceId();
-    }
-
-    /**
-     * TraceId生成器
-     */
-    private static class GXTraceIdGenerator {
-        private GXTraceIdGenerator() {
-        }
-
-        /**
-         * 生成traceId
-         *
-         * @return TraceId 基于UUID
-         */
-        public static String generateTraceId() {
+        GXGenerateTraceIdService traceIdService = GXSpringContextUtils.getBean(GXGenerateTraceIdService.class);
+        if (Objects.isNull(traceIdService)) {
+            LOG.warn("traceId生成服务没有可用的实例存在");
             return IdUtil.fastSimpleUUID();
         }
+        return traceIdService.generateTraceId();
     }
 }
