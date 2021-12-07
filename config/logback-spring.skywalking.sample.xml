@@ -7,11 +7,12 @@
     <!-- name的值是变量的名称，value的值是变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使"${}"来使用变量。
          LOG_PATH可以通过指定环境变量来设置 -DLOG_PATH="/tmp/xxxx" -->
     <!--property name="LOG_PATH" value="${LOG_PATH:-/tmp/logs}"/-->
-    <property name="LOG_PATH" value="${LOG_PATH:-.}"/>
+    <property name="LOG_PATH" value="${LOG_PATH:-./logs/}"/>
+
     <!--日志文件名字-->
     <property name="LOG_FILE" value="${LOG_PATH}/${applicationName}-log.log"/>
-    <!-- 日志输出格式 -->
 
+    <!-- 日志输出格式 -->
     <!-- 格式化输出：%d 表示日期，%X{tid} SkWalking 链路追踪编号，%thread 表示线程名，%-5level：级别从左显示 5 个字符宽度，%msg：日志消息，%n是换行符 -->
     <property name="PATTERN_DEFAULT"
               value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%thread] [%tid] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
@@ -84,7 +85,7 @@
 
     <!-- 开发、测试环境 -->
     <springProfile name="local,dev,test">
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SW_GRPC"/> <!-- 本地环境下，如果不想接入 SkyWalking 日志服务，可以注释掉本行 -->
             <appender-ref ref="ASYNC"/>  <!-- 本地环境下，如果不想打印日志，可以注释掉本行 -->

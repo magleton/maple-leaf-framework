@@ -36,7 +36,7 @@
     <!-- name的值是变量的名称，value的值是变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使"${}"来使用变量。
     LOG_PATH可以通过指定环境变量来设置 -DLOG_PATH="/tmp/xxxx" -->
     <!--property name="LOG_PATH" value="${LOG_PATH:-/tmp/logs}"/-->
-    <property name="LOG_PATH" value="${LOG_PATH:-.}"/>
+    <property name="LOG_PATH" value="${LOG_PATH:-./logs/}"/>
 
     <!-- 日志输出格式 -->
     <property name="LOG_PATTERN"
@@ -185,6 +185,15 @@
         <appender-ref ref="FILE"/>
     </appender>
 
+    <!-- SkyWalking GRPC 日志收集，实现日志中心。注意：SkyWalking 8.4.0 版本开始支持 -->
+    <appender name="SW_GRPC" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+                <pattern>${PATTERN_DEFAULT}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
     <!-- 对于类路径以 com.example.logback 开头的Logger,输出级别设置为warn,并且只输出到控制台 -->
     <!-- 这个logger没有指定appender，它会继承root节点中定义的那些appender -->
     <!-- <logger name="com.example.logback" level="warn"/> -->
@@ -204,6 +213,11 @@
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="WARN_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SW_GRPC"/>
     </root>
 
 </configuration>
