@@ -32,6 +32,7 @@ public class GXSkyWalkingLoggerServiceImpl implements GXLoggerService {
         }
         String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
         ActiveSpan.info(s);
+        logger.info(s);
     }
 
     /**
@@ -52,6 +53,7 @@ public class GXSkyWalkingLoggerServiceImpl implements GXLoggerService {
         }
         String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
         ActiveSpan.debug(s);
+        logger.debug(s);
     }
 
     /**
@@ -72,6 +74,7 @@ public class GXSkyWalkingLoggerServiceImpl implements GXLoggerService {
         }
         String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
         ActiveSpan.error(s);
+        logger.error(s);
     }
 
     /**
@@ -89,6 +92,7 @@ public class GXSkyWalkingLoggerServiceImpl implements GXLoggerService {
         String s = CharSequenceUtil.format("{} : {}", threadName, desc);
         ActiveSpan.error(s);
         ActiveSpan.error(t);
+        logger.error(s, t);
     }
 
     /**
@@ -109,5 +113,6 @@ public class GXSkyWalkingLoggerServiceImpl implements GXLoggerService {
         }
         String s = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, jsonStr);
         ActiveSpan.info(s);
+        logger.warn(s);
     }
 }

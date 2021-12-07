@@ -61,6 +61,12 @@ public class GXCommonConstant {
 
     /**
      * 服务运行的环境
+     * 预发布模式
+     */
+    public static final String RUN_ENV_PRE = "pre";
+
+    /**
+     * 服务运行的环境
      * 生产模式
      */
     public static final String RUN_ENV_PROD = "prod";
