@@ -45,9 +45,6 @@
     <property name="LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}] [%thread] %-5level %logger{50} - %msg%n"/>
 
-    <property name="LOG_FILE"
-              value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/${applicationName:-spring}.log}"/>
-
     <property name="CONSOLE_LOG_PATTERN"
               value="%clr(%d{MM-dd HH:mm:ss.SSS}){faint} %clr(%-5level) %clr([%10.10t]){magenta} %clr([${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(%-40.40logger{39}.%-10.25M{25}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
@@ -185,8 +182,8 @@
         <!-- 日志文件名 -->
         <file>${LOG_FILE}</file>
         <!--日志文件输出格式-->
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <pattern>${PATTERN_DEFAULT}</pattern>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
             <charset>UTF-8</charset> <!-- 此处设置字符集 -->
         </encoder>
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
@@ -197,9 +194,9 @@
             <!-- 启动服务时，是否清理历史日志，一般不建议清理 -->
             <cleanHistoryOnStart>${LOGBACK_ROLLING_POLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
             <!-- 日志文件，到达多少容量，进行滚动 -->
-            <maxFileSize>${LOGBACK_ROLLING_POLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
-            <!-- 日志文件的总大小，0 表示不限制 -->
-            <totalSizeCap>${LOGBACK_ROLLING_POLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <maxFileSize>${LOGBACK_ROLLING_POLICY_MAX_FILE_SIZE:-200MB}</maxFileSize>
+            <!-- 日志文件的总大小，0 表示不限制 单位字节-->
+            <totalSizeCap>${LOGBACK_ROLLING_POLICY_TOTAL_SIZE_CAP:-220200960}</totalSizeCap>
             <!-- 日志文件的保留天数 -->
             <maxHistory>${LOGBACK_ROLLING_POLICY_MAX_HISTORY:-30}</maxHistory>
         </rollingPolicy>
@@ -239,7 +236,7 @@
     <!-- INFO 级别 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="INFO_FILE"/>
+        <appender-ref ref="FILE"/>
     </root>
 
 </configuration>

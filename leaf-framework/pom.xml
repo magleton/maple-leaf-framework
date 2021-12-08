@@ -57,10 +57,5 @@
             <artifactId>leaf-base-dubbo-nacos-sentinel</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.maple.framework</groupId>
-            <artifactId>leaf-base-skywalking</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
     </dependencies>
 </project>

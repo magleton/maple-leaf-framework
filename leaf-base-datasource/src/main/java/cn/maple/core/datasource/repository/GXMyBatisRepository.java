@@ -18,7 +18,6 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.service.GXLoggerService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -26,7 +25,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 
@@ -38,12 +36,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     @Autowired
     protected D baseDao;
-
-    /**
-     * 日志服务对象
-     */
-    @Resource
-    protected GXLoggerService loggerService;
 
     /**
      * 保存数据

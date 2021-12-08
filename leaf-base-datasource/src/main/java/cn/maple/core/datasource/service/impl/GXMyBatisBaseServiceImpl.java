@@ -10,7 +10,6 @@ import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import cn.maple.core.framework.service.GXLoggerService;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -18,7 +17,6 @@ import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
@@ -47,12 +45,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Autowired
     @SuppressWarnings("all")
     protected P repository;
-
-    /**
-     * 日志服务对象
-     */
-    @Resource
-    protected GXLoggerService loggerService;
 
     /**
      * 检测给定条件的记录是否存在
