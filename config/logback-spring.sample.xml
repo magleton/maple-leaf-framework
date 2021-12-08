@@ -207,6 +207,7 @@
     </logger>
 
     <!-- 日志输出级别及方式 -->
+    <!-- DEBUG级别 -->
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG_FILE"/>
@@ -215,9 +216,10 @@
         <appender-ref ref="ERROR_FILE"/>
     </root>
 
+    <!-- INFO 级别 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="SW_GRPC"/>
+        <appender-ref ref="INFO_FILE"/>
     </root>
 
 </configuration>

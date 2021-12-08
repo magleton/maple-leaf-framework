@@ -69,6 +69,11 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
 
     /**
      * SQL中的having条件
+     * <pre>
+     * {@code
+     * Set<String> having = CollUtil.newHashSet("SUM(area)>1000000" , "SUM(price) >= 1000");
+     * }
+     * </pre>
      */
     private Set<String> having;
 
