@@ -188,6 +188,7 @@ public interface GXBaseBuilder {
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Set<String> groupByField = dbQueryParamInnerDto.getGroupByField();
         Dict orderByField = dbQueryParamInnerDto.getOrderByField();
+        Set<String> having = dbQueryParamInnerDto.getHaving();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
@@ -205,6 +206,10 @@ public interface GXBaseBuilder {
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
+        }
+        // 处理having
+        if (CollUtil.isNotEmpty(having)) {
+            sql.HAVING(having.toArray(new String[0]));
         }
         // 处理排序
         if (Objects.nonNull(orderByField) && !orderByField.isEmpty()) {

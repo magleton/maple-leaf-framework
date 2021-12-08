@@ -68,6 +68,11 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private String methodName;
 
     /**
+     * SQL中的having条件
+     */
+    private Set<String> having;
+
+    /**
      * 对象复制时的一些额外配置
      */
     private CopyOptions copyOptions;
