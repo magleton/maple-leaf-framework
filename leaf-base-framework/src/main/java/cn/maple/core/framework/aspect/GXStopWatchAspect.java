@@ -58,8 +58,8 @@ public class GXStopWatchAspect {
         String threadName = Thread.currentThread().getName();
         log.info("{} {} {} : 调用{}方法的请求参数 ---- > {}", traceIdKey, traceId, threadName, callInfo, JSONUtil.toJsonStr(parametersDict));
         Object o = point.proceed();
-        log.info("{} {} {} : 调用{}方法的响应数据 ---- > {}", traceIdKey, traceId, threadName, callInfo, JSONUtil.toJsonStr(o));
-        log.info("{} {} {} : 调用{}方法总共运行{}秒", traceIdKey, traceId, threadName, callInfo, last);
+        log.debug("{} {} {} : 调用{}方法的响应数据 ---- > {}", traceIdKey, traceId, threadName, callInfo, JSONUtil.toJsonStr(o));
+        log.debug("{} {} {} : 调用{}方法总共运行{}秒", traceIdKey, traceId, threadName, callInfo, last);
         return o;
     }
 }
