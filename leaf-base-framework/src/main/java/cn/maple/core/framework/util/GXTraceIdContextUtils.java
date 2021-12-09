@@ -31,7 +31,9 @@ public class GXTraceIdContextUtils {
      * @return String
      */
     public static String getTraceId() {
+        String threadName = Thread.currentThread().getName();
         String traceId = MDC.get(TRACE_ID_KEY);
+        LOG.debug("线程 {} 获取的TraceId : {}", threadName, traceId);
         return Objects.isNull(traceId) ? "" : traceId;
     }
 
@@ -54,6 +56,8 @@ public class GXTraceIdContextUtils {
         if (Objects.isNull(traceId)) {
             return;
         }
+        String threadName = Thread.currentThread().getName();
+        LOG.debug("线程 {} 销毁的TraceId : {}", threadName, traceId);
         MDC.remove(TRACE_ID_KEY);
     }
 
@@ -70,7 +74,10 @@ public class GXTraceIdContextUtils {
      * @return String
      */
     public static String generateTraceId() {
-        return GXTraceIdGenerator.generateTraceId();
+        String threadName = Thread.currentThread().getName();
+        String traceId = GXTraceIdGenerator.generateTraceId();
+        LOG.debug("线程 {} 生成的TraceId : {}", threadName, traceId);
+        return traceId;
     }
 
     /**
