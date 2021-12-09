@@ -36,7 +36,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        log.info("授权验证权限时调用-->GXOAuth2Realm.doGetAuthorizationInfo() principals : " + principals.getPrimaryPrincipal());
+        log.debug("授权验证权限时调用-->GXOAuth2Realm.doGetAuthorizationInfo() principals : " + principals.getPrimaryPrincipal());
         Dict dict = (Dict) principals.getPrimaryPrincipal();
         Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.ADMIN_ID)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstant.ADMIN_ID)));
         // 获取用户权限列表
@@ -54,7 +54,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
-        log.info("用户登录时认证 --> GXOAuth2Realm.doGetAuthenticationInfo() ,  principal = {} : credentials = {}", token.getPrincipal(), token.getCredentials());
+        log.debug("用户登录时认证 --> GXOAuth2Realm.doGetAuthenticationInfo() ,  principal = {} : credentials = {}", token.getPrincipal(), token.getCredentials());
         String accessToken = token.getPrincipal().toString();
         // 根据accessToken, 获取token中的值
         Dict dict = GXTokenManagerUtils.decodeAdminToken(accessToken, shiroService.getSecretKey());

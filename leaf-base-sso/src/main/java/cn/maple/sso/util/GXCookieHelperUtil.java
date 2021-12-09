@@ -90,7 +90,7 @@ public class GXCookieHelperUtil {
         for (int i = 0; i < cookies.length; i++) {
             clearCookie(response, cookies[i].getName(), domain, path);
         }
-        log.info("clearAllCookie in  domain " + domain);
+        log.debug("clearAllCookie in  domain " + domain);
     }
 
     /**

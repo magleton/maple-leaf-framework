@@ -85,7 +85,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
             map.put(data.getSeqInIndex(), data.getColumnName());
             returnList.put(data.getKeyName(), map);
         }
-        log.info("{}", returnList);
+        log.debug("{}", returnList);
         return list;
     }
 

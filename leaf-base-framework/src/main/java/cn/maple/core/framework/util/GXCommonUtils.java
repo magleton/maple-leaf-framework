@@ -386,7 +386,7 @@ public class GXCommonUtils {
      */
     public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
         if (Objects.isNull(source)) {
-            LOG.info("源对象不能为null");
+            LOG.debug("源对象不能为null");
             return null;
         }
         copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
@@ -413,7 +413,7 @@ public class GXCommonUtils {
     @SuppressWarnings("all")
     public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
         if (CollUtil.isEmpty(collection)) {
-            LOG.info("源对象不能为null");
+            LOG.debug("源对象不能为null");
             return Collections.emptyList();
         }
         List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions)).collect(Collectors.toList());

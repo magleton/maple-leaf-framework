@@ -100,7 +100,7 @@ public interface GXBaseBuilder {
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         handleSQLWhereCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);
-        return CharSequenceUtil.format("SELECT IFNULL(({}) , 0)", sql.toString());
+        return sql.toString();
     }
 
     /**

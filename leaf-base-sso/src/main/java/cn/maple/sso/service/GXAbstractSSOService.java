@@ -70,7 +70,7 @@ public abstract class GXAbstractSSOService extends GXSSOServiceSupport implement
         if (cache != null) {
             return cache.delete(GXSSOConfig.toCacheKey(userId));
         } else {
-            log.info(" kickLogin! please implements GXSsoCache class.");
+            log.debug(" kickLogin! please implements GXSsoCache class.");
         }
         return false;
     }

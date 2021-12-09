@@ -14,7 +14,7 @@ public class GXDebugger {
 
     public static void debug(String message) {
         if (isDebugOn) {
-            log.info(message);
+            log.debug(message);
         }
     }
 

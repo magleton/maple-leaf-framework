@@ -35,12 +35,12 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
         if (Objects.isNull(bean)) {
             bean = GXSpringContextUtils.getBean("defaultProcessCanalDataService");
             if (Objects.isNull(bean)) {
-                log.info("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
+                log.debug("{}不存在,请提供实现了{}接口的类型", serviceName, GXProcessCanalDataService.class.getSimpleName());
                 return dict;
             }
         }
         if (!(bean instanceof GXProcessCanalDataService)) {
-            log.info("{}必须是{}的子类", serviceName, GXProcessCanalDataService.class.getSimpleName());
+            log.debug("{}必须是{}的子类", serviceName, GXProcessCanalDataService.class.getSimpleName());
             return dict;
         }
         switch (canalDataDto.getType()) {
@@ -54,7 +54,7 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
                 ((GXProcessCanalDataService) bean).processDelete(canalDataDto, Dict.create().set(operator, "delete"));
                 break;
             default:
-                log.info("RabbitMQ监听的canal没有对应的操作");
+                log.debug("RabbitMQ监听的canal没有对应的操作");
                 break;
         }
         return dict;

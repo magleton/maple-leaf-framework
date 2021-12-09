@@ -71,7 +71,7 @@ public class GXFrameworkConfig {
                             return;
                         }
                     } catch (NoSuchFieldException noSuchFieldException) {
-                        //LOG.info(noSuchFieldException.getMessage());
+                        //LOG.debug(noSuchFieldException.getMessage());
                     }
                     //jsonGenerator.writeString("");
                     jsonGenerator.writeNull();

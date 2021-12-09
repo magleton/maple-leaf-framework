@@ -258,7 +258,7 @@ public class GXSpELToolUtils {
         final Method method = ReflectUtil.getMethod(targetObject.getClass(), methodName, methodParamTypes);
         if (Objects.isNull(method)) {
             final String paramStr = Arrays.stream(methodParamTypes).map(Class::getSimpleName).collect(Collectors.joining(","));
-            LOG.info(METHOD_NOT_FOUND_TIPS_TEMPLATE, targetObject.getClass().getSimpleName(), methodName, paramStr);
+            LOG.debug(METHOD_NOT_FOUND_TIPS_TEMPLATE, targetObject.getClass().getSimpleName(), methodName, paramStr);
             return null;
         }
         final ExpressionParser expressionParser = new SpelExpressionParser();

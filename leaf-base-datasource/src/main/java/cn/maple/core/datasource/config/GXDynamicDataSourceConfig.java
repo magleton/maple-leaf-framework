@@ -2,9 +2,9 @@ package cn.maple.core.datasource.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.druid.pool.DruidDataSource;
 import cn.maple.core.datasource.properties.GXDataSourceProperties;
 import cn.maple.core.datasource.properties.GXDynamicDataSourceProperties;
+import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +65,7 @@ public class GXDynamicDataSourceConfig {
             }
             return (DataSource) o;
         } catch (ClassNotFoundException e) {
-            log.info("未找到Seata的DataSourceProxy类,将使用原始的DataSource对象!!!!");
+            log.debug("未找到Seata的DataSourceProxy类,将使用原始的DataSource对象!!!!");
         }
         return dataSource;
     }

@@ -149,14 +149,14 @@ public class GXSSOServiceSupport {
         }
         // 判断请求浏览器是否合法
         if (getConfig().isCookieBrowser() && !GXBrowserUtil.isLegalUserAgent(request, ssoToken.getUserAgent())) {
-            log.info("The request browser is inconsistent.");
+            log.debug("The request browser is inconsistent.");
             return null;
         }
         // 判断请求 IP 是否合法
         if (getConfig().isCookieCheckIp()) {
             String ip = GXIpHelperUtil.getIpAddr(request);
             if (ip != null && !ip.equals(ssoToken.getIp())) {
-                log.info(String.format("ip inconsistent! return SSOToken null, SSOToken userIp:%s, reqIp:%s", ssoToken.getIp(), ip));
+                log.debug(String.format("ip inconsistent! return SSOToken null, SSOToken userIp:%s, reqIp:%s", ssoToken.getIp(), ip));
                 return null;
             }
         }

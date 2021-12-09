@@ -14,14 +14,14 @@ public class GXSysOutVisitor implements GXVisitor {
     @Override
     public String visitOnEntry(GXStateMachine<?, ?, ?> stateMachine) {
         String entry = "-----StateMachine:" + stateMachine.getMachineId() + "-------";
-        log.info(entry);
+        log.debug(entry);
         return entry;
     }
 
     @Override
     public String visitOnExit(GXStateMachine<?, ?, ?> stateMachine) {
         String exit = "------------------------";
-        log.info(exit);
+        log.debug(exit);
         return exit;
     }
 
@@ -30,11 +30,11 @@ public class GXSysOutVisitor implements GXVisitor {
         StringBuilder sb = new StringBuilder();
         String stateStr = "State:" + state.getId();
         sb.append(stateStr).append(LF);
-        log.info(stateStr);
+        log.debug(stateStr);
         for (GXTransition<?, ?, ?> transition : state.getAllTransitions()) {
             String transitionStr = "    Transition:" + transition;
             sb.append(transitionStr).append(LF);
-            log.info(transitionStr);
+            log.debug(transitionStr);
         }
         return sb.toString();
     }

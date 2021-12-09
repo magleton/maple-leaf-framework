@@ -32,9 +32,9 @@ public class GXDefaultRabbitMQQueueServiceImpl implements GXRabbitMQQueueService
         if (CharSequenceUtil.isNotBlank(s)) {
             if (JSONUtil.isJson(s)) {
                 final Dict param = JSONUtil.toBean(s, Dict.class);
-                log.info("param  : " + param);
+                log.debug("param  : " + param);
             }
-            log.info("byte[]  : " + s);
+            log.debug("byte[]  : " + s);
         }
     }
 }

@@ -104,7 +104,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
                 .tableName(tableName)
                 .condition(condition)
                 .build();
-        return baseMapper.checkRecordIsExists(queryParamInnerDto) == 1;
+        return Objects.nonNull(baseMapper.checkRecordIsExists(queryParamInnerDto));
     }
 
     /**

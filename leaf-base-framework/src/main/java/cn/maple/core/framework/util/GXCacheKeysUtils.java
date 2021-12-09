@@ -67,11 +67,11 @@ public class GXCacheKeysUtils {
     public String getCacheKey(String configName, String key) {
         CacheKeysProperties cacheKeysProperties = GXSpringContextUtils.getBean(CacheKeysProperties.class);
         if (Objects.isNull(cacheKeysProperties)) {
-            log.info("未配置缓存键列表");
+            log.debug("未配置缓存键列表");
             return CharSequenceUtil.format("geoxus:default:{}", key);
         }
         final List<Map<String, String>> list = cacheKeysProperties.getKeys();
-        log.info(list.toString());
+        log.debug(list.toString());
         for (Map<String, String> map : list) {
             final String s = map.get(configName);
             if (null != s && !s.isEmpty()) {

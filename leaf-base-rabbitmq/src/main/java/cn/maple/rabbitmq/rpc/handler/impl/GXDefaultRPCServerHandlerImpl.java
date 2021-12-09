@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class GXDefaultRPCServerHandlerImpl implements GXRPCServerHandler {
     @Override
     public JSONObject rpcHandler(Dict param) {
-        log.info("dict param : " + param.toString());
+        log.debug("dict param : " + param.toString());
         param.set("result", "处理的结果是 : ABC");
         return JSONUtil.parseObj(param);
     }

@@ -27,7 +27,7 @@ import java.util.*;
 @Slf4j
 public class GXShiRoConfig {
     public GXShiRoConfig() {
-        log.info("ShiRoConfig init ......");
+        log.debug("ShiRoConfig init ......");
     }
 
     @Bean("sessionManager")
@@ -64,7 +64,7 @@ public class GXShiRoConfig {
      */
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager, @Autowired ShiroCustomerConfig shiroCustomerConfig) {
-        log.info("ShiRoConfiguration.shiRoFilter() ......");
+        log.debug("ShiRoConfiguration.shiRoFilter() ......");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         // oauth过滤
