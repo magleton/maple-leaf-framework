@@ -43,13 +43,13 @@
 
     <!-- 日志输出格式 -->
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}] [%thread] %-5level %logger{50} - %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [${applicationName},%X{X-B3-TraceId:-}] [%thread] %-5level %logger{50} - %msg%n"/>
 
     <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{MM-dd HH:mm:ss.SSS}){faint} %clr(%-5level) %clr([%10.10t]){magenta} %clr([${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(%-40.40logger{39}.%-10.25M{25}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5level) %clr([%10.10t]){magenta} %clr([${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(%-40.40logger{39}.%-10.25M{25}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
     <property name="FILE_LOG_PATTERN"
-              value="%d{MM-dd HH:mm:ss.SSS} %-5level [%10.10t] [${applicationName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}] %-40.40logger{39}.%-10.25M{25} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [${applicationName},%X{X-B3-TraceId:-}] [%thread] %-5level [%10.10t] %-40.40logger{39}.%-10.25M{25} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
