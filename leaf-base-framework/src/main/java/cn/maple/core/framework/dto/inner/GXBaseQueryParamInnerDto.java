@@ -15,12 +15,12 @@ import java.util.Set;
 @Builder
 public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
-     * 需要查询的主表名字 , 在有join查询时
+     * 需要查询的主表名字(在有join查询时,需要有主表、次表的区分)
      */
     private String tableName;
 
     /**
-     * 需要查询的主表名字的别名 , 在有join查询时
+     * 需要查询的主表名字的别名(在有join查询时,需要有主表、次表的区分)
      */
     private String tableNameAlias;
 

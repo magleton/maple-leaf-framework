@@ -96,6 +96,23 @@ public class GXBuilderConstant {
      */
     public static final String JOIN_ON_STR = "{} {} ON {}";
 
+    /**
+     * 更新字段时需要移除的json字段的前缀
+     * <pre>
+     * {@code
+     * final Table<String, String, Object> extData = HashBasedTable.create();
+     * extData.put("ext", "name", "jack");
+     * extData.put("ext", "address", "四川成都");
+     * extData.put("ext", GXBuilderConstant.REMOVE_JSON_FIELD_PREFIX_FLAG + "salary" , "");
+     * final Dict data = Dict.create().set("category_name", "打折商品").set("ext", extData);
+     * Table<String , String , Object> condition = HashBasedTable.create();
+     * condition.put("category_id" ,  GXBuilderConstant.STR_EQ , 11111);
+     * updateFieldByCondition("s_category", data, condition);
+     * }
+     * </pre>
+     */
+    public static final String REMOVE_JSON_FIELD_PREFIX_FLAG = "-";
+
     private GXBuilderConstant() {
     }
 }

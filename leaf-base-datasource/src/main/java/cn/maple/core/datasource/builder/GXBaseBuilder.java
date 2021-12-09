@@ -32,9 +32,11 @@ public interface GXBaseBuilder {
      * final Table<String, String, Object> extData = HashBasedTable.create();
      * extData.put("ext", "name", "jack");
      * extData.put("ext", "address", "四川成都");
-     * extData.put("ext", "-salary" , "")
+     * extData.put("ext", GXBuilderConstant.REMOVE_JSON_FIELD_PREFIX_FLAG + "salary" , "");
      * final Dict data = Dict.create().set("category_name", "打折商品").set("ext", extData);
-     * updateFieldByCondition("s_category", data, Dict.create().set("category_id", 2));
+     * Table<String , String , Object> condition = HashBasedTable.create();
+     * condition.put("category_id" ,  GXBuilderConstant.STR_EQ , 11111);
+     * updateFieldByCondition("s_category", data, condition);
      * }
      * </pre>
      *
@@ -56,7 +58,7 @@ public interface GXBaseBuilder {
                 for (Map.Entry<String, Object> entry : row.entrySet()) {
                     final String entryKey = entry.getKey();
                     Object entryValue = entry.getValue();
-                    if (entryKey.startsWith("-")) {
+                    if (entryKey.startsWith(GXBuilderConstant.REMOVE_JSON_FIELD_PREFIX_FLAG)) {
                         sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", fieldName, fieldName, entryKey.substring(1)));
                     } else {
                         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
@@ -72,8 +74,7 @@ public interface GXBaseBuilder {
                     }
                 }
                 continue;
-            }
-            if (value instanceof Map) {
+            } else if (value instanceof Map) {
                 value = JSONUtil.toJsonStr(value);
             }
             if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {

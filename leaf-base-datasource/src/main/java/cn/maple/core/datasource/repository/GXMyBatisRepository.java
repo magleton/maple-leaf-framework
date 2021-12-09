@@ -401,10 +401,10 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param tableName 需要更新的表名
      * @param data      需要更新的数据
      * @param condition 更新条件
-     * @return 更新的条数
+     * @return 影响的行数
      */
     @Override
-    public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         if (Objects.isNull(condition) || condition.isEmpty()) {
             throw new GXBusinessException("更新数据需要指定条件");
         }
