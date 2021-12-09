@@ -31,8 +31,11 @@ spring:
       test-on-borrow: false
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
+      web-stat-filter:
+        enabled: true
       stat-view-servlet:
         enabled: true
+        allow: 127.0.0.1,localhost
         url-pattern: /druid/*
         login-username: britton
         login-password: britton

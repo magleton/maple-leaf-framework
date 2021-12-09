@@ -412,6 +412,28 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
+     * 根据条件获取所有数据
+     *
+     * @param clazz     表实体
+     * @param condition 条件
+     * @return 列表
+     */
+    public List<R> findByCondition(Class<T> clazz, Table<String, String, Object> condition) {
+        return findByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param clazz     表实体
+     * @param condition 查询条件
+     * @return R 返回数据
+     */
+    public R findOneByCondition(Class<T> clazz, Table<String, String, Object> condition) {
+        return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
      * 构造分页对象
      *
      * @param page     当前页
