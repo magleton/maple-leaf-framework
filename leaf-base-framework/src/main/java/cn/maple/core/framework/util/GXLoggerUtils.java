@@ -85,7 +85,7 @@ public class GXLoggerUtils {
      */
     public static void logError(Logger logger, String desc, Throwable t) {
         String threadName = Thread.currentThread().getName();
-        String format = CharSequenceUtil.format("{} : {}", threadName, desc);
+        String format = CharSequenceUtil.format(GXCommonConstant.LOGGER_FORMAT, threadName, desc, "错误对象信息");
         logger.error(format, t);
     }
 
