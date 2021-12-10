@@ -21,7 +21,7 @@ public interface GXDBSchemaService {
      * @param tableName 表名
      * @return List
      */
-    List<GXDBSchemaService.TableIndexData> listTableIndex(String tableName) throws SQLException;
+    List<GXDBSchemaService.TableIndexData> tableIndexes(String tableName) throws SQLException;
 
     /**
      * 删除表的索引

@@ -97,7 +97,7 @@ public class GXAlterTableServiceImpl implements GXAlterTableService {
 
     @Override
     public List<GXDBSchemaService.TableIndexData> getTableIndexes(String tableName) throws SQLException {
-        return schemaService.listTableIndex(tableName);
+        return schemaService.tableIndexes(tableName);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
 
     @Override
     @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName +#tableName")
-    public List<GXDBSchemaService.TableIndexData> listTableIndex(String tableName) throws SQLException {
+    public List<GXDBSchemaService.TableIndexData> tableIndexes(String tableName) throws SQLException {
         Map<String, Map<String, Object>> returnList = new HashMap<>();
         List<GXDBSchemaService.TableIndexData> list = new ArrayList<>();
         try (final Connection connection = dataSource.getConnection();
