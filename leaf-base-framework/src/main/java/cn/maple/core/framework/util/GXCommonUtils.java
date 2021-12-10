@@ -159,15 +159,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 派发事件
-     *
-     * @param event 事件对象
-     */
-    public static <T> void publishEvent(GXBaseEvent<T> event) {
-        GXSpringContextUtils.getApplicationContext().publishEvent(event);
-    }
-
-    /**
      * 隐藏手机号码的指定几位为指定的字符
      *
      * @param phoneNumber  手机号码

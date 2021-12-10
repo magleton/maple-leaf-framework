@@ -38,7 +38,7 @@
         <lombok.version>1.18.22</lombok.version>
         <mysql.version>8.0.27</mysql.version>
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
-        <hutool.version>5.7.16</hutool.version>
+        <hutool.version>5.7.17</hutool.version>
         <mybatis-plus-boot.version>3.4.2</mybatis-plus-boot.version>
         <redisson-spring-boot.version>3.14.1</redisson-spring-boot.version>
         <aspectjweaver.version>1.9.8.RC2</aspectjweaver.version>

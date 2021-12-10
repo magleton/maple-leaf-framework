@@ -6,7 +6,7 @@ import cn.maple.core.framework.annotation.GXPermission;
 import cn.maple.core.framework.annotation.GXPermissionCtl;
 import cn.maple.core.framework.dto.inner.permission.GXBasePermissionInnerDto;
 import cn.maple.core.framework.event.GXPermissionEvent;
-import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXEventPublisherUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -55,6 +55,6 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
             concurrentHashMap.putIfAbsent(k, permissionDtoList);
         });
         GXPermissionEvent<Map<String, List<GXBasePermissionInnerDto>>> permissionEvent = new GXPermissionEvent<>(concurrentHashMap, Dict.create());
-        GXCommonUtils.publishEvent(permissionEvent);
+        GXEventPublisherUtils.publishEvent(permissionEvent);
     }
 }

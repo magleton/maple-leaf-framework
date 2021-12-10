@@ -10,6 +10,7 @@ import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXEventPublisherUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +60,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      */
     @Override
     public <R> void publishEvent(GXBaseEvent<R> event) {
-        GXCommonUtils.publishEvent(event);
+        GXEventPublisherUtils.publishEvent(event);
     }
 
     /**
