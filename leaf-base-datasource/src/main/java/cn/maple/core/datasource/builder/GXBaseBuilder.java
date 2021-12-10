@@ -17,7 +17,6 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
-import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
@@ -190,6 +189,7 @@ public interface GXBaseBuilder {
         Set<String> groupByField = dbQueryParamInnerDto.getGroupByField();
         Dict orderByField = dbQueryParamInnerDto.getOrderByField();
         Set<String> having = dbQueryParamInnerDto.getHaving();
+        Integer limit = dbQueryParamInnerDto.getLimit();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
         Boolean excludeDeletedFieldCondition = dbQueryParamInnerDto.getExcludeDeletedFieldCondition();
         if (CollUtil.isNotEmpty(columns)) {
@@ -197,22 +197,24 @@ public interface GXBaseBuilder {
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
         Table<String, String, Table<String, String, Dict>> joins = dbQueryParamInnerDto.getJoins();
+        // 处理JOIN
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             handleSQLJoin(sql, joins);
         }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        // 处理WHERE
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             handleSQLWhereCondition(sql, condition, tableNameAlias);
         }
         // 排除条件中的删除字段
-        if (Boolean.FALSE.equals(excludeDeletedFieldCondition)) {
+        if (Objects.isNull(excludeDeletedFieldCondition) || Boolean.FALSE.equals(excludeDeletedFieldCondition)) {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
         }
-        // 处理having
+        // 处理HAVING
         if (CollUtil.isNotEmpty(having)) {
             sql.HAVING(having.toArray(new String[0]));
         }
@@ -222,6 +224,10 @@ public interface GXBaseBuilder {
             Integer[] idx = new Integer[]{0};
             orderByField.forEach((k, v) -> orderColumns[idx[0]++] = CharSequenceUtil.format("{} {}", k, v));
             sql.ORDER_BY(orderColumns);
+        }
+        // 处理LIMIT
+        if (Objects.nonNull(limit) && limit > 0) {
+            sql.LIMIT(limit);
         }
         return sql.toString();
     }
@@ -241,8 +247,8 @@ public interface GXBaseBuilder {
      * }
      * </pre>
      *
-     * @param sql SQL语句
-     *            * @param joins joins信息
+     * @param sql   SQL语句
+     * @param joins joins信息
      */
     static void handleSQLJoin(SQL sql, Table<String, String, Table<String, String, Dict>> joins) {
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
@@ -347,20 +353,8 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        GXValidatorUtils.validateEntity(dbQueryParamInnerDto);
-        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
-        Set<String> columns = dbQueryParamInnerDto.getColumns();
-        String tableName = dbQueryParamInnerDto.getTableName();
-        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
-        String selectStr = "*";
-        if (CollUtil.isNotEmpty(columns)) {
-            selectStr = String.join(",", columns);
-        }
-        SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
-        handleSQLWhereCondition(sql, condition, tableNameAlias);
-        sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
-        sql.LIMIT(1);
-        return sql.toString();
+        dbQueryParamInnerDto.setLimit(1);
+        return findByCondition(dbQueryParamInnerDto);
     }
 
     /**

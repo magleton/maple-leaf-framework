@@ -89,6 +89,11 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private Boolean excludeDeletedFieldCondition;
 
     /**
+     * 限制条数
+     */
+    private Integer limit;
+
+    /**
      * JOIN链接信息
      * <pre>
      * {@code
