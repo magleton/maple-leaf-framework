@@ -191,6 +191,7 @@ public interface GXBaseBuilder {
         Dict orderByField = dbQueryParamInnerDto.getOrderByField();
         Set<String> having = dbQueryParamInnerDto.getHaving();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
+        Boolean excludeDeletedFieldCondition = dbQueryParamInnerDto.getExcludeDeletedFieldCondition();
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
         }
@@ -203,7 +204,10 @@ public interface GXBaseBuilder {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             handleSQLWhereCondition(sql, condition, tableNameAlias);
         }
-        sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
+        // 排除条件中的删除字段
+        if (Boolean.FALSE.equals(excludeDeletedFieldCondition)) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
+        }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));

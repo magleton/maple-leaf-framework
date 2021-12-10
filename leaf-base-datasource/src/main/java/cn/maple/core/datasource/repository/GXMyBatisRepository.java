@@ -175,15 +175,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param tableName 表名字
      * @param condition 条件
      * @param columns   需要获取的列
+     * @param param     附加参数
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)
                 .condition(condition)
                 .columns(columns)
                 .build();
+        if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
+            paramInnerDto.setExcludeDeletedFieldCondition(true);
+        }
         return findByCondition(paramInnerDto);
     }
 
@@ -192,11 +196,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param tableName 表名字
      * @param condition 条件
+     * @param param     附加参数
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
-        return findByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Dict param) {
+        return findByCondition(tableName, condition, CollUtil.newHashSet("*"), param);
     }
 
     /**
@@ -215,11 +220,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param tableName 表名字
      * @param condition 查询条件
+     * @param param     附加参数
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
-        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Dict param) {
+        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"), param);
     }
 
     /**
@@ -228,15 +234,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要查询的列
+     * @param param     附加参数
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
                 .tableName(tableName)
                 .condition(condition)
                 .columns(columns)
                 .build();
+        if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
+            queryParamInnerDto.setExcludeDeletedFieldCondition(true);
+        }
         return findOneByCondition(queryParamInnerDto);
     }
 
@@ -419,7 +429,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     public List<R> findByCondition(Class<T> clazz, Table<String, String, Object> condition) {
-        return findByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
+        return findByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"), Dict.create());
     }
 
     /**
@@ -430,7 +440,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     public R findOneByCondition(Class<T> clazz, Table<String, String, Object> condition) {
-        return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
+        return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"), Dict.create());
     }
 
     /**

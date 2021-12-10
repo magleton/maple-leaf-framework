@@ -113,6 +113,11 @@ public class GXBuilderConstant {
      */
     public static final String REMOVE_JSON_FIELD_PREFIX_FLAG = "-";
 
+    /**
+     * 数据库删除标记的字段名字
+     */
+    public static final String DB_DELETED_FLAG_FIELD_NAME = "is_deleted";
+
     private GXBuilderConstant() {
     }
 }

@@ -83,6 +83,12 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private CopyOptions copyOptions;
 
     /**
+     * 排除条件中的删除字段
+     * 条件中不会出现删除的字段
+     */
+    private Boolean excludeDeletedFieldCondition;
+
+    /**
      * JOIN链接信息
      * <pre>
      * {@code

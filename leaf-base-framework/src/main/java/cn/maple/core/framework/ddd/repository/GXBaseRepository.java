@@ -74,18 +74,20 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param tableName 表名字
      * @param condition 条件
      * @param columns   需要获取的列
+     * @param param     附加参数
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param);
 
     /**
      * 根据条件获取所有数据
      *
      * @param tableName 表名字
      * @param condition 条件
+     * @param param     附加参数
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Dict param);
 
     /**
      * 根据条件获取数据
@@ -100,9 +102,10 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      *
      * @param tableName 表名字
      * @param condition 查询条件
+     * @param param     附加参数
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Dict param);
 
     /**
      * 根据条件获取数据
@@ -110,9 +113,10 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要查询的列
+     * @param param     附加参数
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param);
 
     /**
      * 根据条件获取分页数据
