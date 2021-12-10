@@ -11,11 +11,12 @@ import com.google.common.eventbus.EventBus;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("all")
 public class GXEventPublisherUtils {
     /**
      * 缓存已经注册的GUAVA事件监听器
      */
-    private static final ConcurrentHashMap<Object, String> REGISTER_CACHE = new ConcurrentHashMap<>(256);
+    private static final ConcurrentHashMap<String, String> EVENT_BUS_REGISTER_CACHE = new ConcurrentHashMap<>(1024);
 
     private GXEventPublisherUtils() {
     }
@@ -37,14 +38,15 @@ public class GXEventPublisherUtils {
      */
     public static <T> void publishGuavaAsyncEvent(GXBaseEvent<T> event, Class<?> listenerClazz) {
         AsyncEventBus asyncEventBus = AsyncEventBusCenter.getInstance();
-        Object bean = GXSpringContextUtils.getBean(listenerClazz);
-        if (Objects.isNull(bean)) {
+        Object listener = GXSpringContextUtils.getBean(listenerClazz);
+        if (Objects.isNull(listener)) {
             throw new GXBusinessException("指定的监听类型不存在");
         }
-        String s = REGISTER_CACHE.get(bean);
+        String key = listenerClazz.getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isEmpty(s)) {
-            asyncEventBus.register(bean);
-            REGISTER_CACHE.put(bean, listenerClazz.getName());
+            asyncEventBus.register(listener);
+            EVENT_BUS_REGISTER_CACHE.put(key, listenerClazz.getSimpleName());
         }
         asyncEventBus.post(event);
     }
@@ -57,14 +59,15 @@ public class GXEventPublisherUtils {
      */
     public static <T> void publishGuavaSyncEvent(GXBaseEvent<T> event, Class<?> listenerClazz) {
         EventBus eventBus = SyncEventBusCenter.getInstance();
-        Object bean = GXSpringContextUtils.getBean(listenerClazz);
-        if (Objects.isNull(bean)) {
+        Object listener = GXSpringContextUtils.getBean(listenerClazz);
+        if (Objects.isNull(listener)) {
             throw new GXBusinessException("指定的监听类型不存在");
         }
-        String s = REGISTER_CACHE.get(bean);
+        String key = listenerClazz.getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isEmpty(s)) {
-            eventBus.register(Objects.requireNonNull(GXSpringContextUtils.getBean(listenerClazz)));
-            REGISTER_CACHE.put(bean, listenerClazz.getName());
+            eventBus.register(listener);
+            EVENT_BUS_REGISTER_CACHE.put(key, listenerClazz.getSimpleName());
         }
         eventBus.post(event);
     }
@@ -77,10 +80,11 @@ public class GXEventPublisherUtils {
      */
     public static <T> void publishGuavaAsyncEvent(GXBaseEvent<T> event, Object listener) {
         AsyncEventBus asyncEventBus = AsyncEventBusCenter.getInstance();
-        String s = REGISTER_CACHE.get(listener);
+        String key = listener.getClass().getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isEmpty(s)) {
             asyncEventBus.register(listener);
-            REGISTER_CACHE.put(listener, listener.getClass().getName());
+            EVENT_BUS_REGISTER_CACHE.put(key, listener.getClass().getSimpleName());
         }
         asyncEventBus.post(event);
     }
@@ -93,10 +97,11 @@ public class GXEventPublisherUtils {
      */
     public static <T> void publishGuavaSyncEvent(GXBaseEvent<T> event, Object listener) {
         EventBus eventBus = SyncEventBusCenter.getInstance();
-        String s = REGISTER_CACHE.get(listener);
+        String key = listener.getClass().getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isEmpty(s)) {
             eventBus.register(listener);
-            REGISTER_CACHE.put(listener, listener.getClass().getName());
+            EVENT_BUS_REGISTER_CACHE.put(key, listener.getClass().getSimpleName());
         }
         eventBus.post(event);
     }
@@ -107,11 +112,12 @@ public class GXEventPublisherUtils {
      * @param listener 监听器的对象
      */
     public static void unregisterGuavaAsyncEventObserver(Object listener) {
-        String s = REGISTER_CACHE.get(listener);
+        String key = listener.getClass().getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isNotEmpty(s)) {
             AsyncEventBus asyncEventBus = AsyncEventBusCenter.getInstance();
             asyncEventBus.unregister(listener);
-            REGISTER_CACHE.remove(listener);
+            EVENT_BUS_REGISTER_CACHE.remove(key);
         }
     }
 
@@ -121,11 +127,12 @@ public class GXEventPublisherUtils {
      * @param listener 监听器的对象
      */
     public static void unregisterGuavaSyncEventObserver(Object listener) {
-        String s = REGISTER_CACHE.get(listener);
+        String key = listener.getClass().getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isNotEmpty(s)) {
             EventBus eventBus = SyncEventBusCenter.getInstance();
             eventBus.unregister(listener);
-            REGISTER_CACHE.remove(listener);
+            EVENT_BUS_REGISTER_CACHE.remove(key);
         }
     }
 
@@ -135,15 +142,16 @@ public class GXEventPublisherUtils {
      * @param listenerClazz 监听器的类型
      */
     public static void unregisterGuavaAsyncEventObserver(Class<?> listenerClazz) {
-        Object bean = GXSpringContextUtils.getBean(listenerClazz);
-        if (Objects.isNull(bean)) {
+        Object listener = GXSpringContextUtils.getBean(listenerClazz);
+        if (Objects.isNull(listener)) {
             return;
         }
-        String s = REGISTER_CACHE.get(bean);
+        String key = listenerClazz.getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isNotEmpty(s)) {
             AsyncEventBus asyncEventBus = AsyncEventBusCenter.getInstance();
-            asyncEventBus.unregister(Objects.requireNonNull(GXSpringContextUtils.getBean(listenerClazz)));
-            REGISTER_CACHE.remove(bean);
+            asyncEventBus.unregister(listener);
+            EVENT_BUS_REGISTER_CACHE.remove(key);
         }
     }
 
@@ -153,15 +161,16 @@ public class GXEventPublisherUtils {
      * @param listenerClazz 监听器的类型
      */
     public static void unregisterGuavaSyncEventObserver(Class<?> listenerClazz) {
-        Object bean = GXSpringContextUtils.getBean(listenerClazz);
-        if (Objects.isNull(bean)) {
+        Object listener = GXSpringContextUtils.getBean(listenerClazz);
+        if (Objects.isNull(listener)) {
             return;
         }
-        String s = REGISTER_CACHE.get(bean);
+        String key = listenerClazz.getName();
+        String s = EVENT_BUS_REGISTER_CACHE.get(key);
         if (CharSequenceUtil.isNotEmpty(s)) {
             EventBus eventBus = SyncEventBusCenter.getInstance();
-            eventBus.unregister(Objects.requireNonNull(GXSpringContextUtils.getBean(listenerClazz)));
-            REGISTER_CACHE.remove(bean);
+            eventBus.unregister(listener);
+            EVENT_BUS_REGISTER_CACHE.remove(key);
         }
     }
 }
