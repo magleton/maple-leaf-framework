@@ -23,6 +23,7 @@ import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public interface GXBaseBuilder {
     /**
      * 更新实体字段和虚拟字段
