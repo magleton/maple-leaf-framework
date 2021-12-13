@@ -1,7 +1,6 @@
 package cn.maple.core.framework.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.maple.core.framework.event.GXBaseEvent;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,17 +10,19 @@ public interface GXBusinessService {
      * 加密手机号码
      *
      * @param phoneNumber 明文手机号
+     * @param key         加密key
      * @return String
      */
-    String encryptedPhoneNumber(String phoneNumber);
+    String encryptedPhoneNumber(String phoneNumber, String key);
 
     /**
      * 解密手机号码
      *
      * @param encryptPhoneNumber 加密手机号
+     * @param key                解密key
      * @return String
      */
-    String decryptedPhoneNumber(String encryptPhoneNumber);
+    String decryptedPhoneNumber(String encryptPhoneNumber, String key);
 
     /**
      * 隐藏手机号码的指定几位为指定的字符
@@ -33,13 +34,6 @@ public interface GXBusinessService {
      * @return String
      */
     String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar);
-
-    /**
-     * 派发事件 (异步事件可以通过在监听器上面添加@Async注解实现)
-     *
-     * @param event ApplicationEvent对象
-     */
-    <R> void publishEvent(GXBaseEvent<R> event);
 
     /**
      * 获取实体中指定指定的值

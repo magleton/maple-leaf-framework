@@ -17,7 +17,6 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -177,53 +176,38 @@ public class GXCommonUtils {
     /**
      * 加密手机号码
      *
-     * @param phoneNumber 手机号明文
+     * @param data 明文数据
+     * @param key  加密KEY
      * @return String
      */
-    public static String encryptedPhoneNumber(String phoneNumber) {
-        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
-        final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
-        return encryptedPhoneNumber(phoneNumber, key);
-    }
-
-    /**
-     * 解密手机号码
-     *
-     * @param encryptPhoneNumber 加密手机号
-     * @return String
-     */
-    public static String decryptedPhoneNumber(String encryptPhoneNumber) {
-        final String prefix = GXCommonUtils.getEnvironmentValue("encrypted.phone.prefix", String.class);
-        final String suffix = GXCommonUtils.getEnvironmentValue("encrypted.phone.suffix", String.class);
-        final String key = prefix + GXCommonConstant.PHONE_ENCRYPT_KEY + suffix;
-        return decryptedPhoneNumber(encryptPhoneNumber, key);
-    }
-
-    /**
-     * 加密手机号码
-     *
-     * @param phoneNumber 手机号明文
-     * @param key         加密KEY
-     * @return String
-     */
-    public static String encryptedPhoneNumber(String phoneNumber, String key) {
-        return GXAuthCodeUtils.authCodeEncode(phoneNumber, key);
-    }
-
-    /**
-     * 解密手机号码
-     *
-     * @param encryptPhoneNumber 加密手机号
-     * @param key                解密KEY
-     * @return String
-     */
-    public static String decryptedPhoneNumber(String encryptPhoneNumber, String key) {
-        final String s = GXAuthCodeUtils.authCodeDecode(encryptPhoneNumber, key);
-        if ("{}".equals(s)) {
-            return encryptPhoneNumber;
+    public static String encryptedData(Dict data, String key) {
+        if (Objects.isNull(data) || data.isEmpty()) {
+            throw new GXBusinessException("加密数据明文不能为空");
         }
-        return s;
+        if (CharSequenceUtil.isEmpty(key)) {
+            throw new GXBusinessException("加密KEY不能为空");
+        }
+        key = CharSequenceUtil.format("{}{}", key, GXCommonConstant.COMMON_ENCRYPT_KEY);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(data), key);
+    }
+
+    /**
+     * 解密手机号码
+     *
+     * @param encryptedStr 加密字符串
+     * @param key             解密KEY
+     * @return String
+     */
+    public static Dict decryptedData(String encryptedStr, String key) {
+        if (CharSequenceUtil.isEmpty(key)) {
+            throw new GXBusinessException("解密KEY不能为空");
+        }
+        key = CharSequenceUtil.format("{}{}", key, GXCommonConstant.COMMON_ENCRYPT_KEY);
+        final String s = GXAuthCodeUtils.authCodeDecode(encryptedStr, key);
+        if ("{}".equals(s)) {
+            return Dict.create();
+        }
+        return JSONUtil.toBean(s, Dict.class);
     }
 
     /**
@@ -243,9 +227,7 @@ public class GXCommonUtils {
      * @return Map
      */
     public static Map<String, Object> convertStrToMap(String mapString) {
-        return Arrays.stream(mapString.replace("{", "").replace("}", "").split(","))
-                .map(arrayData -> arrayData.split("="))
-                .collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
+        return Arrays.stream(mapString.replace("{", "").replace("}", "").split(",")).map(arrayData -> arrayData.split("=")).collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
     }
 
     /**

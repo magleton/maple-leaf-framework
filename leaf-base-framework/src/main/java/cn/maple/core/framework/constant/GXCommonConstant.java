@@ -24,7 +24,7 @@ public class GXCommonConstant {
     /**
      * 手机号码加密的KEY
      */
-    public static final String PHONE_ENCRYPT_KEY = "B78D32BTR1CHEN15AC1F19C46A9B533986";
+    public static final String COMMON_ENCRYPT_KEY = "B78D32BTR1CHEN15AC1F19C46A9B533986";
 
     /**
      * 未删除的标识值,整形类型

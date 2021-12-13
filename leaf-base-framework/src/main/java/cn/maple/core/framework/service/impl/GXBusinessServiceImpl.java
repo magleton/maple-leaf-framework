@@ -6,11 +6,9 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.event.GXBaseEvent;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXEventPublisherUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,22 +19,32 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      * 加密手机号码
      *
      * @param phoneNumber 明文手机号
+     * @param key         加密key
      * @return String
      */
     @Override
-    public String encryptedPhoneNumber(String phoneNumber) {
-        return GXCommonUtils.encryptedPhoneNumber(phoneNumber);
+    public String encryptedPhoneNumber(String phoneNumber, String key) {
+        if (CharSequenceUtil.isEmpty(key)) {
+            throw new GXBusinessException("手机号加密key不能为空");
+        }
+        Dict data = Dict.create().set("phone", phoneNumber);
+        return GXCommonUtils.encryptedData(data, key);
     }
 
     /**
      * 解密手机号码
      *
      * @param encryptPhoneNumber 加密手机号
+     * @param key                解密key
      * @return String
      */
     @Override
-    public String decryptedPhoneNumber(String encryptPhoneNumber) {
-        return GXCommonUtils.decryptedPhoneNumber(encryptPhoneNumber);
+    public String decryptedPhoneNumber(String encryptPhoneNumber, String key) {
+        if (CharSequenceUtil.isEmpty(key)) {
+            throw new GXBusinessException("手机号解密key不能为空");
+        }
+        Dict data = GXCommonUtils.decryptedData(encryptPhoneNumber, key);
+        return data.getStr("phone");
     }
 
     /**
@@ -51,16 +59,6 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     @Override
     public String hiddenPhoneNumber(CharSequence phoneNumber, int startInclude, int endExclude, char replacedChar) {
         return GXCommonUtils.hiddenPhoneNumber(phoneNumber, startInclude, endExclude, replacedChar);
-    }
-
-    /**
-     * 派发事件 (异步事件可以通过在监听器上面添加@Async注解实现)
-     *
-     * @param event ApplicationEvent对象
-     */
-    @Override
-    public <R> void publishEvent(GXBaseEvent<R> event) {
-        GXEventPublisherUtils.publishEvent(event);
     }
 
     /**

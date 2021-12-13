@@ -23,6 +23,8 @@ public class GXEventPublisherUtils {
 
     /**
      * 派发SpringBoot事件
+     * 异步事件可以通过在监听器上面添加@Async注解实现, 但需要开启SpringBoot的异步功能
+     * {@code @EnableAsync}
      *
      * @param event 事件对象
      */
