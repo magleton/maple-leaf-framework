@@ -11,7 +11,8 @@ import java.util.Optional;
 public class GXBaseRequestLoggingFilter extends AbstractRequestLoggingFilter {
     @Override
     protected void beforeRequest(HttpServletRequest request, @NotNull String message) {
-        String requestId = Optional.ofNullable(request.getHeader(GXTraceIdContextUtils.TRACE_ID_KEY)).orElse(GXTraceIdContextUtils.getTraceId());
+        String requestId = Optional.ofNullable(request.getHeader(GXTraceIdContextUtils.TRACE_ID_KEY))
+                .orElse(GXTraceIdContextUtils.getTraceId());
         if (CharSequenceUtil.isEmpty(requestId)) {
             requestId = GXTraceIdContextUtils.generateTraceId();
         }
