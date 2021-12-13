@@ -176,11 +176,12 @@ public class GXCommonUtils {
     /**
      * 加密手机号码
      *
-     * @param data 明文数据
-     * @param key  加密KEY
+     * @param data   明文数据
+     * @param key    加密KEY
+     * @param expiry 加密之后的数据过期时间  0 永不过期
      * @return String
      */
-    public static String encryptedData(Dict data, String key) {
+    public static String encryptedData(Dict data, String key, int expiry) {
         if (Objects.isNull(data) || data.isEmpty()) {
             throw new GXBusinessException("加密数据明文不能为空");
         }
@@ -188,14 +189,14 @@ public class GXCommonUtils {
             throw new GXBusinessException("加密KEY不能为空");
         }
         key = CharSequenceUtil.format("{}{}", key, GXCommonConstant.COMMON_ENCRYPT_KEY);
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(data), key);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(data), key, expiry);
     }
 
     /**
      * 解密手机号码
      *
      * @param encryptedStr 加密字符串
-     * @param key             解密KEY
+     * @param key          解密KEY
      * @return String
      */
     public static Dict decryptedData(String encryptedStr, String key) {

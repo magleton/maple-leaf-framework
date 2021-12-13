@@ -28,7 +28,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
             throw new GXBusinessException("手机号加密key不能为空");
         }
         Dict data = Dict.create().set("phone", phoneNumber);
-        return GXCommonUtils.encryptedData(data, key);
+        return GXCommonUtils.encryptedData(data, key, 0);
     }
 
     /**
