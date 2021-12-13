@@ -39,7 +39,12 @@ public class GXCommonConstant {
     /**
      * 日志格式
      */
-    public static final String LOGGER_FORMAT = "线程 : {} --> 描述信息 : {} --> 详细信息 : {}";
+    public static final String FULL_LOGGER_FORMAT = "线程 : {} --> 描述信息 : {} --> 日志详细 : {}";
+
+    /**
+     * 日志格式
+     */
+    public static final String SHORT_LOGGER_FORMAT = "线程 : {} --> 描述信息 : {}";
 
     /**
      * 服务运行的环境

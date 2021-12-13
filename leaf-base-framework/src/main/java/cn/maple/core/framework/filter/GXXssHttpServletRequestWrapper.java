@@ -52,7 +52,7 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
 
         // 为空，直接返回
-        String json = IoUtil.read(super.getInputStream(), "utf-8");
+        String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
