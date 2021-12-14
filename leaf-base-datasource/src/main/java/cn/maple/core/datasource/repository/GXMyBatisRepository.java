@@ -7,8 +7,9 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.constant.GXBuilderConstant;
-import cn.maple.core.datasource.dao.GXBaseDao;
+import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
@@ -28,8 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 
-public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXBaseDao<M, T, R>, R extends GXBaseResDto, ID>
-        implements GXBaseRepository<T, R, ID> {
+public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> implements GXBaseRepository<T, R, ID> {
     /**
      * 基础DAO
      */
@@ -180,11 +180,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
-        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
-                .tableName(tableName)
-                .condition(condition)
-                .columns(columns)
-                .build();
+        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
         if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
             paramInnerDto.setExcludeDeletedFieldCondition(true);
         }
@@ -239,11 +235,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .tableName(tableName)
-                .condition(condition)
-                .columns(columns)
-                .build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
         if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
             queryParamInnerDto.setExcludeDeletedFieldCondition(true);
         }
@@ -251,11 +243,41 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
+     * 通过ID获取一条记录
+     *
+     * @param tableName 表名字
+     * @param id        ID值
+     * @return 返回数据
+     */
+    @Override
+    public R findOneByPkId(String tableName, ID id) {
+        return findOneByPkId(tableName, id, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 通过ID获取一条记录
+     *
+     * @param tableName 表名字
+     * @param id        ID值
+     * @param columns   需要返回的列
+     * @return 返回数据
+     */
+    @Override
+    public R findOneByPkId(String tableName, ID id, Set<String> columns) {
+        HashBasedTable<String, String, Object> condition = HashBasedTable.create();
+        condition.put("id", GXBuilderConstant.NUMBER_EQ, id);
+        if (TypeUtil.getClass(id.getClass()).getName().equalsIgnoreCase(String.class.getName())) {
+            condition.put("id", GXBuilderConstant.STR_EQ, id);
+        }
+        return findOneByCondition(tableName, condition, columns, Dict.create());
+    }
+
+    /**
      * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
      *
      * @param mapperMethodName     mapper中的方法名字
      * @param dbQueryParamInnerDto 查询信息
-     * @return
+     * @return 分页数据
      */
     public GXPaginationResDto<R> paginate(String mapperMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(mapperMethodName)) {
@@ -264,8 +286,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        IPage<R> paginate = baseDao.paginate(dbQueryParamInnerDto, mapperMethodName);
-        return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
+        return baseDao.paginate(dbQueryParamInnerDto, mapperMethodName);
     }
 
     /**
@@ -284,12 +305,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .page(page)
-                .pageSize(pageSize)
-                .columns(columns)
-                .condition(condition)
-                .build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().page(page).pageSize(pageSize).columns(columns).condition(condition).build();
         return paginate(mapperMethodName, queryParamInnerDto);
     }
 
@@ -304,8 +320,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        IPage<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
-        return GXDBCommonUtils.convertPageToPaginationResDto(paginate);
+        return baseDao.paginate(dbQueryParamInnerDto);
     }
 
     /**
@@ -323,13 +338,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .page(page)
-                .pageSize(pageSize)
-                .tableName(tableName)
-                .condition(condition)
-                .columns(columns)
-                .build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().page(page).pageSize(pageSize).tableName(tableName).condition(condition).columns(columns).build();
         return paginate(queryParamInnerDto);
     }
 

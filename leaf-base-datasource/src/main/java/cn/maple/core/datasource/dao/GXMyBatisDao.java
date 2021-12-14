@@ -8,8 +8,10 @@ import cn.maple.core.datasource.entity.GXBaseEntity;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,11 +26,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R extends GXBaseResDto> extends ServiceImpl<M, T> {
+public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R extends GXBaseResDto, ID> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
     /**
      * 日志对象
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(GXBaseDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GXMyBatisDao.class);
 
     /**
      * 分页  返回实体对象
@@ -37,7 +39,8 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param mapperMethodName     Mapper方法
      * @return GXPagination
      */
-    public IPage<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
+    @Override
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
@@ -57,7 +60,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
         }
         final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
         iPage.setRecords(list);
-        return iPage;
+        return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
     }
 
     /**
@@ -66,14 +69,15 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    public IPage<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    @Override
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
         List<R> paginate = baseMapper.paginate(iPage, dbQueryParamInnerDto);
         iPage.setRecords(paginate);
-        return iPage;
+        return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
     }
 
     /**
@@ -84,6 +88,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 更新条件
      * @return 影响的行数
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         if (Objects.isNull(condition) || condition.isEmpty()) {
@@ -99,11 +104,9 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 条件
      * @return int
      */
+    @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .tableName(tableName)
-                .condition(condition)
-                .build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).build();
         return Objects.nonNull(baseMapper.checkRecordIsExists(queryParamInnerDto));
     }
 
@@ -114,6 +117,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dataList  数据集合
      * @return int
      */
+    @Override
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
     public Integer batchInsert(String tableName, List<Dict> dataList) {
@@ -126,6 +130,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询参数
      * @return 列表
      */
+    @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findOneByCondition(dbQueryParamInnerDto);
     }
@@ -136,6 +141,7 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
+    @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findByCondition(dbQueryParamInnerDto);
     }
@@ -161,22 +167,13 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
     }
 
     /**
-     * 获取表名字
-     *
-     * @param clazz 实体的类型
-     * @return 数据库表的名字
-     */
-    private String getTableName(Class<T> clazz) {
-        return GXDBCommonUtils.getTableName(clazz);
-    }
-
-    /**
      * 根据条件软(逻辑)删除
      *
      * @param tableName 表名
      * @param condition 删除条件
      * @return 影响行数
      */
+    @Override
     public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         return baseMapper.deleteSoftWhere(tableName, condition);
     }
@@ -188,7 +185,19 @@ public class GXBaseDao<M extends GXBaseMapper<T, R>, T extends GXBaseEntity, R e
      * @param condition 删除条件
      * @return 影响行数
      */
+    @Override
     public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
         return baseMapper.deleteWhere(tableName, condition);
+    }
+
+    /**
+     * 获取表名字
+     *
+     * @param clazz 实体的类型
+     * @return 数据库表的名字
+     */
+    @Override
+    public String getTableName(Class<T> clazz) {
+        return GXDBCommonUtils.getTableName(clazz);
     }
 }

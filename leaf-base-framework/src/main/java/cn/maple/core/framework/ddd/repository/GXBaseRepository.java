@@ -119,6 +119,25 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param);
 
     /**
+     * 通过ID获取一条记录
+     *
+     * @param tableName 表名字
+     * @param id        ID值
+     * @param columns   需要返回的列
+     * @return 返回数据
+     */
+    R findOneByPkId(String tableName, ID id, Set<String> columns);
+
+    /**
+     * 通过ID获取一条记录
+     *
+     * @param tableName 表名字
+     * @param id        ID值
+     * @return 返回数据
+     */
+    R findOneByPkId(String tableName, ID id);
+
+    /**
      * 根据条件获取分页数据
      *
      * @param dbQueryParamInnerDto 条件查询
@@ -175,8 +194,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param param                      param
      * @return boolean
      */
-    boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param)
-            throws UnsupportedOperationException;
+    boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException;
 
     /**
      * 批量插入数据
