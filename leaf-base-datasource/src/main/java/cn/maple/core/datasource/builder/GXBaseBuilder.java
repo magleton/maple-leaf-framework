@@ -10,7 +10,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.constant.GXBuilderConstant;
-import cn.maple.core.datasource.entity.GXBaseEntity;
+import cn.maple.core.datasource.po.GXBasePO;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -64,9 +64,7 @@ public interface GXBaseBuilder {
                         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
                             sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
                         } else {
-                            if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass())
-                                    && !ClassUtil.equals(entryValue.getClass(), "String", true)
-                                    && (entryValue instanceof Map || entryValue instanceof GXBaseEntity)) {
+                            if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass()) && !ClassUtil.equals(entryValue.getClass(), "String", true) && (entryValue instanceof Map || entryValue instanceof GXBasePO)) {
                                 entryValue = JSONUtil.toJsonStr(entryValue);
                             }
                             sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", fieldName, fieldName, entryKey, entryValue));
