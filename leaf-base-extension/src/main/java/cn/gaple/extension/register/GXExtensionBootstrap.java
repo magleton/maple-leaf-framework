@@ -30,8 +30,6 @@ public class GXExtensionBootstrap {
     @PostConstruct
     public void init() {
         Map<String, Object> extensionBeans = applicationContext.getBeansWithAnnotation(GXExtension.class);
-        extensionBeans.values().forEach(
-                extension -> extensionRegister.doRegistration((GXExtensionPoint) extension)
-        );
+        extensionBeans.values().forEach(extension -> extensionRegister.doRegistration((GXExtensionPoint) extension));
     }
 }
