@@ -4,11 +4,11 @@ import cn.gaple.extension.GXBizScenario;
 import cn.gaple.extension.GXExtensionExecutor;
 import cn.gaple.extension.test.customer.domain.rule.CustomerRuleExtPt;
 import cn.gaple.extension.test.customer.infrastructure.CustomerRepository;
-import cn.maple.core.framework.annotation.GXEntity;
+import cn.maple.core.framework.ddd.annotation.GXDomainEntity;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@GXEntity
+@GXDomainEntity
 @Data
 public class CustomerEntity {
     private String companyName;
