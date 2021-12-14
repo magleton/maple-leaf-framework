@@ -114,9 +114,15 @@ public class GXBuilderConstant {
     public static final String REMOVE_JSON_FIELD_PREFIX_FLAG = "-";
 
     /**
-     * 数据库删除标记的字段名字
+     * 数据库中删除标记的字段名字
      */
-    public static final String DB_DELETED_FLAG_FIELD_NAME = "is_deleted";
+    public static final String DELETED_FLAG_FIELD_NAME = "is_deleted";
+
+    /**
+     * 排除删除条件的标识
+     * 如果额外传输了该字段, 则查询SQL中会查询所有满足条件的数据 , 无论删除与否
+     */
+    public static final String EXCLUSION_DELETED_CONDITION_FLAG = "exclusion_deleted_condition";
 
     private GXBuilderConstant() {
     }

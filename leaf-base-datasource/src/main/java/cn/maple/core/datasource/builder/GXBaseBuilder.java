@@ -190,7 +190,6 @@ public interface GXBaseBuilder {
         Set<String> having = dbQueryParamInnerDto.getHaving();
         Integer limit = dbQueryParamInnerDto.getLimit();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
-        Boolean excludeDeletedFieldCondition = dbQueryParamInnerDto.getExcludeDeletedFieldCondition();
         if (CollUtil.isNotEmpty(columns)) {
             selectStr = String.join(",", columns);
         }
@@ -201,12 +200,15 @@ public interface GXBaseBuilder {
             handleSQLJoin(sql, joins);
         }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        // 获取是否排除删除条件的标识, 若不为null,则需要排除is_deleted条件,也就是会查询所有数据
+        Object retentionDelCondition = null;
         // 处理WHERE
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
+            retentionDelCondition = condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, GXBuilderConstant.EXCLUSION_DELETED_CONDITION_FLAG);
             handleSQLWhereCondition(sql, condition, tableNameAlias);
         }
         // 排除条件中的删除字段
-        if (Objects.isNull(excludeDeletedFieldCondition) || Boolean.FALSE.equals(excludeDeletedFieldCondition)) {
+        if (Objects.isNull(retentionDelCondition)) {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
         }
         // 处理分组

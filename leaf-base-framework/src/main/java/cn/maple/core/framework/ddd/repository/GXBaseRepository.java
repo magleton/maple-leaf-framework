@@ -74,20 +74,18 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param tableName 表名字
      * @param condition 条件
      * @param columns   需要获取的列
-     * @param param     附加参数
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
 
     /**
      * 根据条件获取所有数据
      *
      * @param tableName 表名字
      * @param condition 条件
-     * @param param     附加参数
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Dict param);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 根据条件获取数据
@@ -102,10 +100,9 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      *
      * @param tableName 表名字
      * @param condition 查询条件
-     * @param param     附加参数
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Dict param);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 根据条件获取数据
@@ -113,10 +110,9 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要查询的列
-     * @param param     附加参数
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
 
     /**
      * 通过ID获取一条记录
@@ -214,6 +210,28 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @return 影响的行数
      */
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+
+    /**
+     * 查询单个字段的值
+     *
+     * @param tableName  表名字
+     * @param condition  查询条件
+     * @param columnName 字段名字
+     * @param valueClazz 值的类型
+     * @return 返回指定字段的值
+     */
+    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, String columnName, Class<E> valueClazz);
+
+    /**
+     * 查询指定字段的值
+     *
+     * @param tableName  表名字
+     * @param condition  查询条件
+     * @param columns    字段名字集合
+     * @param valueClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> valueClazz);
 
     /**
      * 获取 Primary Key

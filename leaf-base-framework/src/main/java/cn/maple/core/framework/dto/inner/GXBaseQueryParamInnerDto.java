@@ -83,12 +83,6 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private CopyOptions copyOptions;
 
     /**
-     * 排除条件中的删除字段
-     * 条件中不会出现删除的字段
-     */
-    private Boolean excludeDeletedFieldCondition;
-
-    /**
      * 限制条数
      */
     private Integer limit;
@@ -105,4 +99,13 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * </pre>
      */
     private transient Table<String, String, Table<String, String, Dict>> joins;
+
+    /**
+     * 额外参数
+     * 用于一些特殊场景
+     * eg:
+     * 1、不合适放入condition中的参数
+     * 2、需要使用该参数调整查询的规则
+     */
+    private transient Dict params;
 }

@@ -175,15 +175,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param tableName 表名字
      * @param condition 条件
      * @param columns   需要获取的列
-     * @param param     附加参数
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
-        if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
-            paramInnerDto.setExcludeDeletedFieldCondition(true);
-        }
         return findByCondition(paramInnerDto);
     }
 
@@ -192,12 +188,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param tableName 表名字
      * @param condition 条件
-     * @param param     附加参数
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Dict param) {
-        return findByCondition(tableName, condition, CollUtil.newHashSet("*"), param);
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        return findByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -216,12 +211,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param tableName 表名字
      * @param condition 查询条件
-     * @param param     附加参数
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Dict param) {
-        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"), param);
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
+        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -230,16 +224,57 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要查询的列
-     * @param param     附加参数
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict param) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
-        if (Objects.nonNull(param.getObj(GXBuilderConstant.DB_DELETED_FLAG_FIELD_NAME))) {
-            queryParamInnerDto.setExcludeDeletedFieldCondition(true);
-        }
         return findOneByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 查询指定字段的值
+     *
+     * @param tableName  查询条件
+     * @param condition
+     * @param columns    字段名字集合
+     * @param valueClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    @SuppressWarnings("all")
+    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> valueClazz) {
+        R one = findOneByCondition(tableName, condition, columns);
+        if (Objects.isNull(one)) {
+            return null;
+        }
+        Dict dict = GXCommonUtils.convertSourceToDict(one);
+        Dict retData = Dict.create();
+        columns.forEach(column -> {
+            retData.set(column, dict.getObj(column));
+        });
+        return (E) retData;
+    }
+
+    /**
+     * 查询单个字段的值
+     *
+     * @param tableName  查询条件
+     * @param condition
+     * @param columnName 字段名字
+     * @param valueClazz 值的类型
+     * @return 返回指定字段的值
+     */
+    @Override
+    @SuppressWarnings("all")
+    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, String columnName, Class<E> valueClazz) {
+        R one = findOneByCondition(tableName, condition, CollUtil.newHashSet(columnName));
+        if (Objects.isNull(one)) {
+            return null;
+        }
+        Dict dict = GXCommonUtils.convertSourceToDict(one);
+        Object obj = dict.getObj(columnName);
+        return Objects.isNull(obj) ? null : (E) obj;
     }
 
     /**
@@ -269,7 +304,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (TypeUtil.getClass(id.getClass()).getName().equalsIgnoreCase(String.class.getName())) {
             condition.put("id", GXBuilderConstant.STR_EQ, id);
         }
-        return findOneByCondition(tableName, condition, columns, Dict.create());
+        return findOneByCondition(tableName, condition, columns);
     }
 
     /**
@@ -438,7 +473,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     public List<R> findByCondition(Class<T> clazz, Table<String, String, Object> condition) {
-        return findByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"), Dict.create());
+        return findByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -449,7 +484,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     public R findOneByCondition(Class<T> clazz, Table<String, String, Object> condition) {
-        return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"), Dict.create());
+        return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
     }
 
     /**
