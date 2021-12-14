@@ -234,6 +234,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
 
     /**
      * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
      *
      * @param tableName  查询条件
      * @param condition
@@ -244,6 +247,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     @SuppressWarnings("all")
     public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> valueClazz) {
+        if (ClassUtil.isSimpleTypeOrArray(valueClazz)) {
+            throw new GXBusinessException("接收的数据类型不正确");
+        }
         R one = findOneByCondition(tableName, condition, columns);
         if (Objects.isNull(one)) {
             return null;
@@ -258,6 +264,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
 
     /**
      * 查询单个字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, "username", String.class)}
+     * </pre>
      *
      * @param tableName  查询条件
      * @param condition

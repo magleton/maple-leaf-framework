@@ -213,6 +213,9 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
 
     /**
      * 查询单个字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, "username", String.class)}
+     * </pre>
      *
      * @param tableName  表名字
      * @param condition  查询条件
@@ -224,6 +227,9 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
 
     /**
      * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
      *
      * @param tableName  表名字
      * @param condition  查询条件
