@@ -2,7 +2,7 @@ package cn.maple.core.datasource.mapper;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
-import cn.maple.core.datasource.po.GXBasePO;
+import cn.maple.core.datasource.model.GXBaseModel;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface GXBaseMapper<T extends GXBasePO, R extends GXBaseResDto> extends BaseMapper<T> {
+public interface GXBaseMapper<T extends GXBaseModel, R extends GXBaseResDto> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 

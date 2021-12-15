@@ -1,4 +1,4 @@
-package cn.maple.core.datasource.po;
+package cn.maple.core.datasource.model;
 
 import cn.maple.core.framework.dto.GXBaseData;
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GXBasePO extends GXBaseData {
+public class GXBaseModel extends GXBaseData {
     @TableField(fill = FieldFill.INSERT)
     private Integer createdAt;
 

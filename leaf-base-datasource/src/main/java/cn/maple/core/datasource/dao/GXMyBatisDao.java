@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.po.GXBasePO;
+import cn.maple.core.datasource.model.GXBaseModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXBasePO, R extends GXBaseResDto, ID> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
+public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXBaseModel, R extends GXBaseResDto, ID> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
     /**
      * 日志对象
      */
