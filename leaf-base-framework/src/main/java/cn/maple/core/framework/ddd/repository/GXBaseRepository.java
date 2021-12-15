@@ -63,6 +63,17 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     /**
      * 根据条件获取所有数据
      *
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     查询列
+     * @param targetClazz 结果数据类型
+     * @return 列表
+     */
+    <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+
+    /**
+     * 根据条件获取所有数据
+     *
      * @param dbQueryInnerDto 查询条件
      * @return 列表
      */
@@ -212,32 +223,39 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 
     /**
-     * 查询单个字段的值
+     * 查询指定字段的值
      * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, "username", String.class)}
+     *     {@code
+     *     findFieldByCondition("s_admin", condition, CollUtil.newHashSet("nickname", "username"), Dict.class);
+     *     }
      * </pre>
      *
-     * @param tableName  表名字
-     * @param condition  查询条件
-     * @param columnName 字段名字
-     * @param valueClazz 值的类型
-     * @return 返回指定字段的值
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, String columnName, Class<E> valueClazz);
+    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
      * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     *     {@code
+     *     GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
+     *                       .tableName("s_admin")
+     *                       .columns(CollUtil.newHashSet("nickname", "username"))
+     *                       .condition(condition)
+     *                       .build();
+     *     findFieldByCondition(paramInnerDto, Dict.class);
+     *     }
      * </pre>
      *
-     * @param tableName  表名字
-     * @param condition  查询条件
-     * @param columns    字段名字集合
-     * @param valueClazz 值的类型
+     * @param dbQueryInnerDto 查询数据
+     * @param targetClazz     值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> valueClazz);
+    <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz);
 
     /**
      * 获取 Primary Key

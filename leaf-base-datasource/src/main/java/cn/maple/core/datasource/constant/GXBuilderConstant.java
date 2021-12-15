@@ -124,6 +124,11 @@ public class GXBuilderConstant {
      */
     public static final String EXCLUSION_DELETED_CONDITION_FLAG = "exclusion_deleted_condition";
 
+    /**
+     * 数据库主键字段的名字
+     */
+    public static final String PK_FIELD_NAME = "id";
+
     private GXBuilderConstant() {
     }
 }

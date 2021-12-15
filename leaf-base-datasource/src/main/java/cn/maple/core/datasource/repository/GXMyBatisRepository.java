@@ -128,11 +128,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
         Set<String> columns = dbQueryInnerDto.getColumns();
-        if (columns.size() > 1 && ClassUtil.isSimpleTypeOrArray(targetClazz)) {
+        if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
         }
         List<R> rList = baseDao.findByCondition(dbQueryInnerDto);
-        if (columns.size() == 1 && ClassUtil.isSimpleTypeOrArray(targetClazz)) {
+        if (columns.size() == 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             ArrayList<E> list = new ArrayList<>();
             rList.forEach(data -> {
                 Dict dict = GXCommonUtils.convertSourceToDict(data);
@@ -156,6 +156,21 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         String methodName = dbQueryInnerDto.getMethodName();
         CopyOptions copyOptions = dbQueryInnerDto.getCopyOptions();
         return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions);
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     查询列
+     * @param targetClazz 结果数据类型
+     * @return 列表
+     */
+    @Override
+    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
+        return findByCondition(paramInnerDto, targetClazz);
     }
 
     /**
@@ -238,52 +253,61 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
      * </pre>
      *
-     * @param tableName  查询条件
-     * @param condition
-     * @param columns    字段名字集合
-     * @param valueClazz 值的类型
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
     @Override
     @SuppressWarnings("all")
-    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> valueClazz) {
-        if (ClassUtil.isSimpleTypeOrArray(valueClazz)) {
+    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).build();
+        return findFieldByCondition(paramInnerDto, targetClazz);
+    }
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code
+     *     GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
+     *                       .tableName("s_admin")
+     *                       .columns(CollUtil.newHashSet("nickname", "username"))
+     *                       .condition(condition)
+     *                       .build();
+     *     findFieldByCondition(paramInnerDto, Dict.class);
+     *     }
+     * </pre>
+     *
+     * @param dbQueryInnerDto 查询数据
+     * @param targetClazz     值的类型
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    @SuppressWarnings("all")
+    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+        Set<String> columns = dbQueryInnerDto.getColumns();
+        if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
         }
-        R one = findOneByCondition(tableName, condition, columns);
+        R one = findOneByCondition(dbQueryInnerDto);
         if (Objects.isNull(one)) {
             return null;
         }
         Dict dict = GXCommonUtils.convertSourceToDict(one);
+        if (ClassUtil.isSimpleValueType(targetClazz)) {
+            String[] columnNames = columns.toArray(new String[0]);
+            Object retValue = dict.getObj(columnNames[0]);
+            if (Objects.isNull(retValue)) {
+                return null;
+            }
+            return (E) retValue;
+        }
         Dict retData = Dict.create();
         columns.forEach(column -> {
             retData.set(column, dict.getObj(column));
         });
         return (E) retData;
-    }
-
-    /**
-     * 查询单个字段的值
-     * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, "username", String.class)}
-     * </pre>
-     *
-     * @param tableName  查询条件
-     * @param condition
-     * @param columnName 字段名字
-     * @param valueClazz 值的类型
-     * @return 返回指定字段的值
-     */
-    @Override
-    @SuppressWarnings("all")
-    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, String columnName, Class<E> valueClazz) {
-        R one = findOneByCondition(tableName, condition, CollUtil.newHashSet(columnName));
-        if (Objects.isNull(one)) {
-            return null;
-        }
-        Dict dict = GXCommonUtils.convertSourceToDict(one);
-        Object obj = dict.getObj(columnName);
-        return Objects.isNull(obj) ? null : (E) obj;
     }
 
     /**
