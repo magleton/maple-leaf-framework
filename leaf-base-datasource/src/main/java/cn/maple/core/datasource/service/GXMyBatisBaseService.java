@@ -3,7 +3,7 @@ package cn.maple.core.datasource.service;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.model.GXBaseModel;
+import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
@@ -24,7 +24,7 @@ import java.util.List;
  * @param <R> 响应对象类型
  * @author britton chen <britton@126.com>
  */
-public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXBaseModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessService, GXValidateDBExistsService {
+public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessService, GXValidateDBExistsService {
     /**
      * 检测给定条件的记录是否存在
      *

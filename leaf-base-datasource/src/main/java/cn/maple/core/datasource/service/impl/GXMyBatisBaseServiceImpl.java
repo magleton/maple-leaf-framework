@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.model.GXBaseModel;
+import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -26,7 +26,7 @@ import java.util.List;
  * @param <P> 仓库对象类型
  * @param <R> 响应数据类型
  */
-public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXBaseModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessServiceImpl implements GXMyBatisBaseService<P, M, T, D, R, ID> {
+public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessServiceImpl implements GXMyBatisBaseService<P, M, T, D, R, ID> {
     /**
      * 日志对象
      */

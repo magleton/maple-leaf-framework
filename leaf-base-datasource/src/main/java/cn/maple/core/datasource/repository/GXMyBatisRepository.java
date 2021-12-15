@@ -11,7 +11,7 @@ import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.model.GXBaseModel;
+import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.util.*;
 
-public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXBaseModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> implements GXBaseRepository<T, R, ID> {
+public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> implements GXBaseRepository<T, R, ID> {
     /**
      * 基础DAO
      */
