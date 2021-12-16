@@ -21,7 +21,7 @@ public class GXCanalRabbitMQListener {
     @RabbitListener(bindings = {
             @QueueBinding(
                     value = @Queue(value = "${canal.queue}", durable = "true"),
-                    exchange = @Exchange(value = CanalConstant.RABBITMQ_CANAL_EXCHANGE_NAME, type = ExchangeTypes.DIRECT),
+                    exchange = @Exchange(value = CanalConstant.RABBITMQ_CANAL_EXCHANGE_NAME, type = ExchangeTypes.FANOUT),
                     key = CanalConstant.RABBITMQ_CANAL_ROUTING_KEY
             )
     }, concurrency = CanalConstant.RABBITMQ_CANAL_CONCURRENCY_COUNT)
