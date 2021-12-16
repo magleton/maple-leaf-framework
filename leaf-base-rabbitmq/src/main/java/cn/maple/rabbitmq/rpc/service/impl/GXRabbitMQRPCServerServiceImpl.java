@@ -5,18 +5,18 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.rabbitmq.config.GXRabbitMQConfig;
 import cn.maple.rabbitmq.rpc.handler.GXRPCServerHandler;
 import cn.maple.rabbitmq.rpc.service.GXRabbitMQRPCServerService;
+import com.alibaba.nacos.api.config.ConfigType;
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -24,12 +24,9 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@PropertySource(value = "classpath:/${spring.profiles.active}/rabbit.yml",
-        factory = GXYamlPropertySourceFactory.class,
-        ignoreResourceNotFound = true)
+@NacosPropertySource(groupId = "${nacos.config.group:DEFAULT_GROUP}", dataId = "rabbit.yml", autoRefreshed = true, type = ConfigType.YAML)
 @ConditionalOnExpression("'${enable-rabbitmq-rpc}'.equals('true')")
-@ConditionalOnClass(value = {GXRabbitMQConfig.class},
-        name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
+@ConditionalOnClass(value = {GXRabbitMQConfig.class}, name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
 public class GXRabbitMQRPCServerServiceImpl implements GXRabbitMQRPCServerService {
     @Override
     @RabbitListener(queues = {"${rabbit.rpc-server.local.default-server-name}"}, containerFactory = "directRabbitListenerContainerFactory")
@@ -71,8 +68,7 @@ public class GXRabbitMQRPCServerServiceImpl implements GXRabbitMQRPCServerServic
             }
             return JSONUtil.toJsonStr(Dict.create().set("thread_name", threadName).set("default", "RPC Server Default Value"));
         } catch (Exception e) {
-            log.error(StrUtil.format("当前线程名字 {} , 异常消息 : {} , 请求服务的名字 : {} , 请求服务的方法名字 : {} , 请求参数 : {} , 异常信息详细信息 : ",
-                    threadName, e.getMessage(), handlerName, methodName, data), e);
+            log.error(StrUtil.format("当前线程名字 {} , 异常消息 : {} , 请求服务的名字 : {} , 请求服务的方法名字 : {} , 请求参数 : {} , 异常信息详细信息 : ", threadName, e.getMessage(), handlerName, methodName, data), e);
             Throwable cause = e.getCause();
             StackTraceElement[] firstCausedBy = null;
             StackTraceElement[] secondCausedBy = null;
@@ -82,13 +78,7 @@ public class GXRabbitMQRPCServerServiceImpl implements GXRabbitMQRPCServerServic
             if (null != cause && null != cause.getCause()) {
                 secondCausedBy = cause.getCause().getStackTrace();
             }
-            return JSONUtil.toJsonStr(Dict.create()
-                    .set("gx_call_info", StrUtil.format("RPC调用出错: 调用信息[HandlerName : {} , MethodName : {}]  , 调用参数: {}", handlerName, methodName, JSONUtil.parseObj(data)))
-                    .set("gx_error_info", e)
-                    .set("gx_first_caused_by", Optional.ofNullable(firstCausedBy).orElse(new StackTraceElement[]{}))
-                    .set("gx_second_caused_by", Optional.ofNullable(secondCausedBy).orElse(new StackTraceElement[]{}))
-                    .set("gx_code", HttpStatus.HTTP_INTERNAL_ERROR)
-            );
+            return JSONUtil.toJsonStr(Dict.create().set("gx_call_info", StrUtil.format("RPC调用出错: 调用信息[HandlerName : {} , MethodName : {}]  , 调用参数: {}", handlerName, methodName, JSONUtil.parseObj(data))).set("gx_error_info", e).set("gx_first_caused_by", Optional.ofNullable(firstCausedBy).orElse(new StackTraceElement[]{})).set("gx_second_caused_by", Optional.ofNullable(secondCausedBy).orElse(new StackTraceElement[]{})).set("gx_code", HttpStatus.HTTP_INTERNAL_ERROR));
         }
     }
 }

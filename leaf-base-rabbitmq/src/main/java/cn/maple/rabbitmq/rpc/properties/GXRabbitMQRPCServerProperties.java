@@ -1,4 +1,4 @@
-package cn.maple.rabbitmq.rpc.config;
+package cn.maple.rabbitmq.rpc.properties;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 @Configuration
 @Slf4j
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
-public class GXRabbitMQRPCServerConfig {
+public class GXRabbitMQRPCServerProperties {
     /**
      * 当前系统的处理器个数
      */

@@ -31,7 +31,7 @@ public class GXRabbitMQConfig {
     }
 
     @Bean
-    public RabbitAdmin rabbitAdmin(@Autowired ConnectionFactory connectionFactory) {
+    public RabbitAdmin rabbitAdmin() {
         return new RabbitAdmin(connectionFactory);
     }
 
