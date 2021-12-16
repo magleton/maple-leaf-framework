@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>cn.maple.framework</groupId>
-            <artifactId>leaf-base-canal</artifactId>
+            <artifactId>leaf-base-data-sync</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

@@ -16,7 +16,7 @@
         <module>leaf-base-shiro</module>
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
-        <module>leaf-base-canal</module>
+        <module>leaf-base-data-sync</module>
         <module>leaf-base-sso</module>
         <module>leaf-base-redisson</module>
         <module>leaf-base-dubbo-nacos</module>
