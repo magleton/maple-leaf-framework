@@ -13,9 +13,9 @@ public class CanalConstant {
 
     /**
      * 交换机的名字
-     * 对应 conf/canal.properties文件里面配置的 rabbitmq.exchange = canal.example.exchange
+     * 对应 conf/canal.properties文件里面配置的 rabbitmq.exchange = exchange.fanout.canal
      */
-    public static final String RABBITMQ_CANAL_EXCHANGE_NAME = "canal.example.exchange";
+    public static final String RABBITMQ_CANAL_EXCHANGE_NAME = "exchange.fanout.canal";
 
     /**
      * 交换机的名字
