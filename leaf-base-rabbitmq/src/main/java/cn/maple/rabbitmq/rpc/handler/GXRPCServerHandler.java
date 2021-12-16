@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.service.GXMyBatisBaseService;
+import cn.maple.core.framework.service.GXBusinessService;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -40,16 +40,15 @@ public interface GXRPCServerHandler {
      * @return Dict
      */
     default Dict getRPCCallInfo(Dict param) {
-        return Optional.ofNullable(Convert.convert(Dict.class, JSONUtil.parse(param.getStr("rpc"))))
-                .orElse(Dict.create().set("method", "").set("handler", ""));
+        return Optional.ofNullable(Convert.convert(Dict.class, JSONUtil.parse(param.getStr("rpc")))).orElse(Dict.create().set("method", "").set("handler", ""));
     }
 
     /**
      * 获取子类的具体RPC服务
      *
-     * @return
+     * @return 具体的业务服务对象
      */
-    default GXMyBatisBaseService getService() {
+    default GXBusinessService getService() {
         return null;
     }
 }
