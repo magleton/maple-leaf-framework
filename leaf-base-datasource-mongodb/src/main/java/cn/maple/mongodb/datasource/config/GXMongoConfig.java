@@ -46,11 +46,7 @@ public class GXMongoConfig implements ApplicationContextAware {
             char[] password = dataSourceProperties.getPassword();
             MongoCredential credential = MongoCredential.createCredential(username, authenticationDatabase, password);
             ConnectionString connectionString = new ConnectionString(uri);
-            MongoClientSettings mongoClientSettings = MongoClientSettings
-                    .builder()
-                    .credential(credential)
-                    .applyConnectionString(connectionString)
-                    .build();
+            MongoClientSettings mongoClientSettings = MongoClientSettings.builder().credential(credential).applyConnectionString(connectionString).build();
             //SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongodb://name:pass@localhost:27017/databaseName), database);
             SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoClientSettings), database);
             MongoTemplate mongoTemplate = new MongoTemplate(factory);
@@ -82,10 +78,10 @@ public class GXMongoConfig implements ApplicationContextAware {
             }
         });
         if (primaryBeanCnt.get() > 1) {
-            throw new GXBusinessException("只能有一个主要的bean , 请检查isPrimary是否设置了多个true值!");
+            throw new GXBusinessException("只能有一个主MongoTemplate , 请检查isPrimary是否设置了多个!");
         }
         if (primaryBeanCnt.get() == 0) {
-            throw new GXBusinessException("必须有一个主要的bean, 请检查isPrimary是否设置true值!");
+            throw new GXBusinessException("必须有一个主MongoTemplate , 请检查isPrimary是否被设置!");
         }
     }
 }
