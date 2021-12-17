@@ -8,7 +8,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.TypeUtil;
-import cn.maple.core.datasource.constant.GXBuilderConstant;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;

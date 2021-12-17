@@ -3,7 +3,7 @@ package cn.maple.core.datasource.util;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.datasource.constant.GXBuilderConstant;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;

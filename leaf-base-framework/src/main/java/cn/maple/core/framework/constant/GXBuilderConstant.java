@@ -1,4 +1,4 @@
-package cn.maple.core.datasource.constant;
+package cn.maple.core.framework.constant;
 
 public class GXBuilderConstant {
     /**
@@ -70,6 +70,16 @@ public class GXBuilderConstant {
      * NOT IN条件
      */
     public static final String NOT_IN = " NOT IN ({})";
+
+    /**
+     * IN条件
+     */
+    public static final String STR_IN = "STR_ IN ({})";
+
+    /**
+     * NOT IN条件
+     */
+    public static final String STR_NOT_IN = "STR_ NOT IN ({})";
 
     /**
      * 标识查询条件是一个函数类型 eg : JSON_OVERLAPS(items->'$.zipcode', CAST('[94536]' AS JSON))

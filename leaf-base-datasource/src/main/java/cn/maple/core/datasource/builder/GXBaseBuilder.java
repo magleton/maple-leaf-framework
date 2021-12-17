@@ -9,12 +9,13 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.constant.GXBuilderConstant;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.service.GXDBSchemaService;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXLoggerUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public interface GXBaseBuilder {
@@ -416,17 +418,32 @@ public interface GXBaseBuilder {
                                     GXLoggerUtils.logInfo(LOGGER, "SQL语句优化了空字符串查询");
                                 }
                                 if (CharSequenceUtil.isNotEmpty(value.toString())) {
-                                    whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value.toString());
+                                    whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
                                     wheres.add(whereStr);
                                 }
                             } else if (value instanceof Number) {
                                 if (CharSequenceUtil.startWith(operator, "STR_")) {
                                     GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
                                 }
-                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value);
+                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
+                                wheres.add(whereStr);
+                            } else if (value instanceof Set) {
+                                String valueStr;
+                                String lastOperator = operator;
+                                if (CharSequenceUtil.startWith(operator, "STR_")) {
+                                    lastOperator = CharSequenceUtil.replace(operator, "STR_", "");
+                                    Set<String> values = Convert.convert(new TypeReference<>() {
+                                    }, value);
+                                    valueStr = values.stream().map(str -> CharSequenceUtil.format("'{}'", str)).collect(Collectors.joining(","));
+                                } else {
+                                    Set<Number> values = Convert.convert(new TypeReference<>() {
+                                    }, value);
+                                    valueStr = values.stream().map(str -> CharSequenceUtil.format("{}", str)).collect(Collectors.joining(","));
+                                }
+                                whereStr = CharSequenceUtil.format("{} " + lastOperator, handleWhereColumn(column, tableNameAlias), valueStr);
                                 wheres.add(whereStr);
                             } else {
-                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value.toString());
+                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
                                 wheres.add(whereStr);
                             }
                         }
