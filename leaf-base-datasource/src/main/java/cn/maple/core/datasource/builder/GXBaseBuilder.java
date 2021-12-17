@@ -464,7 +464,7 @@ public interface GXBaseBuilder {
             if (CharSequenceUtil.startWith(operator, "STR_")) {
                 GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
             }
-            format = "{} " + operator;
+            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
             lastValueStr = GXSQLFilter.sqlInject(value.toString());
         } else if (value instanceof Set) {
             String[] tmpFormat = {"{}"};
@@ -476,7 +476,7 @@ public interface GXBaseBuilder {
             lastValueStr = values.stream().map(str -> CharSequenceUtil.format(CharSequenceUtil.format("{}", tmpFormat[0]), str)).collect(Collectors.joining(","));
             format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
         } else {
-            format = "{} " + operator;
+            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
             lastValueStr = GXSQLFilter.sqlInject(value.toString());
         }
         String whereStr = CharSequenceUtil.format(format, whereColumnName, lastValueStr);
