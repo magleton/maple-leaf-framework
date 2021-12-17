@@ -333,6 +333,7 @@ public interface GXBaseBuilder {
      * @param dbQueryParamInnerDto 查询对象
      * @return SQL语句
      */
+    @SuppressWarnings("unused")
     static <R> String paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return findByCondition(dbQueryParamInnerDto);
     }
@@ -466,15 +467,13 @@ public interface GXBaseBuilder {
             format = "{} " + operator;
             lastValueStr = GXSQLFilter.sqlInject(value.toString());
         } else if (value instanceof Set) {
+            String[] tmpFormat = {"{}"};
             if (CharSequenceUtil.startWith(operator, "STR_")) {
-                Set<String> values = Convert.convert(new TypeReference<>() {
-                }, value);
-                lastValueStr = values.stream().map(str -> CharSequenceUtil.format("'{}'", str)).collect(Collectors.joining(","));
-            } else {
-                Set<Number> values = Convert.convert(new TypeReference<>() {
-                }, value);
-                lastValueStr = values.stream().map(str -> CharSequenceUtil.format("{}", str)).collect(Collectors.joining(","));
+                tmpFormat[0] = "'{}'";
             }
+            Set<Object> values = Convert.convert(new TypeReference<>() {
+            }, value);
+            lastValueStr = values.stream().map(str -> CharSequenceUtil.format(CharSequenceUtil.format("{}", tmpFormat[0]), str)).collect(Collectors.joining(","));
             format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
         } else {
             format = "{} " + operator;
