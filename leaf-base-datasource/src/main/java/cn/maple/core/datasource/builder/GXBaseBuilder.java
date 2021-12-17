@@ -404,8 +404,14 @@ public interface GXBaseBuilder {
                         }
                     }
                 });
-                if (!wheres.isEmpty()) {
-                    String whereStr = String.join(" AND ", wheres);
+                List<String> lastWheres = new ArrayList<>();
+                wheres.forEach(str -> {
+                    if (CharSequenceUtil.isNotBlank(str)) {
+                        lastWheres.add(str);
+                    }
+                });
+                if (!lastWheres.isEmpty()) {
+                    String whereStr = String.join(" AND ", lastWheres);
                     sql.WHERE(whereStr);
                 }
             });
@@ -479,8 +485,10 @@ public interface GXBaseBuilder {
             format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
             lastValueStr = GXSQLFilter.sqlInject(value.toString());
         }
-        String whereStr = CharSequenceUtil.format(format, whereColumnName, lastValueStr);
-        wheres.add(whereStr);
+        if (CharSequenceUtil.isNotBlank(lastValueStr)) {
+            String whereStr = CharSequenceUtil.format(format, whereColumnName, lastValueStr);
+            wheres.add(whereStr);
+        }
     }
 
     /**
