@@ -7,31 +7,6 @@ public class GXBuilderConstant {
     public static final String SEARCH_CONDITION_NAME = "searchCondition";
 
     /**
-     * 左糊查询条件
-     */
-    public static final String LEFT_LIKE = " like '%{}'";
-
-    /**
-     * 后模糊查询条件
-     */
-    public static final String RIGHT_LIKE = " like '{}%'";
-
-    /**
-     * 全模糊查询
-     */
-    public static final String LIKE = " like '%{}%'";
-
-    /**
-     * 字符串相等
-     */
-    public static final String STR_EQ = " = '{}'";
-
-    /**
-     * 字符串相等
-     */
-    public static final String STR_NOT_EQ = " != '{}'";
-
-    /**
      * 数字相等
      */
     public static final String EQ = " = {}";
@@ -70,6 +45,31 @@ public class GXBuilderConstant {
      * NOT IN条件
      */
     public static final String NOT_IN = " NOT IN ({})";
+
+    /**
+     * 左糊查询条件
+     */
+    public static final String LEFT_LIKE = " like '%{}'";
+
+    /**
+     * 后模糊查询条件
+     */
+    public static final String RIGHT_LIKE = " like '{}%'";
+
+    /**
+     * 全模糊查询
+     */
+    public static final String LIKE = " like '%{}%'";
+
+    /**
+     * 字符串相等
+     */
+    public static final String STR_EQ = "STR_ = '{}'";
+
+    /**
+     * 字符串相等
+     */
+    public static final String STR_NOT_EQ = "STR_ != '{}'";
 
     /**
      * IN条件

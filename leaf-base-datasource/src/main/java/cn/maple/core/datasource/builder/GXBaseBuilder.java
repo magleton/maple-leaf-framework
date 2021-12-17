@@ -397,55 +397,9 @@ public interface GXBaseBuilder {
                     if (Objects.nonNull(value)) {
                         String whereStr;
                         if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
-                            if (value instanceof Table) {
-                                Table<String, String, Object> table = Convert.convert(new TypeReference<>() {
-                                }, value);
-                                Map<String, Map<String, Object>> rowMap = table.rowMap();
-                                rowMap.forEach((c, op) -> op.forEach((k, v) -> wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v.toString()))));
-                            } else if (value instanceof Set) {
-                                Set<String> stringSet = Convert.toSet(String.class, value);
-                                stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, v)));
-                            } else {
-                                whereStr = CharSequenceUtil.format("{} ({}) ", operator, value.toString());
-                                wheres.add(whereStr);
-                            }
+                            handleWhereTableValue(wheres, operator, value);
                         } else {
-                            if (value instanceof String) {
-                                if (!CharSequenceUtil.startWith(operator, "STR_") || !CharSequenceUtil.startWith(CharSequenceUtil.trim(operator), "like")) {
-                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改!!!");
-                                }
-                                if (CharSequenceUtil.isNotEmpty(value.toString())) {
-                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句优化了空字符串查询");
-                                }
-                                if (CharSequenceUtil.isNotEmpty(value.toString())) {
-                                    whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
-                                    wheres.add(whereStr);
-                                }
-                            } else if (value instanceof Number) {
-                                if (CharSequenceUtil.startWith(operator, "STR_")) {
-                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
-                                }
-                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
-                                wheres.add(whereStr);
-                            } else if (value instanceof Set) {
-                                String valueStr;
-                                String lastOperator = operator;
-                                if (CharSequenceUtil.startWith(operator, "STR_")) {
-                                    lastOperator = CharSequenceUtil.replace(operator, "STR_", "");
-                                    Set<String> values = Convert.convert(new TypeReference<>() {
-                                    }, value);
-                                    valueStr = values.stream().map(str -> CharSequenceUtil.format("'{}'", str)).collect(Collectors.joining(","));
-                                } else {
-                                    Set<Number> values = Convert.convert(new TypeReference<>() {
-                                    }, value);
-                                    valueStr = values.stream().map(str -> CharSequenceUtil.format("{}", str)).collect(Collectors.joining(","));
-                                }
-                                whereStr = CharSequenceUtil.format("{} " + lastOperator, handleWhereColumn(column, tableNameAlias), valueStr);
-                                wheres.add(whereStr);
-                            } else {
-                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), GXSQLFilter.sqlInject(value.toString()));
-                                wheres.add(whereStr);
-                            }
+                            handleWhereValue(tableNameAlias, column, wheres, operator, value);
                         }
                     }
                 });
@@ -455,6 +409,79 @@ public interface GXBaseBuilder {
                 }
             });
         }
+    }
+
+    /**
+     * 处理where值为Table类型,一般为where条件后面跟函数调用
+     *
+     * @param wheres   where条件列表
+     * @param operator 操作
+     * @param value    值
+     */
+    private static void handleWhereTableValue(List<String> wheres, String operator, Object value) {
+        String whereStr;
+        if (value instanceof Table) {
+            Table<String, String, Object> table = Convert.convert(new TypeReference<>() {
+            }, value);
+            Map<String, Map<String, Object>> rowMap = table.rowMap();
+            rowMap.forEach((c, op) -> op.forEach((k, v) -> wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v.toString()))));
+        } else if (value instanceof Set) {
+            Set<String> stringSet = Convert.toSet(String.class, value);
+            stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, v)));
+        } else {
+            whereStr = CharSequenceUtil.format("{} ({}) ", operator, value.toString());
+            wheres.add(whereStr);
+        }
+    }
+
+    /**
+     * 处理where值为常规字段
+     * eg: String , Number , Set
+     *
+     * @param tableNameAlias 表别名
+     * @param column         字段
+     * @param wheres         where条件列表
+     * @param operator       操作
+     * @param value          where的值
+     */
+    private static void handleWhereValue(String tableNameAlias, String column, List<String> wheres, String operator, Object value) {
+        String whereColumnName = handleWhereColumn(column, tableNameAlias);
+        String format = "";
+        String lastValueStr = "";
+        if (value instanceof String) {
+            if (!CharSequenceUtil.startWith(operator, "STR_")) {
+                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改!!!");
+            }
+            if (CharSequenceUtil.isNotEmpty(value.toString())) {
+                GXLoggerUtils.logInfo(LOGGER, "SQL语句优化了空字符串查询");
+            }
+            if (CharSequenceUtil.isNotEmpty(value.toString())) {
+                format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
+                lastValueStr = GXSQLFilter.sqlInject(value.toString());
+            }
+        } else if (value instanceof Number) {
+            if (CharSequenceUtil.startWith(operator, "STR_")) {
+                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
+            }
+            format = "{} " + operator;
+            lastValueStr = GXSQLFilter.sqlInject(value.toString());
+        } else if (value instanceof Set) {
+            if (CharSequenceUtil.startWith(operator, "STR_")) {
+                Set<String> values = Convert.convert(new TypeReference<>() {
+                }, value);
+                lastValueStr = values.stream().map(str -> CharSequenceUtil.format("'{}'", str)).collect(Collectors.joining(","));
+            } else {
+                Set<Number> values = Convert.convert(new TypeReference<>() {
+                }, value);
+                lastValueStr = values.stream().map(str -> CharSequenceUtil.format("{}", str)).collect(Collectors.joining(","));
+            }
+            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
+        } else {
+            format = "{} " + operator;
+            lastValueStr = GXSQLFilter.sqlInject(value.toString());
+        }
+        String whereStr = CharSequenceUtil.format(format, whereColumnName, lastValueStr);
+        wheres.add(whereStr);
     }
 
     /**
