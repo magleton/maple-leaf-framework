@@ -333,7 +333,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public R findOneByPkId(String tableName, ID id, Set<String> columns) {
         HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-        condition.put("id", GXBuilderConstant.NUMBER_EQ, id);
+        condition.put("id", GXBuilderConstant.EQ, id);
         if (TypeUtil.getClass(id.getClass()).getName().equalsIgnoreCase(String.class.getName())) {
             condition.put("id", GXBuilderConstant.STR_EQ, id);
         }
@@ -463,7 +463,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         }
         Table<String, String, Object> condition = HashBasedTable.create();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-            condition.put(fieldName, GXBuilderConstant.NUMBER_EQ, value);
+            condition.put(fieldName, GXBuilderConstant.EQ, value);
         } else {
             condition.put(fieldName, GXBuilderConstant.STR_EQ, value);
         }

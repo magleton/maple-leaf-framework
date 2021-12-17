@@ -16,15 +16,20 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXLoggerUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 @SuppressWarnings("unused")
 public interface GXBaseBuilder {
+    Logger LOGGER = LoggerFactory.getLogger(GXBaseBuilder.class);
+
     /**
      * 更新实体字段和虚拟字段
      * <pre>
@@ -76,7 +81,7 @@ public interface GXBaseBuilder {
                 value = JSONUtil.toJsonStr(value);
             }
             if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.NUMBER_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.EQ, fieldName, value));
             } else {
                 sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.STR_EQ, fieldName, value));
             }
@@ -363,10 +368,10 @@ public interface GXBaseBuilder {
      * <pre>
      * {@code
      * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put(GXAdminConstant.PRIMARY_KEY, GXBaseBuilderConstant.NUMBER_EQ, 22);
-     * condition.put("created_at", GXBaseBuilderConstant.NUMBER_LE, 11111);
-     * condition.put("created_at", GXBaseBuilderConstant.NUMBER_GE, 22222);
-     * condition.put("username", GXBaseBuilderConstant.RIGHT_LIKE, "jetty");
+     * condition.put(GXAdminConstant.PRIMARY_KEY, GXBuilderConstant.NUMBER_EQ, 22);
+     * condition.put("created_at", GXBuilderConstant.NUMBER_LE, 11111);
+     * condition.put("created_at", GXBuilderConstant.NUMBER_GE, 22222);
+     * condition.put("username", GXBuilderConstant.RIGHT_LIKE, "jetty");
      * HashBasedTable<String, String, Object> multiColumn = HashBasedTable.create();
      * multiColumn.put("username , '-' , nickname", GXBuilderConstant.RIGHT_LIKE, "77777");
      * multiColumn.put("username ,'-' , real_name", GXBuilderConstant.RIGHT_LIKE, "99999");
@@ -388,10 +393,11 @@ public interface GXBaseBuilder {
                 List<String> wheres = new ArrayList<>();
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
-                        String whereStr = "";
+                        String whereStr;
                         if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
                             if (value instanceof Table) {
-                                Table<String, String, Object> table = Convert.convert(Table.class, value);
+                                Table<String, String, Object> table = Convert.convert(new TypeReference<>() {
+                                }, value);
                                 Map<String, Map<String, Object>> rowMap = table.rowMap();
                                 rowMap.forEach((c, op) -> op.forEach((k, v) -> wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v.toString()))));
                             } else if (value instanceof Set) {
@@ -402,13 +408,34 @@ public interface GXBaseBuilder {
                                 wheres.add(whereStr);
                             }
                         } else {
-                            whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value.toString());
-                            wheres.add(whereStr);
+                            if (value instanceof String) {
+                                if (!CharSequenceUtil.startWith(operator, "STR_") || !CharSequenceUtil.startWith(CharSequenceUtil.trim(operator), "like")) {
+                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改!!!");
+                                }
+                                if (CharSequenceUtil.isNotEmpty(value.toString())) {
+                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句优化了空字符串查询");
+                                }
+                                if (CharSequenceUtil.isNotEmpty(value.toString())) {
+                                    whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value.toString());
+                                    wheres.add(whereStr);
+                                }
+                            } else if (value instanceof Number) {
+                                if (CharSequenceUtil.startWith(operator, "STR_")) {
+                                    GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
+                                }
+                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value);
+                                wheres.add(whereStr);
+                            } else {
+                                whereStr = CharSequenceUtil.format("{} " + operator, handleWhereColumn(column, tableNameAlias), value.toString());
+                                wheres.add(whereStr);
+                            }
                         }
                     }
                 });
-                String whereStr = String.join(" AND ", wheres);
-                sql.WHERE(whereStr);
+                if (!wheres.isEmpty()) {
+                    String whereStr = String.join(" AND ", wheres);
+                    sql.WHERE(whereStr);
+                }
             });
         }
     }
@@ -437,7 +464,7 @@ public interface GXBaseBuilder {
     static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
-        condition.put("is_deleted", GXBuilderConstant.NUMBER_EQ, getIsNotDeletedValue());
+        condition.put("is_deleted", GXBuilderConstant.EQ, getIsNotDeletedValue());
         handleSQLWhereCondition(sql, condition, "");
         return sql.toString();
     }

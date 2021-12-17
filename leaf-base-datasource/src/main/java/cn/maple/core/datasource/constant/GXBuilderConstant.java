@@ -34,32 +34,32 @@ public class GXBuilderConstant {
     /**
      * 数字相等
      */
-    public static final String NUMBER_EQ = " = {}";
+    public static final String EQ = " = {}";
 
     /**
      * 数字不相等
      */
-    public static final String NUMBER_NOT_EQ = " != {}";
+    public static final String NOT_EQ = " != {}";
 
     /**
      * 数字小于
      */
-    public static final String NUMBER_LT = " < {}";
+    public static final String LT = " < {}";
 
     /**
      * 数字小于等于
      */
-    public static final String NUMBER_LE = " <= {}";
+    public static final String LE = " <= {}";
 
     /**
      * 数字大于
      */
-    public static final String NUMBER_GT = " > {}";
+    public static final String GT = " > {}";
 
     /**
      * 数字大于等于
      */
-    public static final String NUMBER_GE = " >= {}";
+    public static final String GE = " >= {}";
 
     /**
      * IN条件
