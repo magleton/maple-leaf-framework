@@ -1,16 +1,22 @@
 package cn.maple.core.datasource.util;
 
 import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused"})
 public class GXDBCommonUtils {
@@ -108,5 +114,67 @@ public class GXDBCommonUtils {
         long pageSize = page.getSize();
         long totalCount = page.getTotal();
         return new GXPaginationResDto<>(page.getRecords(), totalCount, pages, pageSize, currentPage);
+    }
+
+    /**
+     * 组合JSON搜索条件
+     * <pre>
+     *     {@code
+     *     compositeJSONSearchExpression("custer_info" , "emp[*].name" , CollUtil.newHashSet("jack"));
+     *     compositeJSONSearchExpression("label_id" , "" , CollUtil.newHashSet(1));
+     *     }
+     * </pre>
+     *
+     * @param searchField      需要搜索的字段
+     * @param searchExpression 表达式
+     * @param searchValue      搜索的值
+     * @return 搜索表达式
+     */
+    public static String compositeJSONSearchExpression(String searchField, String searchExpression, Set<Object> searchValue) {
+        if (CharSequenceUtil.isEmpty(searchExpression)) {
+            searchExpression = "$";
+        } else {
+            searchExpression = CharSequenceUtil.format("$.{}", searchExpression);
+        }
+        return compositeJSONSearchExpression(searchField, searchExpression, searchValue, GXBuilderConstant.JSON_OVERLAPS_EXPRESSION_TEMPLATE);
+    }
+
+    /**
+     * 组合JSON搜索条件
+     * <pre>
+     *     {@code
+     *     compositeJSONSearchExpression("custer_info" , "emp[*].name" , CollUtil.newHashSet("jack") ,null);
+     *     compositeJSONSearchExpression("label_id" , "" , CollUtil.newHashSet(1) , null);
+     *     compositeJSONSearchExpression("custer_info" , "emp[*].name" , CollUtil.newHashSet("jack") ,GXBuilderConstant.JSON_OVERLAPS_EXPRESSION_TEMPLATE);
+     *     compositeJSONSearchExpression("label_id" , "" , CollUtil.newHashSet(1) , GXBuilderConstant.JSON_CONTAINS_EXPRESSION_TEMPLATE);
+     *     }
+     * </pre>
+     *
+     * @param searchField        需要搜索的字段
+     * @param searchExpression   表达式
+     * @param searchValue        搜索的值
+     * @param expressionTemplate 搜索表达式模板
+     * @return 搜索表达式
+     */
+    public static String compositeJSONSearchExpression(String searchField, String searchExpression, Set<Object> searchValue, String expressionTemplate) {
+        if (CharSequenceUtil.isEmpty(searchField)) {
+            throw new GXBusinessException("请传递搜索的字段");
+        }
+        if (CollUtil.isEmpty(searchValue)) {
+            throw new GXBusinessException("请传递搜索的值");
+        }
+        if (CharSequenceUtil.isEmpty(searchExpression)) {
+            searchExpression = "$";
+        } else if (!CharSequenceUtil.startWith(searchExpression, "$")) {
+            searchExpression = CharSequenceUtil.format("$.{}", searchExpression);
+        }
+        expressionTemplate = Optional.ofNullable(expressionTemplate).orElse(GXBuilderConstant.JSON_OVERLAPS_EXPRESSION_TEMPLATE);
+        String searchStr = searchValue.stream().map(o -> {
+            if (o instanceof Number) {
+                return CharSequenceUtil.format("{}", o.toString());
+            }
+            return CharSequenceUtil.format("\"{}\"", o.toString());
+        }).collect(Collectors.joining(","));
+        return CharSequenceUtil.format(expressionTemplate, searchField, searchExpression, searchStr);
     }
 }

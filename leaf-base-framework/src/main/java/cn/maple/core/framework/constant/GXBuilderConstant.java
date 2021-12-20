@@ -139,6 +139,16 @@ public class GXBuilderConstant {
      */
     public static final String PK_FIELD_NAME = "id";
 
+    /**
+     * 数据库JSON查询字符串模板表达式
+     */
+    public static final String JSON_OVERLAPS_EXPRESSION_TEMPLATE = "JSON_OVERLAPS({}->'{}' , CAST('[{}]' as JSON))";
+
+    /**
+     * 数据库JSON查询字符串模板表达式
+     */
+    public static final String JSON_CONTAINS_EXPRESSION_TEMPLATE = "JSON_CONTAINS({}->'{}' , CAST('[{}]' as JSON))";
+
     private GXBuilderConstant() {
     }
 }
