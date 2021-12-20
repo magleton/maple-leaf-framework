@@ -393,7 +393,8 @@ public interface GXBaseBuilder {
     static void handleSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-            conditionMap.forEach((column, datum) -> {
+            conditionMap.forEach((fieldName, datum) -> {
+                final String column = CharSequenceUtil.toUnderlineCase(fieldName);
                 List<String> wheres = new ArrayList<>();
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {

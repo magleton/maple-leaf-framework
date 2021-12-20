@@ -2,12 +2,11 @@ package cn.maple.core.framework.controller;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
-import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 
@@ -109,22 +108,16 @@ public interface GXBaseController {
      * 将GXPaginationResDto转换为GXPaginationResProtocol
      *
      * @param pagination  源分页对象
-     * @param sourceClazz 原类型
      * @param targetClazz 目标类型
-     * @param mapStruct   转换器
      * @return GXPaginationResProtocol对象
      */
-    default <S extends GXBaseResDto, T extends GXBaseResProtocol>
-    GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination,
-                                                              GXBaseMapStruct<S, T> mapStruct,
-                                                              Class<S> sourceClazz,
-                                                              Class<T> targetClazz) {
+    default <S extends GXBaseResDto, T extends GXBaseResProtocol> GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination, Class<T> targetClazz) {
         List<S> records = pagination.getRecords();
         long total = pagination.getTotal();
         long pages = pagination.getPages();
         long pageSize = pagination.getPageSize();
         long currentPage = pagination.getCurrentPage();
-        List<T> list = mapStruct.sourceToTarget(records);
+        List<T> list = convertSourceListToTargetList(records, targetClazz);
         return new GXPaginationResProtocol<>(list, total, pages, pageSize, currentPage);
     }
 
