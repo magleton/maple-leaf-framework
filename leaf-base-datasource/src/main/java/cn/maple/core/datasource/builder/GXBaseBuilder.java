@@ -389,6 +389,7 @@ public interface GXBaseBuilder {
      * @param condition      条件
      * @param tableNameAlias 表的别名
      */
+    @SuppressWarnings("all")
     static void handleSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
@@ -457,7 +458,7 @@ public interface GXBaseBuilder {
         String lastValueStr = "";
         if (value instanceof String) {
             if (!CharSequenceUtil.startWith(operator, "STR_")) {
-                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改!!!");
+                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐式类型转换,请修改!!!");
             }
             if (CharSequenceUtil.isNotEmpty(value.toString())) {
                 GXLoggerUtils.logInfo(LOGGER, "SQL语句优化了空字符串查询");
@@ -468,7 +469,7 @@ public interface GXBaseBuilder {
             }
         } else if (value instanceof Number) {
             if (CharSequenceUtil.startWith(operator, "STR_")) {
-                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐士类型转换,请修改");
+                GXLoggerUtils.logInfo(LOGGER, "SQL语句会发生隐式类型转换,请修改");
             }
             format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
             lastValueStr = GXSQLFilter.sqlInject(value.toString());
