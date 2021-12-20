@@ -399,8 +399,8 @@ public interface GXBaseBuilder {
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr;
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
-                            handleWhereTableValue(wheres, operator, value);
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, fieldName)) {
+                            handleWhereFuncValue(wheres, operator, value);
                         } else {
                             handleWhereValue(tableNameAlias, column, wheres, operator, value);
                         }
@@ -427,7 +427,7 @@ public interface GXBaseBuilder {
      * @param operator 操作
      * @param value    值
      */
-    private static void handleWhereTableValue(List<String> wheres, String operator, Object value) {
+    private static void handleWhereFuncValue(List<String> wheres, String operator, Object value) {
         String whereStr;
         if (value instanceof Table) {
             Table<String, String, Object> table = Convert.convert(new TypeReference<>() {

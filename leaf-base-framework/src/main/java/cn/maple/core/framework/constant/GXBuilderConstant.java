@@ -142,12 +142,7 @@ public class GXBuilderConstant {
     /**
      * 数据库JSON查询字符串模板表达式
      */
-    public static final String JSON_OVERLAPS_EXPRESSION_TEMPLATE = "JSON_OVERLAPS({}->'{}' , CAST('[{}]' as JSON))";
-
-    /**
-     * 数据库JSON查询字符串模板表达式
-     */
-    public static final String JSON_CONTAINS_EXPRESSION_TEMPLATE = "JSON_CONTAINS({}->'{}' , CAST('[{}]' as JSON))";
+    public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->'{}' , CAST('[{}]' as JSON)";
 
     private GXBuilderConstant() {
     }
