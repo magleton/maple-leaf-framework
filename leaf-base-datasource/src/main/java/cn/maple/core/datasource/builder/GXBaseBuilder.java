@@ -393,16 +393,15 @@ public interface GXBaseBuilder {
     static void handleSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-            conditionMap.forEach((fieldName, datum) -> {
-                final String column = CharSequenceUtil.toUnderlineCase(fieldName);
+            conditionMap.forEach((column, datum) -> {
                 List<String> wheres = new ArrayList<>();
                 datum.forEach((operator, value) -> {
                     if (Objects.nonNull(value)) {
                         String whereStr;
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, fieldName)) {
+                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
                             handleWhereFuncValue(wheres, operator, value);
                         } else {
-                            handleWhereValue(tableNameAlias, column, wheres, operator, value);
+                            handleWhereValue(tableNameAlias, CharSequenceUtil.toUnderlineCase(column), wheres, operator, value);
                         }
                     }
                 });
