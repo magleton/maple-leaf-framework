@@ -129,7 +129,7 @@ public class GXDBCommonUtils {
      * @param searchValue      搜索的值
      * @return 搜索表达式
      */
-    public static String compositeJSONSearchExpression(String searchField, String searchExpression, Set<Object> searchValue) {
+    public static String generateJSONSearchExpression(String searchField, String searchExpression, Set<Object> searchValue) {
         if (CharSequenceUtil.isEmpty(searchField)) {
             throw new GXBusinessException("请传递搜索的字段");
         }

@@ -1,6 +1,7 @@
 package cn.maple.redisson.config;
 
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.properties.GXRedissonCacheManagerProperties;
 import cn.maple.redisson.properties.GXRedissonProperties;
 import org.redisson.Redisson;
@@ -17,7 +18,6 @@ import java.util.Map;
 
 @Configuration
 @ConditionalOnClass(name = {"org.redisson.Redisson"})
-//@ConditionalOnMissingClass(value = {"com.alibaba.nacos.api.config.ConfigFactory"})
 public class GXRedissonSpringDataConfig {
     @Resource
     private GXRedissonProperties redissonConfig;
@@ -27,6 +27,10 @@ public class GXRedissonSpringDataConfig {
 
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redisson() {
+        redissonConfig.getConfig().forEach((k, v) -> {
+            v.setAddress(GXCommonUtils.decodeConnectStr(v.getAddress(), String.class));
+            v.setPassword(GXCommonUtils.decodeConnectStr(v.getPassword(), String.class));
+        });
         final Config config = JSONUtil.toBean(JSONUtil.toJsonStr(redissonConfig.getConfig()), Config.class);
         return Redisson.create(config);
     }

@@ -2,6 +2,7 @@ package cn.maple.mongodb.datasource.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.mongodb.datasource.properties.GXMongoDynamicDataSourceProperties;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -39,15 +40,14 @@ public class GXMongoConfig implements ApplicationContextAware {
         dealMongoDynamicDataSourceProperties();
         String[] primaryMongoTemplateName = {""};
         mongoDynamicDataSourceProperties.getDatasource().forEach((k, dataSourceProperties) -> {
-            String uri = dataSourceProperties.getUri();
+            String uri = GXCommonUtils.decodeConnectStr(dataSourceProperties.getUri(), String.class);
             String database = dataSourceProperties.getDatabase();
-            String username = dataSourceProperties.getUsername();
-            String authenticationDatabase = dataSourceProperties.getAuthenticationDatabase();
-            char[] password = dataSourceProperties.getPassword();
+            String username = GXCommonUtils.decodeConnectStr(dataSourceProperties.getUsername(), String.class);
+            String authenticationDatabase = GXCommonUtils.decodeConnectStr(dataSourceProperties.getAuthenticationDatabase(), String.class);
+            char[] password = GXCommonUtils.decodeConnectStr(String.valueOf(dataSourceProperties.getPassword()), String.class).toCharArray();
             MongoCredential credential = MongoCredential.createCredential(username, authenticationDatabase, password);
             ConnectionString connectionString = new ConnectionString(uri);
             MongoClientSettings mongoClientSettings = MongoClientSettings.builder().credential(credential).applyConnectionString(connectionString).build();
-            //SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongodb://name:pass@localhost:27017/databaseName), database);
             SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoClientSettings), database);
             MongoTemplate mongoTemplate = new MongoTemplate(factory);
             Boolean isPrimary = dataSourceProperties.getIsPrimary();

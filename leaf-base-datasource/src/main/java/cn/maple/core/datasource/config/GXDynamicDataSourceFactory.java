@@ -1,7 +1,8 @@
 package cn.maple.core.datasource.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import cn.maple.core.datasource.properties.GXDataSourceProperties;
+import cn.maple.core.framework.util.GXCommonUtils;
+import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
@@ -18,9 +19,9 @@ public class GXDynamicDataSourceFactory {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDbType(properties.getDbType());
         druidDataSource.setDriverClassName(properties.getDriverClassName());
-        druidDataSource.setUrl(properties.getUrl());
-        druidDataSource.setUsername(properties.getUsername());
-        druidDataSource.setPassword(properties.getPassword());
+        druidDataSource.setUrl(GXCommonUtils.decodeConnectStr(properties.getUrl(), String.class));
+        druidDataSource.setUsername(GXCommonUtils.decodeConnectStr(properties.getUsername(), String.class));
+        druidDataSource.setPassword(GXCommonUtils.decodeConnectStr(properties.getPassword(), String.class));
         druidDataSource.setInitialSize(properties.getInitialSize());
         druidDataSource.setMaxActive(properties.getMaxActive());
         druidDataSource.setMinIdle(properties.getMinIdle());

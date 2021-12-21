@@ -76,6 +76,16 @@ public class GXCommonConstant {
      */
     public static final String RUN_ENV_PROD = "prod";
 
+    /**
+     * 服务敏感信息的加解密KEY的名字,需要通过
+     * {@code -Dmaple.ds.secret=britton}
+     * 虚拟机参数指定
+     * 1、数据库
+     * 2、redis
+     * 3、MongoDB
+     */
+    public static final String DATA_SOURCE_SECRET_KEY = "maple.ds.secret";
+
     private GXCommonConstant() {
     }
 }

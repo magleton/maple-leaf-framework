@@ -12,6 +12,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -690,5 +691,29 @@ public class GXCommonUtils {
             // 再次递归构建
             children.forEach(child -> buildSubs(child, subs));
         }
+    }
+
+    /**
+     * 解码服务链接信息
+     * <pre>
+     *     1、数据库
+     *     2、redis
+     *     3、MongoDB
+     * </pre>
+     *
+     * @param connectEncodeStr 加密的链接信息
+     * @return 解码之后的链接信息
+     */
+    public static <R> R decodeConnectStr(String connectEncodeStr, Class<R> targetClazz) {
+        String secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
+        if (CharSequenceUtil.isEmpty(secretKey)) {
+            secretKey = "F82E85EB4965EC54F85AB7C";
+        }
+        String s = GXAuthCodeUtils.authCodeDecode(connectEncodeStr, secretKey);
+        if (CharSequenceUtil.equalsIgnoreCase(s, "{}")) {
+            throw new GXBusinessException("链接信息参数解码失败");
+        }
+        s = HtmlUtil.unescape(s);
+        return Convert.convert(targetClazz, s);
     }
 }
