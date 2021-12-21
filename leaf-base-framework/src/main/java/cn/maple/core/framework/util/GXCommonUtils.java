@@ -707,7 +707,8 @@ public class GXCommonUtils {
     public static <R> R decodeConnectStr(String connectEncodeStr, Class<R> targetClazz) {
         String secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
         if (CharSequenceUtil.isEmpty(secretKey)) {
-            secretKey = "F82E85EB4965EC54F85AB7C";
+            GXLoggerUtils.logDebug(LOG, "解密密钥为空,链接信息不进行解密操作");
+            return Convert.convert(targetClazz, connectEncodeStr);
         }
         String s = GXAuthCodeUtils.authCodeDecode(connectEncodeStr, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase(s, "{}")) {
