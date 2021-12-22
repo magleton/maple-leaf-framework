@@ -2,7 +2,6 @@ package cn.maple.core.framework.config.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -21,7 +20,6 @@ import javax.validation.constraints.NotNull;
  * @author britton
  */
 @Component
-@ConditionalOnExpression("'${spring.cache.type}'.equalsIgnoreCase('caffeine')")
 public class GXCachingConfigurerSupport extends CachingConfigurerSupport {
     @Resource
     private CaffeineCacheManager caffeineCacheManager;

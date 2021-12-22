@@ -3,7 +3,6 @@ package cn.maple.core.framework.config.cache;
 import cn.hutool.core.collection.CollUtil;
 import cn.maple.core.framework.properties.GXCaffeineCacheManagerProperties;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -12,13 +11,12 @@ import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@ConditionalOnExpression("'${spring.cache.type}'.equalsIgnoreCase('caffeine')")
 public class GXCaffeineCacheConfig {
     @Resource
     private GXCaffeineCacheManagerProperties caffeineCacheManagerProperties;
 
     /**
-     * 配置缓存管理器
+     * 配置Caffeine缓存管理器
      *
      * @return 缓存管理器
      */
