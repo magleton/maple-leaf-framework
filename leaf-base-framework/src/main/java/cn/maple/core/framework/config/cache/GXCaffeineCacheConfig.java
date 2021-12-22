@@ -1,25 +1,21 @@
 package cn.maple.core.framework.config.cache;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.text.CharSequenceUtil;
-import com.github.benmanes.caffeine.cache.CacheLoader;
-import com.github.benmanes.caffeine.cache.CaffeineSpec;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import org.springframework.beans.factory.annotation.Value;
+import cn.maple.core.framework.properties.GXCaffeineCacheManagerProperties;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnExpression("'${spring.cache.type}'.equalsIgnoreCase('caffeine')")
 public class GXCaffeineCacheConfig {
-    @Value("${spring.cache.cache-names:}")
-    private String cacheNames;
-
-    @Value("${spring.cache.caffeine.spec:}")
-    private String cacheSpec;
+    @Resource
+    private GXCaffeineCacheManagerProperties caffeineCacheManagerProperties;
 
     /**
      * 配置缓存管理器
@@ -29,18 +25,27 @@ public class GXCaffeineCacheConfig {
     @Bean("caffeineCacheManager")
     public CaffeineCacheManager caffeineCacheManager() {
         CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
-        List<String> lastCacheNames = new ArrayList<>(16);
-        if (CharSequenceUtil.isNotEmpty(cacheNames)) {
-            lastCacheNames.addAll(CharSequenceUtil.split(cacheNames, ","));
-        }
-        lastCacheNames.addAll(CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "BIZ-CACHE"));
-        caffeineCacheManager.setCacheNames(lastCacheNames);
-        caffeineCacheManager.setAllowNullValues(false);
-        if (CharSequenceUtil.isEmpty(cacheSpec)) {
-            cacheSpec = "initialCapacity=50,maximumSize=10000,expireAfterAccess=86400s,recordStats,softValues";
-        }
-        CaffeineSpec caffeineSpec = CaffeineSpec.parse(cacheSpec);
-        caffeineCacheManager.setCaffeineSpec(caffeineSpec);
+        caffeineCacheManagerProperties.getConfig().forEach((name, caffeineCacheProperties) -> {
+            Integer initialCapacity = caffeineCacheProperties.getInitialCapacity();
+            Integer expireAfterAccess = caffeineCacheProperties.getExpireAfterAccess();
+            Long maximumSize = caffeineCacheProperties.getMaximumSize();
+            boolean recordStats = caffeineCacheProperties.getRecordStats();
+            boolean softValues = caffeineCacheProperties.getSoftValues();
+            Caffeine<Object, Object> caffeine = Caffeine.newBuilder().initialCapacity(initialCapacity).expireAfterAccess(expireAfterAccess, TimeUnit.SECONDS).maximumSize(maximumSize);
+            if (recordStats) {
+                caffeine.recordStats();
+            }
+            if (softValues) {
+                caffeine.softValues();
+            }
+            caffeineCacheManager.registerCustomCache(name, caffeine.build());
+        });
+
+        // 新增默认的缓存
+        CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "BIZ-CACHE").forEach(name -> {
+            Caffeine<Object, Object> caffeine = Caffeine.newBuilder().initialCapacity(50).expireAfterAccess(86400, TimeUnit.SECONDS).maximumSize(10000).softValues().recordStats();
+            caffeineCacheManager.registerCustomCache(name, caffeine.build());
+        });
         return caffeineCacheManager;
     }
 }

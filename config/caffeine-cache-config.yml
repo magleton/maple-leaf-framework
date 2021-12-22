@@ -1,0 +1,20 @@
+caffeine:
+  config:
+    testMapCache:
+      initialCapacity: 100000
+      expireAfterAccess: 1000
+      maximumSize: 10000
+      recordStats: true
+      softValues: true
+    brtCache:
+      initialCapacity: 100000
+      expireAfterAccess: 1000
+      maximumSize: 10000
+      recordStats: true
+      softValues: true
+    categoryCache:
+      initialCapacity: 100000
+      expireAfterAccess: 1000
+      maximumSize: 10000
+      recordStats: true
+      softValues: true
