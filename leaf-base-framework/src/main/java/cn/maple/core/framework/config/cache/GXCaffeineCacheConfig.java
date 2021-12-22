@@ -2,7 +2,9 @@ package cn.maple.core.framework.config.cache;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.CaffeineSpec;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +37,10 @@ public class GXCaffeineCacheConfig {
         caffeineCacheManager.setCacheNames(lastCacheNames);
         caffeineCacheManager.setAllowNullValues(false);
         if (CharSequenceUtil.isEmpty(cacheSpec)) {
-            cacheSpec = "initialCapacity=50,maximumSize=10000,expireAfterWrite=10s,recordStats,softValues";
+            cacheSpec = "initialCapacity=50,maximumSize=10000,expireAfterAccess=86400s,recordStats,softValues";
         }
-        caffeineCacheManager.setCaffeineSpec(CaffeineSpec.parse(cacheSpec));
+        CaffeineSpec caffeineSpec = CaffeineSpec.parse(cacheSpec);
+        caffeineCacheManager.setCaffeineSpec(caffeineSpec);
         return caffeineCacheManager;
     }
 }
