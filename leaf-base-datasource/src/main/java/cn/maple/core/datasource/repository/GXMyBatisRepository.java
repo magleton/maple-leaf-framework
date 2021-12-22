@@ -318,8 +318,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 返回数据
      */
     @Override
-    public R findOneByPkId(String tableName, ID id) {
-        return findOneByPkId(tableName, id, CollUtil.newHashSet("*"));
+    public R findOneById(String tableName, ID id) {
+        return findOneById(tableName, id, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -331,7 +331,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 返回数据
      */
     @Override
-    public R findOneByPkId(String tableName, ID id, Set<String> columns) {
+    public R findOneById(String tableName, ID id, Set<String> columns) {
         HashBasedTable<String, String, Object> condition = HashBasedTable.create();
         condition.put("id", GXBuilderConstant.EQ, id);
         if (TypeUtil.getClass(id.getClass()).getName().equalsIgnoreCase(String.class.getName())) {

@@ -36,7 +36,7 @@ public class GXRedissonSpringDataConfig {
     }
 
     @Bean("redissonSpringCacheManager")
-    public RedissonSpringCacheManager cacheManager(RedissonClient redisson) {
+    public RedissonSpringCacheManager redissonSpringCacheManager(RedissonClient redisson) {
         final Map<String, CacheConfig> config = redissonCacheManagerConfig.getConfig();
         if (config.isEmpty()) {
             return new RedissonSpringCacheManager(redisson);

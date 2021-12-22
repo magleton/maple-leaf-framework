@@ -8,9 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,9 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.util.unit.DataSize;
 
-import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -31,15 +27,6 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan("cn.maple")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GXFrameworkConfig {
-    @Bean
-    @ConditionalOnExpression("'${enable-fileupload-progress}'.equals('false')")
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(DataSize.ofMegabytes(10L));
-        factory.setMaxRequestSize(DataSize.ofMegabytes(20L));
-        return factory.createMultipartConfig();
-    }
-
     @Bean
     @ConditionalOnMissingBean(ObjectMapper.class)
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
@@ -86,15 +73,12 @@ public class GXFrameworkConfig {
      *
      * @return 缓存管理器
      */
-    @Bean("caffeineCache")
-    public CaffeineCacheManager caffeineCache() {
+    @Bean("caffeineCacheManager")
+    public CaffeineCacheManager caffeineCacheManager() {
         CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
-        caffeineCacheManager.setCacheNames(CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__"));
+        caffeineCacheManager.setCacheNames(CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "BIZ-CACHE"));
         caffeineCacheManager.setAllowNullValues(false);
-        caffeineCacheManager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterAccess(365, TimeUnit.DAYS)
-                .initialCapacity(100)
-                .maximumSize(100000));
+        caffeineCacheManager.setCaffeine(Caffeine.newBuilder().expireAfterAccess(86400, TimeUnit.SECONDS).initialCapacity(100).maximumSize(100000));
         return caffeineCacheManager;
     }
 }

@@ -133,7 +133,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param columns   需要返回的列
      * @return 返回数据
      */
-    R findOneByPkId(String tableName, ID id, Set<String> columns);
+    R findOneById(String tableName, ID id, Set<String> columns);
 
     /**
      * 通过ID获取一条记录
@@ -142,7 +142,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param id        ID值
      * @return 返回数据
      */
-    R findOneByPkId(String tableName, ID id);
+    R findOneById(String tableName, ID id);
 
     /**
      * 根据条件获取分页数据
