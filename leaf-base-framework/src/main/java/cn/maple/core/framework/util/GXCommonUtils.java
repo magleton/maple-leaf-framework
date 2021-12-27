@@ -712,7 +712,7 @@ public class GXCommonUtils {
         }
         String s = GXAuthCodeUtils.authCodeDecode(connectEncodeStr, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase(s, "{}")) {
-            throw new GXBusinessException("链接信息参数解码失败");
+            throw new GXBusinessException(CharSequenceUtil.format("{}->{}->{}链接信息参数解码失败", s, connectEncodeStr, secretKey));
         }
         s = HtmlUtil.unescape(s);
         return Convert.convert(targetClazz, s);
