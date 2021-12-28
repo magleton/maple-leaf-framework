@@ -705,7 +705,10 @@ public class GXCommonUtils {
      * @return 解码之后的链接信息
      */
     public static <R> R decodeConnectStr(String connectEncodeStr, Class<R> targetClazz) {
-        String secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
+        String secretKey = System.getenv(GXCommonConstant.DATA_SOURCE_SECRET_KEY_ENV);
+        if (CharSequenceUtil.isEmpty(secretKey)) {
+            secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
+        }
         if (CharSequenceUtil.isEmpty(secretKey)) {
             GXLoggerUtils.logDebug(LOG, "解密密钥为空,链接信息不进行解密操作");
             return Convert.convert(targetClazz, connectEncodeStr);

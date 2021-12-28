@@ -86,6 +86,15 @@ public class GXCommonConstant {
      */
     public static final String DATA_SOURCE_SECRET_KEY = "maple.ds.secret";
 
+    /**
+     * 系统(环境)变量里面配置的服务敏感信息的加解密KEY的名字
+     * {@code
+     * Linux : export JAVA_BIZ_SECRET_KEY = "aaa-bbb";
+     * Windows : 在环境变量里面设置
+     * }
+     */
+    public static final String DATA_SOURCE_SECRET_KEY_ENV = "JAVA_BIZ_SECRET_KEY";
+
     private GXCommonConstant() {
     }
 }
