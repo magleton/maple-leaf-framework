@@ -27,6 +27,9 @@ public class GXLoggerUtils {
      * @since 2021-10-19 17:40
      */
     public static void logInfo(Logger logger, String desc, Object... data) {
+        if (data.length == 0) {
+            return;
+        }
         String format = generateFormat(desc, data);
         logger.info(format, data);
     }
@@ -41,6 +44,9 @@ public class GXLoggerUtils {
      * @since 2021-10-19 17:40
      */
     public static void logDebug(Logger logger, String desc, Object... data) {
+        if (data.length == 0) {
+            return;
+        }
         String format = generateFormat(desc, data);
         logger.debug(format, data);
     }
@@ -55,8 +61,28 @@ public class GXLoggerUtils {
      * @since 2021-10-19 17:40
      */
     public static void logError(Logger logger, String desc, Object... data) {
+        if (data.length == 0) {
+            return;
+        }
         String format = generateFormat(desc, data);
         logger.error(format, data);
+    }
+
+    /**
+     * 记录日志
+     *
+     * @param logger 日志对象
+     * @param desc   日志格式描述
+     * @param data   记录数据
+     * @author britton
+     * @since 2021-10-19 17:40
+     */
+    public static void logWarn(Logger logger, String desc, Object... data) {
+        if (data.length == 0) {
+            return;
+        }
+        String format = generateFormat(desc, data);
+        logger.warn(format, data);
     }
 
     /**
@@ -71,20 +97,6 @@ public class GXLoggerUtils {
         String threadName = Thread.currentThread().getName();
         String format = CharSequenceUtil.format("线程 : {}", threadName);
         logger.error(format, t);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   日志格式描述
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logWarn(Logger logger, String desc, Object... data) {
-        String format = generateFormat(desc, data);
-        logger.warn(format, data);
     }
 
     /**
