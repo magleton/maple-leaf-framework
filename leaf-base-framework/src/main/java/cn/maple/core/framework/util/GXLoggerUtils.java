@@ -44,7 +44,7 @@ public class GXLoggerUtils {
      */
     public static void logInfo(Logger logger, String desc, Dict data) {
         String threadName = Thread.currentThread().getName();
-        if (Objects.nonNull(data)) {
+        if (Objects.isNull(data)) {
             data = Dict.create();
         }
         String s = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
@@ -77,7 +77,7 @@ public class GXLoggerUtils {
      */
     public static void logDebug(Logger logger, String desc, Dict data) {
         String threadName = Thread.currentThread().getName();
-        if (Objects.nonNull(data)) {
+        if (Objects.isNull(data)) {
             data = Dict.create();
         }
         String format = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
@@ -110,7 +110,7 @@ public class GXLoggerUtils {
      */
     public static void logError(Logger logger, String desc, Dict data) {
         String threadName = Thread.currentThread().getName();
-        if (Objects.nonNull(data)) {
+        if (Objects.isNull(data)) {
             data = Dict.create();
         }
         String format = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
@@ -157,7 +157,7 @@ public class GXLoggerUtils {
      */
     public static void logWarn(Logger logger, String desc, Dict data) {
         String threadName = Thread.currentThread().getName();
-        if (Objects.nonNull(data)) {
+        if (Objects.isNull(data)) {
             data = Dict.create();
         }
         String s = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
