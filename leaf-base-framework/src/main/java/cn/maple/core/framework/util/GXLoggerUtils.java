@@ -1,13 +1,12 @@
 package cn.maple.core.framework.util;
 
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class GXLoggerUtils {
     /**
@@ -22,14 +21,13 @@ public class GXLoggerUtils {
      * 记录日志
      *
      * @param logger 日志对象
-     * @param format 格式
+     * @param desc   格式
      * @param data   记录数据
      * @author britton
      * @since 2021-10-19 17:40
      */
-    public static void logInfo(Logger logger, String format, Object... data) {
-        String threadName = Thread.currentThread().getName();
-        format = CharSequenceUtil.format(GXCommonConstant.SHORT_LOGGER_FORMAT, threadName, format);
+    public static void logInfo(Logger logger, String desc, Object... data) {
+        String format = generateFormat(desc, data);
         logger.info(format, data);
     }
 
@@ -37,32 +35,13 @@ public class GXLoggerUtils {
      * 记录日志
      *
      * @param logger 日志对象
-     * @param desc   描述信息
+     * @param desc   格式
      * @param data   记录数据
      * @author britton
      * @since 2021-10-19 17:40
      */
-    public static void logInfo(Logger logger, String desc, Dict data) {
-        String threadName = Thread.currentThread().getName();
-        if (Objects.isNull(data)) {
-            data = Dict.create();
-        }
-        String s = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
-        logger.info(s);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param format 格式
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logDebug(Logger logger, String format, Object... data) {
-        String threadName = Thread.currentThread().getName();
-        format = CharSequenceUtil.format(GXCommonConstant.SHORT_LOGGER_FORMAT, threadName, format);
+    public static void logDebug(Logger logger, String desc, Object... data) {
+        String format = generateFormat(desc, data);
         logger.debug(format, data);
     }
 
@@ -70,51 +49,14 @@ public class GXLoggerUtils {
      * 记录日志
      *
      * @param logger 日志对象
-     * @param desc   描述信息
+     * @param desc   格式
      * @param data   记录数据
      * @author britton
      * @since 2021-10-19 17:40
      */
-    public static void logDebug(Logger logger, String desc, Dict data) {
-        String threadName = Thread.currentThread().getName();
-        if (Objects.isNull(data)) {
-            data = Dict.create();
-        }
-        String format = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
-        logger.debug(format);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param format 格式
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logError(Logger logger, String format, Object... data) {
-        String threadName = Thread.currentThread().getName();
-        format = CharSequenceUtil.format(GXCommonConstant.SHORT_LOGGER_FORMAT, threadName, format);
+    public static void logError(Logger logger, String desc, Object... data) {
+        String format = generateFormat(desc, data);
         logger.error(format, data);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
-     */
-    public static void logError(Logger logger, String desc, Dict data) {
-        String threadName = Thread.currentThread().getName();
-        if (Objects.isNull(data)) {
-            data = Dict.create();
-        }
-        String format = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
-        logger.error(format);
     }
 
     /**
@@ -135,32 +77,32 @@ public class GXLoggerUtils {
      * 记录日志
      *
      * @param logger 日志对象
-     * @param format 日志格式描述
+     * @param desc   日志格式描述
      * @param data   记录数据
      * @author britton
      * @since 2021-10-19 17:40
      */
-    public static void logWarn(Logger logger, String format, Object... data) {
-        String threadName = Thread.currentThread().getName();
-        format = CharSequenceUtil.format(GXCommonConstant.SHORT_LOGGER_FORMAT, threadName, format);
+    public static void logWarn(Logger logger, String desc, Object... data) {
+        String format = generateFormat(desc, data);
         logger.warn(format, data);
     }
 
     /**
-     * 记录日志
+     * 生成日志的格式化字符串
      *
-     * @param logger 日志对象
-     * @param desc   描述信息
-     * @param data   记录数据
-     * @author britton
-     * @since 2021-10-19 17:40
+     * @param desc 日志描述信息
+     * @param data 需要记录的数据
+     * @return 日志格式化字符串
      */
-    public static void logWarn(Logger logger, String desc, Dict data) {
+    private static String generateFormat(String desc, Object... data) {
         String threadName = Thread.currentThread().getName();
-        if (Objects.isNull(data)) {
-            data = Dict.create();
+        String format = CharSequenceUtil.format(GXCommonConstant.SHORT_LOGGER_FORMAT, threadName, desc);
+        int length = data.length;
+        ArrayList<String> strings = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            strings.add("{}");
         }
-        String s = CharSequenceUtil.format(GXCommonConstant.FULL_LOGGER_FORMAT, threadName, desc, JSONUtil.toJsonStr(data));
-        logger.warn(s);
+        String appendFormat = Strings.join(strings, ',');
+        return format + " --> 日志详细 : " + appendFormat;
     }
 }

@@ -35,12 +35,7 @@ public class GXCommonConstant {
      * 未删除的标识值,字符串类型
      */
     public static final String NOT_STR_DELETED_MARK = "'0'";
-
-    /**
-     * 日志格式
-     */
-    public static final String FULL_LOGGER_FORMAT = "线程 : {} --> 描述信息 : {} --> 日志详细 : {}";
-
+    
     /**
      * 日志格式
      */
