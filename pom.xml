@@ -38,14 +38,14 @@
         <lombok.version>1.18.22</lombok.version>
         <mysql.version>8.0.27</mysql.version>
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
-        <hutool.version>5.7.17</hutool.version>
+        <hutool.version>5.7.18</hutool.version>
         <mybatis-plus-boot.version>3.4.2</mybatis-plus-boot.version>
         <redisson-spring-boot.version>3.14.1</redisson-spring-boot.version>
-        <aspectjweaver.version>1.9.8.RC2</aspectjweaver.version>
+        <aspectjweaver.version>1.9.8.RC3</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
         <guava.version>31.0.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
-        <caffeine.version>3.0.4</caffeine.version>
+        <caffeine.version>3.0.5</caffeine.version>
         <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
