@@ -28,12 +28,6 @@
             <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-nacos</artifactId>
             <version>${project.parent.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-context-support</artifactId>
-                    <groupId>com.alibaba.spring</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.dubbo</groupId>
