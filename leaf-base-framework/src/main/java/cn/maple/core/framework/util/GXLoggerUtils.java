@@ -115,6 +115,6 @@ public class GXLoggerUtils {
             strings.add("{}");
         }
         String appendFormat = Strings.join(strings, ',');
-        return format + " --> 日志详细 : " + appendFormat;
+        return GXTraceIdContextUtils.TRACE_ID_KEY + " : " + GXTraceIdContextUtils.getTraceId() + " --> " + format + " --> 日志详细 : " + appendFormat;
     }
 }
