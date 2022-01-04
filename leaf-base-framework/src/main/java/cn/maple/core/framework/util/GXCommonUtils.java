@@ -410,20 +410,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 将任意目标对象通过转换器转换为指定类型的目标对象
-     *
-     * @param target    目标对象
-     * @param mapStruct 转换器
-     * @return 目标对象
-     */
-    public static <S extends GXBaseData, T extends GXBaseData> S convertTargetToSource(T target, GXBaseMapStruct<S, T> mapStruct) {
-        if (Objects.isNull(target)) {
-            return null;
-        }
-        return mapStruct.targetToSource(target);
-    }
-
-    /**
      * 将任意的源对象列表通过转换器转换为指定类型的目标对象列表
      *
      * @param sourceList 源列表
@@ -437,6 +423,20 @@ public class GXCommonUtils {
         }
         List<T> ts = mapStruct.sourceToTarget(sourceList);
         return ts;
+    }
+
+    /**
+     * 将任意目标对象通过转换器转换为指定类型的目标对象
+     *
+     * @param target    目标对象
+     * @param mapStruct 转换器
+     * @return 目标对象
+     */
+    public static <S extends GXBaseData, T extends GXBaseData> S convertTargetToSource(T target, GXBaseMapStruct<S, T> mapStruct) {
+        if (Objects.isNull(target)) {
+            return null;
+        }
+        return mapStruct.targetToSource(target);
     }
 
     /**
