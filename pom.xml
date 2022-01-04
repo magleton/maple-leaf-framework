@@ -46,7 +46,7 @@
         <guava.version>31.0.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
         <caffeine.version>3.0.5</caffeine.version>
-        <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
+        <org.mapstruct.version>1.5.0.Beta2</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>

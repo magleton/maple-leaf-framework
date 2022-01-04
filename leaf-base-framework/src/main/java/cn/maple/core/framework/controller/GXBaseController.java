@@ -2,11 +2,13 @@ package cn.maple.core.framework.controller;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 
@@ -22,7 +24,7 @@ public interface GXBaseController {
      * @param clazz  目标对象类型
      * @return T
      */
-    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz) {
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz) {
         return convertSourceToTarget(source, clazz, null, null);
     }
 
@@ -34,7 +36,7 @@ public interface GXBaseController {
      * @param methodName 回调的方法名字
      * @return T
      */
-    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, String methodName) {
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName) {
         return convertSourceToTarget(source, clazz, methodName, null);
     }
 
@@ -46,7 +48,7 @@ public interface GXBaseController {
      * @param copyOptions 复制选项
      * @return T
      */
-    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, CopyOptions copyOptions) {
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, CopyOptions copyOptions) {
         return convertSourceToTarget(source, clazz, null, copyOptions);
     }
 
@@ -59,7 +61,7 @@ public interface GXBaseController {
      * @param copyOptions 复制选项
      * @return T
      */
-    default <S, Q> Q convertSourceToTarget(S source, Class<Q> clazz, String methodName, CopyOptions copyOptions) {
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, CopyOptions copyOptions) {
         return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions);
     }
 
@@ -72,7 +74,7 @@ public interface GXBaseController {
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    default <S, Q> List<Q> convertSourceListToTargetList(Collection<S> collection, Class<Q> clazz, String methodName, CopyOptions copyOptions) {
+    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, String methodName, CopyOptions copyOptions) {
         return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions);
     }
 
@@ -83,8 +85,52 @@ public interface GXBaseController {
      * @param clazz      目标对象的类型
      * @return List
      */
-    default <S, Q> List<Q> convertSourceListToTargetList(Collection<S> collection, Class<Q> clazz) {
+    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz) {
         return GXCommonUtils.convertSourceListToTargetList(collection, clazz, null, null);
+    }
+
+    /**
+     * 将任意对象列表通过转换器转换为指定类型的目标对象列表
+     *
+     * @param targetList 目标列表
+     * @param mapStruct  转换器
+     * @return 源对象列表
+     */
+    default <S extends GXBaseData, T extends GXBaseData> List<S> convertTargetListToSourceList(List<T> targetList, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertTargetListToSourceList(targetList, mapStruct);
+    }
+
+    /**
+     * 将任意目标对象通过转换器转换为指定类型的目标对象
+     *
+     * @param target    目标对象
+     * @param mapStruct 转换器
+     * @return 源对象
+     */
+    default <S extends GXBaseData, T extends GXBaseData> S convertTargetToSource(T target, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertTargetToSource(target, mapStruct);
+    }
+
+    /**
+     * 将任意的源对象列表通过转换器转换为指定类型的目标对象列表
+     *
+     * @param sourceList 源列表
+     * @param mapStruct  转换器
+     * @return 目标对象列表
+     */
+    default <S extends GXBaseData, T extends GXBaseData> List<T> convertSourceListToTargetList(List<S> sourceList, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertSourceListToTargetList(sourceList, mapStruct);
+    }
+
+    /**
+     * 将任意源对象通过转换器转换为目标对象
+     *
+     * @param source    源对象
+     * @param mapStruct 转换器
+     * @return 目标对象
+     */
+    default <S extends GXBaseData, T extends GXBaseData> T convertSourceToTarget(S source, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertSourceToTarget(source, mapStruct);
     }
 
     /**

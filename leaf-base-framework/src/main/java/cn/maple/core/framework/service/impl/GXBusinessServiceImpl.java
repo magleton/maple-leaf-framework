@@ -6,7 +6,9 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
 
@@ -15,6 +17,54 @@ import java.util.List;
 import java.util.Map;
 
 public class GXBusinessServiceImpl implements GXBusinessService {
+    /**
+     * 将任意对象列表通过转换器转换为指定类型的目标对象列表
+     *
+     * @param targetList 目标列表
+     * @param mapStruct  转换器
+     * @return 源对象列表
+     */
+    @Override
+    public <S extends GXBaseData, T extends GXBaseData> List<S> convertTargetListToSourceList(List<T> targetList, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertTargetListToSourceList(targetList, mapStruct);
+    }
+
+    /**
+     * 将任意目标对象通过转换器转换为指定类型的目标对象
+     *
+     * @param target    目标对象
+     * @param mapStruct 转换器
+     * @return 源对象
+     */
+    @Override
+    public <S extends GXBaseData, T extends GXBaseData> S convertTargetToSource(T target, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertTargetToSource(target, mapStruct);
+    }
+
+    /**
+     * 将任意的源对象列表通过转换器转换为指定类型的目标对象列表
+     *
+     * @param sourceList 源列表
+     * @param mapStruct  转换器
+     * @return 目标对象列表
+     */
+    @Override
+    public <S extends GXBaseData, T extends GXBaseData> List<T> convertSourceListToTargetList(List<S> sourceList, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertSourceListToTargetList(sourceList, mapStruct);
+    }
+
+    /**
+     * 将任意源对象通过转换器转换为目标对象
+     *
+     * @param source    源对象
+     * @param mapStruct 转换器
+     * @return 目标对象
+     */
+    @Override
+    public <S extends GXBaseData, T extends GXBaseData> T convertSourceToTarget(S source, GXBaseMapStruct<S, T> mapStruct) {
+        return GXCommonUtils.convertSourceToTarget(source, mapStruct);
+    }
+
     /**
      * 加密手机号码
      *
