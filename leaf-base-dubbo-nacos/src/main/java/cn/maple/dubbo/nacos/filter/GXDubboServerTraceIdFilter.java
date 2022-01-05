@@ -17,7 +17,7 @@ public class GXDubboServerTraceIdFilter implements Filter {
         String traceId = Optional.ofNullable(invocation.getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)).orElse(GXTraceIdContextUtils.getTraceId());
         log.debug("Dubbo服务提供者获取到的TraceId : {}", traceId);
         GXTraceIdContextUtils.setTraceId(traceId);
-        RpcContext.getServerAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+        RpcContext.getClientAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
         return invoker.invoke(invocation);
     }
 }
