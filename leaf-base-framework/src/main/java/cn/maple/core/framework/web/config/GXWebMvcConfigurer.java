@@ -47,10 +47,10 @@ public class GXWebMvcConfigurer implements WebMvcConfigurer {
     }
 
     protected void registerCustomerInterceptors(InterceptorRegistry registry) {
-
+        // TODO document why this method is empty
     }
 
     protected void registerCustomerArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-
+        // TODO document why this method is empty
     }
 }
