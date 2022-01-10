@@ -86,7 +86,7 @@ public interface GXBaseController {
      * @return List
      */
     default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz) {
-        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, null, null);
+        return convertSourceListToTargetList(collection, clazz, null, null);
     }
 
     /**
