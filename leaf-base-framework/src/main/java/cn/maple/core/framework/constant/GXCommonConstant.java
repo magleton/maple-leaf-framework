@@ -19,7 +19,7 @@ public class GXCommonConstant {
     /**
      * 验证数字的正则表达式
      */
-    public static final String DIGITAL_REGULAR_EXPRESSION = "^[+-]?(0|([1-9]\\d*))(\\.\\d+)?$";
+    public static final String DIGITAL_REGULAR_EXPRESSION = "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
 
     /**
      * 手机号码加密的KEY
@@ -35,7 +35,7 @@ public class GXCommonConstant {
      * 未删除的标识值,字符串类型
      */
     public static final String NOT_STR_DELETED_MARK = "'0'";
-    
+
     /**
      * 日志格式
      */

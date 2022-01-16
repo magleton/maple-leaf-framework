@@ -73,8 +73,11 @@ public interface GXBaseBuilder {
                         } else {
                             if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass()) && !ClassUtil.equals(entryValue.getClass(), "String", true) && (entryValue instanceof Map || entryValue instanceof GXMyBatisModel)) {
                                 entryValue = JSONUtil.toJsonStr(entryValue);
+                                entryValue = CharSequenceUtil.format("CAST('{}' as JSON)", entryValue);
+                            } else {
+                                entryValue = CharSequenceUtil.format("'{}'", entryValue);
                             }
-                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , '{}')", fieldName, fieldName, entryKey, entryValue));
+                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
                         }
                     }
                 }

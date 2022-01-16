@@ -788,7 +788,6 @@ public class GXCommonUtils {
      * @return 是否匹配
      */
     public static boolean digitalRegularExpression(String str) {
-        String regularNumberExpression = "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
-        return ReUtil.isMatch(regularNumberExpression, str);
+        return ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, str);
     }
 }
