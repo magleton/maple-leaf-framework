@@ -135,6 +135,12 @@ public class GXBuilderConstant {
     public static final String EXCLUSION_DELETED_CONDITION_FLAG = "exclusion_deleted_condition";
 
     /**
+     * 排除删除条件的标识的值
+     * EXCLUSION_DELETED_CONDITION_FLAG 标识字段的值
+     */
+    public static final String EXCLUSION_DELETED_CONDITION_VALUE = "";
+
+    /**
      * 数据库主键字段的名字
      */
     public static final String PK_FIELD_NAME = "id";

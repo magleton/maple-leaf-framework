@@ -780,4 +780,15 @@ public class GXCommonUtils {
         s = HtmlUtil.unescape(s);
         return Convert.convert(targetClazz, s);
     }
+
+    /**
+     * 数字匹配正则表达式
+     *
+     * @param str 需要验证的表达式
+     * @return 是否匹配
+     */
+    public static boolean digitalRegularExpression(String str) {
+        String regularNumberExpression = "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
+        return ReUtil.isMatch(regularNumberExpression, str);
+    }
 }
