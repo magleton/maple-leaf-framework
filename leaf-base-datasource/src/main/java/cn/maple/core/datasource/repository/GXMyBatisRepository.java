@@ -8,11 +8,11 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.TypeUtil;
-import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -518,6 +518,26 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     public R findOneByCondition(Class<T> clazz, Table<String, String, Object> condition) {
         return findOneByCondition(GXDBCommonUtils.getTableName(clazz), condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 通过条件获取单字段的数据
+     * <pre>
+     * {@code
+     * HashBasedTable<String, String, Object> condition = HashBasedTable.create();
+     * String username = getSingleField("s_admin" ,condition , "username" , String.class);
+     * }
+     * </pre>
+     *
+     * @param tableName   表名
+     * @param condition   查询条件
+     * @param fieldName   需要的字段名字
+     * @param targetClazz 返回的字段类型
+     * @return 目标类型的值
+     */
+    @Override
+    public <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
+        return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
 
     /**

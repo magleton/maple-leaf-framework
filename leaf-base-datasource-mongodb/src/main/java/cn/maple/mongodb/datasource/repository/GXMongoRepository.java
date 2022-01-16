@@ -1,5 +1,6 @@
 package cn.maple.mongodb.datasource.repository;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -310,5 +311,25 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     @Override
     public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
         return null;
+    }
+
+    /**
+     * 通过条件获取单字段的数据
+     * <pre>
+     * {@code
+     * HashBasedTable<String, String, Object> condition = HashBasedTable.create();
+     * String username = getSingleField("s_admin" ,condition , "username" , String.class);
+     * }
+     * </pre>
+     *
+     * @param tableName   表名
+     * @param condition   查询条件
+     * @param fieldName   需要的字段名字
+     * @param targetClazz 返回的字段类型
+     * @return 目标类型的值
+     */
+    @Override
+    public <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
+        return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
 }
