@@ -88,7 +88,7 @@ public interface GXBaseBuilder {
             if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
                 sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.EQ, fieldName, value));
             } else {
-                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.STR_EQ, fieldName, value));
+                sql.SET(CharSequenceUtil.format("{} " + CharSequenceUtil.replace(GXBuilderConstant.STR_EQ, "STR_", ""), fieldName, value));
             }
         }
         sql.SET(CharSequenceUtil.format(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds())));
