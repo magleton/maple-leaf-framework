@@ -6,4 +6,5 @@ rabbit:
   publisherReturns: true
   virtualHost: /
   cacheMode: CHANNEL
+  canalQueue: canalQueue
   default-queue-name: geoxus

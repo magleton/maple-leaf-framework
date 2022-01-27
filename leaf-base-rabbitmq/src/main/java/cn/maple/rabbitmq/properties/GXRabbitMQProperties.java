@@ -50,9 +50,9 @@ public class GXRabbitMQProperties {
      * 默认队列名字
      */
     private String defaultQueueName = "gapleaf";
-
+    
     /**
-     * 是否启用rabbitmq的队列处理
+     * canal的queue的名字
      */
-    private Boolean enableRabbitmq = false;
+    private String canalQueue = "canalQueue";
 }
