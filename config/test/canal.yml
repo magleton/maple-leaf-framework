@@ -1,0 +1,5 @@
+canal:
+  concurrencyCount: 10
+  canalQueueName: canalQueue
+  exchangeName: exchange.fanout.canal
+  routingKey: canal.example.exchange.routingkey

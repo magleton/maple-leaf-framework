@@ -50,9 +50,4 @@ public class GXRabbitMQProperties {
      * 默认队列名字
      */
     private String defaultQueueName = "gapleaf";
-    
-    /**
-     * canal的queue的名字
-     */
-    private String canalQueue = "canalQueue";
 }

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -43,7 +44,8 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
             log.debug("{}必须是{}的子类", serviceName, GXProcessCanalDataService.class.getSimpleName());
             return dict;
         }
-        switch (canalDataDto.getType()) {
+        String type = Optional.ofNullable(canalDataDto.getType()).orElse("");
+        switch (type) {
             case "UPDATE":
                 dict = ((GXProcessCanalDataService) bean).processUpdate(canalDataDto, Dict.create().set(operator, "update"));
                 break;
