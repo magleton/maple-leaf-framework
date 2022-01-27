@@ -765,17 +765,18 @@ public class GXCommonUtils {
      * @return 解码之后的链接信息
      */
     public static <R> R decodeConnectStr(String connectEncodeStr, Class<R> targetClazz) {
-        String secretKey = System.getenv(GXCommonConstant.DATA_SOURCE_SECRET_KEY_ENV);
+        String secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
         if (CharSequenceUtil.isEmpty(secretKey)) {
-            secretKey = System.getProperty(GXCommonConstant.DATA_SOURCE_SECRET_KEY);
+            secretKey = System.getenv(GXCommonConstant.DATA_SOURCE_SECRET_KEY_ENV);
         }
         if (CharSequenceUtil.isEmpty(secretKey)) {
-            GXLoggerUtils.logDebug(LOG, "解密密钥为空,链接信息不进行解密操作");
+            GXLoggerUtils.logDebug(LOG, "解密密钥为空, 链接信息不进行解密操作");
             return Convert.convert(targetClazz, connectEncodeStr);
         }
         String s = GXAuthCodeUtils.authCodeDecode(connectEncodeStr, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase(s, "{}")) {
-            throw new GXBusinessException(CharSequenceUtil.format("{}->{}->{}链接信息参数解码失败", s, connectEncodeStr, secretKey));
+            GXLoggerUtils.logDebug(LOG, "链接信息参数解码失败, 将使用原始的链接信息");
+            return Convert.convert(targetClazz, connectEncodeStr);
         }
         s = HtmlUtil.unescape(s);
         return Convert.convert(targetClazz, s);
