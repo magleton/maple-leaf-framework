@@ -14,7 +14,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <dubbo.version>3.0.2.1</dubbo.version>
+        <dubbo.version>3.0.5</dubbo.version>
         <fastjson.version>1.2.78</fastjson.version>
     </properties>
 
@@ -38,6 +38,18 @@
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba.spring</groupId>
+                    <artifactId>spring-context-support</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -48,6 +60,10 @@
                 <exclusion>
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
