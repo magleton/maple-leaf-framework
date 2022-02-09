@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.properties.GXDataSourceProperties;
 import cn.maple.core.datasource.properties.GXDynamicDataSourceProperties;
+import cn.maple.core.framework.exception.GXBusinessException;
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 配置多数据源
@@ -34,13 +36,17 @@ public class GXDynamicDataSourceConfig {
     }
 
     @Bean
-    public GXDynamicDataSource dynamicDataSource(GXDataSourceProperties dataSourceProperties) {
+    public GXDynamicDataSource dynamicDataSource() {
         GXDynamicDataSource dynamicDataSource = new GXDynamicDataSource();
-        dynamicDataSource.setTargetDataSources(getDynamicDataSource());
+        Map<Object, Object> dynamicDataSources = getDynamicDataSources();
+        dynamicDataSource.setTargetDataSources(dynamicDataSources);
+        Optional<Object> firstDataSource = dynamicDataSources.keySet().stream().findFirst();
+        if (firstDataSource.isEmpty()) {
+            throw new GXBusinessException("请配置正确的数据源");
+        }
         // 默认数据源
-        DruidDataSource defaultDataSource = GXDynamicDataSourceFactory.buildDruidDataSource(dataSourceProperties);
-        DataSource dataSource = wrapSeataDataSource(defaultDataSource);
-        dynamicDataSource.setDefaultTargetDataSource(dataSource);
+        DataSource defaultDataSource = (DataSource) dynamicDataSources.get(firstDataSource.get());
+        dynamicDataSource.setDefaultTargetDataSource(defaultDataSource);
         return dynamicDataSource;
     }
 
@@ -70,9 +76,9 @@ public class GXDynamicDataSourceConfig {
         return dataSource;
     }
 
-    protected Map<Object, Object> getDynamicDataSource() {
+    protected Map<Object, Object> getDynamicDataSources() {
         Map<String, GXDataSourceProperties> dataSourcePropertiesMap = dynamicDataSourceProperties.getDatasource();
-        Map<Object, Object> targetDataSources = new HashMap<>(dataSourcePropertiesMap.size());
+        Map<Object, Object> targetDataSources = new LinkedHashMap<>(dataSourcePropertiesMap.size());
         // TODO 此处可以通过在其他地方获取连接信息来新建连接池, 比如从另外的数据库读取信息
         dataSourcePropertiesMap.forEach((k, v) -> {
             DruidDataSource druidDataSource = GXDynamicDataSourceFactory.buildDruidDataSource(v);
