@@ -82,13 +82,17 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param updateWrapper MyBatis更新条件对象
      * @param condition     条件
      */
-    private void setUpdateWrapper(UpdateWrapper<T> updateWrapper, Dict condition) {
+    protected void setUpdateWrapper(UpdateWrapper<T> updateWrapper, Dict condition) {
         String op = condition.getStr("op");
         String column = condition.getStr("column");
         String value = condition.getStr("value");
         Dict methodNameDict = Dict.create()
                 .set(GXBuilderConstant.EQ, "eq")
+                .set(GXBuilderConstant.STR_EQ, "eq")
                 .set(GXBuilderConstant.NOT_EQ, "ne")
+                .set(GXBuilderConstant.STR_NOT_EQ, "ne")
+                .set(GXBuilderConstant.NOT_IN, "notIn")
+                .set(GXBuilderConstant.STR_NOT_IN, "notIn")
                 .set(GXBuilderConstant.GE, "ge")
                 .set(GXBuilderConstant.GT, "gt")
                 .set(GXBuilderConstant.LE, "le")
@@ -127,7 +131,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            return updateOrCreate(entity, (UpdateWrapper<T>) null);
+        }
+        UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
+        condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
+        return updateOrCreate(entity, updateWrapper);
     }
 
     /**
