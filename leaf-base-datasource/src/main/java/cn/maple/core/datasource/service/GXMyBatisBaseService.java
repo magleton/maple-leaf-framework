@@ -123,6 +123,24 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper);
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
      * 获取 Primary Key
      *
      * @return String

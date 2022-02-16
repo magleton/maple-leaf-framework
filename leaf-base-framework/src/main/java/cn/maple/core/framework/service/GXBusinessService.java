@@ -3,7 +3,6 @@ package cn.maple.core.framework.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
-import com.google.common.collect.Table;
 
 import java.util.Collection;
 import java.util.List;
@@ -145,22 +144,4 @@ public interface GXBusinessService {
      * @return List
      */
     <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions);
-
-    /**
-     * 根据条件软(逻辑)删除
-     *
-     * @param tableName 表名
-     * @param condition 删除条件
-     * @return 影响行数
-     */
-    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
-
-    /**
-     * 根据条件删除
-     *
-     * @param tableName 表名
-     * @param condition 删除条件
-     * @return 影响行数
-     */
-    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
 }

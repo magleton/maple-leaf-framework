@@ -171,6 +171,30 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+        return repository.deleteSoftCondition(tableName, condition);
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+        return repository.deleteCondition(tableName, condition);
+    }
+
+    /**
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
