@@ -78,7 +78,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID> impl
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
         return null;
     }
 
@@ -90,7 +90,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID> impl
      * @return 影响行数
      */
     @Override
-    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
         return null;
     }
 

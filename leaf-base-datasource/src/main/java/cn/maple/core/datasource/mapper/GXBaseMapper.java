@@ -42,9 +42,9 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
     })
     List<R> paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
 
-    @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftWhere")
-    Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition);
+    @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftCondition")
+    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
 
-    @DeleteProvider(type = GXBaseBuilder.class, method = "deleteWhere")
-    Integer deleteWhere(String tableName, Table<String, String, Object> condition);
+    @DeleteProvider(type = GXBaseBuilder.class, method = "deleteCondition")
+    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
 }

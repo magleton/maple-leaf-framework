@@ -11,6 +11,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
+import com.google.common.collect.Table;
 
 import java.util.Collection;
 import java.util.List;
@@ -218,5 +219,29 @@ public class GXBusinessServiceImpl implements GXBusinessService {
     @Override
     public <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
         return GXCommonUtils.convertSourceListToTargetList(collection, tClass, methodName, copyOptions);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
     }
 }

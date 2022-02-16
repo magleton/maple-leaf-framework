@@ -92,7 +92,7 @@ public interface GXBaseBuilder {
             }
         }
         sql.SET(CharSequenceUtil.format(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds())));
-        handleSQLWhereCondition(sql, condition, "");
+        handleSQLCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -107,7 +107,7 @@ public interface GXBaseBuilder {
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        handleSQLWhereCondition(sql, condition, tableNameAlias);
+        handleSQLCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);
         return sql.toString();
     }
@@ -215,7 +215,7 @@ public interface GXBaseBuilder {
         // 处理WHERE
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             retentionDelCondition = condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, GXBuilderConstant.EXCLUSION_DELETED_CONDITION_FLAG);
-            handleSQLWhereCondition(sql, condition, tableNameAlias);
+            handleSQLCondition(sql, condition, tableNameAlias);
         }
         // 排除条件中的删除字段
         if (Objects.isNull(retentionDelCondition)) {
@@ -393,7 +393,7 @@ public interface GXBaseBuilder {
      * @param tableNameAlias 表的别名
      */
     @SuppressWarnings("all")
-    static void handleSQLWhereCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
+    static void handleSQLCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
         if (Objects.nonNull(condition) && !condition.isEmpty()) {
             Map<String, Map<String, Object>> conditionMap = condition.rowMap();
             conditionMap.forEach((column, datum) -> {
@@ -516,11 +516,11 @@ public interface GXBaseBuilder {
      * @param condition 删除条件
      * @return SQL语句
      */
-    static String deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
+    static String deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         condition.put("is_deleted", GXBuilderConstant.EQ, getIsNotDeletedValue());
-        handleSQLWhereCondition(sql, condition, "");
+        handleSQLCondition(sql, condition, "");
         return sql.toString();
     }
 
@@ -531,9 +531,9 @@ public interface GXBaseBuilder {
      * @param condition 删除条件
      * @return SQL语句
      */
-    static String deleteWhere(String tableName, Table<String, String, Object> condition) {
+    static String deleteCondition(String tableName, Table<String, String, Object> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
-        handleSQLWhereCondition(sql, condition, "");
+        handleSQLCondition(sql, condition, "");
         return sql.toString();
     }
 

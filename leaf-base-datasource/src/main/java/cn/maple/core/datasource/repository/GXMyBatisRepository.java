@@ -455,8 +455,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition) {
-        return baseDao.deleteSoftWhere(tableName, condition);
+    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+        return baseDao.deleteSoftCondition(tableName, condition);
     }
 
     /**
@@ -467,8 +467,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer deleteWhere(String tableName, Table<String, String, Object> condition) {
-        return baseDao.deleteWhere(tableName, condition);
+    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+        return baseDao.deleteCondition(tableName, condition);
     }
 
     /**

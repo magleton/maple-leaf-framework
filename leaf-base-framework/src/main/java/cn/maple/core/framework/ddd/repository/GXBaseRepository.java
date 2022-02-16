@@ -171,7 +171,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteSoftWhere(String tableName, Table<String, String, Object> condition);
+    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 根据条件删除
@@ -180,7 +180,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteWhere(String tableName, Table<String, String, Object> condition);
+    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 检测数据是否存在
