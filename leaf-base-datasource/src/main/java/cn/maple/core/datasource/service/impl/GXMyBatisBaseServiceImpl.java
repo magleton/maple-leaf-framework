@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 业务基础Service
@@ -85,7 +86,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
-        queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
+        if (Objects.isNull(queryParamReqDto.getColumns())) {
+            queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
+        }
         return repository.paginate("paginate", queryParamReqDto);
     }
 
