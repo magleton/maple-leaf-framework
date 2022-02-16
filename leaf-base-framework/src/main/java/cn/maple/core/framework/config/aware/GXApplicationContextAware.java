@@ -14,6 +14,8 @@ import org.springframework.lang.NonNull;
 public class GXApplicationContextAware implements ApplicationContextAware {
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        GXApplicationContextSingleton.INSTANCE.setApplicationContext(applicationContext);
+        if (GXApplicationContextSingleton.INSTANCE.getApplicationContext() == null) {
+            GXApplicationContextSingleton.INSTANCE.setApplicationContext(applicationContext);
+        }
     }
 }

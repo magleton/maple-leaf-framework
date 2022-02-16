@@ -3,7 +3,10 @@ package cn.maple.core.datasource.config;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -28,6 +31,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @EnableTransactionManagement
@@ -62,6 +66,10 @@ public class GXMyBatisPlusConfig {
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        // 将ApplicationContext提前注入
+        if (GXApplicationContextSingleton.INSTANCE.getApplicationContext() == null) {
+            GXApplicationContextSingleton.INSTANCE.setApplicationContext(applicationContext);
+        }
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 分页插件
         PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
@@ -139,7 +147,9 @@ public class GXMyBatisPlusConfig {
          */
         @Override
         public boolean ignoreTable(String tableName) {
-            return false;
+            String ignoreTenantTablesStr = Optional.ofNullable(GXSpringContextUtils.getEnvironment().getProperty("ignoreTenantTables")).orElse("");
+            List<String> ignoreTenantTables = CharSequenceUtil.split(ignoreTenantTablesStr, " ", true, true);
+            return CollUtil.contains(ignoreTenantTables, tableName);
         }
     }
 }

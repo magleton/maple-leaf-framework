@@ -14,7 +14,7 @@ public enum GXApplicationContextSingleton {
         return applicationContext;
     }
 
-    void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 }
