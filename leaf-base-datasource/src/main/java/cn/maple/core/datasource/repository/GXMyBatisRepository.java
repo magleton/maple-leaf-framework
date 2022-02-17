@@ -123,6 +123,17 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
+     * 保存或者更新数据
+     *
+     * @param entity 需要更新或者保存的数据
+     */
+    @Override
+    public ID updateOrCreate(T entity) {
+        baseDao.saveOrUpdate(entity);
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+    }
+
+    /**
      * 保存数据
      *
      * @param entity    需要更新或者保存的数据
@@ -151,7 +162,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.nonNull(updateWrapper)) {
             baseDao.update(entity, updateWrapper);
         } else {
-            baseDao.save(entity);
+            baseDao.saveOrUpdate(entity);
         }
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
     }
