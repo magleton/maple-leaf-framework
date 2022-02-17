@@ -24,8 +24,12 @@ import java.util.Objects;
 /**
  * 业务基础Service
  *
- * @param <P> 仓库对象类型
- * @param <R> 响应数据类型
+ * @param <P>  仓库对象类型
+ * @param <M>  Mapper类型
+ * @param <T>  实体类型
+ * @param <D>  DAO类型
+ * @param <R>  响应对象类型
+ * @param <ID> 实体的主键ID类型
  */
 public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessServiceImpl implements GXMyBatisBaseService<P, M, T, D, R, ID> {
     /**

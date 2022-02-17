@@ -17,11 +17,12 @@ import java.util.List;
 /**
  * 业务DB基础Service
  *
- * @param <P> 仓库对象类型
- * @param <M> Mapper类型
- * @param <D> DAO类型
- * @param <T> 实体类型
- * @param <R> 响应对象类型
+ * @param <P>  仓库对象类型
+ * @param <M>  Mapper类型
+ * @param <T>  实体类型
+ * @param <D>  DAO类型
+ * @param <R>  响应对象类型
+ * @param <ID> 实体的主键ID类型
  * @author britton chen <britton@126.com>
  */
 @SuppressWarnings("unused")
