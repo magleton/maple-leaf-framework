@@ -156,6 +156,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 创建或者更新
      *
+     * @param entity 数据实体
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity) {
+        return repository.updateOrCreate(entity);
+    }
+
+    /**
+     * 创建或者更新
+     *
      * @param entity    数据实体
      * @param condition 更新条件
      * @return ID

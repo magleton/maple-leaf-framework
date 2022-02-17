@@ -108,6 +108,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 创建或者更新
      *
+     * @param entity 数据实体
+     * @return ID
+     */
+    ID updateOrCreate(T entity);
+
+    /**
+     * 创建或者更新
+     *
      * @param entity    数据实体
      * @param condition 更新条件
      * @return ID
