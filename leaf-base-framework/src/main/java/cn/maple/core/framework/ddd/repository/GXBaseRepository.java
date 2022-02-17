@@ -46,13 +46,6 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     /**
      * 保存或者更新数据
      *
-     * @param entity 需要更新或者保存的数据
-     */
-    ID updateOrCreate(T entity);
-
-    /**
-     * 保存或者更新数据
-     *
      * @param entity    需要更新或者保存的数据
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
