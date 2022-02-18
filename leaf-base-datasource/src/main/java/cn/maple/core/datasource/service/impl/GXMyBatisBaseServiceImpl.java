@@ -14,6 +14,7 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXTypeOfUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -177,6 +178,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         String keyProperty = tableInfo.getKeyProperty();
         Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
         HashBasedTable<String, String, Object> condition = HashBasedTable.create();
+        if (Objects.isNull(idVal) || Objects.equals(idVal, GXCommonUtils.getClassDefaultValue(GXTypeOfUtils.typeof(idVal)))) {
+            idVal = -1;
+        }
         condition.put(keyProperty, op, idVal);
         if (Objects.nonNull(idVal) && repository.checkRecordIsExists(tableInfo.getTableName(), condition)) {
             return repository.update(entity, condition);
