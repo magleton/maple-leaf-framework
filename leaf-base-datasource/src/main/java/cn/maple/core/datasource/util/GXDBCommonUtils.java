@@ -10,6 +10,8 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,11 +81,8 @@ public class GXDBCommonUtils {
      * @return String
      */
     public static String getTableName(Class<?> clazz) {
-        final TableName annotation = AnnotationUtil.getAnnotation(clazz, TableName.class);
-        if (null != annotation) {
-            return annotation.value();
-        }
-        return "";
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+        return tableInfo.getTableName();
     }
 
     /**

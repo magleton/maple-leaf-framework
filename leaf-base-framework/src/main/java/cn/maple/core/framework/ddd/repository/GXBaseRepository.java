@@ -277,9 +277,8 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     /**
      * 获取 Primary Key
      *
+     * @param entity 实体对象
      * @return String
      */
-    default String getPrimaryKey() {
-        return "id";
-    }
+    String getPrimaryKey(T entity);
 }

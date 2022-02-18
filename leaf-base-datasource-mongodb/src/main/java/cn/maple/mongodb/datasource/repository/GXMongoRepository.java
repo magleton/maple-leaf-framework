@@ -332,4 +332,15 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     public <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
         return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
+
+    /**
+     * 获取 Primary Key
+     *
+     * @param entity 实体对象
+     * @return String
+     */
+    @Override
+    public String getPrimaryKey(T entity) {
+        return "id";
+    }
 }

@@ -154,5 +154,5 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      *
      * @return String
      */
-    String getPrimaryKey();
+    String getPrimaryKey(T entity);
 }

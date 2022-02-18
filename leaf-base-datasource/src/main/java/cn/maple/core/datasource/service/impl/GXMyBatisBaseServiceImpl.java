@@ -253,7 +253,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return String
      */
     @Override
-    public String getPrimaryKey() {
-        return "id";
+    public String getPrimaryKey(T entity) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
+        return tableInfo.getKeyProperty();
     }
 }
