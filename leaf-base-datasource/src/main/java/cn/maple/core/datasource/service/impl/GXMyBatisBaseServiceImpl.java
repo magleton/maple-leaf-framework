@@ -15,6 +15,9 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
@@ -170,12 +173,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
             op = GXBuilderConstant.STR_EQ;
         }
-        ID id = (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
+        String keyProperty = tableInfo.getKeyProperty();
+        Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
         HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-        if (Objects.nonNull(id)) {
-            condition.put("id", op, id);
+        condition.put(keyProperty, op, idVal);
+        if (Objects.nonNull(idVal) && repository.checkRecordIsExists(tableInfo.getTableName(), condition)) {
+            return repository.update(entity, condition);
         }
-        return repository.updateOrCreate(entity, condition);
+        return repository.create(entity);
     }
 
     /**

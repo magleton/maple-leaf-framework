@@ -149,9 +149,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
         if (Objects.nonNull(updateWrapper)) {
-            baseDao.update(entity, updateWrapper);
+            this.update(entity, updateWrapper);
         } else {
-            baseDao.saveOrUpdate(entity);
+            this.create(entity);
         }
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
     }
