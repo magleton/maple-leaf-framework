@@ -182,10 +182,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
             idVal = -1;
         }
         condition.put(keyProperty, op, idVal);
-        if (Objects.nonNull(idVal) && repository.checkRecordIsExists(tableInfo.getTableName(), condition)) {
-            return repository.update(entity, condition);
+        if (Objects.nonNull(idVal) && checkRecordIsExists(tableInfo.getTableName(), condition)) {
+            return update(entity, condition);
         }
-        return repository.create(entity);
+        return create(entity);
     }
 
     /**
