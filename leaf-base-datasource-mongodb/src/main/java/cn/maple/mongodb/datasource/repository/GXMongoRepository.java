@@ -340,7 +340,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return String
      */
     @Override
-    public String getPrimaryKey(T entity) {
+    public String getIdName(T entity) {
         return "id";
     }
 }

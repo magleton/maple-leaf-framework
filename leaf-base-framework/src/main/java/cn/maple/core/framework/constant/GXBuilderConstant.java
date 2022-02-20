@@ -141,9 +141,9 @@ public class GXBuilderConstant {
     public static final String EXCLUSION_DELETED_CONDITION_VALUE = "";
 
     /**
-     * 数据库主键字段的名字
+     * 数据库主键字段的默认名字
      */
-    public static final String PK_FIELD_NAME = "id";
+    public static final String DEFAULT_ID_NAME = "id";
 
     /**
      * 数据库JSON查询字符串模板表达式

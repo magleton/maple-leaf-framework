@@ -14,5 +14,5 @@ public @interface GXRequestBody {
 
     boolean validateTarget() default true;
 
-    String primaryKey() default "id";
+    String idName() default "id";
 }

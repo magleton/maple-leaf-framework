@@ -576,7 +576,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return String
      */
     @Override
-    public String getPrimaryKey(T entity) {
+    public String getIdName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getKeyProperty();
     }
