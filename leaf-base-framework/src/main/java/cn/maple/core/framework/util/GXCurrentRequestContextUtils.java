@@ -8,6 +8,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -126,17 +127,31 @@ public class GXCurrentRequestContextUtils {
         if (Objects.isNull(secretKey)) {
             secretKey = GXTokenConstant.KEY;
         }
-        final String token = getHeader(tokenName);
-        String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
-        if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
-            return null;
-        }
-        Dict dict = JSONUtil.toBean(s, Dict.class);
+        Dict dict = getLoginCredentials(tokenName, secretKey);
         Object retValue = dict.getObj(tokenFieldName);
         if (Objects.nonNull(retValue)) {
             return Convert.convert(clazz, retValue);
         }
         return null;
+    }
+
+    /**
+     * 从token中获取登录信息
+     *
+     * @param tokenName token名字
+     * @param secretKey token密钥
+     * @return Dict
+     */
+    public static Dict getLoginCredentials(String tokenName, String secretKey) {
+        String token = getHeader(tokenName);
+        if (Objects.isNull(token)) {
+            throw new GXBusinessException(CharSequenceUtil.format("{}不存在", tokenName));
+        }
+        String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
+        if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
+            return Dict.create();
+        }
+        return JSONUtil.toBean(s, Dict.class);
     }
 
     /**

@@ -1,7 +1,9 @@
 package cn.maple.core.framework.controller;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
 import cn.maple.core.framework.dto.protocol.res.GXPaginationResProtocol;
@@ -177,5 +179,44 @@ public interface GXBaseController {
      */
     default <R extends GXBaseResProtocol> List<R> buildTree(List<R> sourceList, Object rootParentValue) {
         return GXCommonUtils.buildDeptTree(sourceList, rootParentValue);
+    }
+
+    /**
+     * 获取前端用户的登录ID
+     *
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getFrontEndUserId(String tokenSecretKey, Class<R> targetClass) {
+        if (Objects.isNull(tokenSecretKey)) {
+            throw new GXBusinessException("请传递token密钥!");
+        }
+        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.USER_ID, targetClass, tokenSecretKey);
+    }
+
+    /**
+     * 获取后端用户的登录ID(管理端)
+     *
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getBackEndUserId(String tokenSecretKey, Class<R> targetClass) {
+        if (Objects.isNull(tokenSecretKey)) {
+            throw new GXBusinessException("请传递token密钥!");
+        }
+        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.ADMIN_ID, targetClass, tokenSecretKey);
+    }
+
+    /**
+     * 从token中获取登录信息
+     *
+     * @param tokenName      token名字
+     * @param tokenSecretKey token密钥
+     * @return Dict
+     */
+    default Dict getLoginCredentials(String tokenName, String tokenSecretKey) {
+        return GXCurrentRequestContextUtils.getLoginCredentials(tokenName, tokenSecretKey);
     }
 }
