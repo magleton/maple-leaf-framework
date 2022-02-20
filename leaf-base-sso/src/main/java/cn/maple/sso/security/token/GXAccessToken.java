@@ -23,7 +23,7 @@ public class GXAccessToken implements GXToken, Serializable {
     }
 
     public GXAccessToken(Dict extParam) {
-        this.token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.KEY);
+        this.token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.TOKEN_SECRET_KEY);
     }
 
     @Override

@@ -36,14 +36,14 @@ public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandl
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer container,
                                   NativeWebRequest request, WebDataBinderFactory factory) throws Exception {
         // 获取用户ID
-        Object object = request.getAttribute(GXTokenConstant.USER_ID, RequestAttributes.SCOPE_REQUEST);
+        Object object = request.getAttribute(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, RequestAttributes.SCOPE_REQUEST);
         if (object == null) {
             final String header = request.getHeader(GXTokenConstant.USER_TOKEN_NAME);
             if (null == header) {
                 return null;
             }
-            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtils.authCodeDecode(header, GXTokenConstant.KEY), Dict.class);
-            object = tokenData.getObj(GXTokenConstant.USER_ID);
+            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtils.authCodeDecode(header, GXTokenConstant.TOKEN_SECRET_KEY), Dict.class);
+            object = tokenData.getObj(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME);
             if (null == object) {
                 return null;
             }

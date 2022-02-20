@@ -82,7 +82,7 @@ public class GXSSOToken extends GXAccessToken {
     }
 
     public static GXSSOToken parser(String token, boolean header) {
-        String s = GXAuthCodeUtils.authCodeDecode(token, GXTokenConstant.KEY);
+        String s = GXAuthCodeUtils.authCodeDecode(token, GXTokenConstant.TOKEN_SECRET_KEY);
         return JSONUtil.toBean(s, GXSSOToken.class);
     }
 
@@ -112,7 +112,7 @@ public class GXSSOToken extends GXAccessToken {
         }
         param.set("time", time);
         param.set("issuedAt", new Date(time));
-        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.KEY);
+        return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), GXTokenConstant.TOKEN_SECRET_KEY);
     }
 
     public GXTokenFlag getFlag() {

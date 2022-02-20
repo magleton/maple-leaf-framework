@@ -44,12 +44,12 @@ public class GXTokenConstant {
     /**
      * 用户登录用的token标签
      */
-    public static final String USER_ID = "userId";
+    public static final String TOKEN_USER_ID_FIELD_NAME = "userId";
 
     /**
      * Admin登录用的token标签
      */
-    public static final String ADMIN_ID = "adminId";
+    public static final String TOKEN_ADMIN_ID_FIELD_NAME = "adminId";
 
     /**
      * 管理员token的名字
@@ -64,7 +64,7 @@ public class GXTokenConstant {
     /**
      * TOKEN加密的KEY
      */
-    public static final String KEY = "GEO_XUS_SHIRO_TOKEN_KEY";
+    public static final String TOKEN_SECRET_KEY = "GEO_XUS_SHIRO_TOKEN_KEY";
 
     /**
      * ADMIN端TOKEN即将过期刷新阈值
@@ -83,7 +83,7 @@ public class GXTokenConstant {
     /**
      * 登录时间
      */
-    public static final String LOGIN_AT_FIELD = "loginAt";
+    public static final String LOGIN_AT_FIELD_NAME = "loginAt";
 
     /**
      * 平台

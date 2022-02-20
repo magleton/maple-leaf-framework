@@ -38,7 +38,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.debug("授权验证权限时调用-->GXOAuth2Realm.doGetAuthorizationInfo() principals : " + principals.getPrimaryPrincipal());
         Dict dict = (Dict) principals.getPrimaryPrincipal();
-        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.ADMIN_ID)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstant.ADMIN_ID)));
+        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)));
         // 获取用户权限列表
         Set<String> permsSet = shiroService.getAdminAllPermissions(adminId);
         // 获取用户角色列表
@@ -63,7 +63,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
             throw new IncorrectCredentialsException("长时间未操作, 请重新登录~~~");
         }
         // 从TOKEN中获取用户ID
-        Long adminId = dict.getLong(GXTokenConstant.ADMIN_ID);
+        Long adminId = dict.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME);
         if (null == adminId) {
             throw new IncorrectCredentialsException("请提供正确的字段");
         }

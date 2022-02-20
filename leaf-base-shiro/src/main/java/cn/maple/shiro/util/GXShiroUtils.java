@@ -31,9 +31,9 @@ public class GXShiroUtils {
         if (getAdminData().isEmpty()) {
             return 0L;
         }
-        Long adminId = getAdminData().getLong(GXTokenConstant.ADMIN_ID);
+        Long adminId = getAdminData().getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME);
         if (null == adminId) {
-            adminId = getAdminData().getLong(GXCommonUtils.toCamelCase(GXTokenConstant.ADMIN_ID));
+            adminId = getAdminData().getLong(GXCommonUtils.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
         }
         return null == adminId ? 0 : adminId;
     }

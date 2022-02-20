@@ -30,8 +30,8 @@ public class GXTokenManagerUtils {
      * @return String
      */
     public static String generateAdminToken(Object adminId, Dict param, String secretKey, int expires) {
-        param.putIfAbsent(GXTokenConstant.ADMIN_ID, adminId);
-        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, adminId);
+        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD_NAME, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }
@@ -73,8 +73,8 @@ public class GXTokenManagerUtils {
      * @return String
      */
     public static String generateUserToken(Object userId, Dict param, String secretKey, int expires) {
-        param.putIfAbsent(GXTokenConstant.USER_ID, userId);
-        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD, DateUtil.currentSeconds());
+        param.putIfAbsent(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, userId);
+        param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD_NAME, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
     }

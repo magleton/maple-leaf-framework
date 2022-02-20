@@ -192,7 +192,7 @@ public interface GXBaseController {
         if (Objects.isNull(tokenSecretKey)) {
             throw new GXBusinessException("请传递token密钥!");
         }
-        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.USER_ID, targetClass, tokenSecretKey);
+        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
     }
 
     /**
@@ -206,7 +206,7 @@ public interface GXBaseController {
         if (Objects.isNull(tokenSecretKey)) {
             throw new GXBusinessException("请传递token密钥!");
         }
-        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.ADMIN_ID, targetClass, tokenSecretKey);
+        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
     }
 
     /**
