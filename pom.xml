@@ -41,7 +41,7 @@
         <hutool.version>5.7.20</hutool.version>
         <mybatis-plus-boot.version>3.4.2</mybatis-plus-boot.version>
         <redisson.version>3.16.8</redisson.version>
-        <aspectjweaver.version>1.9.8.RC3</aspectjweaver.version>
+        <aspectjweaver.version>1.9.8</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
         <guava.version>31.0.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
