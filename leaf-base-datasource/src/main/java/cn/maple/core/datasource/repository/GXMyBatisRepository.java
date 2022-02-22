@@ -21,7 +21,6 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.google.common.collect.HashBasedTable;
@@ -88,6 +87,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         String op = condition.getStr("op");
         String column = condition.getStr("column");
         String value = condition.getStr("value");
+        if (CharSequenceUtil.isBlank(value)) {
+            return;
+        }
         Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
         String methodName = methodNameDict.getStr(op);
         if (Objects.nonNull(methodName)) {
