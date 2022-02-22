@@ -288,5 +288,5 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param entity 实体对象
      * @return String
      */
-    String getIdName(T entity);
+    String getIdFieldName(T entity);
 }

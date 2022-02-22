@@ -520,7 +520,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
         if (CharSequenceUtil.isBlank(tableName)) {
-            throw new GXBusinessException(CharSequenceUtil.format("请指定数据库表的名字 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
+            throw new GXBusinessException(CharSequenceUtil.format("请指定表名 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         Table<String, String, Object> condition = HashBasedTable.create();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
@@ -608,7 +608,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return String
      */
     @Override
-    public String getIdName(T entity) {
+    public String getIdFieldName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getKeyProperty();
     }

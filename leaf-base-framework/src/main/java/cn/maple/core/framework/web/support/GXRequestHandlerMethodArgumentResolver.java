@@ -170,6 +170,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         try {
             return OBJECT_MAPPER.readValue(jsonData, beanType);
         } catch (Exception e) {
+            LOGGER.error("Servlet请求体参数转换对象失败");
             throw e;
         }
     }
@@ -186,6 +187,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         try {
             return OBJECT_MAPPER.readValue(jsonData, javaType);
         } catch (Exception e) {
+            LOGGER.error("Servlet请求体参数转换对象失败");
             throw e;
         }
     }

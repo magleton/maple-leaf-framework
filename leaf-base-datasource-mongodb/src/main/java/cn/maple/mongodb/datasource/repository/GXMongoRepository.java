@@ -351,7 +351,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return String
      */
     @Override
-    public String getIdName(T entity) {
+    public String getIdFieldName(T entity) {
         return "id";
     }
 }
