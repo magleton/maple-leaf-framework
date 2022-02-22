@@ -40,7 +40,7 @@
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
         <hutool.version>5.7.20</hutool.version>
         <mybatis-plus-boot.version>3.4.2</mybatis-plus-boot.version>
-        <redisson.version>3.16.8</redisson.version>
+        <redisson-spring-boot.version>3.14.1</redisson-spring-boot.version>
         <aspectjweaver.version>1.9.8</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
         <guava.version>31.0.1-jre</guava.version>
@@ -110,8 +110,18 @@
             </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
-                <artifactId>redisson</artifactId>
-                <version>${redisson.version}</version>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson-spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-actuator</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.boot</groupId>
