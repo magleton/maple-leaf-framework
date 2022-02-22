@@ -53,6 +53,14 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
     ID updateOrCreate(T entity, Table<String, String, Object> condition);
 
     /**
+     * 创建或者更新
+     *
+     * @param entity 数据实体
+     * @return ID
+     */
+    ID updateOrCreate(T entity);
+
+    /**
      * 根据条件获取所有数据
      *
      * @param dbQueryInnerDto 查询对象

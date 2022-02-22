@@ -48,6 +48,17 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     }
 
     /**
+     * 创建或者更新
+     *
+     * @param entity 数据实体
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity) {
+        return null;
+    }
+
+    /**
      * 根据条件获取所有数据
      *
      * @param dbQueryInnerDto 查询对象

@@ -20,9 +20,11 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXTypeOfUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,34 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
         condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
         return updateOrCreate(entity, updateWrapper);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param entity 数据实体
+     * @return ID
+     */
+    @SuppressWarnings("all")
+    @Override
+    public ID updateOrCreate(T entity) {
+        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
+        String op = GXBuilderConstant.EQ;
+        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
+            op = GXBuilderConstant.STR_EQ;
+        }
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
+        String keyProperty = tableInfo.getKeyProperty();
+        Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
+        HashBasedTable<String, String, Object> condition = HashBasedTable.create();
+        if (Objects.isNull(idVal) || Objects.equals(idVal, GXCommonUtils.getClassDefaultValue(GXTypeOfUtils.typeof(idVal)))) {
+            idVal = -1;
+        }
+        condition.put(keyProperty, op, idVal);
+        if (Objects.nonNull(idVal) && checkRecordIsExists(tableInfo.getTableName(), condition)) {
+            return update(entity, condition);
+        }
+        return create(entity);
     }
 
     /**
