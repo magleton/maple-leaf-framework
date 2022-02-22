@@ -8,6 +8,7 @@ import cn.maple.core.framework.code.GXResultCode;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -55,11 +56,17 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * 进行参数验证之后对数据进行修复的方法名字
      */
     private static final String AFTER_REPAIR_METHOD = "afterRepair";
-
     /**
      * 日志对象
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
+
+    /**
+     * 给OBJECT_MAPPER设置属性
+     */
+    static {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
