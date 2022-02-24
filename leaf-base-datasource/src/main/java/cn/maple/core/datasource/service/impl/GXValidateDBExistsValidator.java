@@ -51,8 +51,11 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         if (null == service) {
             throw new GXBusinessException(CharSequenceUtil.format("字段<{}>的值<{}>需要指定相应的Service进行验证...", fieldName, o));
         }
-        Dict param = CharSequenceUtil.isBlank(condition) ? Dict.create() : (Dict) GXCommonUtils.convertStrToMap(condition);
+        Dict param = Dict.create();
         param.set("spEL", spEL);
+        if (CharSequenceUtil.isNotBlank(condition)) {
+            param.putAll(GXCommonUtils.convertStrToMap(condition));
+        }
         return service.validateExists(o, tableName, fieldName, constraintValidatorContext, param);
     }
 }
