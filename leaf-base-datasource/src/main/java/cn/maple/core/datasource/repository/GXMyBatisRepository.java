@@ -62,7 +62,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public ID create(T entity) {
         baseDao.save(entity);
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
     /**
@@ -115,7 +116,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             throw new GXBusinessException("请传递更新对象");
         }
         baseDao.update(entity, updateWrapper);
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
     /**
@@ -177,7 +179,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         } else {
             this.create(entity);
         }
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, "getId");
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
     /**
