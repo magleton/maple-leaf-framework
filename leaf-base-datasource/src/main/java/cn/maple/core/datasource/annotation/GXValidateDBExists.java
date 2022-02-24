@@ -53,7 +53,7 @@ public @interface GXValidateDBExists {
      *
      * @return String
      */
-    String fieldName() default "model_id";
+    String fieldName() default "id";
 
     /**
      * 表名

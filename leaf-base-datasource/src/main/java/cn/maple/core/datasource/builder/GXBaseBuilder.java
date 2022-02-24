@@ -116,6 +116,7 @@ public interface GXBaseBuilder {
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         handleSQLCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);
+        condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, op);
         return sql.toString();
     }
 
