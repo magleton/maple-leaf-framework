@@ -93,6 +93,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (CharSequenceUtil.isBlank(value)) {
             return;
         }
+        column = CharSequenceUtil.toUnderlineCase(column);
         Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
         String methodName = methodNameDict.getStr(op);
         if (Objects.nonNull(methodName)) {
@@ -129,7 +130,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        if (Objects.isNull(condition) || condition.isEmpty()) {
+        boolean recordIsExists = false;
+        if (Objects.nonNull(condition) && !condition.isEmpty()) {
+            recordIsExists = baseDao.checkRecordIsExists(getTableName(entity), condition);
+        }
+        if (Objects.isNull(condition) || condition.isEmpty() || !recordIsExists) {
             return updateOrCreate(entity, (UpdateWrapper<T>) null);
         }
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
@@ -614,5 +619,17 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public String getIdFieldName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getKeyProperty();
+    }
+
+    /**
+     * 获取实体的表名字
+     *
+     * @param entity 实体对象
+     * @return 实体表名字
+     */
+    @Override
+    public String getTableName(T entity) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
+        return tableInfo.getTableName();
     }
 }

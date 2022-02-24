@@ -19,6 +19,7 @@ import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXLoggerUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
+import cn.maple.core.framework.util.GXTypeOfUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
@@ -106,6 +107,12 @@ public interface GXBaseBuilder {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
+        String op = GXBuilderConstant.EQ;
+        Object isNotDeletedValue = getIsNotDeletedValue();
+        if (GXTypeOfUtils.typeof(isNotDeletedValue).getTypeName().equals(String.class.getTypeName())) {
+            op = GXBuilderConstant.STR_EQ;
+        }
+        condition.put(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, op, isNotDeletedValue);
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         handleSQLCondition(sql, condition, tableNameAlias);
         sql.LIMIT(1);

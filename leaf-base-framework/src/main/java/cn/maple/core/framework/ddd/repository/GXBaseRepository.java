@@ -289,4 +289,12 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @return String
      */
     String getIdFieldName(T entity);
+
+    /**
+     * 获取实体的表名字
+     *
+     * @param entity 实体对象
+     * @return 实体表名字
+     */
+    String getTableName(T entity);
 }

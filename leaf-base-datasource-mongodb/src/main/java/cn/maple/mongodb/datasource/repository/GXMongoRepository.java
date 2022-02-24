@@ -354,4 +354,15 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     public String getIdFieldName(T entity) {
         return "id";
     }
+
+    /**
+     * 获取实体的表名字
+     *
+     * @param entity 实体对象
+     * @return 实体表名字
+     */
+    @Override
+    public String getTableName(T entity) {
+        return null;
+    }
 }
