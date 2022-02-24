@@ -42,9 +42,9 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param tableName 表名字
      * @param data      需要更新的数据
      * @param condition 更新条件
-     * @return boolean
+     * @return Integer
      */
-    boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 
     /**
      * 通过SQL语句批量插入数据

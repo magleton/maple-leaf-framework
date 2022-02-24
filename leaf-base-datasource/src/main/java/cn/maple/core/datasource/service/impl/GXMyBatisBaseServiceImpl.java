@@ -64,11 +64,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param tableName 表名
      * @param data      需要更新的数据
      * @param condition 更新条件
-     * @return boolean
+     * @return Integer
      */
     @Override
-    public boolean updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
-        return false;
+    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+        return repository.updateFieldByCondition(tableName, data, condition);
     }
 
     /**
