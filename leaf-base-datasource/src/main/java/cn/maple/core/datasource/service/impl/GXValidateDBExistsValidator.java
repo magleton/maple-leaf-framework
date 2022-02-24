@@ -5,6 +5,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,9 +51,8 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         if (null == service) {
             throw new GXBusinessException(CharSequenceUtil.format("字段<{}>的值<{}>需要指定相应的Service进行验证...", fieldName, o));
         }
-        Dict param = Dict.create()
-                .set("condition", condition)
-                .set("spEL", spEL);
+        Dict param = CharSequenceUtil.isBlank(condition) ? Dict.create() : (Dict) GXCommonUtils.convertStrToMap(condition);
+        param.set("spEL", spEL);
         return service.validateExists(o, tableName, fieldName, constraintValidatorContext, param);
     }
 }
