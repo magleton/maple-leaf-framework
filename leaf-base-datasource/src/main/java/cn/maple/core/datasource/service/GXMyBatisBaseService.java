@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 业务DB基础Service
@@ -37,6 +38,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
 
     /**
+     * 检测给定条件的记录是否存在
+     *
+     * @param condition 条件
+     * @return int
+     */
+    boolean checkRecordIsExists(Table<String, String, Object> condition);
+
+
+    /**
      * 通过SQL更新表中的数据
      *
      * @param tableName 表名字
@@ -45,6 +55,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Integer
      */
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+
+    /**
+     * 通过SQL更新表中的数据
+     *
+     * @param data      需要更新的数据
+     * @param condition 更新条件
+     * @return Integer
+     */
+    Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition);
 
     /**
      * 通过SQL语句批量插入数据
@@ -81,6 +100,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     List<R> findByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param condition 搜索条件
+     * @return List
+     */
+    List<R> findByCondition(Table<String, String, Object> condition);
+
+    /**
      * 通过条件获取一条数据
      *
      * @param searchReqDto 搜索条件
@@ -96,6 +123,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 一条数据
      */
     R findOneByCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    R findOneByCondition(Table<String, String, Object> condition);
 
     /**
      * 创建数据
@@ -168,9 +203,55 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     Integer deleteCondition(String tableName, Table<String, String, Object> condition);
 
     /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition(condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    <E> E findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition(condition, CollUtil.newHashSet("nickname", "username"));}
+     * </pre>
+     *
+     * @param condition 查询条件
+     * @param columns   字段名字集合
+     * @return 返回指定的类型的值对象
+     */
+    R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns);
+
+    /**
      * 获取 Primary Key
      *
      * @return String
      */
     String getPrimaryKeyName(T entity);
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    Class<R> getReturnValueType();
 }

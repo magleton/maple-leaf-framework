@@ -13,8 +13,6 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 业务基础Service
@@ -59,6 +58,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 检测给定条件的记录是否存在
+     *
+     * @param condition 条件
+     * @return int
+     */
+    @Override
+    public boolean checkRecordIsExists(Table<String, String, Object> condition) {
+        return checkRecordIsExists(repository.getTableName(), condition);
+    }
+
+    /**
      * 通过SQL更新表中的数据
      *
      * @param tableName 表名
@@ -69,6 +79,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         return repository.updateFieldByCondition(tableName, data, condition);
+    }
+
+    /**
+     * 通过SQL更新表中的数据
+     *
+     * @param data      需要更新的数据
+     * @param condition 更新条件
+     * @return Integer
+     */
+    @Override
+    public Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
+        return updateFieldByCondition(repository.getTableName(), data, condition);
     }
 
     /**
@@ -122,6 +144,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param condition 搜索条件
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition) {
+        return findByCondition(repository.getTableName(), condition);
+    }
+
+    /**
      * 通过条件获取一条数据
      *
      * @param searchReqDto 搜索条件
@@ -142,6 +175,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
         return repository.findOneByCondition(tableName, condition);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(Table<String, String, Object> condition) {
+        return findOneByCondition(repository.getTableName(), condition);
     }
 
     /**
@@ -240,6 +284,54 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
+     * @param tableName   表名字
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        return repository.findFieldByCondition(tableName, condition, columns, targetClazz);
+    }
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    public <E> E findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        return findFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
+    }
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
+     * @param condition 查询条件
+     * @param columns   字段名字集合
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    public R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns) {
+        return findFieldByCondition(repository.getTableName(), condition, columns, getReturnValueType());
+    }
+
+    /**
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
@@ -261,7 +353,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public String getPrimaryKeyName(T entity) {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
-        return tableInfo.getKeyProperty();
+        return repository.getPrimaryKeyName(entity);
+    }
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    @Override
+    @SuppressWarnings("all")
+    public Class<R> getReturnValueType() {
+        return (Class<R>) repository.getReturnValueType();
     }
 }

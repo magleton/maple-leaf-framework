@@ -351,7 +351,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return String
      */
     @Override
-    public String getIdFieldName(T entity) {
+    public String getPrimaryKeyName(T entity) {
         return "id";
     }
 
@@ -363,6 +363,26 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public String getTableName(T entity) {
+        return null;
+    }
+
+    /**
+     * 通过泛型标识获取实体的表名字
+     *
+     * @return 数据库表名字
+     */
+    @Override
+    public String getTableName() {
+        return null;
+    }
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    @Override
+    public Class<R> getReturnValueType() {
         return null;
     }
 }

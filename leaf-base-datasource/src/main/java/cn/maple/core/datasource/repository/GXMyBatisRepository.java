@@ -27,12 +27,19 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> implements GXBaseRepository<T, R, ID> {
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = GXCommonUtils.getLogger(GXMyBatisRepository.class);
+
     /**
      * 基础DAO
      */
@@ -62,7 +69,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public ID create(T entity) {
         baseDao.save(entity);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
@@ -117,7 +124,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             throw new GXBusinessException("请传递更新对象");
         }
         baseDao.update(entity, updateWrapper);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
@@ -184,7 +191,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         } else {
             this.create(entity);
         }
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getIdFieldName(entity)));
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
     }
 
@@ -376,7 +383,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         columns.forEach(column -> {
             retData.set(column, dict.getObj(column));
         });
-        return (E) retData;
+        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, null, null);
     }
 
     /**
@@ -616,7 +623,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return String
      */
     @Override
-    public String getIdFieldName(T entity) {
+    public String getPrimaryKeyName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getKeyProperty();
     }
@@ -631,5 +638,29 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public String getTableName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getTableName();
+    }
+
+    /**
+     * 通过泛型标识获取实体的表名字
+     *
+     * @return 数据库表名字
+     */
+    @Override
+    @SuppressWarnings("all")
+    public String getTableName() {
+        Class<? extends GXMyBatisModel> entityClass = (Class<? extends GXMyBatisModel>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
+        return tableInfo.getTableName();
+    }
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    @Override
+    @SuppressWarnings("all")
+    public Class<R> getReturnValueType() {
+        return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
     }
 }

@@ -288,7 +288,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @param entity 实体对象
      * @return String
      */
-    String getIdFieldName(T entity);
+    String getPrimaryKeyName(T entity);
 
     /**
      * 获取实体的表名字
@@ -297,4 +297,18 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
      * @return 实体表名字
      */
     String getTableName(T entity);
+
+    /**
+     * 通过泛型标识获取实体的表名字
+     *
+     * @return 数据库表名字
+     */
+    String getTableName();
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    Class<R> getReturnValueType();
 }
