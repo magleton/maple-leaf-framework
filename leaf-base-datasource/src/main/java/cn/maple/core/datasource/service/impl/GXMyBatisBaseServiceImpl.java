@@ -7,13 +7,11 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -117,14 +114,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
-        int page = Optional.ofNullable(GXCurrentRequestContextUtils.getHttpParam("page", Integer.class)).orElse(GXCommonConstant.DEFAULT_CURRENT_PAGE);
-        int pageSize = Optional.ofNullable(GXCurrentRequestContextUtils.getHttpParam("pageSize", Integer.class)).orElse(GXCommonConstant.DEFAULT_PAGE_SIZE);
-        if (Objects.isNull(queryParamReqDto.getPage())) {
-            queryParamReqDto.setPage(page);
-        }
-        if (Objects.isNull(queryParamReqDto.getPageSize())) {
-            queryParamReqDto.setPageSize(pageSize);
-        }
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
