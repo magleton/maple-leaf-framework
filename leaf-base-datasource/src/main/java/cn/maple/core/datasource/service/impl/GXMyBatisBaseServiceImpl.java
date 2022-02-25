@@ -110,6 +110,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        return repository.findByCondition(tableName, condition);
+    }
+
+    /**
      * 通过条件获取一条数据
      *
      * @param searchReqDto 搜索条件
@@ -118,6 +130,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto) {
         return repository.findOneByCondition(searchReqDto);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
+        return repository.findOneByCondition(tableName, condition);
     }
 
     /**
@@ -236,7 +260,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return String
      */
     @Override
-    public String getPrimaryKey(T entity) {
+    public String getPrimaryKeyName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getKeyProperty();
     }

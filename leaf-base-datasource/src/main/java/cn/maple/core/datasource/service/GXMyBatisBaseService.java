@@ -72,12 +72,30 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     List<R> findByCondition(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return List
+     */
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
      * 通过条件获取一条数据
      *
      * @param searchReqDto 搜索条件
      * @return 一条数据
      */
     R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    R findOneByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 创建数据
@@ -154,5 +172,5 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      *
      * @return String
      */
-    String getPrimaryKey(T entity);
+    String getPrimaryKeyName(T entity);
 }
