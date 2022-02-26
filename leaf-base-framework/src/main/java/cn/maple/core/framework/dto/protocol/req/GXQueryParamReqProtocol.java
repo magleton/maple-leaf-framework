@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.req;
 
-import cn.hutool.core.lang.Dict;
+import com.google.common.collect.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,10 +21,6 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
 
     /**
      * 查询条件
-     * eg:
-     * {
-     * "username":"枫叶思源"
-     * }
      */
-    private Dict queryCondition;
+    private Table<String, String, Object> condition;
 }
