@@ -1,9 +1,11 @@
 package cn.maple.core.framework.api;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
 
@@ -26,7 +28,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 查询条件
      * @return R
      */
-    R findOneByCondition(Table<String, String, Object> condition);
+    default R findOneByCondition(Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 根据条件获取数据
@@ -34,7 +38,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 查询条件
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition);
+    default List<R> findByCondition(Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 根据条件获取一条数据
@@ -43,7 +49,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 查询条件
      * @return R
      */
-    R findOneByCondition(Set<String> columns, Table<String, String, Object> condition);
+    default R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 根据条件获取一条数据
@@ -65,7 +73,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 查询条件
      * @return List
      */
-    List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition);
+    default List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 根据条件获取数据
@@ -86,7 +96,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 更新条件
      * @return ID
      */
-    ID updateOrCreate(Q reqDto, Table<String, String, Object> condition);
+    default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 分页数据
@@ -94,7 +106,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param reqProtocol 查询条件
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol);
+    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 物理删除
@@ -102,7 +116,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 删除条件
      * @return 删除行数
      */
-    Integer deleteCondition(Table<String, String, Object> condition);
+    default Integer deleteCondition(Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 
     /**
      * 软删除
@@ -110,5 +126,28 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 删除条件
      * @return 删除行数
      */
-    Integer deleteSoftCondition(Table<String, String, Object> condition);
+    default Integer deleteSoftCondition(Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
+     * 通过SQL更新表中的数据
+     *
+     * @param data      需要更新的数据
+     * @param condition 更新条件
+     * @return Integer
+     */
+    default Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
+     * 检测给定条件的记录是否存在
+     *
+     * @param condition 条件
+     * @return int
+     */
+    default boolean checkRecordIsExists(Table<String, String, Object> condition) {
+        throw new GXBusinessException("请自定义实现!");
+    }
 }
