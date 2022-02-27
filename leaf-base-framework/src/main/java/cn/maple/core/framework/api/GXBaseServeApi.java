@@ -1,4 +1,4 @@
-package cn.maple.dubbo.nacos.api;
+package cn.maple.core.framework.api;
 
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
@@ -11,8 +11,15 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 暴露服务的基础API接口
+ *
+ * @param <Q>  请求参数的类型
+ * @param <R>  响应对象的类型
+ * @param <ID> 唯一标识的类型  一般是一个实体对象的ID类型
+ */
 @SuppressWarnings("all")
-public interface GXBaseDubboApi<Q extends GXBaseReqDto, R extends GXBaseResDto, ID extends Serializable> {
+public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, ID extends Serializable> {
     /**
      * 根据条件获取一条数据
      *
