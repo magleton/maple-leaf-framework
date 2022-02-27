@@ -4,7 +4,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseDto;
 import com.google.common.collect.Table;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,12 +15,16 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 public class GXBaseSEParamInnerDto extends GXBaseDto {
     /**
      * 索引名字
      */
     private String indexName;
+
+    /**
+     * 查询词条
+     */
+    private String queryWords;
 
     /**
      * 搜索条件

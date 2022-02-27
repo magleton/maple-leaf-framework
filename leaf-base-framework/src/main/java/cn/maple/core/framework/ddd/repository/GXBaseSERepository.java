@@ -13,14 +13,14 @@ import java.util.Set;
  * @author britton gapleaf@163.com
  * @since 2022-01-26
  */
-public interface GXBaseSERepository {
+public interface GXBaseSERepository<Q extends GXBaseSEParamInnerDto> {
     /**
      * 通过条件获取数据
      *
      * @param dataIndexesParamInnerDto 索引数据
      * @return 列表
      */
-    default <R> List<R> search(GXBaseSEParamInnerDto dataIndexesParamInnerDto, Class<R> targetClass) {
+    default <R> List<R> search(Q dataIndexesParamInnerDto, Class<R> targetClass) {
         throw new GXBusinessException("请自定义实现!");
     }
 
