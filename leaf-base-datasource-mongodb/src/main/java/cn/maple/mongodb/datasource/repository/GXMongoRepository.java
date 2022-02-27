@@ -12,11 +12,12 @@ import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R, ID>, R extends GXBaseResDto, ID> implements GXBaseRepository<T, R, ID> {
+public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R, ID>, R extends GXBaseResDto, ID extends Serializable> implements GXBaseRepository<T, R, ID> {
     /**
      * 基础DAO
      */

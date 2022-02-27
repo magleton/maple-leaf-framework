@@ -8,9 +8,10 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID> {
+public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID extends Serializable> {
     /**
      * 保存数据
      *

@@ -8,9 +8,10 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
 import com.google.common.collect.Table;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID> implements GXBaseDao<T, R, ID> {
+public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID extends Serializable> implements GXBaseDao<T, R, ID> {
     /**
      * 通过SQL更新表中的数据
      *

@@ -12,6 +12,7 @@ import cn.maple.core.framework.service.GXBusinessService;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ import java.util.Set;
  * @author britton chen <britton@126.com>
  */
 @SuppressWarnings("unused")
-public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID> extends GXBusinessService, GXValidateDBExistsService {
+public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
     /**
      * 检测给定条件的记录是否存在
      *
@@ -44,7 +45,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return int
      */
     boolean checkRecordIsExists(Table<String, String, Object> condition);
-
 
     /**
      * 通过SQL更新表中的数据

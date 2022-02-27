@@ -8,10 +8,11 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<T, R extends GXBaseResDto, ID> {
+public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializable> {
     /**
      * 保存数据
      *
