@@ -1,4 +1,4 @@
-package cn.maple.redisson.module;
+package cn.maple.redisson.module.config;
 
 import io.github.dengliming.redismodule.redisearch.client.RediSearchClient;
 import io.github.dengliming.redismodule.redisjson.client.RedisJSONClient;
