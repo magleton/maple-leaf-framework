@@ -102,4 +102,9 @@ public class GXBaseSEParamInnerDto extends GXBaseDto {
      * 2、需要使用该参数调整查询的规则
      */
     private transient Dict params;
+
+    /**
+     * 数据转换时需要条用的额外参数
+     */
+    private String convertMethodName;
 }
