@@ -4,12 +4,14 @@ import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("all")
 public interface GXBaseDubboApi<Q extends GXBaseReqDto, R extends GXBaseResDto, ID extends Serializable> {
     /**
      * 根据条件获取一条数据
@@ -37,6 +39,19 @@ public interface GXBaseDubboApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     R findOneByCondition(Set<String> columns, Table<String, String, Object> condition);
 
     /**
+     * 根据条件获取一条数据
+     *
+     * @param columns     需要查询的列
+     * @param condition   查询条件
+     * @param targetClazz 目标类型
+     * @return R
+     */
+    default <E> E findOneByCondition(Set<String> columns, Table<String, String, Object> condition, Class<E> targetClazz) {
+        R data = findOneByCondition(columns, condition);
+        return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null);
+    }
+
+    /**
      * 根据条件获取数据
      *
      * @param columns   需要查询的列
@@ -44,6 +59,18 @@ public interface GXBaseDubboApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return List
      */
     List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition);
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param columns   需要查询的列
+     * @param condition 查询条件
+     * @return List
+     */
+    default <E> List<E> findByCondition(Set<String> columns, Table<String, String, Object> condition, Class<E> targetClazz) {
+        List<R> rList = findByCondition(columns, condition);
+        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null);
+    }
 
     /**
      * 创建或者更新数据
