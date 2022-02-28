@@ -108,6 +108,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 批量插入数据
+     *
+     * @param dataList 待插入的数据
+     * @return 插入的行数
+     */
+    @Override
+    public Integer batchInsert(List<Dict> dataList) {
+        return batchInsert(repository.getTableName(), dataList);
+    }
+
+    /**
      * 列表或者搜索(分页)
      *
      * @param queryParamReqDto 参数

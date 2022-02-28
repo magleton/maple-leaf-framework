@@ -75,6 +75,13 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     Integer batchInsert(String tableName, List<Dict> dataList);
 
     /**
+     * 批量插入数据
+     * @param dataList 待插入的数据
+     * @return 插入的行数
+     */
+    Integer batchInsert(List<Dict> dataList);
+
+    /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数
