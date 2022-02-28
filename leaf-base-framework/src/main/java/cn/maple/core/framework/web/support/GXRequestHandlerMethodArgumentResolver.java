@@ -4,7 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXRequestBody;
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -154,7 +154,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             }
         }
         if (!JSONUtil.isJson(jsonBody)) {
-            throw new GXBusinessException(GXResultCode.REQUEST_JSON_NOT_BODY);
+            throw new GXBusinessException(GXHttpStatusCode.REQUEST_JSON_NOT_BODY);
         }
         return jsonBody;
     }

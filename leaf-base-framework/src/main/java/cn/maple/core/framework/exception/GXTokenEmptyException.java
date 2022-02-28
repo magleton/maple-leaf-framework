@@ -1,6 +1,6 @@
 package cn.maple.core.framework.exception;
 
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
 
 public class GXTokenEmptyException extends GXBusinessException {
     public GXTokenEmptyException(String msg) {
@@ -19,11 +19,11 @@ public class GXTokenEmptyException extends GXBusinessException {
         super(msg, code, e);
     }
 
-    public GXTokenEmptyException(GXResultCode resultCode) {
+    public GXTokenEmptyException(GXHttpStatusCode resultCode) {
         super(resultCode);
     }
 
-    public GXTokenEmptyException(GXResultCode resultCode, Throwable e) {
+    public GXTokenEmptyException(GXHttpStatusCode resultCode, Throwable e) {
         super(resultCode, e);
     }
 }

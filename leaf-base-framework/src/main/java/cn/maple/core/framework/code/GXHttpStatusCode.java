@@ -1,10 +1,12 @@
 package cn.maple.core.framework.code;
 
-public enum GXResultCode {
-    OK(200, "操作成功"),
-    SMS_SEND_SUCCESS(200, "短信发送成功"),
-    SMS_SEND_FAILURE(200, "短信发送失败"),
-    COMMON_ERROR(1000, "系统错误"),
+import cn.hutool.http.HttpStatus;
+
+public enum GXHttpStatusCode {
+    OK(HttpStatus.HTTP_OK, "操作成功"),
+    SMS_SEND_SUCCESS(HttpStatus.HTTP_OK, "短信发送成功"),
+    SMS_SEND_FAILURE(HttpStatus.HTTP_OK, "短信发送失败"),
+    INTERNAL_SYSTEM_ERROR(HttpStatus.HTTP_INTERNAL_ERROR, "内部系统错误"),
     INPUT_TOO_SHORT(1100, "输入为空,或者输入字数不够!"),
     DATA_NOT_FOUND(1200, "数据对象不存在"),
     SMS_CAPTCHA_ERROR(1300, "短信验证码错误"),
@@ -27,7 +29,7 @@ public enum GXResultCode {
 
     private final Integer code;
 
-    GXResultCode(Integer code, String desc) {
+    GXHttpStatusCode(Integer code, String desc) {
         this.code = code;
         this.msg = desc;
     }

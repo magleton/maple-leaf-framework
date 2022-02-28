@@ -2,7 +2,7 @@ package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
 
 public class GXDBNotExistsException extends RuntimeException {
     private final String msg;
@@ -38,11 +38,11 @@ public class GXDBNotExistsException extends RuntimeException {
         this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
     }
 
-    public GXDBNotExistsException(GXResultCode resultCode) {
+    public GXDBNotExistsException(GXHttpStatusCode resultCode) {
         this(resultCode, null);
     }
 
-    public GXDBNotExistsException(GXResultCode resultCode, Throwable e) {
+    public GXDBNotExistsException(GXHttpStatusCode resultCode, Throwable e) {
         super(resultCode.getMsg(), e);
         this.msg = resultCode.getMsg();
         this.code = resultCode.getCode();

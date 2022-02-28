@@ -3,7 +3,7 @@ package cn.maple.core.framework.util;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
 import lombok.Data;
 
 import java.lang.reflect.Method;
@@ -48,11 +48,11 @@ public class GXResultUtils<T> {
      */
     private T data = null;
 
-    public static <T> GXResultUtils<T> ok(GXResultCode resultCode) {
+    public static <T> GXResultUtils<T> ok(GXHttpStatusCode resultCode) {
         return ok(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtils<T> ok(GXResultCode resultCode, T data) {
+    public static <T> GXResultUtils<T> ok(GXHttpStatusCode resultCode, T data) {
         callUserDefinedMethod(data);
         return ok(resultCode.getCode(), resultCode.getMsg(), data);
     }
@@ -123,11 +123,11 @@ public class GXResultUtils<T> {
         return error(code, msg, null);
     }
 
-    public static <T> GXResultUtils<T> error(GXResultCode resultCode) {
+    public static <T> GXResultUtils<T> error(GXHttpStatusCode resultCode) {
         return error(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtils<T> error(GXResultCode resultCode, T data) {
+    public static <T> GXResultUtils<T> error(GXHttpStatusCode resultCode, T data) {
         callUserDefinedMethod(data);
         return error(resultCode.getCode(), resultCode.getMsg(), data);
     }

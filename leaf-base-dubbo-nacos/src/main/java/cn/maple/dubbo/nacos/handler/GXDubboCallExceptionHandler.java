@@ -1,7 +1,7 @@
 package cn.maple.dubbo.nacos.handler;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.exception.GXExceptionHandler;
+import cn.maple.core.framework.handler.GXExceptionHandler;
 import cn.maple.core.framework.exception.GXSentinelFlowException;
 import cn.maple.core.framework.util.GXResultUtils;
 import lombok.extern.slf4j.Slf4j;

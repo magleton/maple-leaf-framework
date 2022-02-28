@@ -1,14 +1,16 @@
-package cn.maple.core.framework.exception;
+package cn.maple.core.framework.handler;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.exception.GXBeanValidateException;
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXDBNotExistsException;
+import cn.maple.core.framework.exception.GXTokenEmptyException;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,7 +57,7 @@ public class GXExceptionHandler {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, errors);
+        return GXResultUtils.error(GXHttpStatusCode.INTERNAL_SYSTEM_ERROR, errors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -70,7 +72,7 @@ public class GXExceptionHandler {
         }
         log.error(e.getMessage(), e);
         Object orDefault = errors.getOrDefault(firstErrorKey, "");
-        return GXResultUtils.error(GXResultCode.PARAMETER_VALIDATION_ERROR.getCode(), GXResultCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
+        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -78,7 +80,7 @@ public class GXExceptionHandler {
         log.error(e.getMessage(), e);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("msg", e.getCause().getMessage());
-        return GXResultUtils.error(GXResultCode.COMMON_ERROR, hashMap);
+        return GXResultUtils.error(GXHttpStatusCode.INTERNAL_SYSTEM_ERROR, hashMap);
     }
 
     @ExceptionHandler(MultipartException.class)

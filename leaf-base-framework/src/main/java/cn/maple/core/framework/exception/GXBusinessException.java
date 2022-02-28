@@ -2,7 +2,7 @@ package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXResultCode;
+import cn.maple.core.framework.code.GXHttpStatusCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -49,11 +49,11 @@ public class GXBusinessException extends RuntimeException {
         this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
     }
 
-    public GXBusinessException(GXResultCode resultCode) {
+    public GXBusinessException(GXHttpStatusCode resultCode) {
         this(resultCode, null);
     }
 
-    public GXBusinessException(GXResultCode resultCode, Throwable e) {
+    public GXBusinessException(GXHttpStatusCode resultCode, Throwable e) {
         super(resultCode.getMsg(), e);
         this.msg = resultCode.getMsg();
         this.code = resultCode.getCode();
