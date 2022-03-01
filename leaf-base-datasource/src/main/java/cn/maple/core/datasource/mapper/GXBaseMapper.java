@@ -7,7 +7,6 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.google.common.collect.Table;
 import org.apache.ibatis.annotations.*;
 
@@ -25,21 +24,12 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
     Integer batchInsert(String tableName, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
-    })
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
-    })
     List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
-    @Results(value = {
-            @Result(column = "ext", property = "ext", typeHandler = JacksonTypeHandler.class)
-    })
     List<R> paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftCondition")
