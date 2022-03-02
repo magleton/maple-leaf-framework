@@ -174,12 +174,12 @@ public class GXMyBatisPlusConfig {
             for (GXDBSchemaService.TableField tableField : tableFieldList) {
                 String name = tableField.getColumnName();
                 if (CharSequenceUtil.equalsIgnoreCase(name, getTenantIdColumn())) {
-                    cache.put(tableName, Boolean.TRUE);
-                    return true;
+                    cache.put(tableName, Boolean.FALSE);
+                    return false;
                 }
             }
-            cache.put(tableName, Boolean.FALSE);
-            return false;
+            cache.put(tableName, Boolean.TRUE);
+            return true;
         }
     }
 }
