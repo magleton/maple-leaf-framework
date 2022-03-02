@@ -89,10 +89,7 @@ public class GXMyBatisPlusConfig {
             interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
-        boolean tenantEnable = Boolean.TRUE.equals(applicationContext.getEnvironment().getProperty("tenant.enable", boolean.class));
-        if (tenantEnable) {
-            interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
-        }
+        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
         // interceptor.addInnerInterceptor(new TenantLineInnerInterceptor());
         // 动态表名插件
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
