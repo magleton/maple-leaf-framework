@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.service.GXDBSchemaService;
+import cn.maple.core.datasource.service.GXTenantIdService;
 import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -18,7 +19,6 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.*;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
@@ -137,7 +137,9 @@ public class GXMyBatisPlusConfig {
          */
         @Override
         public Expression getTenantId() {
-            return new LongValue(1);
+            GXTenantIdService tenantIdService = GXSpringContextUtils.getBean(GXTenantIdService.class);
+            assert tenantIdService != null;
+            return tenantIdService.getTenantId();
         }
 
         /**
