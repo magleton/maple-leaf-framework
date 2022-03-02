@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -22,6 +23,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.cache.Cache;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +34,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Slf4j
 @EnableTransactionManagement
@@ -115,6 +118,21 @@ public class GXMyBatisPlusConfig {
      */
     private static class GXTenantLineHandler implements TenantLineHandler {
         /**
+         * 数据缓存管理器
+         */
+        private static final CaffeineCacheManager caffeineCacheManager;
+
+        /**
+         * DB的Schema服务类
+         */
+        private static final GXDBSchemaService dbSchemaService;
+
+        static {
+            caffeineCacheManager = GXSpringContextUtils.getBean(CaffeineCacheManager.class);
+            dbSchemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
+        }
+
+        /**
          * 获取租户 ID 值表达式，只支持单个 ID 值
          * <p>
          *
@@ -147,9 +165,24 @@ public class GXMyBatisPlusConfig {
          */
         @Override
         public boolean ignoreTable(String tableName) {
-            String ignoreTenantTablesStr = Optional.ofNullable(GXSpringContextUtils.getEnvironment().getProperty("ignoreTenantTables")).orElse("");
-            List<String> ignoreTenantTables = CharSequenceUtil.split(ignoreTenantTablesStr, " ", true, true);
-            return CollUtil.contains(ignoreTenantTables, tableName);
+            assert caffeineCacheManager != null;
+            Cache cache = caffeineCacheManager.getCache("FRAMEWORK-CACHE");
+            assert cache != null;
+            Boolean hasTenantIdField = cache.get(tableName, Boolean.class);
+            if (Objects.nonNull(hasTenantIdField)) {
+                return hasTenantIdField;
+            }
+            assert dbSchemaService != null;
+            List<GXDBSchemaService.TableField> tableFieldList = dbSchemaService.getTableColumn(tableName);
+            for (GXDBSchemaService.TableField tableField : tableFieldList) {
+                String name = tableField.getColumnName();
+                if (CharSequenceUtil.equalsIgnoreCase(name, getTenantIdColumn())) {
+                    cache.put(tableName, Boolean.TRUE);
+                    return true;
+                }
+            }
+            cache.put(tableName, Boolean.FALSE);
+            return false;
         }
     }
 }

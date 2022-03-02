@@ -37,7 +37,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
     private DataSource dataSource;
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName")
+    @Cacheable(cacheManager = "caffeineCacheManager", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName")
     public List<GXDBSchemaService.TableField> getTableColumn(String tableName) {
         final List<TableField> resultData = new ArrayList<>();
         try (final Connection connection = dataSource.getConnection()) {
@@ -63,7 +63,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
     }
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName +#tableName")
+    @Cacheable(cacheManager = "caffeineCacheManager", value = "FRAMEWORK-CACHE", key = "targetClass + methodName +#tableName")
     public List<GXDBSchemaService.TableIndexData> tableIndexes(String tableName) throws SQLException {
         Map<String, Map<String, Object>> returnList = new HashMap<>();
         List<GXDBSchemaService.TableIndexData> list = new ArrayList<>();
@@ -128,19 +128,19 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
     }
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet")
+    @Cacheable(cacheManager = "caffeineCacheManager", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet")
     public String getSelectFieldStr(String tableName, Set<String> targetSet) {
         return getSelectFieldStr(tableName, targetSet, "", false);
     }
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet")
+    @Cacheable(cacheManager = "caffeineCacheManager", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet")
     public String getSelectFieldStr(String tableName, Set<String> targetSet, boolean remove) {
         return getSelectFieldStr(tableName, targetSet, "", remove);
     }
 
     @Override
-    @Cacheable(cacheManager = "caffeineCache", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet + #tableAlias")
+    @Cacheable(cacheManager = "caffeineCacheManager", value = "FRAMEWORK-CACHE", key = "targetClass + methodName + #tableName + #targetSet + #tableAlias")
     public String getSelectFieldStr(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
         return getSelectFieldStr(tableName, targetSet, tableAlias, remove, false);
     }
