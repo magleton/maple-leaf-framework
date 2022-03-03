@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
@@ -123,5 +124,25 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public GXResultUtils<Dict> handleBusinessException(MissingServletRequestParameterException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), "参数缺失", Dict.create().set(e.getParameterName(), CharSequenceUtil.format("参数{}必填", e.getParameterName())));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public GXResultUtils<Dict> handleBusinessException(IllegalArgumentException e) {
+        log.error(e.getMessage(), e);
+        String message = e.getMessage();
+        Dict dict = Dict.create();
+        if (CharSequenceUtil.contains(message, ":")) {
+            String[] split = CharSequenceUtil.splitToArray(message, ':', 2);
+            dict.set(split[0], split[0] + split[1]);
+        } else {
+            dict.set("field", message);
+        }
+        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getMsg(), dict);
     }
 }
