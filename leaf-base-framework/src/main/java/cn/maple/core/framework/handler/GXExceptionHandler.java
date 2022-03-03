@@ -139,7 +139,7 @@ public class GXExceptionHandler {
         String message = e.getMessage();
         Dict dict = Dict.create();
         if (CharSequenceUtil.contains(message, StrPool.COLON)) {
-            String[] split = CharSequenceUtil.splitToArray(message, ':', 2);
+            String[] split = CharSequenceUtil.splitToArray(message, StrPool.COLON.charAt(0), 2);
             String concat = CharSequenceUtil.concat(true, split);
             dict.set(split[0], concat);
         } else {
