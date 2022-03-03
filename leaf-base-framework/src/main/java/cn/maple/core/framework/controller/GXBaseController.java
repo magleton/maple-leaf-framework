@@ -3,6 +3,7 @@ package cn.maple.core.framework.controller;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
@@ -218,5 +219,16 @@ public interface GXBaseController {
      */
     default Dict getLoginCredentials(String tokenName, String tokenSecretKey) {
         return GXCurrentRequestContextUtils.getLoginCredentials(tokenName, tokenSecretKey);
+    }
+
+    /**
+     * 拼接字段的断言信息
+     *
+     * @param msg       提示信息
+     * @param fieldName 字段名字
+     * @return 断言信息
+     */
+    default String concatAssertMsg(String msg, String fieldName) {
+        return CharSequenceUtil.format("{}{}{}", fieldName, StrPool.COLON, msg);
     }
 }
