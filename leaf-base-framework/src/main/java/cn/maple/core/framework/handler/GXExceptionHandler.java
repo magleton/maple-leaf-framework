@@ -2,6 +2,7 @@ package cn.maple.core.framework.handler;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXHttpStatusCode;
 import cn.maple.core.framework.exception.GXBeanValidateException;
@@ -137,9 +138,10 @@ public class GXExceptionHandler {
         log.error(e.getMessage(), e);
         String message = e.getMessage();
         Dict dict = Dict.create();
-        if (CharSequenceUtil.contains(message, ":")) {
+        if (CharSequenceUtil.contains(message, StrPool.COLON)) {
             String[] split = CharSequenceUtil.splitToArray(message, ':', 2);
-            dict.set(split[0], split[0] + split[1]);
+            String concat = CharSequenceUtil.concat(true, split);
+            dict.set(split[0], concat);
         } else {
             dict.set("field", message);
         }
