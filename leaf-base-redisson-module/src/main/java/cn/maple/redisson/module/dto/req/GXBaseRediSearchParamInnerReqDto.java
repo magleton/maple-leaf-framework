@@ -1,4 +1,4 @@
-package cn.maple.redisson.module.dto;
+package cn.maple.redisson.module.dto.req;
 
 import cn.maple.core.framework.dto.inner.GXBaseSEParamInnerDto;
 import io.github.dengliming.redismodule.redisearch.search.Filter;
@@ -13,7 +13,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class GXBaseRediSeachParamInnerDto extends GXBaseSEParamInnerDto {
+public class GXBaseRediSearchParamInnerReqDto extends GXBaseSEParamInnerDto {
     /**
      * 需要搜索的字段
      */

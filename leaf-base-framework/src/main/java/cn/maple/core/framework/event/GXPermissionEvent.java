@@ -11,7 +11,7 @@ public class GXPermissionEvent<T> extends GXBaseEvent<T> {
         this(source, eventName, param, "");
     }
 
-    public GXPermissionEvent(T source, String eventName, Dict param, Object scene) {
+    public GXPermissionEvent(T source, String eventName, Dict param, String scene) {
         super(source, eventName, param, scene);
     }
 }

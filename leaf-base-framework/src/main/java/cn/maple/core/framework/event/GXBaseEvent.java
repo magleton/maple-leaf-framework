@@ -8,23 +8,35 @@ import org.springframework.core.ResolvableTypeProvider;
 
 import java.lang.reflect.Type;
 
-public abstract class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
+public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
     /**
      * 附加参数
      */
-    protected transient Dict param;
+    private final Dict param;
 
     /**
      * 场景值,用于区分同一个事件的不同使用场景
      */
-    protected transient Object scene;
+    private final String scene;
 
     /**
      * 事件名字
      */
-    protected transient String eventName;
+    private final String eventName;
 
-    protected GXBaseEvent(T source, String eventName, Dict param, Object scene) {
+    public GXBaseEvent(T source) {
+        this(source, "", Dict.create(), "");
+    }
+
+    public GXBaseEvent(T source, String eventName) {
+        this(source, eventName, Dict.create(), "");
+    }
+
+    public GXBaseEvent(T source, String eventName, Dict param) {
+        this(source, eventName, param, "");
+    }
+
+    public GXBaseEvent(T source, String eventName, Dict param, String scene) {
         super(source);
         this.param = param;
         this.scene = scene;

@@ -1,6 +1,7 @@
 package cn.maple.redisson.module.config;
 
 import io.github.dengliming.redismodule.redisearch.client.RediSearchClient;
+import io.github.dengliming.redismodule.redisjson.RedisJSON;
 import io.github.dengliming.redismodule.redisjson.client.RedisJSONClient;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
@@ -23,5 +24,10 @@ public class GXRedisModuleConfig {
     @Bean
     public RediSearchClient rediSearchClient() {
         return new RediSearchClient(config);
+    }
+
+    @Bean
+    public RedisJSON redisJSON(RedisJSONClient redisJSONClient) {
+        return redisJSONClient.getRedisJSON();
     }
 }
