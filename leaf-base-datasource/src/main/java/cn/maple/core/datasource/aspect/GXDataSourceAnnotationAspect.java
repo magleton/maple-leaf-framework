@@ -23,7 +23,10 @@ import java.util.Objects;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class GXDataSourceAnnotationAspect {
-    @Pointcut("@annotation(cn.maple.core.datasource.annotation.GXDataSource) || @within(cn.maple.core.datasource.annotation.GXDataSource)")
+    @Pointcut("@annotation(cn.maple.core.datasource.annotation.GXDataSource) " +
+            "|| @within(cn.maple.core.datasource.annotation.GXDataSource) " +
+            "|| target(cn.maple.core.datasource.service.GXMyBatisBaseService) " +
+            "|| target(cn.maple.core.datasource.repository.GXMyBatisRepository)")
     public void dataSourcePointCut() {
         // 这是是切点标记
     }
