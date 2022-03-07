@@ -169,7 +169,7 @@ public class GXMyBatisPlusConfig {
             assert cache != null;
             Boolean hasTenantIdField = cache.get(tableName, Boolean.class);
             if (Objects.nonNull(hasTenantIdField)) {
-                return hasTenantIdField;
+                return Boolean.TRUE.equals(hasTenantIdField);
             }
             assert dbSchemaService != null;
             List<GXDBSchemaService.TableField> tableFieldList = dbSchemaService.getTableColumn(tableName);
