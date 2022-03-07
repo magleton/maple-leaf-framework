@@ -27,7 +27,7 @@ public class GXDefaultRabbitMQQueueServiceImpl implements GXRabbitMQQueueService
     public void process(Message data) {
         final String s = new String(data.getBody(), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isNotBlank(s)) {
-            if (JSONUtil.isJson(s)) {
+            if (JSONUtil.isTypeJSON(s)) {
                 final Dict param = JSONUtil.toBean(s, Dict.class);
                 log.debug("param  : " + param);
             }

@@ -63,7 +63,7 @@ public abstract class GXBaseData implements Serializable {
      * @return 列表
      */
     protected <E> List<E> convertJsonArrayToTarget(String jsonArray, Class<E> targetClass) {
-        if (JSONUtil.isJsonArray(jsonArray)) {
+        if (JSONUtil.isTypeJSONArray(jsonArray)) {
             return JSONUtil.toList(jsonArray, targetClass);
         }
         return Collections.emptyList();
@@ -77,7 +77,7 @@ public abstract class GXBaseData implements Serializable {
      * @return 列表
      */
     protected <E> E convertJsonObjectToTarget(String jsonObject, Class<E> targetClass) {
-        if (JSONUtil.isJsonObj(jsonObject)) {
+        if (JSONUtil.isTypeJSONObject(jsonObject)) {
             return JSONUtil.toBean(jsonObject, targetClass);
         }
         return GXCommonUtils.getClassDefaultValue(targetClass);

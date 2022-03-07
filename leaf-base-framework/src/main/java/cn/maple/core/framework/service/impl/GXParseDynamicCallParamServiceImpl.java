@@ -65,7 +65,7 @@ public class GXParseDynamicCallParamServiceImpl implements GXParseDynamicCallPar
      */
     @Override
     public Object getDynamicCallMethodParamValue(String jsonStr) {
-        if (JSONUtil.isNull(jsonStr) || !JSONUtil.isJson(jsonStr)) {
+        if (JSONUtil.isNull(jsonStr) || !JSONUtil.isTypeJSON(jsonStr)) {
             log.error("参数请传递JSON类型");
             return null;
         }

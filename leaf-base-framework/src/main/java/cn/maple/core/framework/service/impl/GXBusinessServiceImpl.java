@@ -157,7 +157,7 @@ public class GXBusinessServiceImpl implements GXBusinessService {
             if (null == json.getByPath(path)) {
                 return defaultValue;
             }
-            if (JSONUtil.isJson(json.getByPath(path).toString())) {
+            if (JSONUtil.isTypeJSON(json.getByPath(path).toString())) {
                 Dict data = Dict.create();
                 Dict dict = JSONUtil.toBean(json.getByPath(path).toString(), Dict.class);
                 if (!dict.isEmpty()) {

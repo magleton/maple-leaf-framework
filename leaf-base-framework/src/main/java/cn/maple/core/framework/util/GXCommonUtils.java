@@ -244,7 +244,7 @@ public class GXCommonUtils {
      * @return JSONObject
      */
     public static JSONObject putDataToJsonStr(String jsonStr, String jsonPath, Object object, boolean override) {
-        if (!JSONUtil.isJsonObj(jsonStr)) {
+        if (!JSONUtil.isTypeJSONObject(jsonStr)) {
             return new JSONObject();
         }
         final JSONObject jsonObject = new JSONObject(jsonStr);
@@ -265,7 +265,7 @@ public class GXCommonUtils {
      * @return R
      */
     public static <R> R jsonStrConvertToTarget(String jsonStr, Class<R> clazz) {
-        if (!JSONUtil.isJson(jsonStr)) {
+        if (!JSONUtil.isTypeJSON(jsonStr)) {
             LOG.error("不合法的JSON字符串 : {}", jsonStr);
             return getClassDefaultValue(clazz);
         }
@@ -298,7 +298,7 @@ public class GXCommonUtils {
      * @return R
      */
     public static <R> R getJsonValueByPath(String jsonStr, String path, Class<R> clazz) {
-        if (!JSONUtil.isJson(jsonStr)) {
+        if (!JSONUtil.isTypeJSON(jsonStr)) {
             LOG.error("不合法的JSON字符串");
             return getClassDefaultValue(clazz);
         }
@@ -511,7 +511,7 @@ public class GXCommonUtils {
             String subPath = CharSequenceUtil.sub(path, CharSequenceUtil.lastIndexOfIgnoreCase(path, ".") + 1, path.length());
             final Object o = parse.get(mainPath);
             if (Objects.nonNull(o)) {
-                if (JSONUtil.isJsonArray(o.toString()) && NumberUtil.isInteger(subPath)) {
+                if (JSONUtil.isTypeJSONArray(o.toString()) && NumberUtil.isInteger(subPath)) {
                     final int delIndex = Integer.parseInt(subPath);
                     if (null != parse.getByPath(mainPath, JSONArray.class)) {
                         parse.getByPath(mainPath, JSONArray.class).remove(delIndex);
@@ -688,7 +688,7 @@ public class GXCommonUtils {
         if (CharSequenceUtil.isBlank(str)) {
             return Dict.create();
         }
-        if (JSONUtil.isJson(str)) {
+        if (JSONUtil.isTypeJSON(str)) {
             return JSONUtil.toBean(str, Dict.class);
         }
         return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {

@@ -25,7 +25,7 @@ public class GXMapStructExpressionUtils {
      * @return T
      */
     public static <T> T convertJsonStringToTargetClazz(@NotNull String jsonStr, Class<T> targetClass) {
-        if (JSONUtil.isJson(jsonStr)) {
+        if (JSONUtil.isTypeJSON(jsonStr)) {
             return JSONUtil.toBean(jsonStr, targetClass);
         }
         return null;
@@ -40,7 +40,7 @@ public class GXMapStructExpressionUtils {
      */
     public static Dict convertJsonStrToDict(@NotNull String jsonStr) {
         Dict retData = Dict.create();
-        if (JSONUtil.isJson(jsonStr)) {
+        if (JSONUtil.isTypeJSON(jsonStr)) {
             Dict data = JSONUtil.toBean(jsonStr, Dict.class);
             data.forEach((key, value) -> retData.set(CharSequenceUtil.toCamelCase(key), value));
         }
@@ -58,7 +58,7 @@ public class GXMapStructExpressionUtils {
      */
     public static <T> List<T> convertJsonStrToList(@NotNull String jsonStr, Class<T> elementType) {
         List<T> list = new ArrayList<>();
-        if (JSONUtil.isJsonArray(jsonStr)) {
+        if (JSONUtil.isTypeJSONArray(jsonStr)) {
             list = JSONUtil.toList(jsonStr, elementType);
         }
         return list;

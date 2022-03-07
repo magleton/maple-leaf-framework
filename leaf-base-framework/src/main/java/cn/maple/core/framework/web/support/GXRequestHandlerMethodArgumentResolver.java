@@ -77,7 +77,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(@NonNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
-        if (JSONUtil.isJsonArray(body)) {
+        if (JSONUtil.isTypeJSONArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
             List<?> bean = jsonToTargetList(body, actualTypeArgument);//JSONUtil.toList(body, actualTypeArgument);
             bean.forEach(dto -> dealSingleBean(dto, parameter, actualTypeArgument));
@@ -153,7 +153,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
                 throw new GXBusinessException(e.getMessage(), e);
             }
         }
-        if (!JSONUtil.isJson(jsonBody)) {
+        if (!JSONUtil.isTypeJSON(jsonBody)) {
             throw new GXBusinessException(GXHttpStatusCode.REQUEST_JSON_NOT_BODY);
         }
         return jsonBody;

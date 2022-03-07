@@ -61,10 +61,10 @@ public class GXJSONToListTypeHandler extends BaseTypeHandler<List<Map<String, Ob
 
     private List<Map<String, Object>> jsonToList(String from) {
         from = CharSequenceUtil.isEmpty(from) ? "[]" : from;
-        if (!JSONUtil.isJson(from) || (JSONUtil.isJsonObj(from) && JSONUtil.parseObj(from).isEmpty())) {
+        if (!JSONUtil.isTypeJSON(from) || (JSONUtil.isTypeJSONObject(from) && JSONUtil.parseObj(from).isEmpty())) {
             return Collections.emptyList();
         }
-        if (JSONUtil.isJsonObj(from)) {
+        if (JSONUtil.isTypeJSONObject(from)) {
             from = '[' + from + ']';
         }
         Dict dict = Dict.create();

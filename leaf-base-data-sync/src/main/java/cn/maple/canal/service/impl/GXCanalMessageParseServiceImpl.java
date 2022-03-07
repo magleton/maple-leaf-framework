@@ -26,7 +26,7 @@ public class GXCanalMessageParseServiceImpl implements GXCanalMessageParseServic
     public Dict parseMessage(String message) {
         String operator = "operator";
         Dict dict = Dict.create();
-        if (!JSONUtil.isJson(message)) {
+        if (!JSONUtil.isTypeJSON(message)) {
             log.error("请传递JSON字符串");
             return dict;
         }
