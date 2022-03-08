@@ -18,8 +18,8 @@ public class GXMdcThreadUtil {
     }
 
     public static void setTraceIdIfAbsent() {
-        if (CharSequenceUtil.isEmpty(MDC.get(GXTraceIdContextUtils.TRACE_ID_KEY))) {
-            MDC.put(GXTraceIdContextUtils.TRACE_ID_KEY, GXTraceIdContextUtils.getTraceId());
+        if (CharSequenceUtil.isBlank(GXTraceIdContextUtils.getTraceId())) {
+            GXTraceIdContextUtils.setTraceId(GXTraceIdContextUtils.generateTraceId());
         }
     }
 
