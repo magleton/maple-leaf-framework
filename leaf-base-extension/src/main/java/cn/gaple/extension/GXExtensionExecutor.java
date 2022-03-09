@@ -102,6 +102,7 @@ public class GXExtensionExecutor extends GXAbstractComponentExecutor {
      * @param <E>            类型
      * @return E
      */
+    @SuppressWarnings("all")
     private <E> E locate(String name, String uniqueIdentity) {
         GXExtensionCoordinate coordinate = new GXExtensionCoordinate(name, uniqueIdentity);
         return (E) extensionRepository.getExtensionRepo().get(coordinate);

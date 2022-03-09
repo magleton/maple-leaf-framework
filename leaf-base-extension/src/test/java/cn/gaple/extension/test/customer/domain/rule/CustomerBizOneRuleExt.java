@@ -5,9 +5,11 @@ import cn.gaple.extension.test.customer.client.GXConstants;
 import cn.gaple.extension.test.customer.domain.CustomerEntity;
 import cn.gaple.extension.test.customer.domain.SourceType;
 import cn.maple.core.framework.exception.GXBusinessException;
+import org.springframework.stereotype.Component;
 
 @GXExtension(bizId = GXConstants.BIZ_1)
-public class CustomerBizOneRuleExt implements CustomerRuleExtPt {
+@Component
+public class CustomerBizOneRuleExt implements CustomerRuleExtPoint {
     @Override
     public boolean addCustomerCheck(CustomerEntity customerEntity) {
         if (SourceType.AD == customerEntity.getSourceType()) {

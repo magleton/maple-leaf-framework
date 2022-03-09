@@ -63,6 +63,7 @@ public class GXExtensionCoordinate {
      * @param <T> 扩展点类型
      * @return Class
      */
+    @SuppressWarnings("all")
     public <T> Class<T> getExtensionPointClass() {
         return (Class<T>) extensionPointClass;
     }
