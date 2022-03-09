@@ -9,21 +9,21 @@
     <springProfile name="local,dev,test">
         <logger name="org.springframework.web" level="INFO"/>
         <logger name="org.springboot.sample" level="INFO"/>
-        <logger name="cn.gaple" level="INFO"/>
+        <logger name="cn.maple" level="INFO"/>
     </springProfile>
 
     <!-- 预发布环境 -->
     <springProfile name="pre">
         <logger name="org.springframework.web" level="INFO"/>
         <logger name="org.springboot.sample" level="INFO"/>
-        <logger name="cn.gaple" level="INFO"/>
+        <logger name="cn.maple" level="INFO"/>
     </springProfile>
 
     <!-- 生产环境 -->
     <springProfile name="prod">
         <logger name="org.springframework.web" level="ERROR"/>
         <logger name="org.springboot.sample" level="ERROR"/>
-        <logger name="cn.gaple" level="INFO"/>
+        <logger name="cn.maple" level="INFO"/>
     </springProfile>
 
     <jmxConfigurator/>
