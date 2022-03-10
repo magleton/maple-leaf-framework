@@ -298,7 +298,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         ReflectUtil.invoke(entity, method, (Object) null);
         replaceData.forEach((k, v) -> GXCommonUtils.reflectCallObjectMethod(entity, CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(k)), v));
 
-        return updateOrCreate(entity);
+        return create(entity);
     }
 
     /**
