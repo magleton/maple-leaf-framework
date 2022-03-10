@@ -1,7 +1,7 @@
 package cn.maple.redisson.module.service;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.redisson.module.dto.req.GXBaseRediSearchParamInnerReqDto;
+import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface GXRediSearchService {
      * @param paramInnerDto 搜索条件
      * @return List
      */
-    List<Dict> search(GXBaseRediSearchParamInnerReqDto paramInnerDto);
+    List<Dict> search(GXRediSearchQueryParamReqDto paramInnerDto);
 }

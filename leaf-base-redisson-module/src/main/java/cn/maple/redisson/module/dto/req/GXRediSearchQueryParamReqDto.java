@@ -4,16 +4,16 @@ import cn.maple.core.framework.dto.inner.GXBaseSEParamInnerDto;
 import io.github.dengliming.redismodule.redisearch.search.Filter;
 import io.github.dengliming.redismodule.redisearch.search.HighlightOptions;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @Builder
-public class GXBaseRediSearchParamInnerReqDto extends GXBaseSEParamInnerDto {
+public class GXRediSearchQueryParamReqDto extends GXBaseSEParamInnerDto {
     /**
      * 需要搜索的字段
      */

@@ -1,7 +1,7 @@
 package cn.maple.redisson.module.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.redisson.module.dto.req.GXBaseRediSearchParamInnerReqDto;
+import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.repository.GXRediSearchRepository;
 import cn.maple.redisson.module.service.GXRediSearchService;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
      * @return List
      */
     @Override
-    public List<Dict> search(GXBaseRediSearchParamInnerReqDto paramInnerDto) {
+    public List<Dict> search(GXRediSearchQueryParamReqDto paramInnerDto) {
         return rediSearchRepository.search(paramInnerDto, Dict.class);
     }
 }

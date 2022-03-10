@@ -3,7 +3,7 @@ package cn.maple.redisson.module.repository;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.ddd.repository.GXBaseSERepository;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.redisson.module.dto.req.GXBaseRediSearchParamInnerReqDto;
+import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import io.github.dengliming.redismodule.redisearch.RediSearch;
 import io.github.dengliming.redismodule.redisearch.client.RediSearchClient;
 import io.github.dengliming.redismodule.redisearch.index.Document;
@@ -21,12 +21,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @Repository
-public class GXRediSearchRepository implements GXBaseSERepository<GXBaseRediSearchParamInnerReqDto> {
+public class GXRediSearchRepository implements GXBaseSERepository<GXRediSearchQueryParamReqDto> {
     @Resource
     private RediSearchClient rediSearchClient;
 
     @Override
-    public <R> List<R> search(GXBaseRediSearchParamInnerReqDto rsDataIndexesParamInnerDto, Class<R> targetClass) {
+    public <R> List<R> search(GXRediSearchQueryParamReqDto rsDataIndexesParamInnerDto, Class<R> targetClass) {
         String indexName = rsDataIndexesParamInnerDto.getIndexName();
         RediSearch rediSearch = rediSearchClient.getRediSearch(indexName);
         String queryWords = rsDataIndexesParamInnerDto.getQueryWords();
