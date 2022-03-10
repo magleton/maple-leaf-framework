@@ -290,10 +290,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(entity)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
-        String mainIDMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        Method method = ReflectUtil.getMethod(entity.getClass(), mainIDMethodName, getIDClassType());
+        String setPrimaryKeyMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
+        Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, getIDClassType());
         if (Objects.isNull(method)) {
-            throw new GXBusinessException(CharSequenceUtil.format("方法{}不存在", mainIDMethodName));
+            throw new GXBusinessException(CharSequenceUtil.format("方法{}不存在", setPrimaryKeyMethodName));
         }
         ReflectUtil.invoke(entity, method, (Object) null);
         replaceData.forEach((k, v) -> GXCommonUtils.reflectCallObjectMethod(entity, CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(k)), v));
