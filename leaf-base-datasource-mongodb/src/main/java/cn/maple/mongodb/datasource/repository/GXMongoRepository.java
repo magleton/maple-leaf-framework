@@ -337,6 +337,17 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     }
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 查询条件
+     * @return 数据
+     */
+    @Override
+    public T getOne(Dict condition) {
+        return null;
+    }
+
+    /**
      * 通过条件获取单字段的数据
      * <pre>
      * {@code
