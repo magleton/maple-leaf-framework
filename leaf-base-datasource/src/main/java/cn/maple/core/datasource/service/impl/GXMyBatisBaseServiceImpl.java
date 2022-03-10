@@ -285,11 +285,12 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData) {
-        Dict condition = GXCommonUtils.convertTableToDict(copyCondition);
-        T entity = repository.getOne(condition);
-        if (Objects.isNull(entity)) {
+        R oneData = findOneByCondition(repository.getTableName(), copyCondition);
+        if (Objects.isNull(oneData)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
+        T entity = GXCommonUtils.convertSourceToTarget(oneData, getModelClass(), null, null);
+        assert entity != null;
         String setPrimaryKeyMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, getIDClassType());
         if (Objects.isNull(method)) {
