@@ -641,6 +641,17 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
+     * 获取 Primary Key
+     *
+     * @return String
+     */
+    @Override
+    public String getPrimaryKeyName() {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(getModelClass());
+        return tableInfo.getKeyProperty();
+    }
+
+    /**
      * 获取实体的表名字
      *
      * @param entity 实体对象
@@ -658,11 +669,21 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 数据库表名字
      */
     @Override
-    @SuppressWarnings("all")
     public String getTableName() {
-        Class<? extends GXMyBatisModel> entityClass = (Class<? extends GXMyBatisModel>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
+        Class<?> entityClass = getModelClass();
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
         return tableInfo.getTableName();
+    }
+
+    /**
+     * 获取实体的Class 对象
+     *
+     * @return Class
+     */
+    @Override
+    @SuppressWarnings("all")
+    public Class<T> getModelClass() {
+        return (Class<T>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
     }
 
     /**
@@ -674,5 +695,16 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     public Class<R> getReturnValueType() {
         return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
+    }
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    @Override
+    @SuppressWarnings("all")
+    public Class<ID> getIDClassType() {
+        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[4]);
     }
 }

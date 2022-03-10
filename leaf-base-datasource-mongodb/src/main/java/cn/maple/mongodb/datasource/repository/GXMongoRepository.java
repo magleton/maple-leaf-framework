@@ -368,6 +368,16 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     }
 
     /**
+     * 获取 Primary Key
+     *
+     * @return String
+     */
+    @Override
+    public String getPrimaryKeyName() {
+        return null;
+    }
+
+    /**
      * 获取实体的表名字
      *
      * @param entity 实体对象
@@ -389,12 +399,32 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     }
 
     /**
+     * 获取实体的Class 对象
+     *
+     * @return Class
+     */
+    @Override
+    public Class<T> getModelClass() {
+        return null;
+    }
+
+    /**
      * 获取返回值的类型
      *
      * @return Class
      */
     @Override
     public Class<R> getReturnValueType() {
+        return null;
+    }
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    @Override
+    public Class<ID> getIDClassType() {
         return null;
     }
 }

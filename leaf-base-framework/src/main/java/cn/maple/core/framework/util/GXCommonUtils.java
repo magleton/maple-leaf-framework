@@ -472,7 +472,9 @@ public class GXCommonUtils {
         }
         Class<?>[] classes = new Class<?>[params.length];
         for (int i = 0; i < params.length; i++) {
-            classes[i] = params[i].getClass();
+            if (Objects.nonNull(params[i])) {
+                classes[i] = params[i].getClass();
+            }
         }
         Method method = ReflectUtil.getMethod(object.getClass(), methodName, classes);
         Object retVal = null;

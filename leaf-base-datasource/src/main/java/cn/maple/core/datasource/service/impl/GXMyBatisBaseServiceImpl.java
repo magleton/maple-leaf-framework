@@ -2,6 +2,8 @@ package cn.maple.core.datasource.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -10,6 +12,8 @@ import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -272,6 +277,32 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 复制一条数据
+     *
+     * @param copyCondition 复制的条件
+     * @param replaceData   需要替换的数据
+     * @return 新数据ID
+     */
+    @Override
+    public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData) {
+        R oneData = findOneByCondition(repository.getTableName(), copyCondition);
+        if (Objects.isNull(oneData)) {
+            throw new GXDBNotExistsException("待拷贝的数据不存在!!");
+        }
+        T entity = GXCommonUtils.convertSourceToTarget(oneData, getModelClass(), null, null);
+        assert entity != null;
+        String mainIDMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
+        Method method = ReflectUtil.getMethod(entity.getClass(), mainIDMethodName, getIDClassType());
+        if (Objects.isNull(method)) {
+            throw new GXBusinessException(CharSequenceUtil.format("方法{}不存在", mainIDMethodName));
+        }
+        ReflectUtil.invoke(entity, method, (Object) null);
+        replaceData.forEach((k, v) -> GXCommonUtils.reflectCallObjectMethod(entity, CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(k)), v));
+
+        return updateOrCreate(entity);
+    }
+
+    /**
      * 根据条件软(逻辑)删除
      *
      * @param tableName 表名
@@ -344,6 +375,16 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 获取实体类型的Class
+     *
+     * @return 实体类的Class
+     */
+    @Override
+    public Class<T> getModelClass() {
+        return repository.getModelClass();
+    }
+
+    /**
      * 实现验证注解(返回true表示数据已经存在)
      *
      * @param value                      The value to check for
@@ -377,5 +418,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @SuppressWarnings("all")
     public Class<R> getReturnValueType() {
         return (Class<R>) repository.getReturnValueType();
+    }
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    @Override
+    public Class<ID> getIDClassType() {
+        return repository.getIDClassType();
     }
 }

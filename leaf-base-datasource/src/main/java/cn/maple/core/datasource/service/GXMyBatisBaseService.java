@@ -76,6 +76,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
 
     /**
      * 批量插入数据
+     *
      * @param dataList 待插入的数据
      * @return 插入的行数
      */
@@ -192,6 +193,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper);
 
     /**
+     * 复制一条数据
+     *
+     * @param copyCondition 复制的条件
+     * @param replaceData   需要替换的数据
+     * @return 新数据ID
+     */
+    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData);
+
+    /**
      * 根据条件软(逻辑)删除
      *
      * @param tableName 表名
@@ -249,6 +259,13 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns);
 
     /**
+     * 获取实体类型的Class
+     *
+     * @return 实体类的Class
+     */
+    Class<?> getModelClass();
+
+    /**
      * 获取 Primary Key
      *
      * @return String
@@ -261,4 +278,11 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Class
      */
     Class<R> getReturnValueType();
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    Class<ID> getIDClassType();
 }

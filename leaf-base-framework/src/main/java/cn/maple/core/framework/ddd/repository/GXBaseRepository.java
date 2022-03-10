@@ -224,7 +224,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     /**
      * 批量插入数据
      *
-     * @param dataList  数据集合
+     * @param dataList 数据集合
      * @return 影响行数
      */
     Integer batchInsert(List<Dict> dataList);
@@ -300,6 +300,13 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     String getPrimaryKeyName(T entity);
 
     /**
+     * 获取 Primary Key
+     *
+     * @return String
+     */
+    String getPrimaryKeyName();
+
+    /**
      * 获取实体的表名字
      *
      * @param entity 实体对象
@@ -315,9 +322,23 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     String getTableName();
 
     /**
+     * 获取实体的Class 对象
+     *
+     * @return Class
+     */
+    Class<T> getModelClass();
+
+    /**
      * 获取返回值的类型
      *
      * @return Class
      */
     Class<R> getReturnValueType();
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    Class<ID> getIDClassType();
 }
