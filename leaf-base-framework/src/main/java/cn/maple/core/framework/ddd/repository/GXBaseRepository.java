@@ -275,6 +275,14 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz);
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 查询条件
+     * @return 数据
+     */
+    T getOne(Dict condition);
+
+    /**
      * 通过条件获取单字段的数据
      * <pre>
      * {@code

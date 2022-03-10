@@ -21,6 +21,7 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTypeOfUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -673,6 +674,18 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         Class<?> entityClass = getModelClass();
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
         return tableInfo.getTableName();
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 查询条件
+     * @return 数据
+     */
+    @Override
+    public T getOne(Dict condition) {
+        QueryWrapper<T> queryWrapper = new QueryWrapper<T>().allEq(condition);
+        return baseDao.getOne(queryWrapper);
     }
 
     /**

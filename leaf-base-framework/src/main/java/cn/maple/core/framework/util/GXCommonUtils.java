@@ -24,6 +24,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -792,5 +793,17 @@ public class GXCommonUtils {
      */
     public static boolean digitalRegularExpression(String str) {
         return ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, str);
+    }
+
+    /**
+     * 将table转换为一个Dict
+     *
+     * @param table 需要转换的table
+     * @return Dict
+     */
+    public static Dict convertTableToDict(Table<String, String, Object> table) {
+        Dict dict = Dict.create();
+        table.columnMap().forEach((operator, datum) -> datum.forEach(dict::set));
+        return dict;
     }
 }
