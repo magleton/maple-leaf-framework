@@ -1,6 +1,5 @@
 package cn.maple.core.framework.mapstruct;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
@@ -54,17 +53,6 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
     T sourceToTarget(S source);
 
     /**
-     * 将源对象转换为目标对象
-     *
-     * @param source 原对象
-     * @param extra  额外参数
-     * @return 目标对象
-     * @author britton
-     * @since 2021-10-23
-     */
-    T sourceToTarget(S source, Dict extra);
-
-    /**
      * 将源对象列表转换为目标对象列表
      *
      * @param sourceList 原对象列表
@@ -83,17 +71,6 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * @since 2021-10-23
      */
     S targetToSource(T target);
-
-    /**
-     * 将目标对象转换为源对象
-     *
-     * @param target 目标对象
-     * @param extra  额外参数
-     * @return 原对象
-     * @author britton
-     * @since 2021-10-23
-     */
-    S targetToSource(T target, Dict extra);
 
     /**
      * 将目标对象列表转换为源对象列表
