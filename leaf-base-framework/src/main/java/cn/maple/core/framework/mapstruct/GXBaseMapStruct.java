@@ -57,7 +57,7 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * 将源对象转换为目标对象
      *
      * @param source 原对象
-     * @param extra  额外数据,可以在表达式中使用
+     * @param extra  额外参数
      * @return 目标对象
      * @author britton
      * @since 2021-10-23
@@ -75,17 +75,6 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
     List<T> sourceToTarget(List<S> sourceList);
 
     /**
-     * 将源对象列表转换为目标对象列表
-     *
-     * @param sourceList 原对象列表
-     * @param extra      额外数据,可以在表达式中使用
-     * @return 目标List
-     * @author britton
-     * @since 2021-10-23
-     */
-    List<T> sourceToTarget(List<S> sourceList, Dict extra);
-
-    /**
      * 将目标对象转换为源对象
      *
      * @param target 目标对象
@@ -99,7 +88,7 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * 将目标对象转换为源对象
      *
      * @param target 目标对象
-     * @param extra  额外数据,可以在表达式中使用
+     * @param extra  额外参数
      * @return 原对象
      * @author britton
      * @since 2021-10-23
@@ -115,15 +104,4 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      * @since 2021-10-23
      */
     List<S> targetToSource(List<T> targetList);
-
-    /**
-     * 将目标对象列表转换为源对象列表
-     *
-     * @param targetList 目标对象列表
-     * @param extra      额外数据,可以在表达式中使用
-     * @return 原对象列表
-     * @author britton
-     * @since 2021-10-23
-     */
-    List<S> targetToSource(List<T> targetList, Dict extra);
 }
