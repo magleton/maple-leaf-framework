@@ -11,40 +11,40 @@ public interface GXBusinessService {
     /**
      * 将任意对象列表通过转换器转换为指定类型的目标对象列表
      *
-     * @param targetList 目标列表
-     * @param mapStruct  转换器
+     * @param targetList     目标列表
+     * @param mapStructClass 转换器
      * @return 源对象列表
      */
     @SuppressWarnings("all")
-    <S extends GXBaseData, T extends GXBaseData> List<S> convertTargetListToSourceList(List<T> targetList, GXBaseMapStruct<S, T> mapStruct);
+    <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<S> convertTargetListToSourceList(List<T> targetList, Class<M> mapStructClass);
 
     /**
      * 将任意目标对象通过转换器转换为指定类型的目标对象
      *
-     * @param target    目标对象
-     * @param mapStruct 转换器
+     * @param target         目标对象
+     * @param mapStructClass 转换器
      * @return 目标对象
      */
-    <S extends GXBaseData, T extends GXBaseData> S convertTargetToSource(T target, GXBaseMapStruct<S, T> mapStruct);
+    <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> S convertTargetToSource(T target, Class<M> mapStructClass);
 
     /**
      * 将任意的源对象列表通过转换器转换为指定类型的目标对象列表
      *
-     * @param sourceList 源列表
-     * @param mapStruct  转换器
+     * @param sourceList     源列表
+     * @param mapStructClass 转换器
      * @return 目标对象列表
      */
     @SuppressWarnings("all")
-    <S extends GXBaseData, T extends GXBaseData> List<T> convertSourceListToTargetList(List<S> sourceList, GXBaseMapStruct<S, T> mapStruct);
+    <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<T> convertSourceListToTargetList(List<S> sourceList, Class<M> mapStructClass);
 
     /**
      * 将任意源对象通过转换器转换为目标对象
      *
-     * @param source    源对象
-     * @param mapStruct 转换器
+     * @param source         源对象
+     * @param mapStructClass 转换器
      * @return 目标对象
      */
-    <S extends GXBaseData, T extends GXBaseData> T convertSourceToTarget(S source, GXBaseMapStruct<S, T> mapStruct);
+    <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> T convertSourceToTarget(S source, Class<M> mapStructClass);
 
     /**
      * 加密手机号码
