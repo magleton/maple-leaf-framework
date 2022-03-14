@@ -315,6 +315,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(Table<String, String, Object> condition) {
+        return deleteSoftCondition(repository.getTableName(), condition);
+    }
+
+    /**
      * 根据条件删除
      *
      * @param tableName 表名
@@ -324,6 +335,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
         return repository.deleteCondition(tableName, condition);
+    }
+
+    /**
+     * 根据条件删除
+     *
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteCondition(Table<String, String, Object> condition) {
+        return deleteCondition(repository.getTableName(), condition);
     }
 
     /**

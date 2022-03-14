@@ -211,6 +211,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(Table<String, String, Object> condition);
+
+    /**
      * 根据条件删除
      *
      * @param tableName 表名
@@ -218,6 +226,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 影响行数
      */
     Integer deleteCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
+     * 根据条件删除
+     *
+     * @param condition 删除条件
+     * @return 影响行数
+     */
+    Integer deleteCondition(Table<String, String, Object> condition);
 
     /**
      * 查询指定字段的值
