@@ -1,5 +1,6 @@
 package cn.maple.core.framework.api;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
@@ -149,5 +150,29 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      */
     default boolean checkRecordIsExists(Table<String, String, Object> condition) {
         throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
+     * 转指定的对象到指定的目标类型对象
+     *
+     * @param reqDto      请求参数
+     * @param targetClass 目标对象类型
+     * @param methodName  转换方法名字
+     * @param copyOptions 转换的自定义项
+     * @return
+     */
+    default <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
+        return GXCommonUtils.convertSourceToTarget(reqDto, targetClass, methodName, copyOptions);
+    }
+
+    /**
+     * 转指定的对象到指定的目标类型对象
+     *
+     * @param reqDto      请求参数
+     * @param targetClass 目标对象类型
+     * @return
+     */
+    default <T> T sourceToTarget(Q reqDto, Class<T> targetClass) {
+        return sourceToTarget(reqDto, targetClass, null, null);
     }
 }
