@@ -37,7 +37,6 @@ public abstract class GXBaseData implements Serializable {
      * @param copyOptions 拷贝的选项
      */
     protected void beforeMapping(CopyOptions copyOptions) {
-        customizeProcess();
     }
 
     /**
@@ -46,7 +45,6 @@ public abstract class GXBaseData implements Serializable {
      * @param source 源数据对象
      */
     protected void afterMapping(Object source) {
-        customizeProcess();
     }
 
     /**
