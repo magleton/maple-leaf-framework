@@ -214,7 +214,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
         }
-        List<R> rList = baseDao.findByCondition(dbQueryInnerDto);
+        List<R> rList = findByCondition(dbQueryInnerDto);
         if (columns.size() == 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             ArrayList<E> list = new ArrayList<>();
             rList.forEach(data -> {
@@ -264,7 +264,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
-        return baseDao.findByCondition(dbQueryInnerDto);
+        List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
+        if (!rs.isEmpty()) {
+            rs.forEach(r -> GXCommonUtils.reflectCallObjectMethod(r, "extraHandle"));
+        }
+        return rs;
     }
 
     /**
@@ -301,7 +305,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        return baseDao.findOneByCondition(dbQueryParamInnerDto);
+        R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
+        if (Objects.nonNull(r)) {
+            GXCommonUtils.reflectCallObjectMethod(r, "extraHandle");
+        }
+        return r;
     }
 
     /**
@@ -390,7 +398,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         columns.forEach(column -> {
             retData.set(column, dict.getObj(column));
         });
-        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, null, null);
+        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null);
     }
 
     /**
