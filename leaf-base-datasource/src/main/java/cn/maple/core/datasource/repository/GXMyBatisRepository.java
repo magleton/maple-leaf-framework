@@ -21,6 +21,7 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTypeOfUtils;
+import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -69,6 +70,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     @Override
     public ID create(T entity) {
+        GXValidatorUtils.validateEntity(entity);
         baseDao.save(entity);
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
@@ -83,6 +85,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public ID update(T entity, Table<String, String, Object> condition) {
+        GXValidatorUtils.validateEntity(entity);
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
         condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
         return update(entity, updateWrapper);
@@ -124,6 +127,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(updateWrapper)) {
             throw new GXBusinessException("请传递更新对象");
         }
+        GXValidatorUtils.validateEntity(entity);
         baseDao.update(entity, updateWrapper);
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
@@ -164,6 +168,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
             op = GXBuilderConstant.STR_EQ;
         }
+        GXValidatorUtils.validateEntity(entity);
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         String keyProperty = tableInfo.getKeyProperty();
         Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
@@ -187,6 +192,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @SuppressWarnings("all")
     public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
+        GXValidatorUtils.validateEntity(entity);
         if (Objects.nonNull(updateWrapper)) {
             this.update(entity, updateWrapper);
         } else {

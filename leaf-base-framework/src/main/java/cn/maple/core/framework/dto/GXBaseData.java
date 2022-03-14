@@ -54,9 +54,6 @@ public abstract class GXBaseData implements Serializable {
      * 调用自定义的方法进行参数的处理
      */
     public void customizeProcess() {
-        this.beforeRepair();
-        this.verify();
-        this.afterRepair();
     }
 
     /**

@@ -396,6 +396,12 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
+        if (CharSequenceUtil.isBlank(tableName)) {
+            tableName = repository.getTableName();
+        }
+        if (CharSequenceUtil.isBlank(fieldName)) {
+            fieldName = repository.getPrimaryKeyName();
+        }
         return repository.validateExists(value, tableName, fieldName, constraintValidatorContext, param);
     }
 

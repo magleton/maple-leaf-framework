@@ -366,16 +366,21 @@ public class GXCommonUtils {
         if (Objects.isNull(source)) {
             return null;
         }
-        copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
-        reflectCallObjectMethod(source, "beforeMapping", copyOptions);
-        T target = ReflectUtil.newInstanceIfPossible(tClass);
-        reflectCallObjectMethod(target, "beforeMapping", copyOptions);
-        BeanUtil.copyProperties(source, target, copyOptions);
-        reflectCallObjectMethod(target, "afterMapping", source);
-        if (CharSequenceUtil.isNotEmpty(methodName)) {
-            reflectCallObjectMethod(target, methodName);
+        try {
+            copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
+            T target = ReflectUtil.newInstanceIfPossible(tClass);
+            reflectCallObjectMethod(target, "beforeMapping", copyOptions);
+            BeanUtil.copyProperties(source, target, copyOptions);
+            reflectCallObjectMethod(target, "afterMapping", source);
+            if (CharSequenceUtil.isNotEmpty(methodName)) {
+                reflectCallObjectMethod(target, methodName);
+            }
+            reflectCallObjectMethod(target, "verify");
+            return target;
+        } catch (Exception e) {
+            Throwable cause = Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause());
+            throw new GXBusinessException(cause.getMessage(), cause);
         }
-        return target;
     }
 
     /**
