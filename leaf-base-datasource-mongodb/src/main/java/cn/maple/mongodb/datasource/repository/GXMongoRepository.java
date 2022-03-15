@@ -99,13 +99,27 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取所有数据
      *
-     * @param tableName 表名字
-     * @param condition 条件
-     * @param columns   需要获取的列
+     * @param tableName            表名字
+     * @param condition            条件
+     * @param columns              需要获取的列
+     * @param gainAssociatedFields 需要关联获取数据的字段
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName            表名字
+     * @param condition            条件
+     * @param gainAssociatedFields 需要关联获取数据的字段
+     * @return 列表
+     */
+    @Override
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
         return Collections.emptyList();
     }
 
@@ -135,6 +149,19 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取数据
      *
+     * @param tableName            表名字
+     * @param condition            查询条件
+     * @param gainAssociatedFields 需要关联获取数据的字段
+     * @return R 返回数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+        return null;
+    }
+
+    /**
+     * 根据条件获取数据
+     *
      * @param tableName 表名字
      * @param condition 查询条件
      * @return R 返回数据
@@ -147,13 +174,14 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取数据
      *
-     * @param tableName 表名字
-     * @param condition 查询条件
-     * @param columns   需要查询的列
+     * @param tableName            表名字
+     * @param condition            查询条件
+     * @param columns              需要查询的列
+     * @param gainAssociatedFields 需要关联获取数据的字段
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
         return null;
     }
 

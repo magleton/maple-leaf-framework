@@ -151,13 +151,38 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param tableName            表名字
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+        return repository.findByCondition(tableName, condition, gainAssociatedFields, gainAssociatedFields);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param tableName 表名字
      * @param condition 搜索条件
      * @return List
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
-        return repository.findByCondition(tableName, condition);
+        return findByCondition(tableName, condition, null);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+        return findByCondition(repository.getTableName(), condition, gainAssociatedFields);
     }
 
     /**
@@ -191,7 +216,20 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
-        return repository.findOneByCondition(tableName, condition);
+        return findOneByCondition(tableName, condition, null);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName            表名字
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+        return repository.findOneByCondition(tableName, condition, gainAssociatedFields);
     }
 
     /**
@@ -202,7 +240,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition) {
-        return findOneByCondition(repository.getTableName(), condition);
+        return findOneByCondition(condition, null);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+        return findOneByCondition(repository.getTableName(), condition, gainAssociatedFields);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -91,12 +92,23 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     /**
      * 根据条件获取所有数据
      *
-     * @param tableName 表名字
-     * @param condition 条件
-     * @param columns   需要获取的列
+     * @param tableName            表名字
+     * @param condition            条件
+     * @param columns              需要获取的列
+     * @param gainAssociatedFields 需要关联获取数据的字段名字
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields);
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName            表名字
+     * @param condition            条件
+     * @param gainAssociatedFields 需要关联获取数据的关联字段
+     * @return 列表
+     */
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
 
     /**
      * 根据条件获取所有数据
@@ -108,12 +120,32 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     List<R> findByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
+     * 根据条件获取所有数据
+     *
+     * @param condition 条件
+     * @return 列表
+     */
+    default List<R> findByCondition(Table<String, String, Object> condition) {
+        return Collections.emptyList();
+    }
+
+    /**
      * 根据条件获取数据
      *
      * @param dbQueryParamInnerDto 查询参数
      * @return R 返回数据
      */
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param tableName            表名字
+     * @param condition            查询条件
+     * @param gainAssociatedFields 需要获取关联数据字段的名字
+     * @return R 返回数据
+     */
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
 
     /**
      * 根据条件获取数据
@@ -127,12 +159,23 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     /**
      * 根据条件获取数据
      *
-     * @param tableName 表名字
      * @param condition 查询条件
-     * @param columns   需要查询的列
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
+    default R findOneByCondition(Table<String, String, Object> condition) {
+        return null;
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param tableName            表名字
+     * @param condition            查询条件
+     * @param columns              需要查询的列
+     * @param gainAssociatedFields 需要关联获取数据的字段名字
+     * @return R 返回数据
+     */
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields);
 
     /**
      * 通过ID获取一条记录
