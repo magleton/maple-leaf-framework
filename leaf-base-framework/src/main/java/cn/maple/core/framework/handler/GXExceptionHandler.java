@@ -130,7 +130,8 @@ public class GXExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public GXResultUtils<Dict> handleBusinessException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), "参数缺失", Dict.create().set(e.getParameterName(), CharSequenceUtil.format("参数{}必填", e.getParameterName())));
+        String parameterName = e.getParameterName();
+        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), CharSequenceUtil.format("缺失{}参数", parameterName), Dict.create().set(parameterName, CharSequenceUtil.format("参数{}必填", parameterName)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
