@@ -266,7 +266,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
         List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
         if (!rs.isEmpty()) {
-            rs.forEach(r -> GXCommonUtils.reflectCallObjectMethod(r, "extraHandle"));
+            rs.forEach(r -> {
+                if (Objects.nonNull(dbQueryInnerDto.getGainAssociatedFields())) {
+                    GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryInnerDto.getGainAssociatedFields());
+                }
+                GXCommonUtils.reflectCallObjectMethod(r, "extraHandle");
+            });
         }
         return rs;
     }
@@ -307,6 +312,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
+            if (Objects.nonNull(dbQueryParamInnerDto.getGainAssociatedFields())) {
+                GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
+            }
             GXCommonUtils.reflectCallObjectMethod(r, "extraHandle");
         }
         return r;
