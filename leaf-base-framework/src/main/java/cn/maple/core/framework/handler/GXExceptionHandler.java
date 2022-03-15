@@ -106,13 +106,13 @@ public class GXExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public GXResultUtils<String> handleSQLException(SQLException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "查询语句异常");
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据异常,请联系相关人员!");
     }
 
     @ExceptionHandler(SQLSyntaxErrorException.class)
     public GXResultUtils<String> handleSQLSyntaxErrorException(SQLSyntaxErrorException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "查询语句异常");
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据异常,请联系相关人员!");
     }
 
     @ExceptionHandler(GXDBNotExistsException.class)
