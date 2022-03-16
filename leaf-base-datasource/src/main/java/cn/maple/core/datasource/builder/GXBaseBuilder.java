@@ -373,7 +373,11 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        //dbQueryParamInnerDto.setLimit(1);
+        int limit = Optional.ofNullable(dbQueryParamInnerDto.getLimit()).orElse(1);
+        if (limit <= 0) {
+            limit = 1;
+        }
+        dbQueryParamInnerDto.setLimit(limit);
         return findByCondition(dbQueryParamInnerDto);
     }
 
