@@ -102,6 +102,16 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     }
 
     /**
+     * 创建或者更新数据
+     *
+     * @param reqDto 请求参数
+     * @return ID
+     */
+    default ID updateOrCreate(Q reqDto) {
+        throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
      * 分页数据
      *
      * @param reqProtocol 查询条件
