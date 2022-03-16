@@ -1,6 +1,6 @@
 package cn.maple.core.framework.dto.protocol.res;
 
-import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.GXBaseDto;
 
 /**
  * @author britton
@@ -10,7 +10,7 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
  * 用于处理返回的用户数据
  * 并对返回数据进行一些额外的逻辑处理
  */
-public abstract class GXBaseResProtocol extends GXBaseResDto {
+public abstract class GXBaseResProtocol extends GXBaseDto {
     /**
      * @author britton
      * @since 2021-09-15
