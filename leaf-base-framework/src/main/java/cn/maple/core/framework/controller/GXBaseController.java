@@ -21,6 +21,11 @@ import java.util.Objects;
 
 public interface GXBaseController {
     /**
+     * 默认处理的方法名字
+     */
+    String DEFAULT_PROCESS_METHOD_NAME = "process";
+
+    /**
      * 将源对象转换为目标对象
      *
      * @param source 源对象
@@ -65,6 +70,9 @@ public interface GXBaseController {
      * @return T
      */
     default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, CopyOptions copyOptions) {
+        if (Objects.isNull(methodName)) {
+            methodName = DEFAULT_PROCESS_METHOD_NAME;
+        }
         return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions);
     }
 
@@ -78,6 +86,9 @@ public interface GXBaseController {
      * @return List
      */
     default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, String methodName, CopyOptions copyOptions) {
+        if (Objects.isNull(methodName)) {
+            methodName = DEFAULT_PROCESS_METHOD_NAME;
+        }
         return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions);
     }
 
