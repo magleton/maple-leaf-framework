@@ -1,14 +1,14 @@
 package cn.maple.core.datasource.util;
 
-import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.framework.constant.GXBuilderConstant;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -148,5 +148,25 @@ public class GXDBCommonUtils {
             return CharSequenceUtil.format("\"{}\"", o.toString());
         }).collect(Collectors.joining(","));
         return CharSequenceUtil.format(expressionTemplate, searchField, searchExpression, searchStr);
+    }
+
+    /**
+     * 获取SELECT　SQL语句
+     *
+     * @param dbQueryParamInnerDto 查询条件
+     * @return String
+     */
+    public static String getSelectSQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        return GXBaseBuilder.findByCondition(dbQueryParamInnerDto);
+    }
+
+    /**
+     * 获取SELECT　SQL语句
+     *
+     * @param dbQueryParamInnerDto 查询条件
+     * @return　String
+     */
+    public static String getSelectONESQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        return GXBaseBuilder.findOneByCondition(dbQueryParamInnerDto);
     }
 }
