@@ -330,15 +330,16 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      *
      * @param copyCondition 复制的条件
      * @param replaceData   需要替换的数据
+     * @param customerData  额外数据
      * @return 新数据ID
      */
     @Override
-    public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData) {
+    public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Object... customerData) {
         R oneData = findOneByCondition(repository.getTableName(), copyCondition);
         if (Objects.isNull(oneData)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
-        T entity = GXCommonUtils.convertSourceToTarget(oneData, getModelClass(), null, null);
+        T entity = GXCommonUtils.convertSourceToTarget(oneData, getModelClass(), null, null, customerData);
         assert entity != null;
         String setPrimaryKeyMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
         Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, getIDClassType());

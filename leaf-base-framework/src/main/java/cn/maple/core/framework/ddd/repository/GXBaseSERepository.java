@@ -18,9 +18,11 @@ public interface GXBaseSERepository<Q extends GXBaseSEParamInnerDto> {
      * 通过条件获取数据
      *
      * @param dataIndexesParamInnerDto 索引数据
+     * @param targetClass              目标类型
+     * @param customerData             额外数据
      * @return 列表
      */
-    default <R> List<R> search(Q dataIndexesParamInnerDto, Class<R> targetClass) {
+    default <R> List<R> search(Q dataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
         throw new GXBusinessException("请自定义实现!");
     }
 

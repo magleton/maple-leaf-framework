@@ -235,9 +235,10 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      *
      * @param copyCondition 复制的条件
      * @param replaceData   需要替换的数据
+     * @param customerData  额外数据
      * @return 新数据ID
      */
-    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData);
+    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Object... customerData);
 
     /**
      * 根据条件软(逻辑)删除

@@ -11,12 +11,4 @@ import cn.maple.core.framework.dto.GXBaseDto;
  * @since 2021-09-15
  */
 public abstract class GXBaseResProtocol extends GXBaseDto {
-    /**
-     * 对返回数据进行自定义处理
-     *
-     * @author britton
-     * @since 2021-09-15
-     */
-    public void process() {
-    }
 }

@@ -205,10 +205,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * 根据条件获取所有数据
      *
      * @param dbQueryInnerDto 查询对象
+     * @param customerData    额外数据
      * @return 列表
      */
     @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
@@ -237,7 +238,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         });
         String methodName = dbQueryInnerDto.getMethodName();
         CopyOptions copyOptions = dbQueryInnerDto.getCopyOptions();
-        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions);
+        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions, customerData);
     }
 
     /**
@@ -429,11 +430,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param dbQueryInnerDto 查询数据
      * @param targetClazz     值的类型
+     * @param customerData    额外参数
      * @return 返回指定的类型的值对象
      */
     @Override
     @SuppressWarnings("all")
-    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
@@ -455,7 +457,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         columns.forEach(column -> {
             retData.set(column, dict.getObj(column));
         });
-        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null);
+        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null, customerData);
     }
 
     /**

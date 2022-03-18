@@ -1,6 +1,7 @@
 package cn.maple.core.framework.dto;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 
@@ -48,10 +49,12 @@ public abstract class GXBaseData implements Serializable {
     }
 
     /**
-     * @author britton
      * 调用自定义的方法进行参数的处理
+     *
+     * @param extraData 额外参数数据
+     * @author britton
      */
-    public void customizeProcess() {
+    public void customizeProcess(Dict extraData) {
     }
 
     /**

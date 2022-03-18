@@ -195,28 +195,30 @@ public class GXBusinessServiceImpl implements GXBusinessService {
      * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
      * {code}
      *
-     * @param source      源对象
-     * @param tClass      目标对象类型
-     * @param methodName  需要条用的方法名字
-     * @param copyOptions 复制选项
+     * @param source       源对象
+     * @param tClass       目标对象类型
+     * @param methodName   需要条用的方法名字
+     * @param copyOptions  复制选项
+     * @param customerData 额外数据
      * @return 目标对象
      */
     @Override
-    public <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
-        return GXCommonUtils.convertSourceToTarget(source, tClass, methodName, copyOptions);
+    public <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object... customerData) {
+        return GXCommonUtils.convertSourceToTarget(source, tClass, methodName, copyOptions, customerData);
     }
 
     /**
      * 将任意对象转换为指定类型的对象
      *
-     * @param collection  需要转换的对象列表
-     * @param tClass      目标对象的类型
-     * @param methodName  需要条用的方法名字
-     * @param copyOptions 需要拷贝的选项
+     * @param collection   需要转换的对象列表
+     * @param tClass       目标对象的类型
+     * @param methodName   需要条用的方法名字
+     * @param copyOptions  需要拷贝的选项
+     * @param customerData 额外数据
      * @return List
      */
     @Override
-    public <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
-        return GXCommonUtils.convertSourceListToTargetList(collection, tClass, methodName, copyOptions);
+    public <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object... customerData) {
+        return GXCommonUtils.convertSourceListToTargetList(collection, tClass, methodName, copyOptions, customerData);
     }
 }

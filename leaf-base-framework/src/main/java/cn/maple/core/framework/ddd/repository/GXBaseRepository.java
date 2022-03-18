@@ -66,9 +66,10 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * 根据条件获取所有数据
      *
      * @param dbQueryInnerDto 查询对象
+     * @param customerData    额外数据
      * @return 列表
      */
-    <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz);
+    <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData);
 
     /**
      * 根据条件获取所有数据
@@ -313,9 +314,10 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      *
      * @param dbQueryInnerDto 查询数据
      * @param targetClazz     值的类型
+     * @param customerData    额外参数
      * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz);
+    <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData);
 
     /**
      * 通过条件获取单字段的数据

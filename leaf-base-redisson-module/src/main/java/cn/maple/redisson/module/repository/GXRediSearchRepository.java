@@ -26,7 +26,7 @@ public class GXRediSearchRepository implements GXBaseSERepository<GXRediSearchQu
     private RediSearchClient rediSearchClient;
 
     @Override
-    public <R> List<R> search(GXRediSearchQueryParamReqDto rsDataIndexesParamInnerDto, Class<R> targetClass) {
+    public <R> List<R> search(GXRediSearchQueryParamReqDto rsDataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
         String indexName = rsDataIndexesParamInnerDto.getIndexName();
         RediSearch rediSearch = rediSearchClient.getRediSearch(indexName);
         String queryWords = rsDataIndexesParamInnerDto.getQueryWords();
@@ -53,6 +53,6 @@ public class GXRediSearchRepository implements GXBaseSERepository<GXRediSearchQu
         }
         SearchResult search = rediSearch.search(queryWords, searchOptions);
         List<Document> documents = search.getDocuments();
-        return GXCommonUtils.convertSourceListToTargetList(documents, targetClass, rsDataIndexesParamInnerDto.getConvertMethodName(), rsDataIndexesParamInnerDto.getCopyOptions());
+        return GXCommonUtils.convertSourceListToTargetList(documents, targetClass, rsDataIndexesParamInnerDto.getConvertMethodName(), rsDataIndexesParamInnerDto.getCopyOptions(), customerData);
     }
 }

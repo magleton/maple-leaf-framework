@@ -6,7 +6,6 @@ import org.mapstruct.BeforeMapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 基础转换接口
@@ -26,9 +25,6 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      */
     @BeforeMapping
     default void beforeMapping(S source) {
-        if (Objects.nonNull(source)) {
-            source.customizeProcess();
-        }
     }
 
     /**
@@ -39,7 +35,6 @@ public interface GXBaseMapStruct<S extends GXBaseData, T extends GXBaseData> {
      */
     @AfterMapping
     default void afterMapping(S source, @MappingTarget T target) {
-        target.customizeProcess();
     }
 
     /**

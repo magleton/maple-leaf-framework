@@ -64,10 +64,11 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      *
      * @param dbQueryInnerDto 查询对象
      * @param targetClazz     目标对象
+     * @param customerData
      * @return 列表
      */
     @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
         return Collections.emptyList();
     }
 
@@ -357,10 +358,11 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      *
      * @param dbQueryInnerDto 查询数据
      * @param targetClazz     值的类型
+     * @param customerData
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
         return null;
     }
 

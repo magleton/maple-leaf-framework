@@ -356,13 +356,14 @@ public class GXCommonUtils {
      * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
      * {code}
      *
-     * @param source      源对象
-     * @param tClass      目标对象类型
-     * @param methodName  需要条用的方法名字
-     * @param copyOptions 复制选项
+     * @param source         源对象
+     * @param tClass         目标对象类型
+     * @param methodName     需要条用的方法名字
+     * @param copyOptions    复制选项
+     * @param customerParams 额外参数
      * @return 目标对象
      */
-    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
+    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object... customerParams) {
         if (Objects.isNull(source)) {
             return null;
         }
@@ -373,7 +374,7 @@ public class GXCommonUtils {
             BeanUtil.copyProperties(source, target, copyOptions);
             reflectCallObjectMethod(target, "afterMapping", source);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
-                reflectCallObjectMethod(target, methodName);
+                reflectCallObjectMethod(target, methodName, customerParams);
             }
             reflectCallObjectMethod(target, "verify");
             return target;
@@ -393,11 +394,11 @@ public class GXCommonUtils {
      * @return List
      */
     @SuppressWarnings("all")
-    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object... customerParams) {
         if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }
-        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions)).collect(Collectors.toList());
+        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions, customerParams)).collect(Collectors.toList());
         return rList;
     }
 

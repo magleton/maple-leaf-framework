@@ -23,84 +23,90 @@ public interface GXBaseController {
     /**
      * 默认处理的方法名字
      */
-    String DEFAULT_PROCESS_METHOD_NAME = "process";
+    String DEFAULT_PROCESS_METHOD_NAME = "customizeProcess";
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param source 源对象
-     * @param clazz  目标对象类型
+     * @param source       源对象
+     * @param clazz        目标对象类型
+     * @param customerData 额外数据
      * @return T
      */
-    default <S, T> T convertSourceToTarget(S source, Class<T> clazz) {
-        return convertSourceToTarget(source, clazz, null, null);
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, Object... customerData) {
+        return convertSourceToTarget(source, clazz, null, null, customerData);
     }
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param source     源对象
-     * @param clazz      目标对象类型
-     * @param methodName 回调的方法名字
+     * @param source       源对象
+     * @param clazz        目标对象类型
+     * @param methodName   回调的方法名字
+     * @param customerData 额外数据
      * @return T
      */
-    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName) {
-        return convertSourceToTarget(source, clazz, methodName, null);
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, Object... customerData) {
+        return convertSourceToTarget(source, clazz, methodName, null, customerData);
     }
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param source      源对象
-     * @param clazz       目标对象类型
-     * @param copyOptions 复制选项
+     * @param source       源对象
+     * @param clazz        目标对象类型
+     * @param copyOptions  复制选项
+     * @param customerData 额外数据
      * @return T
      */
-    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, CopyOptions copyOptions) {
-        return convertSourceToTarget(source, clazz, null, copyOptions);
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, CopyOptions copyOptions, Object... customerData) {
+        return convertSourceToTarget(source, clazz, null, copyOptions, customerData);
     }
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param source      源对象
-     * @param clazz       目标对象类型
-     * @param methodName  回调的方法名字
-     * @param copyOptions 复制选项
+     * @param source       源对象
+     * @param clazz        目标对象类型
+     * @param methodName   回调的方法名字
+     * @param copyOptions  复制选项
+     * @param customerData 额外数据
      * @return T
      */
-    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, CopyOptions copyOptions) {
+    default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, CopyOptions copyOptions, Object... customerData) {
         if (Objects.isNull(methodName)) {
             methodName = DEFAULT_PROCESS_METHOD_NAME;
         }
-        return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions);
+        return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions, customerData);
     }
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param collection  需要转换的对象列表
-     * @param clazz       目标对象的类型
-     * @param methodName  回调方法的名字
-     * @param copyOptions 需要拷贝的选项
+     * @param collection   需要转换的对象列表
+     * @param clazz        目标对象的类型
+     * @param methodName   回调方法的名字
+     * @param copyOptions  需要拷贝的选项
+     * @param customerData 额外数据
      * @return List
      */
-    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, String methodName, CopyOptions copyOptions) {
+    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, String methodName, CopyOptions copyOptions, Object... customerData) {
         if (Objects.isNull(methodName)) {
             methodName = DEFAULT_PROCESS_METHOD_NAME;
         }
-        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions);
+        return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions, customerData);
     }
 
     /**
      * 将源对象转换为目标对象
      *
-     * @param collection 需要转换的对象列表
-     * @param clazz      目标对象的类型
+     * @param collection   需要转换的对象列表
+     * @param clazz        目标对象的类型
+     * @param customerData 额外数据
      * @return List
      */
-    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz) {
-        return convertSourceListToTargetList(collection, clazz, null, null);
+    default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, Object... customerData) {
+        return convertSourceListToTargetList(collection, clazz, null, null, customerData);
     }
 
     /**
