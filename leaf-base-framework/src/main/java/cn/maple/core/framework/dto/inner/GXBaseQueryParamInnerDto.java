@@ -68,6 +68,12 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private String methodName;
 
     /**
+     * 额外参数
+     * 配合methodName一起使用
+     */
+    private Dict customerData;
+
+    /**
      * SQL中的having条件
      * <pre>
      * {@code

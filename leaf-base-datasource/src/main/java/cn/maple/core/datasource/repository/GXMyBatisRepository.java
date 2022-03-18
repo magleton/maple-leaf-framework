@@ -263,6 +263,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     @Override
+    @SuppressWarnings("all")
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
         List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
         if (!rs.isEmpty()) {
@@ -270,7 +271,15 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
                 if (Objects.nonNull(dbQueryInnerDto.getGainAssociatedFields())) {
                     GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryInnerDto.getGainAssociatedFields());
                 }
-                GXCommonUtils.reflectCallObjectMethod(r, "extraHandle");
+                String methodName = dbQueryInnerDto.getMethodName();
+                if (CharSequenceUtil.isBlank(methodName)) {
+                    methodName = "customizeProcess";
+                }
+                Dict customerData = dbQueryInnerDto.getCustomerData();
+                if (Objects.isNull(customerData)) {
+                    customerData = Dict.create();
+                }
+                GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
             });
         }
         return rs;
@@ -334,13 +343,22 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
+    @SuppressWarnings("all")
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
             if (Objects.nonNull(dbQueryParamInnerDto.getGainAssociatedFields())) {
                 GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
             }
-            GXCommonUtils.reflectCallObjectMethod(r, "extraHandle");
+            String methodName = dbQueryParamInnerDto.getMethodName();
+            if (CharSequenceUtil.isBlank(methodName)) {
+                methodName = "customizeProcess";
+            }
+            Dict customerData = dbQueryParamInnerDto.getCustomerData();
+            if (Objects.isNull(customerData)) {
+                customerData = Dict.create();
+            }
+            GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
         }
         return r;
     }
