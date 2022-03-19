@@ -284,7 +284,8 @@ public interface GXBaseBuilder {
      * joinInfo.put("子表别名", "主表别名", Dict.create()
      * .set("子表字段名字A", "主表表字段名字A")
      * .set("子表字段名字B", "主表表字段名字B")
-     * .set("子表字段名字C", "主表表字段名字C"));
+     * .set("子表字段名字C" , "&88899")
+     * .set("子表字段名字D", "主表表字段名字D"));
      * handleJoinOnSpecification(sql , "left" , "address" , joinInfo);
      * }
      * </pre>
@@ -300,7 +301,13 @@ public interface GXBaseBuilder {
             String[] joinOnStr = new String[]{""};
             rowMap.forEach((subTableAlias, joinInfo) -> joinInfo.forEach((mainTableAlias, joinSpecification) -> {
                 List<String> joinOnList = CollUtil.newArrayList();
-                joinSpecification.forEach((subTableField, mainTableField) -> joinOnList.add(CharSequenceUtil.format("{}.{} = {}.{}", subTableAlias, subTableField, mainTableAlias, mainTableField)));
+                joinSpecification.forEach((subTableField, mainTableField) -> {
+                    String onStr = CharSequenceUtil.format("{}.{} = {}.{}", subTableAlias, subTableField, mainTableAlias, mainTableField);
+                    if (CharSequenceUtil.startWith(mainTableField.toString(), GXBuilderConstant.JOIN_ON_START_WITH_MARKER, true)) {
+                        onStr = CharSequenceUtil.format("{}.{} = {}", subTableAlias, subTableField, CharSequenceUtil.subAfter(mainTableField.toString(), GXBuilderConstant.JOIN_ON_START_WITH_MARKER, false));
+                    }
+                    joinOnList.add(onStr);
+                });
                 joinOnStr[0] = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, subTableName, subTableAlias, CollUtil.join(joinOnList, " and "));
             }));
             if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {

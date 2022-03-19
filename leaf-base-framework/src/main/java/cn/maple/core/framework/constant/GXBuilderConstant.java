@@ -150,6 +150,14 @@ public class GXBuilderConstant {
      */
     public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->'{}' , CAST('[{}]' as JSON)";
 
+    /**
+     * JOIN条件值开头的标识
+     * eg:
+     * ON a.id = b.aid and type = 1
+     *
+     */
+    public static final String JOIN_ON_START_WITH_MARKER = "&";
+
     private GXBuilderConstant() {
     }
 }
