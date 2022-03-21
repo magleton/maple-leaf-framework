@@ -1,12 +1,14 @@
 package cn.maple.redisson.module.dto.req;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
+import com.google.common.collect.Table;
+import io.github.dengliming.redismodule.redisearch.index.IndexDefinition;
+import io.github.dengliming.redismodule.redisearch.index.RSLanguage;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
@@ -22,44 +24,25 @@ public class GXRediSearchSchemaReqDto extends GXBaseReqDto {
      * 1、HASH
      * 2、JSON
      */
-    private String dataType;
+    private IndexDefinition.DataType dataType;
 
     /**
-     * 所依赖底层数据的前缀
+     * 索引结构的字段信息
      */
-    private String prefix;
+    private transient Table<String, String, String> schemaFields;
 
     /**
-     * filter
+     * 索引前缀
      */
-    private String filter;
+    private List<String> prefixes;
 
     /**
-     * 支持语言
+     * 索引指定的语言
      */
-    private String language;
+    private RSLanguage language;
 
     /**
-     * 指定需要language应用的字段
+     * TAG字段的分割符
      */
-    private Set<String> languageField;
-
-    /**
-     * 文档索引的score
-     */
-    private Float score;
-
-    /**
-     * 需要应用score的字段
-     */
-    private Set<String> scoreField;
-
-    /**
-     * 索引字段信息
-     * eg:
-     * Dict.create()
-     * .set("$.name" , "name text")
-     * .set("$.tags" , "tags Tag ';'");
-     */
-    private Dict schemas;
+    private String separator = ",";
 }

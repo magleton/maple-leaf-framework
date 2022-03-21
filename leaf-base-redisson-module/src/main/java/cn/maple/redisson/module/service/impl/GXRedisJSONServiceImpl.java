@@ -10,6 +10,7 @@ import io.github.dengliming.redismodule.redisjson.args.SetArgs;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class GXRedisJSONServiceImpl implements GXRedisJSONService {
@@ -54,5 +55,39 @@ public class GXRedisJSONServiceImpl implements GXRedisJSONService {
     @Override
     public long del(String key, String path) {
         return redisJSON.del(key, path);
+    }
+
+    /**
+     * 获取多个key的值
+     *
+     * @param path  路径
+     * @param clazz 目标类型
+     * @param keys  需要获取的key列表
+     * @return 列表
+     */
+    @Override
+    public <T> List<T> mget(String path, Class<T> clazz, String... keys) {
+        return redisJSON.mget(path, clazz, keys);
+    }
+
+    /**
+     * 获取指定path的JSON类型
+     *
+     * @param key  key
+     * @param path 路径
+     * @return Class
+     */
+    @Override
+    public Class<?> getType(String key, String path) {
+        return redisJSON.getType(key, path);
+    }
+
+    /**
+     * 获取RedisJSON对象
+     *
+     * @return RedisJSON对象
+     */
+    public RedisJSON getRedisJSON() {
+        return redisJSON;
     }
 }

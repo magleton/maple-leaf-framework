@@ -3,6 +3,8 @@ package cn.maple.redisson.module.service;
 import cn.hutool.core.lang.Dict;
 import io.github.dengliming.redismodule.redisjson.args.GetArgs;
 
+import java.util.List;
+
 public interface GXRedisJSONService {
     /**
      * 新增JSON数据
@@ -32,4 +34,23 @@ public interface GXRedisJSONService {
      * @return 删除的条数
      */
     long del(String key, String path);
+
+    /**
+     * 获取多个key的值
+     *
+     * @param path  路径
+     * @param clazz 目标类型
+     * @param keys  需要获取的key列表
+     * @return 列表
+     */
+    <T> List<T> mget(String path, Class<T> clazz, String... keys);
+
+    /**
+     * 获取指定path的JSON类型
+     *
+     * @param key  key
+     * @param path 路径
+     * @return Class
+     */
+    Class<?> getType(String key, String path);
 }
