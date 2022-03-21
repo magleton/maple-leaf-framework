@@ -84,7 +84,7 @@ public class GXRediSearchRepository {
             return false;
         }
         RSLanguage language = Optional.ofNullable(schemaReqDto.getLanguage()).orElse(RSLanguage.CHINESE);
-        IndexDefinition.DataType dataType = Optional.ofNullable(schemaReqDto.getDataType()).orElse(IndexDefinition.DataType.HASH);
+        IndexDefinition.DataType dataType = Optional.ofNullable(schemaReqDto.getDataType()).orElse(IndexDefinition.DataType.JSON);
         Map<String, Map<String, String>> rowMap = schemaFields.rowMap();
         Schema schema = new Schema();
         rowMap.forEach((identifier, fields) -> {
