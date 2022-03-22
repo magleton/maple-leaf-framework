@@ -26,6 +26,15 @@ public interface GXRediSearchService {
     boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
 
     /**
+     * 修改索引
+     *
+     * @param schemaReqDto 索引数据
+     * @param dropExists   是否删除已经存在的索引
+     * @return 是否修改成功
+     */
+    boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto, boolean dropExists);
+
+    /**
      * 删除索引
      *
      * @param schemaReqDto 索引结构请求数据
