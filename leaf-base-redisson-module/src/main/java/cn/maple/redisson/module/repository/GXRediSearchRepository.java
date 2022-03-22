@@ -7,14 +7,14 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
-import com.google.common.collect.Table;
 import io.github.dengliming.redismodule.redisearch.RediSearch;
 import io.github.dengliming.redismodule.redisearch.client.RediSearchClient;
 import io.github.dengliming.redismodule.redisearch.index.Document;
 import io.github.dengliming.redismodule.redisearch.index.IndexDefinition;
 import io.github.dengliming.redismodule.redisearch.index.IndexOptions;
 import io.github.dengliming.redismodule.redisearch.index.RSLanguage;
-import io.github.dengliming.redismodule.redisearch.index.schema.*;
+import io.github.dengliming.redismodule.redisearch.index.schema.Field;
+import io.github.dengliming.redismodule.redisearch.index.schema.Schema;
 import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
 import io.github.dengliming.redismodule.redisearch.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +73,7 @@ public class GXRediSearchRepository {
     @SuppressWarnings("all")
     public boolean createIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         String indexName = schemaReqDto.getIndexName();
-        Table<String, String, FieldType> schemaFields = schemaReqDto.getSchemaFields();
+        List<Field> schemaFields = schemaReqDto.getSchemaFieldLst();
         if (Objects.isNull(schemaFields) || schemaFields.isEmpty()) {
             log.info(CharSequenceUtil.format("修改索引失败"));
             return false;
@@ -81,19 +81,37 @@ public class GXRediSearchRepository {
         String separator = Optional.ofNullable(schemaReqDto.getSeparator()).orElse(",");
         RSLanguage language = Optional.ofNullable(schemaReqDto.getLanguage()).orElse(RSLanguage.CHINESE);
         IndexDefinition.DataType dataType = Optional.ofNullable(schemaReqDto.getDataType()).orElse(IndexDefinition.DataType.JSON);
-        Map<String, Map<String, FieldType>> rowMap = schemaFields.rowMap();
-        Schema schema = new Schema();
-        rowMap.forEach((identifier, fields) -> {
-            fields.forEach((attribute, fieldType) -> {
-                schema.addField(fittingField(fieldType, identifier, attribute, separator));
-            });
-        });
+        Schema schema = new Schema(schemaFields);
         List<String> prefixes = schemaReqDto.getPrefixes();
         IndexDefinition indexDefinition = new IndexDefinition(dataType);
         indexDefinition.setPrefixes(prefixes);
         indexDefinition.setLanguage(language);
+        if (CharSequenceUtil.isNotBlank(schemaReqDto.getFilter())) {
+            indexDefinition.setFilter(schemaReqDto.getFilter());
+        }
+        if (Objects.nonNull(schemaReqDto.getLanguageField())) {
+            indexDefinition.setLanguageField(schemaReqDto.getLanguageField());
+        }
+        if (Objects.nonNull(schemaReqDto.getScore())) {
+            indexDefinition.setScore(schemaReqDto.getScore());
+        }
+        if (CharSequenceUtil.isNotBlank(schemaReqDto.getScoreFiled())) {
+            indexDefinition.setScoreFiled(schemaReqDto.getScoreFiled());
+        }
+        if (CharSequenceUtil.isNotBlank(schemaReqDto.getPayloadField())) {
+            indexDefinition.setPayloadField(schemaReqDto.getPayloadField());
+        }
         IndexOptions indexOptions = new IndexOptions();
         indexOptions.definition(indexDefinition);
+        if (Objects.nonNull(schemaReqDto.getStopwords()) && CollUtil.isNotEmpty(schemaReqDto.getStopwords())) {
+            indexOptions.stopwords(schemaReqDto.getStopwords());
+        }
+        if (Objects.nonNull(schemaReqDto.getMaxTextFields()) && schemaReqDto.getMaxTextFields()) {
+            indexOptions.maxTextFields();
+        }
+        if (Objects.nonNull(schemaReqDto.getNoFields()) && schemaReqDto.getNoFields()) {
+            indexOptions.noFields();
+        }
         return getRediSearch(indexName).createIndex(schema, indexOptions);
     }
 
@@ -106,19 +124,13 @@ public class GXRediSearchRepository {
     @SuppressWarnings("all")
     public boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         String indexName = schemaReqDto.getIndexName();
-        Table<String, String, FieldType> schemaFields = schemaReqDto.getSchemaFields();
+        List<Field> schemaFields = schemaReqDto.getSchemaFieldLst();
         if (Objects.isNull(schemaFields) || schemaFields.isEmpty()) {
             log.info(CharSequenceUtil.format("修改索引失败"));
             return false;
         }
-        Map<String, Map<String, FieldType>> rowMap = schemaFields.rowMap();
-        List<Field> fieldLst = CollUtil.newArrayList();
-        rowMap.forEach((identifier, fields) -> {
-            fields.forEach((attribute, fieldType) -> {
-                fieldLst.add(fittingField(fieldType, identifier, attribute, schemaReqDto.getSeparator()));
-            });
-        });
-        return getRediSearch(indexName).alterIndex(fieldLst.toArray(new Field[0]));
+        String separator = Optional.ofNullable(schemaReqDto.getSeparator()).orElse(",");
+        return getRediSearch(indexName).alterIndex(schemaFields.toArray(new Field[0]));
     }
 
     /**
@@ -141,27 +153,5 @@ public class GXRediSearchRepository {
      */
     public RediSearch getRediSearch(String indexName) {
         return rediSearchClient.getRediSearch(indexName);
-    }
-
-    /**
-     * 组装索引Field
-     *
-     * @param fieldType 字段类型
-     * @return Field
-     */
-    private Field fittingField(FieldType fieldType, String identifier, String attribute, String separator) {
-        if (fieldType.equals(FieldType.TEXT)) {
-            Field field = new TextField(identifier);
-            field.attribute(attribute);
-            return field;
-        } else if (fieldType.equals(FieldType.TAG)) {
-            separator = Objects.isNull(separator) ? "," : separator;
-            TagField field = new TagField(identifier, separator);
-            field.attribute(attribute);
-            return field;
-        }
-        Field field = new Field(identifier, fieldType);
-        field.attribute(attribute);
-        return field;
     }
 }
