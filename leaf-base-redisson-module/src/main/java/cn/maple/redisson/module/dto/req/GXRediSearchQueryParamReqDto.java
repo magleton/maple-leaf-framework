@@ -1,36 +1,42 @@
 package cn.maple.redisson.module.dto.req;
 
-import cn.maple.core.framework.dto.inner.GXBaseSEParamInnerDto;
-import io.github.dengliming.redismodule.redisearch.search.Filter;
-import io.github.dengliming.redismodule.redisearch.search.HighlightOptions;
+import cn.hutool.core.bean.copier.CopyOptions;
+import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.List;
-import java.util.Set;
-
-@EqualsAndHashCode(callSuper = true)
+/**
+ * RediSearch 查询条件
+ *
+ * @author britton
+ * @see <a href="https://oss.redis.com/redisearch/Commands/#ftsearch">...</a>
+ */
 @Getter
 @Builder
-public class GXRediSearchQueryParamReqDto extends GXBaseSEParamInnerDto {
+public class GXRediSearchQueryParamReqDto {
     /**
-     * 需要搜索的字段
+     * 索引名字
      */
-    private Set<String> inFields;
+    private String indexName;
 
     /**
-     * 高亮选项
+     * 查询语句
+     * 参考 FT.SEARCH {indexName} {query}
      */
-    private HighlightOptions highlightOptions;
+    private String query;
 
     /**
-     * 需要返回的字段
+     * 搜索选项
      */
-    private Set<String> returnFields;
+    private SearchOptions searchOptions;
 
     /**
-     * 过滤器
+     * 对象复制时的一些额外配置
      */
-    private List<Filter> filters;
+    private CopyOptions copyOptions;
+
+    /**
+     * 数据转换时需要条用的额外参数
+     */
+    private String convertMethodName;
 }

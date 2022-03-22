@@ -1,7 +1,9 @@
 package cn.maple.redisson.module.repository;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
@@ -13,7 +15,8 @@ import io.github.dengliming.redismodule.redisearch.index.IndexDefinition;
 import io.github.dengliming.redismodule.redisearch.index.IndexOptions;
 import io.github.dengliming.redismodule.redisearch.index.RSLanguage;
 import io.github.dengliming.redismodule.redisearch.index.schema.*;
-import io.github.dengliming.redismodule.redisearch.search.*;
+import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
+import io.github.dengliming.redismodule.redisearch.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -37,36 +40,28 @@ public class GXRediSearchRepository {
     public <R> List<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
         String indexName = dataIndexesParamInnerDto.getIndexName();
         RediSearch rediSearch = getRediSearch(indexName);
-        String queryWords = dataIndexesParamInnerDto.getQueryWords();
-        if (CharSequenceUtil.isBlank(queryWords)) {
+        SearchOptions searchOptions = Optional.ofNullable(dataIndexesParamInnerDto.getSearchOptions()).orElse(new SearchOptions());
+        String query = dataIndexesParamInnerDto.getQuery();
+
+        if (CharSequenceUtil.isBlank(query)) {
             return Collections.emptyList();
         }
-        SearchOptions searchOptions = new SearchOptions();
-        searchOptions.language(RSLanguage.CHINESE);
-        Set<String> inFields = dataIndexesParamInnerDto.getInFields();
-        HighlightOptions highlightOptions = dataIndexesParamInnerDto.getHighlightOptions();
-        Set<String> returnFields = dataIndexesParamInnerDto.getReturnFields();
-        List<Filter> filters = dataIndexesParamInnerDto.getFilters();
-        Integer currentPage = Optional.ofNullable(dataIndexesParamInnerDto.getPage()).orElse(0);
-        Integer pageSize = Optional.ofNullable(dataIndexesParamInnerDto.getPageSize()).orElse(20);
-        if (Objects.nonNull(inFields)) {
-            searchOptions.inFields(inFields.toArray(new String[0]));
-        }
-        if (Objects.nonNull(highlightOptions)) {
-            searchOptions.highlightOptions(highlightOptions);
-        }
-        if (Objects.nonNull(returnFields)) {
-            searchOptions.returnFields(returnFields.toArray(new String[0]));
-        }
-        if (Objects.nonNull(filters) && !filters.isEmpty()) {
-            filters.forEach(searchOptions::filter);
-        }
-        Page page = new Page(currentPage, pageSize);
-        searchOptions.page(page);
 
-        SearchResult search = rediSearch.search(queryWords, searchOptions);
+        SearchResult search = rediSearch.search(query, searchOptions);
         List<Document> documents = search.getDocuments();
-        return GXCommonUtils.convertSourceListToTargetList(documents, targetClass, dataIndexesParamInnerDto.getConvertMethodName(), dataIndexesParamInnerDto.getCopyOptions(), customerData);
+        List<R> rLst = new ArrayList<>();
+        documents.forEach(doc -> {
+            Dict data = Dict.create();
+            data.put("id", doc.getId());
+            doc.getFields().forEach((k, v) -> {
+                if (CharSequenceUtil.equals("$", k) && JSONUtil.isTypeJSON(v.toString())) {
+                    data.putAll(JSONUtil.toBean(v.toString(), Dict.class));
+                }
+            });
+            R r = GXCommonUtils.convertSourceToTarget(data, targetClass, dataIndexesParamInnerDto.getConvertMethodName(), dataIndexesParamInnerDto.getCopyOptions(), customerData);
+            rLst.add(r);
+        });
+        return rLst;
     }
 
     /**
@@ -78,18 +73,19 @@ public class GXRediSearchRepository {
     @SuppressWarnings("all")
     public boolean createIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         String indexName = schemaReqDto.getIndexName();
-        Table<String, String, String> schemaFields = schemaReqDto.getSchemaFields();
+        Table<String, String, FieldType> schemaFields = schemaReqDto.getSchemaFields();
         if (Objects.isNull(schemaFields) || schemaFields.isEmpty()) {
             log.info(CharSequenceUtil.format("修改索引失败"));
             return false;
         }
+        String separator = Optional.ofNullable(schemaReqDto.getSeparator()).orElse(",");
         RSLanguage language = Optional.ofNullable(schemaReqDto.getLanguage()).orElse(RSLanguage.CHINESE);
         IndexDefinition.DataType dataType = Optional.ofNullable(schemaReqDto.getDataType()).orElse(IndexDefinition.DataType.JSON);
-        Map<String, Map<String, String>> rowMap = schemaFields.rowMap();
+        Map<String, Map<String, FieldType>> rowMap = schemaFields.rowMap();
         Schema schema = new Schema();
         rowMap.forEach((identifier, fields) -> {
             fields.forEach((attribute, fieldType) -> {
-                schema.addField(fittingField(fieldType, identifier, attribute, schemaReqDto.getSeparator()));
+                schema.addField(fittingField(fieldType, identifier, attribute, separator));
             });
         });
         List<String> prefixes = schemaReqDto.getPrefixes();
@@ -110,12 +106,12 @@ public class GXRediSearchRepository {
     @SuppressWarnings("all")
     public boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         String indexName = schemaReqDto.getIndexName();
-        Table<String, String, String> schemaFields = schemaReqDto.getSchemaFields();
+        Table<String, String, FieldType> schemaFields = schemaReqDto.getSchemaFields();
         if (Objects.isNull(schemaFields) || schemaFields.isEmpty()) {
             log.info(CharSequenceUtil.format("修改索引失败"));
             return false;
         }
-        Map<String, Map<String, String>> rowMap = schemaFields.rowMap();
+        Map<String, Map<String, FieldType>> rowMap = schemaFields.rowMap();
         List<Field> fieldLst = CollUtil.newArrayList();
         rowMap.forEach((identifier, fields) -> {
             fields.forEach((attribute, fieldType) -> {
@@ -153,18 +149,18 @@ public class GXRediSearchRepository {
      * @param fieldType 字段类型
      * @return Field
      */
-    private Field fittingField(String fieldType, String identifier, String attribute, String separator) {
-        if (fieldType.equals(FieldType.TEXT.name())) {
+    private Field fittingField(FieldType fieldType, String identifier, String attribute, String separator) {
+        if (fieldType.equals(FieldType.TEXT)) {
             Field field = new TextField(identifier);
             field.attribute(attribute);
             return field;
-        } else if (fieldType.equals(FieldType.TAG.name())) {
+        } else if (fieldType.equals(FieldType.TAG)) {
             separator = Objects.isNull(separator) ? "," : separator;
             TagField field = new TagField(identifier, separator);
             field.attribute(attribute);
             return field;
         }
-        Field field = new Field(identifier, FieldType.valueOf(fieldType));
+        Field field = new Field(identifier, fieldType);
         field.attribute(attribute);
         return field;
     }

@@ -4,6 +4,7 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import com.google.common.collect.Table;
 import io.github.dengliming.redismodule.redisearch.index.IndexDefinition;
 import io.github.dengliming.redismodule.redisearch.index.RSLanguage;
+import io.github.dengliming.redismodule.redisearch.index.schema.FieldType;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class GXRediSearchSchemaReqDto extends GXBaseReqDto {
     /**
      * 索引结构的字段信息
      */
-    private transient Table<String, String, String> schemaFields;
+    private transient Table<String, String, FieldType> schemaFields;
 
     /**
      * 索引前缀
