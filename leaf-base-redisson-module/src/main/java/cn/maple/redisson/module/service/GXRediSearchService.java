@@ -40,7 +40,7 @@ public interface GXRediSearchService {
      * @param schemaReqDto 索引结构请求数据
      * @return 是否成功
      */
-    boolean deleteIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
+    boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
 
     /**
      * 按照条件进行搜索

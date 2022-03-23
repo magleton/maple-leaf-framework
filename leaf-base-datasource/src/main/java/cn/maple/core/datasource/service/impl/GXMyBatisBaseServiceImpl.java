@@ -145,6 +145,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto searchReqDto) {
+        String tableName = searchReqDto.getTableName();
+        if (CharSequenceUtil.isBlank(tableName)) {
+            tableName = repository.getTableName();
+            searchReqDto.setTableName(tableName);
+        }
         return repository.findByCondition(searchReqDto);
     }
 

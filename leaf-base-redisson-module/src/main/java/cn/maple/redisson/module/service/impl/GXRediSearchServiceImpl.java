@@ -48,7 +48,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
     @Override
     public boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto, boolean dropExists) {
         if (dropExists) {
-            deleteIndexSchema(schemaReqDto);
+            dropIndexSchema(schemaReqDto);
         }
         return createIndexSchema(schemaReqDto);
     }
@@ -60,7 +60,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
+    public boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         return rediSearchRepository.dropIndexSchema(schemaReqDto);
     }
 
