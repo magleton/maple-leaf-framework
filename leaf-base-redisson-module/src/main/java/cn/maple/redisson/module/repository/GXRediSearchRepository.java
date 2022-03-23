@@ -142,7 +142,13 @@ public class GXRediSearchRepository {
     @SuppressWarnings("all")
     public boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
         String indexName = schemaReqDto.getIndexName();
-        return getRediSearch(indexName).dropIndex(true);
+        RediSearch rediSearch = getRediSearch(indexName);
+        List<String> indexNameLst = rediSearch.listIndexes();
+        if (CollUtil.contains(indexNameLst, indexName)) {
+            return rediSearch.dropIndex(true);
+        }
+        log.info(CharSequenceUtil.format("索引{}不存在,没有做删除操作", indexName));
+        return true;
     }
 
     /**
