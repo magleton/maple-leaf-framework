@@ -46,7 +46,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
     @Override
     public boolean updateOrCreateIndexSchema(List<Dict> fieldLst, String indexName, List<String> prefixes, IndexDefinition.DataType schemaDataType) {
         List<Field> schemaFieldLst = processIndexSchemaFieldLst(fieldLst, schemaDataType);
-        GXRediSearchSchemaReqDto schemaReqDto = GXRediSearchSchemaReqDto.builder().schemaFieldLst(schemaFieldLst).indexName("goodsSkuIdx").prefixes(List.of("goods-sku:")).build();
+        GXRediSearchSchemaReqDto schemaReqDto = GXRediSearchSchemaReqDto.builder().schemaFieldLst(schemaFieldLst).indexName(indexName).prefixes(prefixes).build();
         dropIndexSchema(schemaReqDto);
         return updateOrCreateIndexSchema(schemaReqDto);
     }
