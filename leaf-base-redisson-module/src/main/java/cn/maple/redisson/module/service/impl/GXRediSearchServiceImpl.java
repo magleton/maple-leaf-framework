@@ -47,7 +47,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
     public boolean updateOrCreateIndexSchema(List<Dict> fieldLst, String indexName, List<String> prefixes, IndexDefinition.DataType schemaDataType) {
         List<Field> schemaFieldLst = processIndexSchemaFieldLst(fieldLst, schemaDataType);
         GXRediSearchSchemaReqDto schemaReqDto = GXRediSearchSchemaReqDto.builder().schemaFieldLst(schemaFieldLst).indexName(indexName).prefixes(prefixes).build();
-        dropIndexSchema(schemaReqDto);
+        dropIndexSchema(schemaReqDto.getIndexName());
         return updateOrCreateIndexSchema(schemaReqDto);
     }
 
@@ -72,7 +72,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
     @Override
     public boolean alertIndexSchema(GXRediSearchSchemaReqDto schemaReqDto, boolean dropExists) {
         if (dropExists) {
-            dropIndexSchema(schemaReqDto);
+            dropIndexSchema(schemaReqDto.getIndexName());
         }
         return updateOrCreateIndexSchema(schemaReqDto);
     }
@@ -80,12 +80,24 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
     /**
      * 删除索引
      *
-     * @param schemaReqDto 索引结构请求数据
+     * @param indexName 索引结构请求数据
      * @return 是否成功
      */
     @Override
-    public boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
-        return rediSearchRepository.dropIndexSchema(schemaReqDto);
+    public boolean dropIndexSchema(String indexName) {
+        return dropIndexSchema(indexName, true);
+    }
+
+    /**
+     * 删除索引
+     *
+     * @param indexName 索引名字
+     * @param keepDocs  是否保留文档
+     * @return 是否成功
+     */
+    @Override
+    public boolean dropIndexSchema(String indexName, boolean keepDocs) {
+        return rediSearchRepository.dropIndexSchema(indexName, keepDocs);
     }
 
     /**

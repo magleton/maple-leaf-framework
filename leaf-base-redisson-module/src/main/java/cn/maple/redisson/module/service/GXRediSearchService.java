@@ -49,10 +49,19 @@ public interface GXRediSearchService {
     /**
      * 删除索引
      *
-     * @param schemaReqDto 索引结构请求数据
+     * @param indexName 索引名字
      * @return 是否成功
      */
-    boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
+    boolean dropIndexSchema(String indexName);
+
+    /**
+     * 删除索引
+     *
+     * @param indexName 索引名字
+     * @param keepDocs  是否保留文档
+     * @return 是否成功
+     */
+    boolean dropIndexSchema(String indexName, boolean keepDocs);
 
     /**
      * 按照条件进行搜索

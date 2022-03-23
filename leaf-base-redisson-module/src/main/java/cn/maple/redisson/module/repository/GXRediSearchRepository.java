@@ -19,6 +19,7 @@ import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
 import io.github.dengliming.redismodule.redisearch.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -136,16 +137,16 @@ public class GXRediSearchRepository {
     /**
      * 删除索引
      *
-     * @param schemaReqDto 索引数据
+     * @param indexName 索引名字
+     * @param keepDocs  是否保存文档
      * @return 删除索引是否成功
      */
-    @SuppressWarnings("all")
-    public boolean dropIndexSchema(GXRediSearchSchemaReqDto schemaReqDto) {
-        String indexName = schemaReqDto.getIndexName();
+    public boolean dropIndexSchema(String indexName, boolean keepDocs) {
+        Assert.notNull(indexName, "索引名字不能为空");
         RediSearch rediSearch = getRediSearch(indexName);
         List<String> indexNameLst = rediSearch.listIndexes();
         if (CollUtil.contains(indexNameLst, indexName)) {
-            return rediSearch.dropIndex(true);
+            return rediSearch.dropIndex(keepDocs);
         }
         log.info(CharSequenceUtil.format("索引{}不存在,没有做删除操作", indexName));
         return true;
