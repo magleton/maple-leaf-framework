@@ -81,7 +81,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param dataList  数据集合
      * @return int
      */
-    Integer batchInsert(String tableName, List<Dict> dataList);
+    Integer batchSave(String tableName, List<Dict> dataList);
 
     /**
      * 通过条件获取数据

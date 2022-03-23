@@ -296,7 +296,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer batchInsert(String tableName, List<Dict> dataList) {
+    public Integer batchSave(String tableName, List<Dict> dataList) {
         return null;
     }
 
@@ -307,7 +307,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer batchInsert(List<Dict> dataList) {
+    public Integer batchSave(List<Dict> dataList) {
         return null;
     }
 

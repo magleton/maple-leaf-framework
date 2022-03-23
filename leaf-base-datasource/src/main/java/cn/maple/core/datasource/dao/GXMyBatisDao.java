@@ -121,8 +121,8 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchInsert(String tableName, List<Dict> dataList) {
-        return baseMapper.batchInsert(tableName, dataList);
+    public Integer batchSave(String tableName, List<Dict> dataList) {
+        return baseMapper.batchSave(tableName, dataList);
     }
 
     /**

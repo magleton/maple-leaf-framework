@@ -263,7 +263,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param dataList  数据集合
      * @return 影响行数
      */
-    Integer batchInsert(String tableName, List<Dict> dataList);
+    Integer batchSave(String tableName, List<Dict> dataList);
 
     /**
      * 批量插入数据
@@ -271,7 +271,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param dataList 数据集合
      * @return 影响行数
      */
-    Integer batchInsert(List<Dict> dataList);
+    Integer batchSave(List<Dict> dataList);
 
     /**
      * 通过条件更新数据

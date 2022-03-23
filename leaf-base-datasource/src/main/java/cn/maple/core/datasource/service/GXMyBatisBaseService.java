@@ -72,7 +72,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param dataList  数据集合
      * @return int
      */
-    Integer batchInsert(String tableName, List<Dict> dataList);
+    Integer batchSave(String tableName, List<Dict> dataList);
 
     /**
      * 批量插入数据
@@ -80,7 +80,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param dataList 待插入的数据
      * @return 插入的行数
      */
-    Integer batchInsert(List<Dict> dataList);
+    Integer batchSave(List<Dict> dataList);
 
     /**
      * 列表或者搜索(分页)

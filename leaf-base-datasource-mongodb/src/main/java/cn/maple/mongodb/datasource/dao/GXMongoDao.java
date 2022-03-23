@@ -45,7 +45,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return int
      */
     @Override
-    public Integer batchInsert(String tableName, List<Dict> dataList) {
+    public Integer batchSave(String tableName, List<Dict> dataList) {
         return null;
     }
 

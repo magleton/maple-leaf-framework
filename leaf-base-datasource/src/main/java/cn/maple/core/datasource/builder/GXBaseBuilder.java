@@ -127,7 +127,7 @@ public interface GXBaseBuilder {
      * @param dataList  需要插入的数据列表
      * @return String
      */
-    static String batchInsert(String tableName, List<Dict> dataList) {
+    static String batchSave(String tableName, List<Dict> dataList) {
         if (dataList.isEmpty()) {
             throw new GXBusinessException("批量插入数据为空");
         }

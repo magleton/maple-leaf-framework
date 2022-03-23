@@ -20,8 +20,8 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
     Integer checkRecordIsExists(GXBaseQueryParamInnerDto queryParamInnerDto);
 
-    @InsertProvider(type = GXBaseBuilder.class, method = "batchInsert")
-    Integer batchInsert(String tableName, List<Dict> dataList);
+    @InsertProvider(type = GXBaseBuilder.class, method = "batchSave")
+    Integer batchSave(String tableName, List<Dict> dataList);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);

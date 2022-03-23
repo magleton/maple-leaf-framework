@@ -646,8 +646,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer batchInsert(String tableName, List<Dict> dataList) {
-        return baseDao.batchInsert(tableName, dataList);
+    public Integer batchSave(String tableName, List<Dict> dataList) {
+        return baseDao.batchSave(tableName, dataList);
     }
 
     /**
@@ -657,8 +657,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer batchInsert(List<Dict> dataList) {
-        return batchInsert(getTableName(), dataList);
+    public Integer batchSave(List<Dict> dataList) {
+        return batchSave(getTableName(), dataList);
     }
 
     /**

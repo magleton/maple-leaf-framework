@@ -108,8 +108,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @SuppressWarnings("all")
     @Override
-    public Integer batchInsert(String tableName, List<Dict> dataList) {
-        return repository.batchInsert(tableName, dataList);
+    public Integer batchSave(String tableName, List<Dict> dataList) {
+        return repository.batchSave(tableName, dataList);
     }
 
     /**
@@ -119,8 +119,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 插入的行数
      */
     @Override
-    public Integer batchInsert(List<Dict> dataList) {
-        return batchInsert(repository.getTableName(), dataList);
+    public Integer batchSave(List<Dict> dataList) {
+        return batchSave(repository.getTableName(), dataList);
     }
 
     /**
