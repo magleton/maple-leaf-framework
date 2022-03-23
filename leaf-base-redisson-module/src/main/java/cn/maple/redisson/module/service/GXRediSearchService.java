@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
 import io.github.dengliming.redismodule.redisearch.RediSearch;
+import io.github.dengliming.redismodule.redisearch.index.IndexDefinition;
 
 import java.util.List;
 
@@ -15,7 +16,18 @@ public interface GXRediSearchService {
      * @param schemaReqDto
      * @return
      */
-    boolean createIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
+    boolean updateOrCreateIndexSchema(GXRediSearchSchemaReqDto schemaReqDto);
+
+    /**
+     * 创建或者更新索引
+     *
+     * @param fieldLst       字段信息
+     * @param indexName      索引名字
+     * @param prefixes       索引前缀
+     * @param schemaDataType 索引依赖的数据类型  HASH JSON
+     * @return boolean
+     */
+    boolean updateOrCreateIndexSchema(List<Dict> fieldLst, String indexName, List<String> prefixes, IndexDefinition.DataType schemaDataType);
 
     /**
      * 修改索引

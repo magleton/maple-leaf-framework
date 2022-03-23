@@ -74,7 +74,7 @@ public class GXRediSearchSchemaReqDto extends GXBaseReqDto {
     /**
      * 停词
      */
-    private List<String> stopwords;
+    private List<String> stopWords;
 
     /**
      * 最大的textFields

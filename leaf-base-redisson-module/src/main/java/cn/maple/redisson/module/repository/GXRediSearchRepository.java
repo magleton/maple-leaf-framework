@@ -103,8 +103,8 @@ public class GXRediSearchRepository {
         }
         IndexOptions indexOptions = new IndexOptions();
         indexOptions.definition(indexDefinition);
-        if (Objects.nonNull(schemaReqDto.getStopwords()) && CollUtil.isNotEmpty(schemaReqDto.getStopwords())) {
-            indexOptions.stopwords(schemaReqDto.getStopwords());
+        if (Objects.nonNull(schemaReqDto.getStopWords()) && CollUtil.isNotEmpty(schemaReqDto.getStopWords())) {
+            indexOptions.stopwords(schemaReqDto.getStopWords());
         }
         if (Objects.nonNull(schemaReqDto.getMaxTextFields()) && schemaReqDto.getMaxTextFields()) {
             indexOptions.maxTextFields();
