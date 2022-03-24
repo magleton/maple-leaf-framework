@@ -163,7 +163,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
-        return repository.findByCondition(tableName, condition, gainAssociatedFields, gainAssociatedFields);
+        return repository.findByCondition(tableName, condition, gainAssociatedFields);
     }
 
     /**
@@ -199,6 +199,32 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition) {
         return findByCondition(repository.getTableName(), condition);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param condition  搜索条件
+     * @param orderField 排序字段
+     * @param groupField 分组字段
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition, Dict orderField, Set<String> groupField) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(repository.getTableName()).condition(condition).orderByField(orderField).groupByField(groupField).build();
+        return findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param condition  搜索条件
+     * @param orderField 排序字段
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition, Dict orderField) {
+        return findByCondition(condition, orderField, null);
     }
 
     /**

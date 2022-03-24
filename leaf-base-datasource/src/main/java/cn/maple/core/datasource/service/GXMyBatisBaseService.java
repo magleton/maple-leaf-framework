@@ -135,6 +135,25 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     List<R> findByCondition(Table<String, String, Object> condition);
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param condition  搜索条件
+     * @param orderField 排序字段
+     * @param groupField 分组字段
+     * @return List
+     */
+    List<R> findByCondition(Table<String, String, Object> condition, Dict orderField, Set<String> groupField);
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param condition  搜索条件
+     * @param orderField 排序字段
+     * @return List
+     */
+    List<R> findByCondition(Table<String, String, Object> condition, Dict orderField);
+
+    /**
      * 通过条件获取一条数据
      *
      * @param searchReqDto 搜索条件
