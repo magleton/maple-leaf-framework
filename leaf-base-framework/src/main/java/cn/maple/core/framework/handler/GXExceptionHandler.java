@@ -142,4 +142,10 @@ public class GXExceptionHandler {
         }
         return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getMsg(), dict);
     }
+
+    @ExceptionHandler(Exception.class)
+    public GXResultUtils<Dict> handleException(Exception e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "系统内部错误");
+    }
 }
