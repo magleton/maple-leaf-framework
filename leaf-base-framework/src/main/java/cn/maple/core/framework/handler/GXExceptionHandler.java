@@ -91,12 +91,6 @@ public class GXExceptionHandler {
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getCause().getMessage());
     }
 
-    @ExceptionHandler(java.net.BindException.class)
-    public GXResultUtils<String> handleBindException(MultipartException e, RedirectAttributes redirectAttributes) {
-        log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
-    }
-
     @ExceptionHandler(GXTokenEmptyException.class)
     public GXResultUtils<String> handleGXTokenEmptyException(GXTokenEmptyException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
