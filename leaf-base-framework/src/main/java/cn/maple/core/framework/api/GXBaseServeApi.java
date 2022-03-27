@@ -61,12 +61,12 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 根据条件获取一条数据
      *
-     * @param columns   需要查询的列
-     * @param condition 查询条件
+     * @param columns              需要查询的列
+     * @param gainAssociatedFields 需要获取关联数据的字段名字
      * @return R
      */
-    default R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
-        Object r = callMethod("findOneByCondition", columns, condition);
+    default R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
+        Object r = callMethod("findOneByCondition", condition, gainAssociatedFields);
         if (Objects.nonNull(r)) {
             return (R) r;
         }
@@ -76,26 +76,26 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 根据条件获取一条数据
      *
-     * @param columns      需要查询的列
      * @param condition    查询条件
+     * @param columns      需要查询的列
      * @param targetClazz  目标类型
      * @param customerData 额外数据
      * @return R
      */
-    default <E> E findOneByCondition(Set<String> columns, Table<String, String, Object> condition, Class<E> targetClazz, Object... customerData) {
-        R data = findOneByCondition(columns, condition);
+    default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Object... customerData) {
+        Object data = callMethod("findOneByCondition", condition, columns);
         return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null, customerData);
     }
 
     /**
      * 根据条件获取数据
      *
-     * @param columns   需要查询的列
-     * @param condition 查询条件
+     * @param columns              需要查询的列
+     * @param gainAssociatedFields 查询条件
      * @return List
      */
-    default List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
-        Object rLst = callMethod("findByCondition", columns, condition);
+    default List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
+        Object rLst = callMethod("findByCondition", condition, gainAssociatedFields);
         if (Objects.nonNull(rLst)) {
             return (List<R>) rLst;
         }
@@ -110,8 +110,8 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param customerData 额外数据
      * @return List
      */
-    default <E> List<E> findByCondition(Set<String> columns, Table<String, String, Object> condition, Class<E> targetClazz, Object... customerData) {
-        List<R> rList = findByCondition(columns, condition);
+    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Object... customerData) {
+        List<R> rList = (List<R>) callMethod("findByCondition", condition, columns);
         return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, customerData);
     }
 

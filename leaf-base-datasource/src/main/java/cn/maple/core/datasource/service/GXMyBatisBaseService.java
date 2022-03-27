@@ -146,6 +146,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param condition 搜索条件
+     * @param columns   需要查询的列
+     * @return List
+     */
+    List<R> findByCondition(Table<String, String, Object> condition, Set<String> columns);
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param condition  搜索条件
      * @param orderField 排序字段
      * @param groupField 分组字段
@@ -205,6 +214,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 一条数据
      */
     R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @param columns   字段集合
+     * @return 一条数据
+     */
+    R findOneByCondition(Table<String, String, Object> condition, Set<String> columns);
 
     /**
      * 创建数据

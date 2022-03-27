@@ -217,6 +217,19 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param condition 搜索条件
+     * @param columns   需要查询的列
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition, Set<String> columns) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(repository.getTableName()).condition(condition).columns(columns).build();
+        return repository.findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param condition  搜索条件
      * @param orderField 排序字段
      * @param groupField 分组字段
@@ -284,14 +297,26 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition) {
-        return findOneByCondition(condition, null);
+        return findOneByCondition(condition, CollUtil.newHashSet("*"));
     }
 
     /**
      * 通过条件获取一条数据
      *
      * @param condition 搜索条件
-     * @param gainAssociatedFields
+     * @param columns   字段集合
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(Table<String, String, Object> condition, Set<String> columns) {
+        return repository.findOneByCondition(repository.getTableName(), condition, columns, CollUtil.newArrayList());
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return 一条数据
      */
     @Override
