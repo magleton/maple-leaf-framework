@@ -61,7 +61,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
             String canonicalName = interfaces[0].getCanonicalName();
             throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperPaginateMethodName));
         }
-        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中实现申明{}方法", mapperPaginateMethodName));
+        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperPaginateMethodName));
     }
 
     /**
