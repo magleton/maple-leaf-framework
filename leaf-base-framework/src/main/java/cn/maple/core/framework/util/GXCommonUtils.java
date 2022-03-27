@@ -498,20 +498,22 @@ public class GXCommonUtils {
         if (Objects.isNull(method) && classes.length == 0) {
             method = ReflectUtil.getMethodByName(object.getClass(), methodName);
         }
+        if (Objects.isNull(method)) {
+            LOG.warn("反射调用类{}中的方法{}({})失败", object.getClass().getSimpleName(), methodName, params);
+            return null;
+        }
         Object retVal = null;
-        if (Objects.nonNull(method)) {
-            try {
-                retVal = ReflectUtil.invoke(object, method, params);
-            } catch (UtilException e) {
-                Throwable cause = e.getCause();
-                if (cause instanceof InvocationTargetException) {
-                    Throwable targetException = ((InvocationTargetException) cause).getTargetException();
-                    if (targetException instanceof GXBeanValidateException) {
-                        throw (GXBeanValidateException) targetException;
-                    }
+        try {
+            retVal = ReflectUtil.invoke(object, method, params);
+        } catch (UtilException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof InvocationTargetException) {
+                Throwable targetException = ((InvocationTargetException) cause).getTargetException();
+                if (targetException instanceof GXBeanValidateException) {
+                    throw (GXBeanValidateException) targetException;
                 }
-                throw new GXBusinessException(e.getMessage(), cause);
             }
+            throw new GXBusinessException(e.getMessage(), cause);
         }
         return retVal;
     }
