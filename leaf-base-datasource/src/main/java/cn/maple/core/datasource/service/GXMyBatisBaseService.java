@@ -91,15 +91,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
-     * 列表或者搜索(分页)
-     *
-     * @param searchReqDto         参数
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
-     * @return GXPagination
-     */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, List<String> gainAssociatedFields);
-
-    /**
      * 通过条件查询列表信息
      *
      * @param searchReqDto 搜索条件
