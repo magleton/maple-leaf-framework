@@ -8,10 +8,12 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -24,12 +26,21 @@ import java.util.Set;
 @SuppressWarnings("all")
 public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, ID extends Serializable> {
     /**
+     * 服务类的Class 对象
+     */
+    Class<?>[] serveClassType = new Class<?>[1];
+
+    /**
      * 根据条件获取一条数据
      *
      * @param condition 查询条件
      * @return R
      */
     default R findOneByCondition(Table<String, String, Object> condition) {
+        Object r = callMethod("findOneByCondition", condition);
+        if (Objects.nonNull(r)) {
+            return (R) r;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -40,6 +51,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return List
      */
     default List<R> findByCondition(Table<String, String, Object> condition) {
+        Object rLst = callMethod("findByCondition", condition);
+        if (Objects.nonNull(rLst)) {
+            return (List<R>) rLst;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -51,6 +66,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return R
      */
     default R findOneByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        Object r = callMethod("findOneByCondition", columns, condition);
+        if (Objects.nonNull(r)) {
+            return (R) r;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -76,6 +95,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return List
      */
     default List<R> findByCondition(Set<String> columns, Table<String, String, Object> condition) {
+        Object rLst = callMethod("findByCondition", columns, condition);
+        if (Objects.nonNull(rLst)) {
+            return (List<R>) rLst;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -100,6 +123,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return ID
      */
     default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition) {
+        Object cnt = callMethod("updateOrCreate", reqDto, condition);
+        if (Objects.nonNull(cnt)) {
+            return (ID) cnt;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -110,7 +137,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return ID
      */
     default ID updateOrCreate(Q reqDto) {
-        throw new GXBusinessException("请自定义实现!");
+        return updateOrCreate(reqDto, null);
     }
 
     /**
@@ -120,6 +147,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return 分页对象
      */
     default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
+        Object paginate = callMethod("paginate", reqProtocol);
+        if (Objects.nonNull(paginate)) {
+            return (GXPaginationResDto<R>) paginate;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -130,6 +161,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return 删除行数
      */
     default Integer deleteCondition(Table<String, String, Object> condition) {
+        Object cnt = callMethod("deleteCondition", condition);
+        if (Objects.nonNull(cnt)) {
+            return (Integer) cnt;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -140,6 +175,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return 删除行数
      */
     default Integer deleteSoftCondition(Table<String, String, Object> condition) {
+        Object cnt = callMethod("deleteSoftCondition", condition);
+        if (Objects.nonNull(cnt)) {
+            return (Integer) cnt;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -151,6 +190,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return Integer
      */
     default Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
+        Object cnt = callMethod("updateFieldByCondition", data, condition);
+        if (Objects.nonNull(cnt)) {
+            return (Integer) cnt;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -161,6 +204,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return int
      */
     default boolean checkRecordIsExists(Table<String, String, Object> condition) {
+        Object exists = callMethod("checkRecordIsExists", condition);
+        if (Objects.isNull(exists)) {
+            return (boolean) exists;
+        }
         throw new GXBusinessException("请自定义实现!");
     }
 
@@ -187,5 +234,31 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      */
     default <T> T sourceToTarget(Q reqDto, Class<T> targetClass) {
         return sourceToTarget(reqDto, targetClass, null, null);
+    }
+
+    /**
+     * 设置服务类的Class对象
+     *
+     * @param serveTargetClass 服务类Class对象
+     */
+    default void setServeClassType(Class<?> serveTargetClass) {
+        serveClassType[0] = serveTargetClass;
+    }
+
+    /**
+     * 调用指定类中的指定方法
+     *
+     * @param methodName 方法名字
+     * @param params     参数列表
+     * @return Object
+     */
+    default Object callMethod(String methodName, Object... params) {
+        if (Objects.nonNull(serveClassType[0])) {
+            Object bean = GXSpringContextUtils.getBean(serveClassType[0]);
+            if (Objects.nonNull(bean)) {
+                return GXCommonUtils.reflectCallObjectMethod(bean, methodName, params);
+            }
+        }
+        return null;
     }
 }

@@ -476,11 +476,16 @@ public class GXCommonUtils {
      * @param params     参数
      * @param <R>        对象类型
      */
+    @SuppressWarnings("all")
     public static <R> Object reflectCallObjectMethod(R object, String methodName, Object... params) {
+        if (Objects.isNull(object)) {
+            LOG.warn("反射调用的object对象为null");
+            return null;
+        }
         if (CharSequenceUtil.isEmpty(methodName)) {
             methodName = "customizeProcess";
         }
-        if (params == null) {
+        if (Objects.isNull(params)) {
             params = new Object[0];
         }
         Class<?>[] classes = new Class<?>[params.length];
