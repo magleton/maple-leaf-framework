@@ -28,7 +28,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 服务类的Class 对象
      */
-    Class<?>[] serveClassType = new Class<?>[1];
+    Class<?>[] serveServiceClass = new Class<?>[1];
 
     /**
      * 根据条件获取一条数据
@@ -239,10 +239,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 设置服务类的Class对象
      *
-     * @param serveTargetClass 服务类Class对象
+     * @param serveServiceClass 服务类Class对象
      */
-    default void setServeClassType(Class<?> serveTargetClass) {
-        serveClassType[0] = serveTargetClass;
+    default void bindServeServiceClass(Class<?> serveServiceClass) {
+        this.serveServiceClass[0] = serveServiceClass;
     }
 
     /**
@@ -253,8 +253,8 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return Object
      */
     default Object callMethod(String methodName, Object... params) {
-        if (Objects.nonNull(serveClassType[0])) {
-            Object bean = GXSpringContextUtils.getBean(serveClassType[0]);
+        if (Objects.nonNull(serveServiceClass[0])) {
+            Object bean = GXSpringContextUtils.getBean(serveServiceClass[0]);
             if (Objects.nonNull(bean)) {
                 return GXCommonUtils.reflectCallObjectMethod(bean, methodName, params);
             }
