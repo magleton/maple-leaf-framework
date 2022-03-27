@@ -495,7 +495,7 @@ public class GXCommonUtils {
             }
         }
         Method method = ReflectUtil.getMethod(object.getClass(), methodName, classes);
-        if (classes.length == 0) {
+        if (Objects.isNull(method) && classes.length == 0) {
             method = ReflectUtil.getMethodByName(object.getClass(), methodName);
         }
         Object retVal = null;
