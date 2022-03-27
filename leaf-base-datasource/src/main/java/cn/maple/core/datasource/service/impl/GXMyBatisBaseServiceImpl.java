@@ -138,6 +138,19 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
+     * 列表或者搜索(分页)
+     *
+     * @param searchReqDto         参数
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return GXPagination
+     */
+    @Override
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, Set<String> gainAssociatedFields) {
+        searchReqDto.setGainAssociatedFields(gainAssociatedFields);
+        return paginate(searchReqDto);
+    }
+
+    /**
      * 通过条件查询列表信息
      *
      * @param searchReqDto 搜索条件

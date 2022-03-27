@@ -36,32 +36,32 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     /**
      * 分页  返回实体对象
      *
-     * @param dbQueryParamInnerDto 查询条件
-     * @param mapperMethodName     Mapper方法
+     * @param dbQueryParamInnerDto     查询条件
+     * @param mapperPaginateMethodName Mapper中的分页方法名字
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperPaginateMethodName) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        if (CharSequenceUtil.isEmpty(mapperMethodName)) {
-            mapperMethodName = "paginate";
+        if (CharSequenceUtil.isEmpty(mapperPaginateMethodName)) {
+            mapperPaginateMethodName = "paginate";
         }
         Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
         if (Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
-        if (Objects.isNull(mapperMethod)) {
-            Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
-            if (interfaces.length > 0) {
-                String canonicalName = interfaces[0].getCanonicalName();
-                throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperMethodName));
-            }
-            throw new GXBusinessException(CharSequenceUtil.format("请在相应的Mapper类中实现{}方法", mapperMethodName));
+        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperPaginateMethodName, IPage.class, dbQueryParamInnerDto.getClass());
+        if (Objects.nonNull(mapperMethod)) {
+            final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            iPage.setRecords(list);
+            return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
-        final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
-        iPage.setRecords(list);
-        return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
+        Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
+        if (interfaces.length > 0) {
+            String canonicalName = interfaces[0].getCanonicalName();
+            throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperPaginateMethodName));
+        }
+        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中实现申明{}方法", mapperPaginateMethodName));
     }
 
     /**

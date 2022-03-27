@@ -511,18 +511,18 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
      *
-     * @param mapperMethodName     mapper中的方法名字
-     * @param dbQueryParamInnerDto 查询信息
+     * @param mapperPaginateMethodName mapper中的分页方法的名字
+     * @param dbQueryParamInnerDto     查询信息
      * @return 分页数据
      */
-    public GXPaginationResDto<R> paginate(String mapperMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        if (Objects.isNull(mapperMethodName)) {
-            mapperMethodName = "paginate";
+    public GXPaginationResDto<R> paginate(String mapperPaginateMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        if (Objects.isNull(mapperPaginateMethodName)) {
+            mapperPaginateMethodName = "paginate";
         }
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return baseDao.paginate(dbQueryParamInnerDto, mapperMethodName);
+        return baseDao.paginate(dbQueryParamInnerDto, mapperPaginateMethodName);
     }
 
     /**
