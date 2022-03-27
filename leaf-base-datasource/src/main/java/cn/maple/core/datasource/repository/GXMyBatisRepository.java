@@ -295,7 +295,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().gainAssociatedFields(gainAssociatedFields).tableName(tableName).condition(condition).columns(columns).build();
         return findByCondition(paramInnerDto);
     }
@@ -309,7 +309,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return findByCondition(tableName, condition, CollUtil.newHashSet("*"), gainAssociatedFields);
     }
 
@@ -372,7 +372,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"), gainAssociatedFields);
     }
 
@@ -409,7 +409,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().gainAssociatedFields(gainAssociatedFields).tableName(tableName).condition(condition).columns(columns).build();
         return findOneByCondition(queryParamInnerDto);
     }

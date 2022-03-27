@@ -107,7 +107,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
         return Collections.emptyList();
     }
 
@@ -120,7 +120,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return Collections.emptyList();
     }
 
@@ -156,7 +156,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return null;
     }
 
@@ -182,7 +182,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
         return null;
     }
 

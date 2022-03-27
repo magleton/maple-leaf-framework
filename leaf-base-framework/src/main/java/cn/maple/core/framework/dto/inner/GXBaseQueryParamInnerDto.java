@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -115,7 +116,7 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * 2、也可以同时获取所有的关联信息
      * 3、也可以不获取任何的关联信息
      */
-    private Set<String> gainAssociatedFields;
+    private List<String> gainAssociatedFields;
 
     /**
      * 额外参数

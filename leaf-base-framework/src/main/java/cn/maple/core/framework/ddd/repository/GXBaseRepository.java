@@ -99,7 +99,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param gainAssociatedFields 需要关联获取数据的字段名字
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields);
 
     /**
      * 根据条件获取所有数据
@@ -109,7 +109,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param gainAssociatedFields 需要关联获取数据的关联字段
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 根据条件获取所有数据
@@ -146,7 +146,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param gainAssociatedFields 需要获取关联数据字段的名字
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 根据条件获取数据
@@ -176,7 +176,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param gainAssociatedFields 需要关联获取数据的字段名字
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Set<String> gainAssociatedFields);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields);
 
     /**
      * 通过ID获取一条记录

@@ -145,7 +145,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, Set<String> gainAssociatedFields) {
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, List<String> gainAssociatedFields) {
         searchReqDto.setGainAssociatedFields(gainAssociatedFields);
         return paginate(searchReqDto);
     }
@@ -175,7 +175,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return List
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return repository.findByCondition(tableName, condition, gainAssociatedFields);
     }
 
@@ -199,7 +199,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return findByCondition(repository.getTableName(), condition, gainAssociatedFields);
     }
 
@@ -272,7 +272,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return repository.findOneByCondition(tableName, condition, gainAssociatedFields);
     }
 
@@ -291,10 +291,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * 通过条件获取一条数据
      *
      * @param condition 搜索条件
+     * @param gainAssociatedFields
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields) {
+    public R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return findOneByCondition(repository.getTableName(), condition, gainAssociatedFields);
     }
 

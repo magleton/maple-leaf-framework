@@ -97,7 +97,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return GXPagination
      */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, Set<String> gainAssociatedFields);
+    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto, List<String> gainAssociatedFields);
 
     /**
      * 通过条件查询列表信息
@@ -115,7 +115,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return List
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 通过条件查询列表信息
@@ -133,7 +133,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 通过条件查询列表信息
@@ -187,7 +187,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return 一条数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 通过条件获取一条数据
@@ -204,7 +204,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return 一条数据
      */
-    R findOneByCondition(Table<String, String, Object> condition, Set<String> gainAssociatedFields);
+    R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 创建数据
