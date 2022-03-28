@@ -338,6 +338,20 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
+     * 根据条件获取数据
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param columns   需要查询的列
+     * @return R 返回数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
+        return findOneByCondition(queryParamInnerDto);
+    }
+
+    /**
      * 查询指定字段的值
      * <pre>
      *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}

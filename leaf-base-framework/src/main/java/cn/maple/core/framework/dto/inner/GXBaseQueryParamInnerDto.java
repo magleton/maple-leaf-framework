@@ -70,9 +70,15 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
 
     /**
      * 额外参数
+     * <p>
      * 配合methodName一起使用
      */
     private Dict customerData;
+
+    /**
+     * 查询目标结果的类型
+     */
+    private Class<?> targetClazz;
 
     /**
      * SQL中的having条件
