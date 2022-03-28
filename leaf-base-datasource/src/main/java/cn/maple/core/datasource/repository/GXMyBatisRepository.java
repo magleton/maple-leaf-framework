@@ -268,7 +268,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
         if (!rs.isEmpty()) {
             rs.forEach(r -> {
-                if (Objects.nonNull(dbQueryInnerDto.getGainAssociatedFields())) {
+                if (CollUtil.isNotEmpty(dbQueryInnerDto.getGainAssociatedFields())) {
                     GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryInnerDto.getGainAssociatedFields());
                 }
                 String methodName = dbQueryInnerDto.getMethodName();
@@ -296,17 +296,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(CollUtil.newHashSet("*")).build();
         return findByCondition(queryParamInnerDto);
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param condition 条件
-     * @return 列表
-     */
-    @Override
-    public List<R> findByCondition(Table<String, String, Object> condition) {
-        return findByCondition(getTableName(), condition);
     }
 
     /**
@@ -346,17 +335,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
         return findOneByCondition(tableName, condition, null);
-    }
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param condition 查询条件
-     * @return R 返回数据
-     */
-    @Override
-    public R findOneByCondition(Table<String, String, Object> condition) {
-        return findOneByCondition(getTableName(), condition);
     }
 
     /**

@@ -99,14 +99,6 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     List<R> findByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
-     * 根据条件获取所有数据
-     *
-     * @param condition 条件
-     * @return 列表
-     */
-    List<R> findByCondition(Table<String, String, Object> condition);
-
-    /**
      * 根据条件获取数据
      *
      * @param dbQueryParamInnerDto 查询参数
@@ -122,14 +114,6 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @return R 返回数据
      */
     R findOneByCondition(String tableName, Table<String, String, Object> condition);
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param condition 查询条件
-     * @return R 返回数据
-     */
-    R findOneByCondition(Table<String, String, Object> condition);
 
     /**
      * 根据条件获取数据
