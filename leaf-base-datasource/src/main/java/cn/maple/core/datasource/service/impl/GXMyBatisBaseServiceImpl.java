@@ -157,14 +157,28 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * 通过条件查询列表信息
      *
      * @param tableName            表名字
+     * @param columns              需要查询的字段
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
+        return findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName            表名字
      * @param condition            搜索条件
      * @param gainAssociatedFields 需要获取关联数据的字段名字集合
      * @return List
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
-        return repository.findByCondition(queryParamInnerDto);
+        return findByCondition(tableName, CollUtil.newHashSet("*"), condition, gainAssociatedFields);
     }
 
     /**
@@ -176,7 +190,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
-        return findByCondition(tableName, condition, null);
+        return findByCondition(tableName, CollUtil.newHashSet("*"), condition, null);
     }
 
     /**
@@ -188,7 +202,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        return findByCondition(repository.getTableName(), condition, gainAssociatedFields);
+        return findByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, gainAssociatedFields);
     }
 
     /**
@@ -199,7 +213,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition) {
-        return findByCondition(repository.getTableName(), condition);
+        return findByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, null);
     }
 
     /**
@@ -211,8 +225,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(repository.getTableName()).condition(condition).columns(columns).build();
-        return repository.findByCondition(queryParamInnerDto);
+        return findByCondition(repository.getTableName(), columns, condition, null);
     }
 
     /**
@@ -255,13 +268,27 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件获取一条数据
      *
+     * @param tableName            表名字
+     * @param columns              需要查询的字段
+     * @param condition            搜索条件
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @return 一条数据
+     */
+    public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
+        return findOneByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
      * @param tableName 表名字
      * @param condition 搜索条件
      * @return 一条数据
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
-        return findOneByCondition(tableName, condition, null);
+        return findOneByCondition(tableName, CollUtil.newHashSet("*"), condition, null);
     }
 
     /**
@@ -274,8 +301,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
-        return repository.findOneByCondition(queryParamInnerDto);
+        return findOneByCondition(tableName, CollUtil.newHashSet("*"), condition, gainAssociatedFields);
     }
 
     /**
@@ -286,7 +312,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition) {
-        return findOneByCondition(condition, CollUtil.newHashSet("*"));
+        return findOneByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, null);
     }
 
     /**
@@ -298,7 +324,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        return repository.findOneByCondition(repository.getTableName(), condition, columns);
+        return findOneByCondition(repository.getTableName(), columns, condition, null);
     }
 
     /**
@@ -310,7 +336,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        return findOneByCondition(repository.getTableName(), condition, gainAssociatedFields);
+        return findOneByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, gainAssociatedFields);
     }
 
     /**

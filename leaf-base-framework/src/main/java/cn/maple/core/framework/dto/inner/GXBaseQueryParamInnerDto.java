@@ -76,11 +76,6 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private Dict customerData;
 
     /**
-     * 查询目标结果的类型
-     */
-    private Class<?> targetClazz;
-
-    /**
      * SQL中的having条件
      * <pre>
      * {@code
