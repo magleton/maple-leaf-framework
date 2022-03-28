@@ -164,8 +164,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
-        return findByCondition(queryParamInnerDto);
+        return findByCondition(tableName, condition, columns, gainAssociatedFields, null, null);
     }
 
     /**
@@ -231,6 +230,22 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param tableName            表名字
+     * @param condition            搜索条件
+     * @param columns              需要查询的字段
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param orderField           排序字段
+     * @param groupField           分组字段
+     * @return List
+     */
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields, Dict orderField, Set<String> groupField) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).gainAssociatedFields(gainAssociatedFields).condition(condition).orderByField(orderField).groupByField(groupField).build();
+        return findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param condition  搜索条件
      * @param orderField 排序字段
      * @param groupField 分组字段
@@ -238,8 +253,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition, Dict orderField, Set<String> groupField) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(repository.getTableName()).condition(condition).orderByField(orderField).groupByField(groupField).build();
-        return findByCondition(queryParamInnerDto);
+        return findByCondition(repository.getTableName(), condition, CollUtil.newHashSet("*"), null, orderField, groupField);
     }
 
     /**

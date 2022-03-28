@@ -157,6 +157,19 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param tableName            表名字
+     * @param condition            搜索条件
+     * @param columns              需要查询的字段
+     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param orderField           排序字段
+     * @param groupField           分组字段
+     * @return List
+     */
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields, Dict orderField, Set<String> groupField);
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param condition  搜索条件
      * @param orderField 排序字段
      * @param groupField 分组字段

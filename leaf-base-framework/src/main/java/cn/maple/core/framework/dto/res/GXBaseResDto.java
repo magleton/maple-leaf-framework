@@ -1,11 +1,10 @@
 package cn.maple.core.framework.dto.res;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,5 +19,5 @@ public class GXBaseResDto extends GXBaseDto {
      * 2、也可以同时获取所有的关联信息
      * 3、也可以不获取任何的关联信息
      */
-    private Set<String> gainAssociatedFields;
+    protected transient List<String> gainAssociatedFields;
 }

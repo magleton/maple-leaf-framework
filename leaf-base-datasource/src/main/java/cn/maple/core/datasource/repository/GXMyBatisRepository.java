@@ -459,7 +459,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return baseDao.paginate(dbQueryParamInnerDto, mapperPaginateMethodName);
+        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto, mapperPaginateMethodName);
+        String[] methodName = new String[]{"customizeProcess"};
+        if (Objects.nonNull(dbQueryParamInnerDto.getMethodName())) {
+            methodName[0] = dbQueryParamInnerDto.getMethodName();
+        }
+        Dict customerData = dbQueryParamInnerDto.getCustomerData();
+        paginate.getRecords().forEach(r -> {
+            if (CollUtil.isNotEmpty(dbQueryParamInnerDto.getGainAssociatedFields())) {
+                GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
+            }
+            GXCommonUtils.reflectCallObjectMethod(r, methodName[0], customerData);
+        });
+        return paginate;
     }
 
     /**
