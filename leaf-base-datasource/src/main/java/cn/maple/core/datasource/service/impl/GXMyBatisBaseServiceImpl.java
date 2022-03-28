@@ -163,7 +163,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        return repository.findByCondition(tableName, condition, gainAssociatedFields);
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
+        return repository.findByCondition(queryParamInnerDto);
     }
 
     /**
@@ -273,7 +274,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        return repository.findOneByCondition(tableName, condition, gainAssociatedFields);
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).gainAssociatedFields(gainAssociatedFields).build();
+        return repository.findOneByCondition(queryParamInnerDto);
     }
 
     /**
@@ -296,7 +298,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        return repository.findOneByCondition(repository.getTableName(), condition, columns, CollUtil.newArrayList());
+        return repository.findOneByCondition(repository.getTableName(), condition, columns);
     }
 
     /**

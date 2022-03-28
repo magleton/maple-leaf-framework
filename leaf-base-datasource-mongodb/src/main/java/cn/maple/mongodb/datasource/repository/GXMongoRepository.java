@@ -64,7 +64,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      *
      * @param dbQueryInnerDto 查询对象
      * @param targetClazz     目标对象
-     * @param customerData
+     * @param customerData    自定义填充数据
      * @return 列表
      */
     @Override
@@ -100,39 +100,23 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取所有数据
      *
-     * @param tableName            表名字
-     * @param condition            条件
-     * @param columns              需要获取的列
-     * @param gainAssociatedFields 需要关联获取数据的字段
-     * @return 列表
-     */
-    @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
-        return Collections.emptyList();
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param tableName            表名字
-     * @param condition            条件
-     * @param gainAssociatedFields 需要关联获取数据的字段
-     * @return 列表
-     */
-    @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        return Collections.emptyList();
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
      * @param tableName 表名字
      * @param condition 条件
      * @return 列表
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param condition 条件
+     * @return 列表
+     */
+    @Override
+    public List<R> findByCondition(Table<String, String, Object> condition) {
         return Collections.emptyList();
     }
 
@@ -144,19 +128,6 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        return null;
-    }
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param tableName            表名字
-     * @param condition            查询条件
-     * @param gainAssociatedFields 需要关联获取数据的字段
-     * @return R 返回数据
-     */
-    @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields) {
         return null;
     }
 
@@ -175,14 +146,24 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取数据
      *
-     * @param tableName            表名字
-     * @param condition            查询条件
-     * @param columns              需要查询的列
-     * @param gainAssociatedFields 需要关联获取数据的字段
+     * @param condition 查询条件
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields) {
+    public R findOneByCondition(Table<String, String, Object> condition) {
+        return null;
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param tableName 表名字
+     * @param condition 查询条件
+     * @param columns   需要查询的列
+     * @return R 返回数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
         return null;
     }
 
@@ -358,7 +339,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      *
      * @param dbQueryInnerDto 查询数据
      * @param targetClazz     值的类型
-     * @param customerData
+     * @param customerData    自定义填充数据
      * @return 返回指定的类型的值对象
      */
     @Override
