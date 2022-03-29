@@ -271,6 +271,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      */
     default Object callMethod(String methodName, Object... params) {
         Class<?> serveServiceClass = targetServeServiceClassThreadLocal.get();
+        if (Objects.nonNull(serveServiceClass)) {
+            targetServeServiceClassThreadLocal.remove();
+        }
         if (Objects.isNull(serveServiceClass)) {
             serveServiceClass = serveServiceClassMap.get(getClass().getSimpleName());
         }
@@ -278,9 +281,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
             Object bean = GXSpringContextUtils.getBean(serveServiceClass);
             if (Objects.nonNull(bean)) {
                 return GXCommonUtils.reflectCallObjectMethod(bean, methodName, params);
-            }
-            if (Objects.nonNull(targetServeServiceClassThreadLocal.get())) {
-                targetServeServiceClassThreadLocal.remove();
             }
         }
         return null;
