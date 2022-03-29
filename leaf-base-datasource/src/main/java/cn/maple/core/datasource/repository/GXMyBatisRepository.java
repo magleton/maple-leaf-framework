@@ -275,10 +275,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
                 if (CharSequenceUtil.isBlank(methodName)) {
                     methodName = "customizeProcess";
                 }
-                Dict customerData = dbQueryInnerDto.getCustomerData();
-                if (Objects.isNull(customerData)) {
-                    customerData = Dict.create();
-                }
+                Dict customerData = Optional.ofNullable(dbQueryInnerDto.getCustomerData()).orElse(Dict.create());
                 GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
             });
         }
@@ -316,10 +313,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             if (CharSequenceUtil.isBlank(methodName)) {
                 methodName = "customizeProcess";
             }
-            Dict customerData = dbQueryParamInnerDto.getCustomerData();
-            if (Objects.isNull(customerData)) {
-                customerData = Dict.create();
-            }
+            Dict customerData = Optional.ofNullable(dbQueryParamInnerDto.getCustomerData()).orElse(Dict.create());
             GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
         }
         return r;
@@ -464,7 +458,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.nonNull(dbQueryParamInnerDto.getMethodName())) {
             methodName[0] = dbQueryParamInnerDto.getMethodName();
         }
-        Dict customerData = dbQueryParamInnerDto.getCustomerData();
+        Dict customerData = Optional.ofNullable(dbQueryParamInnerDto.getCustomerData()).orElse(Dict.create());
         paginate.getRecords().forEach(r -> {
             if (CollUtil.isNotEmpty(dbQueryParamInnerDto.getGainAssociatedFields())) {
                 GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
