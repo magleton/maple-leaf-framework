@@ -13,8 +13,10 @@ import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 暴露服务的基础API接口
@@ -28,7 +30,12 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 服务类的Class 对象
      */
-    Class<?>[] serveServiceClass = new Class<?>[1];
+    Map<String, Class<?>> serveServiceClassMap = new ConcurrentHashMap<String, Class<?>>();
+
+    /**
+     * 目标服务的类型
+     */
+    ThreadLocal<Class<?>> targetServeServiceClassThreadLocal = new ThreadLocal<>();
 
     /**
      * 根据条件获取一条数据
@@ -241,8 +248,18 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      *
      * @param serveServiceClass 服务类Class对象
      */
-    default void bindServeServiceClass(Class<?> serveServiceClass) {
-        this.serveServiceClass[0] = serveServiceClass;
+    default void staticBindServeServiceClass(Class<?> serveServiceClass) {
+        this.serveServiceClassMap.put(getClass().getSimpleName(), serveServiceClass);
+    }
+
+    /**
+     * 子类可以动态指定目标服务类型
+     *
+     * @return
+     */
+    default GXBaseServeApi callBindTargetServeSericeClass(Class<?> targetServeServiceClass) {
+        targetServeServiceClassThreadLocal.set(targetServeServiceClass);
+        return this;
     }
 
     /**
@@ -253,10 +270,17 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return Object
      */
     default Object callMethod(String methodName, Object... params) {
-        if (Objects.nonNull(serveServiceClass[0])) {
-            Object bean = GXSpringContextUtils.getBean(serveServiceClass[0]);
+        Class<?> serveServiceClass = targetServeServiceClassThreadLocal.get();
+        if (Objects.isNull(serveServiceClass)) {
+            serveServiceClass = serveServiceClassMap.get(getClass().getSimpleName());
+        }
+        if (Objects.nonNull(serveServiceClass)) {
+            Object bean = GXSpringContextUtils.getBean(serveServiceClass);
             if (Objects.nonNull(bean)) {
                 return GXCommonUtils.reflectCallObjectMethod(bean, methodName, params);
+            }
+            if (Objects.nonNull(targetServeServiceClassThreadLocal.get())) {
+                targetServeServiceClassThreadLocal.remove();
             }
         }
         return null;
