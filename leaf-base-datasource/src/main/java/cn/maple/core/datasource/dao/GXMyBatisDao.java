@@ -108,7 +108,8 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).build();
-        return Objects.nonNull(baseMapper.checkRecordIsExists(queryParamInnerDto));
+        Integer val = baseMapper.checkRecordIsExists(queryParamInnerDto);
+        return Objects.nonNull(val);
     }
 
     /**
