@@ -2,6 +2,7 @@ package cn.maple.redisson.module.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
 import cn.maple.redisson.module.repository.GXRediSearchRepository;
@@ -107,7 +108,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
      * @return List
      */
     @Override
-    public List<Dict> search(GXRediSearchQueryParamReqDto paramInnerDto) {
+    public GXPaginationResDto<Dict> search(GXRediSearchQueryParamReqDto paramInnerDto) {
         return rediSearchRepository.search(paramInnerDto, Dict.class);
     }
 

@@ -1,6 +1,7 @@
 package cn.maple.redisson.module.dto.req;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,4 +40,14 @@ public class GXRediSearchQueryParamReqDto {
      * 数据转换时需要条用的额外参数
      */
     private String convertMethodName;
+
+    /**
+     * 当前页
+     */
+    private Integer currentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
+
+    /**
+     * 每页条数
+     */
+    private Integer pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
 }

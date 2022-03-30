@@ -1,6 +1,7 @@
 package cn.maple.redisson.module.service;
 
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
 import io.github.dengliming.redismodule.redisearch.RediSearch;
@@ -69,7 +70,7 @@ public interface GXRediSearchService {
      * @param paramInnerDto 搜索条件
      * @return List
      */
-    List<Dict> search(GXRediSearchQueryParamReqDto searchQueryParamReqDto);
+    GXPaginationResDto<Dict> search(GXRediSearchQueryParamReqDto searchQueryParamReqDto);
 
     /**
      * 获取RediSearch对象

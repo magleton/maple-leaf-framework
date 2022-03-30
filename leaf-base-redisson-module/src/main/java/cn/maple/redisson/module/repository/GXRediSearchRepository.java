@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.module.dto.req.GXRediSearchQueryParamReqDto;
 import cn.maple.redisson.module.dto.req.GXRediSearchSchemaReqDto;
@@ -15,6 +16,7 @@ import io.github.dengliming.redismodule.redisearch.index.IndexOptions;
 import io.github.dengliming.redismodule.redisearch.index.RSLanguage;
 import io.github.dengliming.redismodule.redisearch.index.schema.Field;
 import io.github.dengliming.redismodule.redisearch.index.schema.Schema;
+import io.github.dengliming.redismodule.redisearch.search.Page;
 import io.github.dengliming.redismodule.redisearch.search.SearchOptions;
 import io.github.dengliming.redismodule.redisearch.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
@@ -38,15 +40,19 @@ public class GXRediSearchRepository {
      * @param customerData             额外数据
      * @return 列表
      */
-    public <R> List<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
+    public <R> GXPaginationResDto<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
         String indexName = dataIndexesParamInnerDto.getIndexName();
         RediSearch rediSearch = getRediSearch(indexName);
         SearchOptions searchOptions = Optional.ofNullable(dataIndexesParamInnerDto.getSearchOptions()).orElse(new SearchOptions());
         String query = dataIndexesParamInnerDto.getQuery();
 
         if (CharSequenceUtil.isBlank(query)) {
-            return Collections.emptyList();
+            return new GXPaginationResDto<>(Collections.emptyList());
         }
+
+        Integer currentPage = dataIndexesParamInnerDto.getCurrentPage();
+        Integer pageSize = dataIndexesParamInnerDto.getPageSize();
+        searchOptions.page(new Page(currentPage, pageSize));
 
         SearchResult search = rediSearch.search(query, searchOptions);
         List<Document> documents = search.getDocuments();
@@ -62,7 +68,7 @@ public class GXRediSearchRepository {
             R r = GXCommonUtils.convertSourceToTarget(data, targetClass, dataIndexesParamInnerDto.getConvertMethodName(), dataIndexesParamInnerDto.getCopyOptions(), customerData);
             rLst.add(r);
         });
-        return rLst;
+        return new GXPaginationResDto<>(rLst, search.getTotal(), pageSize, currentPage);
     }
 
     /**
