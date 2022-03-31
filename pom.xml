@@ -50,7 +50,6 @@
         <p6spy.version>3.9.1</p6spy.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
-        <nacos-config-spring-boot.version>0.2.10</nacos-config-spring-boot.version>
         <log4j.version>2.17.1</log4j.version>
         <logback.version>1.2.10</logback.version>
     </properties>
@@ -105,21 +104,6 @@
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-autoconfigure</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba.boot</groupId>
-                <artifactId>nacos-config-spring-boot-starter</artifactId>
-                <version>${nacos-config-spring-boot.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.alibaba.nacos</groupId>
-                        <artifactId>nacos-client</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
