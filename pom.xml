@@ -39,7 +39,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mysql.version>8.0.28</mysql.version>
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
-        <hutool.version>5.7.22</hutool.version>
+        <hutool.version>5.8.0.M1</hutool.version>
         <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
         <aspectjweaver.version>1.9.8</aspectjweaver.version>
         <shiro-spring.version>1.8.0</shiro-spring.version>
@@ -49,7 +49,7 @@
         <org.mapstruct.version>1.5.0.Beta2</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <spring-boot.version>2.6.5</spring-boot.version>
+        <spring-boot.version>2.6.6</spring-boot.version>
         <log4j.version>2.17.1</log4j.version>
         <logback.version>1.2.10</logback.version>
     </properties>
