@@ -1,12 +1,11 @@
 package cn.maple.redisson.properties;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("all")
 public abstract class GXRedissonProperties {
-    protected Map<String, GXRedissonConnectProperties> config = new LinkedHashMap<>();
-
     public Map<String, GXRedissonConnectProperties> getConfig() {
-        return config;
+        return new HashMap<>();
     }
 }

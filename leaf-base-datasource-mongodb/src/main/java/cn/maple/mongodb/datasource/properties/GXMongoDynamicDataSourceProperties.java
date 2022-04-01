@@ -1,12 +1,11 @@
 package cn.maple.mongodb.datasource.properties;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("all")
 public abstract class GXMongoDynamicDataSourceProperties {
-    protected Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
-
     public Map<String, GXMongoDataSourceProperties> getDatasource() {
-        return datasource;
+        return new HashMap<>();
     }
 }

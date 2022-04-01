@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Slf4j
 @Component
+@SuppressWarnings("all")
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
 @PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/rabbit.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)

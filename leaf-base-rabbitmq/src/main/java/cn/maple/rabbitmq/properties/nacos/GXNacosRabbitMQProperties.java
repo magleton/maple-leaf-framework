@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Slf4j
-@EqualsAndHashCode(callSuper = true)
 @Component
+@SuppressWarnings("all")
+@EqualsAndHashCode(callSuper = true)
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
 @NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "rabbit", dataId = "rabbit.yml", autoRefreshed = true, type = ConfigType.YAML)
 public class GXNacosRabbitMQProperties extends GXRabbitMQProperties {
