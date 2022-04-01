@@ -471,7 +471,7 @@ public class GXCommonUtils {
     /**
      * 动态调用对象中的方法
      *
-     * @param serviceClass 目标对象类型
+     * @param serviceClass 目标对象类型 必须存在于Spring Bean容器中
      * @param methodName   对象中的方法
      * @param params       参数
      * @param <R>          对象类型
