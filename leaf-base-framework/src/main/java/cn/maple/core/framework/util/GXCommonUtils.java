@@ -471,6 +471,20 @@ public class GXCommonUtils {
     /**
      * 动态调用对象中的方法
      *
+     * @param serviceClass 目标对象类型
+     * @param methodName   对象中的方法
+     * @param params       参数
+     * @param <R>          对象类型
+     */
+    @SuppressWarnings("all")
+    public static <R> Object reflectCallObjectMethod(Class<?> serviceClass, String methodName, Object... params) {
+        Object target = GXSpringContextUtils.getBean(serviceClass);
+        return reflectCallObjectMethod(target, methodName, params);
+    }
+
+    /**
+     * 动态调用对象中的方法
+     *
      * @param object     对象
      * @param methodName 对象中的方法
      * @param params     参数
