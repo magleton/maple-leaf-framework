@@ -8,7 +8,6 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
@@ -278,10 +277,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
             serveServiceClass = serveServiceClassMap.get(getClass().getSimpleName());
         }
         if (Objects.nonNull(serveServiceClass)) {
-            Object bean = GXSpringContextUtils.getBean(serveServiceClass);
-            if (Objects.nonNull(bean)) {
-                return GXCommonUtils.reflectCallObjectMethod(bean, methodName, params);
-            }
+            return GXCommonUtils.reflectCallObjectMethod(serveServiceClass, methodName, params);
         }
         return null;
     }
