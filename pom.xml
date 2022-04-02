@@ -40,7 +40,6 @@
         <mysql.version>8.0.28</mysql.version>
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
         <hutool.version>5.8.0.M1</hutool.version>
-        <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
         <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
         <shiro-spring.version>1.9.0</shiro-spring.version>
         <guava.version>31.1-jre</guava.version>
@@ -96,17 +95,6 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus-boot.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-autoconfigure</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
