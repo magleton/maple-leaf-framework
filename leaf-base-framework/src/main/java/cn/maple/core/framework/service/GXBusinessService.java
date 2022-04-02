@@ -3,6 +3,7 @@ package cn.maple.core.framework.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -146,4 +147,16 @@ public interface GXBusinessService {
      * @return List
      */
     <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object... customerData);
+
+    /**
+     * 动态调用指定底层类中的方法
+     *
+     * @param serveClass 底层类型 一定要是Spring Bean容器中的类型
+     * @param methodName 方法名字
+     * @param params     调用参数
+     * @return Object
+     */
+    default Object callMethod(Class<?> serveClass, String methodName, Object... params) {
+        return GXCommonUtils.reflectCallObjectMethod(serveClass, methodName, params);
+    }
 }
