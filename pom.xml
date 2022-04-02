@@ -41,17 +41,18 @@
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
         <hutool.version>5.8.0.M1</hutool.version>
         <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
-        <aspectjweaver.version>1.9.8</aspectjweaver.version>
-        <shiro-spring.version>1.8.0</shiro-spring.version>
+        <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
+        <shiro-spring.version>1.9.0</shiro-spring.version>
         <guava.version>31.1-jre</guava.version>
-        <okhttp.version>4.9.1</okhttp.version>
-        <caffeine.version>3.0.5</caffeine.version>
+        <okhttp.version>5.0.0-alpha.6</okhttp.version>
+        <caffeine.version>3.0.6</caffeine.version>
         <org.mapstruct.version>1.5.0.RC1</org.mapstruct.version>
         <p6spy.version>3.9.1</p6spy.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <spring-boot.version>2.6.6</spring-boot.version>
-        <log4j.version>2.17.2</log4j.version>
-        <logback.version>1.3.0-alpha14</logback.version>
+        <logging.log4j.version>2.17.2</logging.log4j.version>
+        <log4j.version>1.2.17</log4j.version>
+        <logback.version>1.2.11</logback.version>
     </properties>
 
     <dependencyManagement>
@@ -152,21 +153,26 @@
                 <artifactId>p6spy</artifactId>
                 <version>${p6spy.version}</version>
             </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
             <!--Log4j-->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
+                <version>${logging.log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>${log4j.version}</version>
+                <version>${logging.log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-to-slf4j</artifactId>
-                <version>${log4j.version}</version>
+                <version>${logging.log4j.version}</version>
             </dependency>
             <!--Logback-->
             <dependency>
