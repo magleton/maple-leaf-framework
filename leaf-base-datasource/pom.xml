@@ -14,6 +14,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <mybatis-dynamic.version>1.4.0</mybatis-dynamic.version>
     </properties>
 
     <dependencies>
@@ -38,6 +39,11 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.dynamic-sql</groupId>
+            <artifactId>mybatis-dynamic-sql</artifactId>
+            <version>${mybatis-dynamic.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
