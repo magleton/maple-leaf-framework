@@ -48,13 +48,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     @Autowired
     protected D baseDao;
-    
-    /**
-     * 基础的MyBatis Mapper
-     */
-    @SuppressWarnings("all")
-    @Autowired
-    protected M baseMapper;
 
     /**
      * 保存数据
