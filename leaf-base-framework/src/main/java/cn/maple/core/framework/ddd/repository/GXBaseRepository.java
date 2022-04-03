@@ -5,13 +5,11 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializable> {
@@ -304,35 +302,6 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @return 目标类型的值
      */
     <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz);
-
-    /**
-     * 动态调用指定的指定Class中的方法
-     *
-     * @param serveClass 底层类型  该类型一定要在Spring Bean容器中
-     * @param method     需要调用的方法
-     * @param params     参数
-     * @return Object
-     */
-    default Object callMethod(Class<?> serveClass, String method, Object... params) {
-        return GXCommonUtils.reflectCallObjectMethod(serveClass, method, params);
-    }
-
-    /**
-     * 动态调用指定的指定Class中的方法
-     *
-     * @param serveClass  底层类型  该类型一定要在Spring Bean容器中
-     * @param method      需要调用的方法
-     * @param targetClass 目标类型
-     * @param params      参数
-     * @return Object
-     */
-    default <E> E callMethod(Class<?> serveClass, String method, Class<E> targetClass, Object... params) {
-        Object o = callMethod(serveClass, method, params);
-        if (Objects.isNull(o)) {
-            return null;
-        }
-        return GXCommonUtils.convertSourceToTarget(o, targetClass, null, null);
-    }
 
     /**
      * 获取 Primary Key

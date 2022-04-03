@@ -39,6 +39,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 日志对象
      */
+    @SuppressWarnings("all")
     private static final Logger LOGGER = GXCommonUtils.getLogger(GXMyBatisRepository.class);
 
     /**
@@ -673,6 +674,15 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public String getTableName(T entity) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
         return tableInfo.getTableName();
+    }
+
+    /**
+     * 获取仓库的MyBatis Mapper对象
+     *
+     * @return Mapper对象
+     */
+    public M getBaseMapper() {
+        return baseDao.getBaseMapper();
     }
 
     /**

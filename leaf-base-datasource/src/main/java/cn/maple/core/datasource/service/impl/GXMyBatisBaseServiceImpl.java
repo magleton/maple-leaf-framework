@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.service.impl;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -24,9 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 业务基础Service
@@ -42,6 +41,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 日志对象
      */
+    @SuppressWarnings("all")
     private static final Logger LOGGER = GXCommonUtils.getLogger(GXMyBatisBaseServiceImpl.class);
 
     /**
@@ -543,6 +543,76 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns) {
         return findFieldByCondition(repository.getTableName(), condition, columns, getReturnValueType());
+    }
+
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param convertMethodName  结果集转换函数名字
+     * @param copyOptions        转换选项
+     * @param params             参数
+     * @return Collection
+     */
+    @Override
+    public Collection<R> findByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
+        Object o = callMethod(getBaseMapper(), mapperMethodMethod, params);
+        if (Objects.isNull(o)) {
+            return Collections.emptyList();
+        }
+        return GXCommonUtils.convertSourceListToTargetList((Collection<?>) o, getReturnValueType(), convertMethodName, copyOptions);
+    }
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param params             参数
+     * @return Object
+     */
+    @Override
+    public Collection<R> findByCallMethod(String mapperMethodMethod, Object... params) {
+        return findByCallMethod(mapperMethodMethod, null, null, params);
+    }
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param convertMethodName  结果集转换函数名字
+     * @param copyOptions        转换选项
+     * @param params             参数
+     * @return Object
+     */
+    @Override
+    public R findOneByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
+        Object o = callMethod(getBaseMapper(), mapperMethodMethod, params);
+        if (Objects.isNull(o)) {
+            return null;
+        }
+        return GXCommonUtils.convertSourceToTarget(o, getReturnValueType(), convertMethodName, copyOptions);
+    }
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodName 需要调用的方法
+     * @param params           参数
+     * @return Object
+     */
+    @Override
+    public R findOneByCallMethod(String mapperMethodName, Object... params) {
+        return findOneByCallMethod(mapperMethodName, null, null, params);
+    }
+
+    /**
+     * 获取基础的MyBatis Mapper对象
+     *
+     * @return Mapper对象
+     */
+    private GXBaseMapper<T, R> getBaseMapper() {
+        return repository.getBaseMapper();
     }
 
     /**

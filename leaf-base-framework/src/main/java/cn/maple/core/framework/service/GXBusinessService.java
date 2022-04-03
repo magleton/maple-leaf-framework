@@ -159,4 +159,16 @@ public interface GXBusinessService {
     default Object callMethod(Class<?> serveClass, String methodName, Object... params) {
         return GXCommonUtils.reflectCallObjectMethod(serveClass, methodName, params);
     }
+
+    /**
+     * 动态调用指定底层类中的方法
+     *
+     * @param targetObject 被调用对象
+     * @param methodName   方法名字
+     * @param params       调用参数
+     * @return Object
+     */
+    default Object callMethod(Object targetObject, String methodName, Object... params) {
+        return GXCommonUtils.reflectCallObjectMethod(targetObject, methodName, params);
+    }
 }

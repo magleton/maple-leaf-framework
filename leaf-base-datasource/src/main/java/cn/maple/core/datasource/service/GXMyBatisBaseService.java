@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.service;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -13,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -384,6 +386,46 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 返回指定的类型的值对象
      */
     R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns);
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param convertMethodName  结果集转换函数名字
+     * @param copyOptions        转换选项
+     * @param params             参数
+     * @return Collection
+     */
+    Collection<R> findByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param params             参数
+     * @return Object
+     */
+    Collection<R> findByCallMethod(String mapperMethodMethod, Object... params);
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodMethod 需要调用的方法
+     * @param convertMethodName  结果集转换函数名字
+     * @param copyOptions        转换选项
+     * @param params             参数
+     * @return Object
+     */
+    R findOneByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
+
+    /**
+     * 动态调用指定的指定Class中的方法
+     *
+     * @param mapperMethodName 需要调用的方法
+     * @param params           参数
+     * @return Object
+     */
+    R findOneByCallMethod(String mapperMethodName, Object... params);
 
     /**
      * 获取实体类型的Class
