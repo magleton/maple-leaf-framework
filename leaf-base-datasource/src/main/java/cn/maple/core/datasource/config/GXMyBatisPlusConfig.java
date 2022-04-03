@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.*;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
@@ -133,7 +134,9 @@ public class GXMyBatisPlusConfig {
         @Override
         public Expression getTenantId() {
             GXTenantIdService tenantIdService = GXSpringContextUtils.getBean(GXTenantIdService.class);
-            assert tenantIdService != null;
+            if (Objects.isNull(tenantIdService)) {
+                return new LongValue(0);
+            }
             return tenantIdService.getTenantId();
         }
 
