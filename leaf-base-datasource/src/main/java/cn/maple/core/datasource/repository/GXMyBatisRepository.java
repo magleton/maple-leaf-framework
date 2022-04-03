@@ -677,15 +677,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
-     * 获取仓库的MyBatis Mapper对象
-     *
-     * @return Mapper对象
-     */
-    public M getBaseMapper() {
-        return baseDao.getBaseMapper();
-    }
-
-    /**
      * 通过泛型标识获取实体的表名字
      *
      * @return 数据库表名字

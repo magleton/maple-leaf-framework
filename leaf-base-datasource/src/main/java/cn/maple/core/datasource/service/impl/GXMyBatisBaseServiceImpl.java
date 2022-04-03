@@ -52,6 +52,13 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     protected P repository;
 
     /**
+     * 基础Mapper
+     */
+    @Autowired
+    @SuppressWarnings("all")
+    private M baseMapper;
+
+    /**
      * 检测给定条件的记录是否存在
      *
      * @param tableName 数据库表名字
@@ -557,7 +564,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Collection<R> findByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
-        Object o = callMethod(getBaseMapper(), mapperMethodMethod, params);
+        Object o = callMethod(baseMapper, mapperMethodMethod, params);
         if (Objects.isNull(o)) {
             return Collections.emptyList();
         }
@@ -587,7 +594,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
-        Object o = callMethod(getBaseMapper(), mapperMethodMethod, params);
+        Object o = callMethod(baseMapper, mapperMethodMethod, params);
         if (Objects.isNull(o)) {
             return null;
         }
@@ -604,15 +611,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public R findOneByCallMethod(String mapperMethodName, Object... params) {
         return findOneByCallMethod(mapperMethodName, null, null, params);
-    }
-
-    /**
-     * 获取基础的MyBatis Mapper对象
-     *
-     * @return Mapper对象
-     */
-    private GXBaseMapper<T, R> getBaseMapper() {
-        return repository.getBaseMapper();
     }
 
     /**
