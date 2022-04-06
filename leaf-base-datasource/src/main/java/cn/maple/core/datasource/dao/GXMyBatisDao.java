@@ -16,6 +16,7 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -72,12 +73,13 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * 保存一条数据
      *
      * @param tableName 表名字
-     * @param data      待插入数据
+     * @param entity    待插入数据
      * @return 影响行数
      */
-    public ID insert(String tableName, Dict data) {
-        baseMapper.insert(tableName, data);
-        return Convert.convert(getIDClassType(), data.getObj(GXBuilderConstant.DEFAULT_ID_NAME));
+    public ID insert(String tableName, T entity) {
+        baseMapper.insert(tableName, entity);
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(GXBuilderConstant.DEFAULT_ID_NAME));
+        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
     }
 
     /**
@@ -226,6 +228,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @SuppressWarnings("all")
     private Class<ID> getIDClassType() {
-        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2]);
+        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
     }
 }

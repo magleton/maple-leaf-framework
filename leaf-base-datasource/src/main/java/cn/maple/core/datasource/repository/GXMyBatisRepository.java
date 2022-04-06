@@ -70,8 +70,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public ID create(T entity) {
         GXValidatorUtils.validateEntity(entity);
-        Dict data = GXCommonUtils.convertSourceToDict(entity);
-        return baseDao.insert(getTableName(), data);
+        return baseDao.insert(getTableName(), entity);
     }
 
     /**

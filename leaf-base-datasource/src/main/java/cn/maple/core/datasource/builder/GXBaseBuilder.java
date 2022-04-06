@@ -165,7 +165,7 @@ public interface GXBaseBuilder {
         List<String> tmp = new ArrayList<>();
         for (String field : fieldSet) {
             Object value = data.getObj(CharSequenceUtil.toCamelCase(field));
-            if (CollUtil.contains(Arrays.asList("0", ""), value) && CharSequenceUtil.equalsIgnoreCase(field, GXBuilderConstant.DEFAULT_ID_NAME) && !CharSequenceUtil.equalsIgnoreCase(Optional.ofNullable(columns.get(field)).orElse("").toString(), "auto_increment")) {
+            if ((CollUtil.contains(Arrays.asList("0", ""), value) || Objects.isNull(value)) && CharSequenceUtil.equalsIgnoreCase(field, GXBuilderConstant.DEFAULT_ID_NAME) && !CharSequenceUtil.equalsIgnoreCase(Optional.ofNullable(columns.get(field)).orElse("").toString(), "auto_increment")) {
                 value = IdUtil.getSnowflake().nextId();
                 data.set(GXBuilderConstant.DEFAULT_ID_NAME, value);
             }
@@ -192,8 +192,23 @@ public interface GXBaseBuilder {
      * @param data      待插入数据
      * @return 影响行数
      */
-    static String insert(String tableName, Dict data) {
-        return batchSave(tableName, List.of(data));
+    @SuppressWarnings("all")
+    static String insert(String tableName, Object data) {
+        try {
+            Dict dict = GXCommonUtils.convertSourceToDict(data);
+            GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
+            assert tableService != null;
+            List<GXDBSchemaService.TableField> tableColumns = tableService.getTableColumns(tableName);
+            HashMap<String, Object> columns = new HashMap<>();
+            tableColumns.forEach(c -> columns.put(c.getColumnName(), c.getExtra()));
+            final Set<String> fieldSet = new HashSet<>(columns.keySet());
+            String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
+            StringBuilder values = new StringBuilder();
+            combinedFieldValue(dict, columns, values);
+            return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
+        } catch (SQLException e) {
+            throw new GXBusinessException("获取表的列信息失败!", e);
+        }
     }
 
     /**

@@ -138,10 +138,10 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * 保存一条数据
      *
      * @param tableName 表名字
-     * @param data      待插入数据
+     * @param entity    待插入数据
      * @return 影响行数
      */
-    ID insert(String tableName, Dict data);
+    ID insert(String tableName, T entity);
 
     /**
      * 获取表名字

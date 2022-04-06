@@ -119,6 +119,18 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
     }
 
     /**
+     * 保存一条数据
+     *
+     * @param tableName 表名字
+     * @param entity    待插入数据
+     * @return 影响行数
+     */
+    @Override
+    public ID insert(String tableName, T entity) {
+        return null;
+    }
+
+    /**
      * 获取表名字
      *
      * @param clazz 实体的类型

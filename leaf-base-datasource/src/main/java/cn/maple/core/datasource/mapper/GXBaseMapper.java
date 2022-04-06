@@ -3,6 +3,7 @@ package cn.maple.core.datasource.mapper;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.datasource.model.GXMyBatisModel;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -25,7 +26,8 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
     Integer batchSave(String tableName, List<Dict> dataList);
 
     @InsertProvider(type = GXBaseBuilder.class, method = "insert")
-    Integer insert(String tableName, Dict data);
+    @Options(useGeneratedKeys = true, keyProperty = "param2.id", keyColumn = "id")
+    Integer insert(String tableName, T entity);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
