@@ -1,12 +1,15 @@
 package cn.maple.core.datasource.dao;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -62,6 +66,18 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
             throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperPaginateMethodName));
         }
         throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperPaginateMethodName));
+    }
+
+    /**
+     * 保存一条数据
+     *
+     * @param tableName 表名字
+     * @param data      待插入数据
+     * @return 影响行数
+     */
+    public ID insert(String tableName, Dict data) {
+        baseMapper.insert(tableName, data);
+        return Convert.convert(getIDClassType(), data.getObj(GXBuilderConstant.DEFAULT_ID_NAME));
     }
 
     /**
@@ -201,5 +217,15 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     public String getTableName(Class<T> clazz) {
         return GXDBCommonUtils.getTableName(clazz);
+    }
+
+    /**
+     * 获取主键标识的类型
+     *
+     * @return Class
+     */
+    @SuppressWarnings("all")
+    private Class<ID> getIDClassType() {
+        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2]);
     }
 }

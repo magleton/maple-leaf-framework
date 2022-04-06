@@ -24,6 +24,9 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
     @InsertProvider(type = GXBaseBuilder.class, method = "batchSave")
     Integer batchSave(String tableName, List<Dict> dataList);
 
+    @InsertProvider(type = GXBaseBuilder.class, method = "insert")
+    Integer insert(String tableName, Dict data);
+
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 

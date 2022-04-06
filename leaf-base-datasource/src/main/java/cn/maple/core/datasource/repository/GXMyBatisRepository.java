@@ -67,13 +67,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param entity 需要保存的数据
      * @return ID
      */
-    @SuppressWarnings("all")
     @Override
     public ID create(T entity) {
         GXValidatorUtils.validateEntity(entity);
-        baseDao.save(entity);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
+        Dict data = GXCommonUtils.convertSourceToDict(entity);
+        return baseDao.insert(getTableName(), data);
     }
 
     /**

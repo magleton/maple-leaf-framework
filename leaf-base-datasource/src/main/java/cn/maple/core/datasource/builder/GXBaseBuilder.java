@@ -7,9 +7,11 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.model.GXMyBatisModel;
+import cn.maple.core.datasource.service.GXAlterTableService;
 import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -26,6 +28,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -131,33 +134,66 @@ public interface GXBaseBuilder {
         if (dataList.isEmpty()) {
             throw new GXBusinessException("批量插入数据为空");
         }
-        dataList.forEach(dict -> {
-            dict.set("created_at", DateUtil.currentSeconds());
-            if (Objects.isNull(dict.getObj("ext"))) {
-                dict.set("ext", "{}");
+        try {
+            GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
+            assert tableService != null;
+            List<GXDBSchemaService.TableField> tableColumns = tableService.getTableColumns(tableName);
+            HashMap<String, Object> columns = new HashMap<>();
+            tableColumns.forEach(c -> columns.put(c.getColumnName(), c.getExtra()));
+            dataList.forEach(dict -> dict.set("createdAt", DateUtil.currentSeconds()));
+            final Set<String> fieldSet = new HashSet<>(columns.keySet());
+            String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
+            StringBuilder values = new StringBuilder();
+            for (Dict dict : dataList) {
+                combinedFieldValue(dict, columns, values);
             }
-        });
-        final Set<String> fieldSet = new HashSet<>(dataList.get(0).keySet());
-        String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
-        StringBuilder values = new StringBuilder();
-        for (Dict dict : dataList) {
-            int len = dict.size();
-            int key = 0;
-            values.append("('");
-            for (String field : fieldSet) {
-                Object value = dict.getObj(field);
-                if (!ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                    value = value.toString();
-                }
-                if (++key == len) {
-                    values.append(value).append("'");
-                } else {
-                    values.append(value).append("','");
-                }
-            }
-            values.append("),");
+            return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
+        } catch (SQLException e) {
+            throw new GXBusinessException("获取表的列信息失败!", e);
         }
-        return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
+    }
+
+    /**
+     * 组合字段的值
+     *
+     * @param data    需要插入的数据
+     * @param columns 数据库字段
+     */
+    private static void combinedFieldValue(Dict data, HashMap<String, Object> columns, StringBuilder values) {
+        values.append("(");
+        Set<String> fieldSet = columns.keySet();
+        List<String> tmp = new ArrayList<>();
+        for (String field : fieldSet) {
+            Object value = data.getObj(CharSequenceUtil.toCamelCase(field));
+            if (CollUtil.contains(Arrays.asList("0", ""), value) && CharSequenceUtil.equalsIgnoreCase(field, GXBuilderConstant.DEFAULT_ID_NAME) && !CharSequenceUtil.equalsIgnoreCase(Optional.ofNullable(columns.get(field)).orElse("").toString(), "auto_increment")) {
+                value = IdUtil.getSnowflake().nextId();
+                data.set(GXBuilderConstant.DEFAULT_ID_NAME, value);
+            }
+            if (Objects.isNull(value)) {
+                tmp.add(null);
+                continue;
+            }
+            if (value instanceof Map) {
+                value = JSONUtil.toJsonStr(value);
+            }
+            String valueTemplate = "'{}'";
+            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
+                valueTemplate = "{}";
+            }
+            tmp.add(CharSequenceUtil.format(valueTemplate, value));
+        }
+        values.append(String.join(",", tmp)).append("),");
+    }
+
+    /**
+     * 保存一条数据
+     *
+     * @param tableName 表名字
+     * @param data      待插入数据
+     * @return 影响行数
+     */
+    static String insert(String tableName, Dict data) {
+        return batchSave(tableName, List.of(data));
     }
 
     /**

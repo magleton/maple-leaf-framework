@@ -97,6 +97,7 @@ public interface GXDBSchemaService {
         private String columnName;
         private String dataType;
         private String columnType;
+        private String extra;
     }
 
     @Data

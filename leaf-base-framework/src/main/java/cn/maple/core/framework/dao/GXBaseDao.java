@@ -135,6 +135,15 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
     GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName);
 
     /**
+     * 保存一条数据
+     *
+     * @param tableName 表名字
+     * @param data      待插入数据
+     * @return 影响行数
+     */
+    ID insert(String tableName, Dict data);
+
+    /**
      * 获取表名字
      *
      * @param clazz 实体的类型

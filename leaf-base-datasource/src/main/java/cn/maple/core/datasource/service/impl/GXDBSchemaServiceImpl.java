@@ -42,7 +42,7 @@ public class GXDBSchemaServiceImpl implements GXDBSchemaService {
         final List<TableField> resultData = new ArrayList<>();
         try (final Connection connection = dataSource.getConnection()) {
             String databaseName = connection.getCatalog();
-            final String sql = "SELECT column_name,data_type,column_type FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME ='{}'";
+            final String sql = "SELECT column_name,data_type,column_type,extra FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME ='{}'";
             try (final Statement statement = connection.createStatement();
                  final ResultSet resultSet = statement.executeQuery(CharSequenceUtil.format(sql, databaseName, tableName))) {
                 while (resultSet.next()) {
