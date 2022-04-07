@@ -253,32 +253,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     R findOneByCondition(Table<String, String, Object> condition, Set<String> columns);
 
     /**
-     * 创建数据
-     *
-     * @param entity 数据实体
-     * @return ID
-     */
-    ID create(T entity);
-
-    /**
-     * 更新数据
-     *
-     * @param entity    数据实体
-     * @param condition 更新条件
-     * @return ID
-     */
-    ID update(T entity, Table<String, String, Object> condition);
-
-    /**
-     * 更新数据
-     *
-     * @param entity        数据实体
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    ID update(T entity, UpdateWrapper<T> updateWrapper);
-
-    /**
      * 创建或者更新
      *
      * @param entity 数据实体
@@ -294,15 +268,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return ID
      */
     ID updateOrCreate(T entity, Table<String, String, Object> condition);
-
-    /**
-     * 创建或者更新
-     *
-     * @param entity        数据实体
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper);
 
     /**
      * 复制一条数据

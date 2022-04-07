@@ -130,7 +130,8 @@ public interface GXBaseBuilder {
      * @param dataList  需要插入的数据列表
      * @return String
      */
-    static String batchSave(String tableName, List<Dict> dataList) {
+    @SuppressWarnings("all")
+    static String saveBatch(String tableName, List<Dict> dataList) {
         if (dataList.isEmpty()) {
             throw new GXBusinessException("批量插入数据为空");
         }
@@ -193,7 +194,7 @@ public interface GXBaseBuilder {
      * @return 影响行数
      */
     @SuppressWarnings("all")
-    static String insert(String tableName, Dict data) {
+    static String save(String tableName, Dict data) {
         try {
             Dict dict = GXCommonUtils.convertSourceToDict(data);
             GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);

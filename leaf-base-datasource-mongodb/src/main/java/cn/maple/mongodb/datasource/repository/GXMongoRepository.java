@@ -8,6 +8,7 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.dao.GXMongoDao;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,17 +25,6 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     @SuppressWarnings("all")
     @Autowired
     protected D baseDao;
-
-    /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    @Override
-    public ID create(T entity) {
-        return baseDao.create(entity);
-    }
 
     /**
      * 保存数据
@@ -56,7 +46,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public ID updateOrCreate(T entity) {
-        return null;
+        return updateOrCreate(entity, HashBasedTable.create());
     }
 
     /**

@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
@@ -13,37 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializable> {
-    /**
-     * 保存数据
-     *
-     * @param entity    需要保存的数据
-     * @param condition 附加条件,用于一些特殊场景
-     * @return ID
-     */
-    default ID create(T entity, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
-    }
-
-    /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    @SuppressWarnings("all")
-    ID create(T entity);
-
-    /**
-     * 保存数据
-     *
-     * @param entity    需要更新的数据
-     * @param condition 附加条件,用于一些特殊场景
-     * @return ID
-     */
-    default ID update(T entity, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
-    }
-
     /**
      * 保存或者更新数据
      *

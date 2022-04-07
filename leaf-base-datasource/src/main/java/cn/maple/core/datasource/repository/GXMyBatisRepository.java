@@ -21,7 +21,6 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTypeOfUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
@@ -52,103 +51,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 保存数据
      *
-     * @param entity    需要保存的数据
-     * @param condition 附加条件,用于一些特殊场景
-     * @return ID
-     */
-    @Override
-    public ID create(T entity, Table<String, String, Object> condition) {
-        throw new GXBusinessException("自定义实现");
-    }
-
-    /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    @Override
-    public ID create(T entity) {
-        GXValidatorUtils.validateEntity(entity);
-        return baseDao.insert(getTableName(), entity);
-    }
-
-    /**
-     * 保存数据
-     *
-     * @param entity    需要更新的数据
-     * @param condition 附加条件,用于一些特殊场景
-     * @return ID
-     */
-    @Override
-    public ID update(T entity, Table<String, String, Object> condition) {
-        GXValidatorUtils.validateEntity(entity);
-        UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
-        return update(entity, updateWrapper);
-    }
-
-    /**
-     * 设置更新条件对象的值
-     *
-     * @param updateWrapper MyBatis更新条件对象
-     * @param condition     条件
-     */
-    protected void setUpdateWrapper(UpdateWrapper<T> updateWrapper, Dict condition) {
-        String op = condition.getStr("op");
-        String column = condition.getStr("column");
-        String value = condition.getStr("value");
-        if (CharSequenceUtil.isBlank(value)) {
-            return;
-        }
-        column = CharSequenceUtil.toUnderlineCase(column);
-        Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
-        String methodName = methodNameDict.getStr(op);
-        if (Objects.nonNull(methodName)) {
-            if (!GXCommonUtils.digitalRegularExpression(value)) {
-                value = CharSequenceUtil.format("'{}'", value);
-            }
-            GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
-        }
-    }
-
-    /**
-     * 保存数据
-     *
-     * @param entity        需要更新的数据
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    @SuppressWarnings("all")
-    public ID update(T entity, UpdateWrapper<T> updateWrapper) {
-        if (Objects.isNull(updateWrapper)) {
-            throw new GXBusinessException("请传递更新对象");
-        }
-        GXValidatorUtils.validateEntity(entity);
-        baseDao.update(entity, updateWrapper);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
-    }
-
-    /**
-     * 保存数据
-     *
      * @param entity    需要更新或者保存的数据
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        boolean recordIsExists = false;
-        if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            recordIsExists = baseDao.checkRecordIsExists(getTableName(entity), condition);
-        }
-        if (Objects.isNull(condition) || condition.isEmpty() || !recordIsExists) {
-            return updateOrCreate(entity, (UpdateWrapper<T>) null);
-        }
-        UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
-        return updateOrCreate(entity, updateWrapper);
+        return baseDao.updateOrCreate(entity, condition);
     }
 
     /**
@@ -174,29 +83,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             idVal = -1;
         }
         condition.put(keyProperty, op, idVal);
-        if (Objects.nonNull(idVal) && checkRecordIsExists(tableInfo.getTableName(), condition)) {
-            return update(entity, condition);
-        }
-        return create(entity);
-    }
-
-    /**
-     * 保存数据
-     *
-     * @param entity        需要更新或者保存的数据
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    @SuppressWarnings("all")
-    public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
-        GXValidatorUtils.validateEntity(entity);
-        if (Objects.nonNull(updateWrapper)) {
-            this.update(entity, updateWrapper);
-        } else {
-            this.create(entity);
-        }
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        return (ID) GXCommonUtils.reflectCallObjectMethod(entity, methodName);
+        return updateOrCreate(entity, condition);
     }
 
     /**
@@ -588,7 +475,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public Integer batchSave(String tableName, List<Dict> dataList) {
-        return baseDao.batchSave(tableName, dataList);
+        return baseDao.saveBatch(tableName, dataList);
     }
 
     /**

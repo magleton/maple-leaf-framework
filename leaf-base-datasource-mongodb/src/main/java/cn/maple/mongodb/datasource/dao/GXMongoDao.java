@@ -38,6 +38,17 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
     }
 
     /**
+     * 保存数据
+     *
+     * @param entity 需要保存的数据
+     * @return ID
+     */
+    @Override
+    public ID create(T entity) {
+        return null;
+    }
+
+    /**
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名字
@@ -45,7 +56,19 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return int
      */
     @Override
-    public Integer batchSave(String tableName, List<Dict> dataList) {
+    public Integer saveBatch(String tableName, List<Dict> dataList) {
+        return null;
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param entity    需要更新或者保存的数据
+     * @param condition 附加条件,用于一些特殊场景
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         return null;
     }
 
@@ -115,18 +138,6 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
-        return null;
-    }
-
-    /**
-     * 保存一条数据
-     *
-     * @param tableName 表名字
-     * @param entity    待插入数据
-     * @return 影响行数
-     */
-    @Override
-    public ID insert(String tableName, T entity) {
         return null;
     }
 

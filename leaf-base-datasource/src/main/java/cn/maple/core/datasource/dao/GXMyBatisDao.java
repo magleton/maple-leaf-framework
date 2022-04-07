@@ -9,6 +9,7 @@ import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -16,6 +17,7 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -38,6 +40,19 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * 日志对象
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GXMyBatisDao.class);
+
+    /**
+     * 保存数据
+     *
+     * @param entity 需要保存的数据
+     * @return ID
+     */
+    @Override
+    public ID create(T entity) {
+        save(entity);
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName()));
+        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
+    }
 
     /**
      * 分页  返回实体对象
@@ -68,19 +83,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
             throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperPaginateMethodName));
         }
         throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperPaginateMethodName));
-    }
-
-    /**
-     * 保存一条数据
-     *
-     * @param tableName 表名字
-     * @param entity    待插入数据
-     * @return 影响行数
-     */
-    public ID insert(String tableName, T entity) {
-        Dict data = GXCommonUtils.convertSourceToDict(entity);
-        baseMapper.insert(tableName, data);
-        return Convert.convert(getIDClassType(), data.getObj(getPrimaryKeyName()));
     }
 
     /**
@@ -141,8 +143,51 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     @SuppressWarnings("all")
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchSave(String tableName, List<Dict> dataList) {
-        return baseMapper.batchSave(tableName, dataList);
+    public Integer saveBatch(String tableName, List<Dict> dataList) {
+        return baseMapper.saveBatch(tableName, dataList);
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param entity    需要更新或者保存的数据
+     * @param condition 附加条件,用于一些特殊场景
+     * @return ID
+     */
+    @Override
+    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            saveOrUpdate(entity);
+        } else {
+            UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
+            condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
+        }
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName()));
+        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
+    }
+
+    /**
+     * 设置更新条件对象的值
+     *
+     * @param updateWrapper MyBatis更新条件对象
+     * @param condition     条件
+     */
+    protected void setUpdateWrapper(UpdateWrapper<T> updateWrapper, Dict condition) {
+        String op = condition.getStr("op");
+        String column = condition.getStr("column");
+        String value = condition.getStr("value");
+        if (CharSequenceUtil.isBlank(value)) {
+            return;
+        }
+        column = CharSequenceUtil.toUnderlineCase(column);
+        Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
+        String methodName = methodNameDict.getStr(op);
+        if (Objects.nonNull(methodName)) {
+            if (!GXCommonUtils.digitalRegularExpression(value)) {
+                value = CharSequenceUtil.format("'{}'", value);
+            }
+            GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
+        }
     }
 
     /**

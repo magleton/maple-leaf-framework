@@ -17,7 +17,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -361,41 +361,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
-     * 创建数据
-     *
-     * @param entity 数据实体
-     * @return ID
-     */
-    @Override
-    public ID create(T entity) {
-        return repository.create(entity);
-    }
-
-    /**
-     * 更新数据
-     *
-     * @param entity    数据实体
-     * @param condition 更新条件
-     * @return ID
-     */
-    @Override
-    public ID update(T entity, Table<String, String, Object> condition) {
-        return repository.update(entity, condition);
-    }
-
-    /**
-     * 更新数据
-     *
-     * @param entity        数据实体
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    @Override
-    public ID update(T entity, UpdateWrapper<T> updateWrapper) {
-        return repository.update(entity, updateWrapper);
-    }
-
-    /**
      * 创建或者更新
      *
      * @param entity 数据实体
@@ -404,7 +369,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @SuppressWarnings("all")
     @Override
     public ID updateOrCreate(T entity) {
-        return repository.updateOrCreate(entity);
+        return updateOrCreate(entity, HashBasedTable.create());
     }
 
     /**
@@ -417,18 +382,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         return repository.updateOrCreate(entity, condition);
-    }
-
-    /**
-     * 创建或者更新
-     *
-     * @param entity        数据实体
-     * @param updateWrapper 更新条件
-     * @return ID
-     */
-    @Override
-    public ID updateOrCreate(T entity, UpdateWrapper<T> updateWrapper) {
-        return repository.updateOrCreate(entity, updateWrapper);
     }
 
     /**
@@ -455,7 +408,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         ReflectUtil.invoke(entity, method, (Object) null);
         replaceData.forEach((k, v) -> GXCommonUtils.reflectCallObjectMethod(entity, CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(CharSequenceUtil.toCamelCase(k))), v));
 
-        return create(entity);
+        return updateOrCreate(entity);
     }
 
     /**
