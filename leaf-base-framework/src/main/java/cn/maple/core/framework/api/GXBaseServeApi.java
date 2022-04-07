@@ -6,15 +6,11 @@ import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,7 +53,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(rLst)) {
             return (List<R>) rLst;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return Collections.emptyList();
     }
 
     /**
@@ -108,7 +104,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(r)) {
             return (R) r;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return null;
     }
 
     /**
@@ -119,11 +115,11 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return ID
      */
     default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition) {
-        Object cnt = callMethod("updateOrCreate", reqDto, condition);
-        if (Objects.nonNull(cnt)) {
-            return (ID) cnt;
+        Object id = callMethod("updateOrCreate", reqDto, condition);
+        if (Objects.nonNull(id)) {
+            return (ID) id;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return null;
     }
 
     /**
@@ -147,7 +143,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(paginate)) {
             return (GXPaginationResDto<R>) paginate;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return null;
     }
 
     /**
@@ -161,7 +157,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return 0;
     }
 
     /**
@@ -175,7 +171,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return 0;
     }
 
     /**
@@ -190,7 +186,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
-        throw new GXBusinessException("请自定义实现!");
+        return 0;
     }
 
     /**
