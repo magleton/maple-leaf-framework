@@ -73,13 +73,6 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private String methodName;
 
     /**
-     * 额外参数
-     * <p>
-     * 配合methodName一起使用
-     */
-    private Object extraData;
-
-    /**
      * SQL中的having条件
      * <pre>
      * {@code
@@ -113,22 +106,9 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private transient Table<String, String, Table<String, String, Dict>> joins;
 
     /**
-     * 需要获取关联数据的字段名字
-     * 在不同场景下可以获取不同的关联字段的数据
-     * eg:
-     * 在获取SKU的数据时
-     * 1、可以单独的获取品牌信息、商品信息、资源信息等
-     * 2、也可以同时获取所有的关联信息
-     * 3、也可以不获取任何的关联信息
-     */
-    //private List<String> gainAssociatedFields;
-
-    /**
      * 额外参数
-     * 用于一些特殊场景
-     * eg:
-     * 1、不合适放入condition中的参数
-     * 2、需要使用该参数调整查询的规则
+     * <p>
+     * 配合methodName一起使用
      */
-    private transient Dict params;
+    private transient Object extraData;
 }
