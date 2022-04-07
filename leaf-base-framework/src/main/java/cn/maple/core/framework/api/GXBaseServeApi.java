@@ -82,15 +82,15 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 根据条件获取一条数据
      *
-     * @param condition    查询条件
-     * @param columns      需要查询的列
-     * @param targetClazz  目标类型
-     * @param customerData 额外数据
+     * @param condition   查询条件
+     * @param columns     需要查询的列
+     * @param targetClazz 目标类型
+     * @param extraData   额外数据
      * @return R
      */
-    default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Object... customerData) {
+    default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
         Object data = callMethod("findOneByCondition", condition, columns);
-        return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null, customerData);
+        return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null, extraData);
     }
 
     /**
@@ -111,14 +111,14 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 根据条件获取数据
      *
-     * @param columns      需要查询的列
-     * @param condition    查询条件
-     * @param customerData 额外数据
+     * @param condition 查询条件
+     * @param columns   需要查询的列
+     * @param extraData 额外数据
      * @return List
      */
-    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Object... customerData) {
+    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
         List<R> rList = (List<R>) callMethod("findByCondition", condition, columns);
-        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, customerData);
+        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, extraData);
     }
 
     /**
@@ -220,15 +220,28 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 转指定的对象到指定的目标类型对象
      *
-     * @param reqDto       请求参数
-     * @param targetClass  目标对象类型
-     * @param methodName   转换方法名字
-     * @param copyOptions  转换的自定义项
-     * @param customerData 额外数据
+     * @param reqDto      请求参数
+     * @param targetClass 目标对象类型
+     * @param methodName  转换方法名字
+     * @param copyOptions 转换的自定义项
+     * @param extraData   额外数据
      * @return
      */
-    default <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Object... customerData) {
-        return GXCommonUtils.convertSourceToTarget(reqDto, targetClass, methodName, copyOptions, customerData);
+    default <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData) {
+        return GXCommonUtils.convertSourceToTarget(reqDto, targetClass, methodName, copyOptions, extraData);
+    }
+
+    /**
+     * 转指定的对象到指定的目标类型对象
+     *
+     * @param reqDto      请求参数
+     * @param targetClass 目标对象类型
+     * @param methodName  转换方法名字
+     * @param copyOptions 转换的自定义项
+     * @return
+     */
+    default <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
+        return sourceToTarget(reqDto, targetClass, methodName, copyOptions, Dict.create());
     }
 
     /**

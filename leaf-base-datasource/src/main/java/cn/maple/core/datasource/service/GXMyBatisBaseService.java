@@ -10,7 +10,6 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
@@ -274,10 +273,19 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      *
      * @param copyCondition 复制的条件
      * @param replaceData   需要替换的数据
-     * @param customerData  额外数据
+     * @param extraData     额外数据
      * @return 新数据ID
      */
-    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Object... customerData);
+    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Dict extraData);
+
+    /**
+     * 复制一条数据
+     *
+     * @param copyCondition 复制的条件
+     * @param replaceData   需要替换的数据
+     * @return 新数据ID
+     */
+    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData);
 
     /**
      * 根据条件软(逻辑)删除

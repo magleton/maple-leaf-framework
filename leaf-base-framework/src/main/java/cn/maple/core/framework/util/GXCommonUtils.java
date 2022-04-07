@@ -357,14 +357,14 @@ public class GXCommonUtils {
      * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
      * {code}
      *
-     * @param source         源对象
-     * @param tClass         目标对象类型
-     * @param methodName     需要条用的方法名字
-     * @param copyOptions    复制选项
-     * @param customerParams 额外参数
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @param extraData   额外参数
      * @return 目标对象
      */
-    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object... customerParams) {
+    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object extraData) {
         if (Objects.isNull(source)) {
             return null;
         }
@@ -375,7 +375,7 @@ public class GXCommonUtils {
             BeanUtil.copyProperties(source, target, copyOptions);
             reflectCallObjectMethod(target, "afterMapping", source);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
-                reflectCallObjectMethod(target, methodName, customerParams);
+                reflectCallObjectMethod(target, methodName, extraData);
             }
             reflectCallObjectMethod(target, "verify");
             return target;
@@ -383,6 +383,30 @@ public class GXCommonUtils {
             Throwable cause = Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause());
             throw new GXBusinessException(cause.getMessage(), cause);
         }
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     * <p>
+     * {@code}
+     * eg:
+     * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
+     * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
+     * OR
+     * PersonReqProtocol req = new PersonReqProtocol();
+     * req.setUsername("britton");
+     * req.setRealName("枫叶思源")；
+     * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
+     * {code}
+     *
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @return 目标对象
+     */
+    public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions) {
+        return convertSourceToTarget(source, tClass, methodName, copyOptions, Dict.create());
     }
 
     /**
@@ -395,11 +419,26 @@ public class GXCommonUtils {
      * @return List
      */
     @SuppressWarnings("all")
-    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object... customerParams) {
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
+        return convertSourceListToTargetList(collection, tClass, methodName, copyOptions, Dict.create());
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
+     * @param collection  需要转换的对象列表
+     * @param tClass      目标对象的类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 需要拷贝的选项
+     * @param extraData   额外参数
+     * @return List
+     */
+    @SuppressWarnings("all")
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object extraData) {
         if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }
-        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions, customerParams)).collect(Collectors.toList());
+        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions, extraData)).collect(Collectors.toList());
         return rList;
     }
 

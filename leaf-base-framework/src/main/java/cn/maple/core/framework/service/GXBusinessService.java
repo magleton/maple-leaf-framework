@@ -1,6 +1,7 @@
 package cn.maple.core.framework.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -127,26 +128,48 @@ public interface GXBusinessService {
      * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
      * {code}
      *
-     * @param source       源对象
-     * @param tClass       目标对象类型
-     * @param methodName   需要条用的方法名字
-     * @param copyOptions  复制选项
-     * @param customerData 额外数据
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @param extraData   额外数据
      * @return 目标对象
      */
-    <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object... customerData);
+    <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Dict extraData);
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     * <p>
+     * {@code}
+     * eg:
+     * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
+     * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
+     * OR
+     * PersonReqProtocol req = new PersonReqProtocol();
+     * req.setUsername("britton");
+     * req.setRealName("枫叶思源")；
+     * convertSourceToTarget(req ,  PersonResDto.class, "customerProcess" , null);
+     * {code}
+     *
+     * @param source      源对象
+     * @param tClass      目标对象类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 复制选项
+     * @return 目标对象
+     */
+    <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions);
 
     /**
      * 将任意对象转换为指定类型的对象
      *
-     * @param collection   需要转换的对象列表
-     * @param tClass       目标对象的类型
-     * @param methodName   需要条用的方法名字
-     * @param copyOptions  需要拷贝的选项
-     * @param customerData 额外数据
+     * @param collection  需要转换的对象列表
+     * @param tClass      目标对象的类型
+     * @param methodName  需要条用的方法名字
+     * @param copyOptions 需要拷贝的选项
+     * @param extraData   额外数据
      * @return List
      */
-    <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object... customerData);
+    <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Dict extraData);
 
     /**
      * 动态调用指定底层类中的方法

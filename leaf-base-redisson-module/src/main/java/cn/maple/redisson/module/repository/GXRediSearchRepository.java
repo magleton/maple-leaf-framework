@@ -37,10 +37,10 @@ public class GXRediSearchRepository {
      *
      * @param dataIndexesParamInnerDto 索引数据
      * @param targetClass              目标类型
-     * @param customerData             额外数据
+     * @param extraData             额外数据
      * @return 列表
      */
-    public <R> GXPaginationResDto<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Object... customerData) {
+    public <R> GXPaginationResDto<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Dict extraData) {
         String indexName = dataIndexesParamInnerDto.getIndexName();
         RediSearch rediSearch = getRediSearch(indexName);
         SearchOptions searchOptions = Optional.ofNullable(dataIndexesParamInnerDto.getSearchOptions()).orElse(new SearchOptions());
@@ -65,7 +65,7 @@ public class GXRediSearchRepository {
                     data.putAll(JSONUtil.toBean(v.toString(), Dict.class));
                 }
             });
-            R r = GXCommonUtils.convertSourceToTarget(data, targetClass, dataIndexesParamInnerDto.getConvertMethodName(), dataIndexesParamInnerDto.getCopyOptions(), customerData);
+            R r = GXCommonUtils.convertSourceToTarget(data, targetClass, dataIndexesParamInnerDto.getConvertMethodName(), dataIndexesParamInnerDto.getCopyOptions(), extraData);
             rLst.add(r);
         });
         return new GXPaginationResDto<>(rLst, search.getTotal(), pageSize, currentPage);

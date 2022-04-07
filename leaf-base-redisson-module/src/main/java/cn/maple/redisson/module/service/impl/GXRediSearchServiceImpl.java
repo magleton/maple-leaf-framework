@@ -109,7 +109,7 @@ public class GXRediSearchServiceImpl implements GXRediSearchService {
      */
     @Override
     public GXPaginationResDto<Dict> search(GXRediSearchQueryParamReqDto paramInnerDto) {
-        return rediSearchRepository.search(paramInnerDto, Dict.class);
+        return rediSearchRepository.search(paramInnerDto, Dict.class, Dict.create());
     }
 
     /**

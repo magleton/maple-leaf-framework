@@ -89,11 +89,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * 根据条件获取所有数据
      *
      * @param dbQueryInnerDto 查询对象
-     * @param customerData    额外数据
+     * @param extraData       额外数据
      * @return 列表
      */
     @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
@@ -122,7 +122,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         });
         String methodName = dbQueryInnerDto.getMethodName();
         CopyOptions copyOptions = dbQueryInnerDto.getCopyOptions();
-        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions, customerData);
+        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions, extraData);
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param dbQueryInnerDto 查询对象
+     * @param targetClazz     目标对象类型
+     * @return 列表
+     */
+    @Override
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
+        return findByCondition(dbQueryInnerDto, targetClazz, Dict.create());
     }
 
     /**
@@ -137,7 +149,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
-        return findByCondition(paramInnerDto, targetClazz);
+        return findByCondition(paramInnerDto, targetClazz, Dict.create());
     }
 
     /**
@@ -245,7 +257,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).build();
-        return findFieldByCondition(paramInnerDto, targetClazz);
+        return findFieldByCondition(paramInnerDto, targetClazz, Dict.create());
     }
 
     /**
@@ -263,12 +275,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      *
      * @param dbQueryInnerDto 查询数据
      * @param targetClazz     值的类型
-     * @param customerData    额外参数
+     * @param extraData       额外参数
      * @return 返回指定的类型的值对象
      */
     @Override
     @SuppressWarnings("all")
-    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Object... customerData) {
+    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
@@ -290,7 +302,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         columns.forEach(column -> {
             retData.set(column, dict.getObj(column));
         });
-        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null, customerData);
+        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null, extraData);
     }
 
     /**
