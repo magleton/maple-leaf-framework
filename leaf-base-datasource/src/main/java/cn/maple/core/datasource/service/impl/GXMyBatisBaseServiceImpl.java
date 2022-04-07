@@ -116,7 +116,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @SuppressWarnings("all")
     @Override
     public Integer batchSave(String tableName, List<Dict> dataList) {
-        return repository.batchSave(tableName, dataList);
+        return repository.saveBatch(tableName, dataList);
     }
 
     /**
@@ -398,10 +398,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(oneData)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
-        T entity = GXCommonUtils.convertSourceToTarget(oneData, getModelClass(), null, null, customerData);
+        T entity = GXCommonUtils.convertSourceToTarget(oneData, GXCommonUtils.getGenericClassType(getClass(), 1), null, null, customerData);
         assert entity != null;
         String setPrimaryKeyMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, getIDClassType());
+        Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, GXCommonUtils.getGenericClassType(getClass(), 4));
         if (Objects.isNull(method)) {
             throw new GXBusinessException(CharSequenceUtil.format("方法{}不存在", setPrimaryKeyMethodName));
         }
@@ -502,7 +502,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        return findFieldByCondition(repository.getTableName(), condition, columns, getReturnValueType());
+        return findFieldByCondition(repository.getTableName(), condition, columns,  GXCommonUtils.getGenericClassType(getClass(), 3));
     }
 
 
@@ -521,7 +521,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(o)) {
             return Collections.emptyList();
         }
-        return GXCommonUtils.convertSourceListToTargetList((Collection<?>) o, getReturnValueType(), convertMethodName, copyOptions);
+        return GXCommonUtils.convertSourceListToTargetList((Collection<?>) o,  GXCommonUtils.getGenericClassType(getClass(), 3), convertMethodName, copyOptions);
     }
 
     /**
@@ -551,7 +551,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(o)) {
             return null;
         }
-        return GXCommonUtils.convertSourceToTarget(o, getReturnValueType(), convertMethodName, copyOptions);
+        return GXCommonUtils.convertSourceToTarget(o,  GXCommonUtils.getGenericClassType(getClass(), 3), convertMethodName, copyOptions);
     }
 
     /**
@@ -564,16 +564,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public R findOneByCallMethod(String mapperMethodName, Object... params) {
         return findOneByCallMethod(mapperMethodName, null, null, params);
-    }
-
-    /**
-     * 获取实体类型的Class
-     *
-     * @return 实体类的Class
-     */
-    @Override
-    public Class<T> getModelClass() {
-        return repository.getModelClass();
     }
 
     /**
@@ -605,26 +595,5 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public String getPrimaryKeyName(T entity) {
         return repository.getPrimaryKeyName(entity);
-    }
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    @Override
-    @SuppressWarnings("all")
-    public Class<R> getReturnValueType() {
-        return (Class<R>) repository.getReturnValueType();
-    }
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    @Override
-    public Class<ID> getIDClassType() {
-        return repository.getIDClassType();
     }
 }

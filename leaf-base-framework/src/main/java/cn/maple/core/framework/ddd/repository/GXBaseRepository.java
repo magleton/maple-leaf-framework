@@ -198,7 +198,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param dataList  数据集合
      * @return 影响行数
      */
-    Integer batchSave(String tableName, List<Dict> dataList);
+    Integer saveBatch(String tableName, List<Dict> dataList);
 
     /**
      * 批量插入数据
@@ -206,7 +206,7 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @param dataList 数据集合
      * @return 影响行数
      */
-    Integer batchSave(List<Dict> dataList);
+    Integer saveBatch(List<Dict> dataList);
 
     /**
      * 通过条件更新数据
@@ -300,25 +300,4 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
      * @return 数据库表名字
      */
     String getTableName();
-
-    /**
-     * 获取实体的Class 对象
-     *
-     * @return Class
-     */
-    Class<T> getModelClass();
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    Class<R> getReturnValueType();
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    Class<ID> getIDClassType();
 }

@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseResDto, ID extends Serializable> implements GXBaseRepository<T, R, ID> {
@@ -474,7 +473,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer batchSave(String tableName, List<Dict> dataList) {
+    public Integer saveBatch(String tableName, List<Dict> dataList) {
         return baseDao.saveBatch(tableName, dataList);
     }
 
@@ -485,8 +484,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 影响行数
      */
     @Override
-    public Integer batchSave(List<Dict> dataList) {
-        return batchSave(getTableName(), dataList);
+    public Integer saveBatch(List<Dict> dataList) {
+        return saveBatch(getTableName(), dataList);
     }
 
     /**
@@ -544,7 +543,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public String getPrimaryKeyName() {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(getModelClass());
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(GXCommonUtils.getGenericClassType(getClass(), 1));
         return tableInfo.getKeyProperty();
     }
 
@@ -567,41 +566,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public String getTableName() {
-        Class<?> entityClass = getModelClass();
+        Class<?> entityClass = GXCommonUtils.getGenericClassType(getClass(), 1);
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
         return tableInfo.getTableName();
-    }
-
-    /**
-     * 获取实体的Class 对象
-     *
-     * @return Class
-     */
-    @Override
-    @SuppressWarnings("all")
-    public Class<T> getModelClass() {
-        return (Class<T>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
-    }
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    @Override
-    @SuppressWarnings("all")
-    public Class<R> getReturnValueType() {
-        return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
-    }
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    @Override
-    @SuppressWarnings("all")
-    public Class<ID> getIDClassType() {
-        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[4]);
     }
 }

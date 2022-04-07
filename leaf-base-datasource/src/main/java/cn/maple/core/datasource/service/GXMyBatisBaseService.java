@@ -393,30 +393,9 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     R findOneByCallMethod(String mapperMethodName, Object... params);
 
     /**
-     * 获取实体类型的Class
-     *
-     * @return 实体类的Class
-     */
-    Class<?> getModelClass();
-
-    /**
      * 获取 Primary Key
      *
      * @return String
      */
     String getPrimaryKeyName(T entity);
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    Class<R> getReturnValueType();
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    Class<ID> getIDClassType();
 }

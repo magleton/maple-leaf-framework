@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -841,5 +842,16 @@ public class GXCommonUtils {
         Dict dict = Dict.create();
         table.columnMap().forEach((operator, datum) -> datum.forEach(dict::set));
         return dict;
+    }
+
+    /**
+     * 获取指定类上的泛型Class
+     *
+     * @param clazz 目标Class
+     * @param index 泛型的索引
+     * @return Class
+     */
+    public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
+        return (Class<R>) TypeUtil.getClass(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[index]);
     }
 }

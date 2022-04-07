@@ -245,7 +245,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer batchSave(String tableName, List<Dict> dataList) {
+    public Integer saveBatch(String tableName, List<Dict> dataList) {
         return null;
     }
 
@@ -256,7 +256,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer batchSave(List<Dict> dataList) {
+    public Integer saveBatch(List<Dict> dataList) {
         return null;
     }
 
@@ -374,36 +374,6 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public String getTableName() {
-        return null;
-    }
-
-    /**
-     * 获取实体的Class 对象
-     *
-     * @return Class
-     */
-    @Override
-    public Class<T> getModelClass() {
-        return null;
-    }
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    @Override
-    public Class<R> getReturnValueType() {
-        return null;
-    }
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    @Override
-    public Class<ID> getIDClassType() {
         return null;
     }
 }

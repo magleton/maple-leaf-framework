@@ -161,6 +161,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         } else {
             UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
             condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
+            saveOrUpdate(entity, updateWrapper);
         }
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName()));
         return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
@@ -284,17 +285,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @SuppressWarnings("all")
     private String getPrimaryKeyName() {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(getModelClass());
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(GXCommonUtils.getGenericClassType(getClass(), 1));
         return tableInfo.getKeyProperty();
-    }
-
-    /**
-     * 获取返回值的类型
-     *
-     * @return Class
-     */
-    @SuppressWarnings("all")
-    private Class<T> getModelClass() {
-        return (Class<T>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
     }
 }
