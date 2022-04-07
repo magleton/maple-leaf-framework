@@ -9,7 +9,6 @@ import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
-import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -18,6 +17,8 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Table;
@@ -77,9 +78,9 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return 影响行数
      */
     public ID insert(String tableName, T entity) {
-        baseMapper.insert(tableName, entity);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(GXBuilderConstant.DEFAULT_ID_NAME));
-        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
+        Dict data = GXCommonUtils.convertSourceToDict(entity);
+        baseMapper.insert(tableName, data);
+        return Convert.convert(getIDClassType(), data.getObj(getPrimaryKeyName()));
     }
 
     /**
@@ -229,5 +230,26 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @SuppressWarnings("all")
     private Class<ID> getIDClassType() {
         return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
+    }
+
+    /**
+     * 获取实体的Class 对象
+     *
+     * @return Class
+     */
+    @SuppressWarnings("all")
+    private String getPrimaryKeyName() {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(getModelClass());
+        return tableInfo.getKeyProperty();
+    }
+
+    /**
+     * 获取返回值的类型
+     *
+     * @return Class
+     */
+    @SuppressWarnings("all")
+    private Class<T> getModelClass() {
+        return (Class<T>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
     }
 }

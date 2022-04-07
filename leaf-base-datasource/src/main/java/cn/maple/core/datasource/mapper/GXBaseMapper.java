@@ -27,7 +27,7 @@ public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> 
 
     @InsertProvider(type = GXBaseBuilder.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "param2.id", keyColumn = "id")
-    Integer insert(String tableName, T entity);
+    Integer insert(String tableName, Dict data);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     R findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);

@@ -193,7 +193,7 @@ public interface GXBaseBuilder {
      * @return 影响行数
      */
     @SuppressWarnings("all")
-    static String insert(String tableName, Object data) {
+    static String insert(String tableName, Dict data) {
         try {
             Dict dict = GXCommonUtils.convertSourceToDict(data);
             GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
