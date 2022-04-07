@@ -48,7 +48,11 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * 排序字段
      * eg:
-     * Dict.create().set("created_at" , "desc").set("username" , "asc");
+     * <code>
+     * Map&lt;String ,String&gt; orderByField = new HashMap<>();
+     * orderByField.put("created_at" , "desc");
+     * orderByField.put("username" , "asc");
+     * </code>
      */
     private Map<String, String> orderByField;
 
