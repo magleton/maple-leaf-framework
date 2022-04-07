@@ -37,17 +37,13 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     ThreadLocal<Class<?>> targetServeServiceClassThreadLocal = new ThreadLocal<>();
 
     /**
-     * 根据条件获取一条数据
+     * 根据条件获取数据
      *
      * @param condition 查询条件
-     * @return R
+     * @return List
      */
-    default R findOneByCondition(Table<String, String, Object> condition) {
-        Object r = callMethod("findOneByCondition", condition);
-        if (Objects.nonNull(r)) {
-            return (R) r;
-        }
-        throw new GXBusinessException("请自定义实现!");
+    default List<R> findByCondition(Table<String, String, Object> condition) {
+        return findByCondition(condition, Dict.create());
     }
 
     /**
@@ -56,12 +52,25 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @param condition 查询条件
      * @return List
      */
-    default List<R> findByCondition(Table<String, String, Object> condition) {
-        Object rLst = callMethod("findByCondition", condition);
+    default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
+        Object rLst = callMethod("findByCondition", condition, extraData);
         if (Objects.nonNull(rLst)) {
             return (List<R>) rLst;
         }
         throw new GXBusinessException("请自定义实现!");
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param condition 查询条件
+     * @param columns   需要查询的列
+     * @param extraData 额外数据
+     * @return List
+     */
+    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
+        List<R> rList = (List<R>) callMethod("findByCondition", condition, columns);
+        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, extraData);
     }
 
     /**
@@ -79,16 +88,27 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     }
 
     /**
-     * 根据条件获取数据
+     * 根据条件获取一条数据
      *
      * @param condition 查询条件
-     * @param columns   需要查询的列
-     * @param extraData 额外数据
-     * @return List
+     * @return R
      */
-    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
-        List<R> rList = (List<R>) callMethod("findByCondition", condition, columns);
-        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, extraData);
+    default R findOneByCondition(Table<String, String, Object> condition) {
+        return findOneByCondition(condition, Dict.create());
+    }
+
+    /**
+     * 根据条件获取一条数据
+     *
+     * @param condition 查询条件
+     * @return R
+     */
+    default R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
+        Object r = callMethod("findOneByCondition", condition, extraData);
+        if (Objects.nonNull(r)) {
+            return (R) r;
+        }
+        throw new GXBusinessException("请自定义实现!");
     }
 
     /**

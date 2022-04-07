@@ -238,7 +238,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param groupField 分组字段
      * @return List
      */
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict orderField, Set<String> groupField) {
+    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).orderByField(orderField).groupByField(groupField).build();
         return findByCondition(queryParamInnerDto);
     }
@@ -252,7 +252,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Dict orderField, Set<String> groupField) {
+    public List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Set<String> groupField) {
         return findByCondition(repository.getTableName(), condition, CollUtil.newHashSet("*"), orderField, groupField);
     }
 
@@ -264,7 +264,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Dict orderField) {
+    public List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField) {
         return findByCondition(condition, orderField, null);
     }
 

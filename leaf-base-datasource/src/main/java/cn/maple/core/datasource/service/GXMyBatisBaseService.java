@@ -15,6 +15,7 @@ import com.google.common.collect.Table;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -154,7 +155,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param groupField 分组字段
      * @return List
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict orderField, Set<String> groupField);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField);
 
     /**
      * 通过条件查询列表信息
@@ -164,7 +165,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param groupField 分组字段
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Dict orderField, Set<String> groupField);
+    List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Set<String> groupField);
 
     /**
      * 通过条件查询列表信息
@@ -173,7 +174,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param orderField 排序字段
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Dict orderField);
+    List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField);
 
     /**
      * 通过条件获取一条数据

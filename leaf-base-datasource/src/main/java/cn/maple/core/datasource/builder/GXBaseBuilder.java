@@ -256,7 +256,7 @@ public interface GXBaseBuilder {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         Set<String> groupByField = dbQueryParamInnerDto.getGroupByField();
-        Dict orderByField = dbQueryParamInnerDto.getOrderByField();
+        Map<String, String> orderByField = dbQueryParamInnerDto.getOrderByField();
         Set<String> having = dbQueryParamInnerDto.getHaving();
         Integer limit = dbQueryParamInnerDto.getLimit();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);

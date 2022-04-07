@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Map;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -49,7 +50,7 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * eg:
      * Dict.create().set("created_at" , "desc").set("username" , "asc");
      */
-    private Dict orderByField;
+    private Map<String, String> orderByField;
 
     /**
      * 分组字段
