@@ -164,15 +164,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
         if (!rs.isEmpty()) {
             rs.forEach(r -> {
-                if (CollUtil.isNotEmpty(dbQueryInnerDto.getGainAssociatedFields())) {
-                    GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryInnerDto.getGainAssociatedFields());
-                }
                 String methodName = dbQueryInnerDto.getMethodName();
                 if (CharSequenceUtil.isBlank(methodName)) {
                     methodName = "customizeProcess";
                 }
-                Dict customerData = Optional.ofNullable(dbQueryInnerDto.getCustomerData()).orElse(Dict.create());
-                GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
+                if (null != dbQueryInnerDto.getExtraData()) {
+                    GXCommonUtils.reflectCallObjectMethod(r, methodName, dbQueryInnerDto.getExtraData());
+                }
             });
         }
         return rs;
@@ -202,15 +200,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
-            if (Objects.nonNull(dbQueryParamInnerDto.getGainAssociatedFields())) {
-                GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryParamInnerDto.getGainAssociatedFields());
-            }
             String methodName = dbQueryParamInnerDto.getMethodName();
             if (CharSequenceUtil.isBlank(methodName)) {
                 methodName = "customizeProcess";
             }
-            Dict customerData = Optional.ofNullable(dbQueryParamInnerDto.getCustomerData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, methodName, customerData);
+            if (null != dbQueryParamInnerDto.getExtraData()) {
+                GXCommonUtils.reflectCallObjectMethod(r, methodName, dbQueryParamInnerDto.getExtraData());
+            }
         }
         return r;
     }
@@ -354,12 +350,10 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.nonNull(dbQueryParamInnerDto.getMethodName())) {
             methodName[0] = dbQueryParamInnerDto.getMethodName();
         }
-        Dict customerData = Optional.ofNullable(dbQueryParamInnerDto.getCustomerData()).orElse(Dict.create());
         paginate.getRecords().forEach(r -> {
-            if (CollUtil.isNotEmpty(dbQueryParamInnerDto.getGainAssociatedFields())) {
-                GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryParamInnerDto.getGainAssociatedFields());
+            if (null != dbQueryParamInnerDto.getExtraData()) {
+                GXCommonUtils.reflectCallObjectMethod(r, methodName[0], dbQueryParamInnerDto.getExtraData());
             }
-            GXCommonUtils.reflectCallObjectMethod(r, methodName[0], customerData);
         });
         return paginate;
     }

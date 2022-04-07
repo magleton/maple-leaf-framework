@@ -94,31 +94,20 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
-     * @param searchReqDto 搜索条件
+     * @param queryParamInnerDto 搜索条件
      * @return List
      */
-    List<R> findByCondition(GXBaseQueryParamInnerDto searchReqDto);
+    List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
 
     /**
      * 通过条件查询列表信息
      *
-     * @param tableName            表名字
-     * @param columns              需要查询的字段
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param tableName 表名字
+     * @param columns   需要查询的字段
+     * @param condition 搜索条件
      * @return List
      */
-    List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, List<String> gainAssociatedFields);
-
-    /**
-     * 通过条件查询列表信息
-     *
-     * @param tableName            表名字
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
-     * @return List
-     */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
+    List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition);
 
     /**
      * 通过条件查询列表信息
@@ -132,19 +121,19 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param condition 搜索条件
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields);
+    List<R> findByCondition(Table<String, String, Object> condition);
 
     /**
      * 通过条件查询列表信息
      *
      * @param condition 搜索条件
+     * @param extraData 额外数据
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition);
+    List<R> findByCondition(Table<String, String, Object> condition, Object extraData);
 
     /**
      * 通过条件查询列表信息
@@ -158,15 +147,14 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
-     * @param tableName            表名字
-     * @param condition            搜索条件
-     * @param columns              需要查询的字段
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
-     * @param orderField           排序字段
-     * @param groupField           分组字段
+     * @param tableName  表名字
+     * @param condition  搜索条件
+     * @param columns    需要查询的字段
+     * @param orderField 排序字段
+     * @param groupField 分组字段
      * @return List
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, List<String> gainAssociatedFields, Dict orderField, Set<String> groupField);
+    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Dict orderField, Set<String> groupField);
 
     /**
      * 通过条件查询列表信息
@@ -190,13 +178,23 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件获取一条数据
      *
-     * @param tableName            表名字
-     * @param columns              需要查询的字段
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param tableName 表名字
+     * @param columns   需要查询的字段
+     * @param condition 搜索条件
+     * @param extraData 额外参数
      * @return 一条数据
      */
-    R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, List<String> gainAssociatedFields);
+    R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName 表名字
+     * @param columns   需要查询的字段
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition);
 
     /**
      * 通过条件获取一条数据
@@ -215,15 +213,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      */
     R findOneByCondition(String tableName, Table<String, String, Object> condition);
 
+
     /**
      * 通过条件获取一条数据
      *
-     * @param tableName            表名字
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
+     * @param condition 搜索条件
+     * @param extraData 额外参数
      * @return 一条数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, List<String> gainAssociatedFields);
+    R findOneByCondition(Table<String, String, Object> condition, Object extraData);
 
     /**
      * 通过条件获取一条数据
@@ -232,15 +230,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 一条数据
      */
     R findOneByCondition(Table<String, String, Object> condition);
-
-    /**
-     * 通过条件获取一条数据
-     *
-     * @param condition            搜索条件
-     * @param gainAssociatedFields 需要获取关联数据的字段名字集合
-     * @return 一条数据
-     */
-    R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields);
 
     /**
      * 通过条件获取一条数据

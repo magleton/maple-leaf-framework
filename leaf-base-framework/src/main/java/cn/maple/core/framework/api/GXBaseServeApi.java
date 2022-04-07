@@ -67,21 +67,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 根据条件获取一条数据
      *
-     * @param columns              需要查询的列
-     * @param gainAssociatedFields 需要获取关联数据的字段名字
-     * @return R
-     */
-    default R findOneByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        Object r = callMethod("findOneByCondition", condition, gainAssociatedFields);
-        if (Objects.nonNull(r)) {
-            return (R) r;
-        }
-        throw new GXBusinessException("请自定义实现!");
-    }
-
-    /**
-     * 根据条件获取一条数据
-     *
      * @param condition   查询条件
      * @param columns     需要查询的列
      * @param targetClazz 目标类型
@@ -91,21 +76,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
         Object data = callMethod("findOneByCondition", condition, columns);
         return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null, extraData);
-    }
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param columns              需要查询的列
-     * @param gainAssociatedFields 查询条件
-     * @return List
-     */
-    default List<R> findByCondition(Table<String, String, Object> condition, List<String> gainAssociatedFields) {
-        Object rLst = callMethod("findByCondition", condition, gainAssociatedFields);
-        if (Objects.nonNull(rLst)) {
-            return (List<R>) rLst;
-        }
-        throw new GXBusinessException("请自定义实现!");
     }
 
     /**
