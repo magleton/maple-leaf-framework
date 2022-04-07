@@ -153,7 +153,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (!rs.isEmpty()) {
             rs.forEach(r -> {
                 if (CollUtil.isNotEmpty(dbQueryInnerDto.getGainAssociatedFields())) {
-                    GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryInnerDto.getGainAssociatedFields());
+                    GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryInnerDto.getGainAssociatedFields());
                 }
                 String methodName = dbQueryInnerDto.getMethodName();
                 if (CharSequenceUtil.isBlank(methodName)) {
@@ -191,7 +191,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
             if (Objects.nonNull(dbQueryParamInnerDto.getGainAssociatedFields())) {
-                GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
+                GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryParamInnerDto.getGainAssociatedFields());
             }
             String methodName = dbQueryParamInnerDto.getMethodName();
             if (CharSequenceUtil.isBlank(methodName)) {
@@ -316,9 +316,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     public R findOneById(String tableName, ID id, Set<String> columns) {
         HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-        condition.put("id", GXBuilderConstant.EQ, id);
+        condition.put(getPrimaryKeyName(), GXBuilderConstant.EQ, id);
         if (TypeUtil.getClass(id.getClass()).getName().equalsIgnoreCase(String.class.getName())) {
-            condition.put("id", GXBuilderConstant.STR_EQ, id);
+            condition.put(getPrimaryKeyName(), GXBuilderConstant.STR_EQ, id);
         }
         return findOneByCondition(tableName, condition, columns);
     }
@@ -345,7 +345,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         Dict customerData = Optional.ofNullable(dbQueryParamInnerDto.getCustomerData()).orElse(Dict.create());
         paginate.getRecords().forEach(r -> {
             if (CollUtil.isNotEmpty(dbQueryParamInnerDto.getGainAssociatedFields())) {
-                GXCommonUtils.reflectCallObjectMethod(r, CharSequenceUtil.format("setGainAssociatedFields"), dbQueryParamInnerDto.getGainAssociatedFields());
+                GXCommonUtils.reflectCallObjectMethod(r, "setGainAssociatedFields", dbQueryParamInnerDto.getGainAssociatedFields());
             }
             GXCommonUtils.reflectCallObjectMethod(r, methodName[0], customerData);
         });

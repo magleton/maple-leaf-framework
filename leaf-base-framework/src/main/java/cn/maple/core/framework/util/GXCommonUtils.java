@@ -851,6 +851,7 @@ public class GXCommonUtils {
      * @param index 泛型的索引
      * @return Class
      */
+    @SuppressWarnings("all")
     public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
         return (Class<R>) TypeUtil.getClass(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[index]);
     }

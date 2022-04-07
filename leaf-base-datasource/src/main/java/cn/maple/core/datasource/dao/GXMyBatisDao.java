@@ -97,8 +97,8 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        List<R> paginate = baseMapper.paginate(iPage, dbQueryParamInnerDto);
-        iPage.setRecords(paginate);
+        List<R> records = baseMapper.paginate(iPage, dbQueryParamInnerDto);
+        iPage.setRecords(records);
         return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
     }
 

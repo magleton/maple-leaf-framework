@@ -398,10 +398,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(oneData)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
-        T entity = GXCommonUtils.convertSourceToTarget(oneData, GXCommonUtils.getGenericClassType(getClass(), 1), null, null, customerData);
+        T entity = GXCommonUtils.convertSourceToTarget(oneData, GXCommonUtils.getGenericClassType(getClass(), 2), null, null, customerData);
         assert entity != null;
         String setPrimaryKeyMethodName = CharSequenceUtil.format("set{}", CharSequenceUtil.upperFirst(getPrimaryKeyName(entity)));
-        Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, GXCommonUtils.getGenericClassType(getClass(), 4));
+        Method method = ReflectUtil.getMethod(entity.getClass(), setPrimaryKeyMethodName, GXCommonUtils.getGenericClassType(getClass(), 5));
         if (Objects.isNull(method)) {
             throw new GXBusinessException(CharSequenceUtil.format("方法{}不存在", setPrimaryKeyMethodName));
         }
@@ -502,7 +502,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findFieldByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        return findFieldByCondition(repository.getTableName(), condition, columns,  GXCommonUtils.getGenericClassType(getClass(), 3));
+        return findFieldByCondition(repository.getTableName(), condition, columns, GXCommonUtils.getGenericClassType(getClass(), 3));
     }
 
 
@@ -521,7 +521,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(o)) {
             return Collections.emptyList();
         }
-        return GXCommonUtils.convertSourceListToTargetList((Collection<?>) o,  GXCommonUtils.getGenericClassType(getClass(), 3), convertMethodName, copyOptions);
+        return GXCommonUtils.convertSourceListToTargetList((Collection<?>) o, GXCommonUtils.getGenericClassType(getClass(), 4), convertMethodName, copyOptions);
     }
 
     /**
@@ -551,7 +551,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(o)) {
             return null;
         }
-        return GXCommonUtils.convertSourceToTarget(o,  GXCommonUtils.getGenericClassType(getClass(), 3), convertMethodName, copyOptions);
+        return GXCommonUtils.convertSourceToTarget(o, GXCommonUtils.getGenericClassType(getClass(), 4), convertMethodName, copyOptions);
     }
 
     /**
