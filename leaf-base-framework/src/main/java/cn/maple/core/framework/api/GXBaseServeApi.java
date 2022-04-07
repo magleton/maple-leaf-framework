@@ -201,10 +201,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      */
     default boolean checkRecordIsExists(Table<String, String, Object> condition) {
         Object exists = callMethod("checkRecordIsExists", condition);
-        if (Objects.isNull(exists)) {
-            return (boolean) exists;
-        }
-        throw new GXBusinessException("请自定义实现!");
+        return (Boolean) exists;
     }
 
     /**
