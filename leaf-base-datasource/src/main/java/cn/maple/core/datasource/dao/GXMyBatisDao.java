@@ -45,10 +45,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<R> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        String mapperMethodName = dbQueryParamInnerDto.getMapperMethodName();
-        if (CharSequenceUtil.isEmpty(mapperMethodName)) {
-            mapperMethodName = "paginate";
-        }
+        String mapperMethodName = "paginate";
         Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
         if (Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
@@ -134,11 +131,11 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o) && Objects.isNull(condition.get(pkName, op))) {
             condition.put(pkName, op, o);
         }
-        if (condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
-            save(entity);
-        } else {
+        if (!condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
             UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);
             update(entity, updateWrapper);
+        } else {
+            save(entity);
         }
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));

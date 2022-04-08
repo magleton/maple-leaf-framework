@@ -141,7 +141,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
-        queryParamReqDto.setMapperMethodName("paginate");
         return repository.paginate(queryParamReqDto);
     }
 
@@ -512,15 +511,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 动态调用指定的指定Class中的方法
      *
-     * @param mapperMethodMethod 需要调用的方法
-     * @param convertMethodName  结果集转换函数名字
-     * @param copyOptions        转换选项
-     * @param params             参数
+     * @param mapperMethodName  需要调用的方法
+     * @param convertMethodName 结果集转换函数名字
+     * @param copyOptions       转换选项
+     * @param params            参数
      * @return Collection
      */
     @Override
-    public Collection<R> findByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
-        Object o = callMethod(baseMapper, mapperMethodMethod, params);
+    public Collection<R> findByCallMapperMethod(String mapperMethodName, String convertMethodName, CopyOptions copyOptions, Object... params) {
+        Object o = callMethod(baseMapper, mapperMethodName, params);
         if (Objects.isNull(o)) {
             return Collections.emptyList();
         }
@@ -530,27 +529,27 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 动态调用指定的指定Class中的方法
      *
-     * @param mapperMethodMethod 需要调用的方法
-     * @param params             参数
+     * @param mapperMethodName 需要调用的方法
+     * @param params           参数
      * @return Object
      */
     @Override
-    public Collection<R> findByCallMapperMethod(String mapperMethodMethod, Object... params) {
-        return findByCallMapperMethod(mapperMethodMethod, null, null, params);
+    public Collection<R> findByCallMapperMethod(String mapperMethodName, Object... params) {
+        return findByCallMapperMethod(mapperMethodName, null, null, params);
     }
 
     /**
      * 动态调用指定的指定Class中的方法
      *
-     * @param mapperMethodMethod 需要调用的方法
-     * @param convertMethodName  结果集转换函数名字
-     * @param copyOptions        转换选项
-     * @param params             参数
+     * @param mapperMethodName  需要调用的方法
+     * @param convertMethodName 结果集转换函数名字
+     * @param copyOptions       转换选项
+     * @param params            参数
      * @return Object
      */
     @Override
-    public R findOneByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
-        Object o = callMethod(baseMapper, mapperMethodMethod, params);
+    public R findOneByCallMapperMethod(String mapperMethodName, String convertMethodName, CopyOptions copyOptions, Object... params) {
+        Object o = callMethod(baseMapper, mapperMethodName, params);
         if (Objects.isNull(o)) {
             return null;
         }

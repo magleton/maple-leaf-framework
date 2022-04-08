@@ -62,11 +62,6 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private Set<String> groupByField;
 
     /**
-     * 自定义mapper中的方法名字
-     */
-    private String mapperMethodName;
-
-    /**
      * GXBaseData及其子类中的方法名字
      * 通常用于在需要额外处理一些逻辑时自动调用
      */
