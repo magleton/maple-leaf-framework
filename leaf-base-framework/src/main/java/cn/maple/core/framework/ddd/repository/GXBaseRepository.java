@@ -153,14 +153,14 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     /**
      * 根据条件获取分页数据
      *
+     * @param tableName 表名字
      * @param page      当前页
      * @param pageSize  每页大小
-     * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns);
+    GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns);
 
     /**
      * 根据条件软(逻辑)删除

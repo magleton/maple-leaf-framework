@@ -186,15 +186,15 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取分页数据
      *
+     * @param tableName 表名字
      * @param page      当前页
      * @param pageSize  每页大小
-     * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要的数据列
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
         return null;
     }
 

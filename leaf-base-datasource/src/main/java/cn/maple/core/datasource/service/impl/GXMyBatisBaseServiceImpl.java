@@ -141,7 +141,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return repository.paginate("paginate", queryParamReqDto);
+        queryParamReqDto.setMapperMethodName("paginate");
+        return repository.paginate(queryParamReqDto);
     }
 
     /**
@@ -207,12 +208,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     public List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
         String tableName = repository.getTableName();
         HashSet<String> columns = CollUtil.newHashSet("*");
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .tableName(tableName)
-                .columns(columns)
-                .condition(condition)
-                .extraData(extraData)
-                .build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).extraData(extraData).build();
         return findByCondition(queryParamInnerDto);
     }
 

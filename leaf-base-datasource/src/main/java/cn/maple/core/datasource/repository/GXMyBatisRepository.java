@@ -317,54 +317,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     }
 
     /**
-     * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
-     *
-     * @param mapperMethodName mapper中的分页方法的名字
-     * @param dbQueryParamInnerDto     查询信息
-     * @return 分页数据
-     */
-    public GXPaginationResDto<R> paginate(String mapperMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        if (Objects.isNull(mapperMethodName)) {
-            mapperMethodName = "paginate";
-        }
-        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
-            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
-        }
-        dbQueryParamInnerDto.setMapperMethodName(mapperMethodName);
-        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
-        String[] methodName = new String[]{"customizeProcess"};
-        if (Objects.nonNull(dbQueryParamInnerDto.getMethodName())) {
-            methodName[0] = dbQueryParamInnerDto.getMethodName();
-        }
-        paginate.getRecords().forEach(r -> {
-            if (null != dbQueryParamInnerDto.getExtraData()) {
-                GXCommonUtils.reflectCallObjectMethod(r, methodName[0], dbQueryParamInnerDto.getExtraData());
-            }
-        });
-        return paginate;
-    }
-
-    /**
-     * 根据条件获取分页数据
-     *
-     * @param page      当前页
-     * @param pageSize  每页大小
-     * @param condition 查询条件
-     * @param columns   需要的数据列
-     * @return 分页对象
-     */
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, Table<String, String, Object> condition, String mapperMethodName, Set<String> columns) {
-        if (Objects.isNull(mapperMethodName)) {
-            mapperMethodName = "paginate";
-        }
-        if (Objects.isNull(columns)) {
-            columns = CollUtil.newHashSet("*");
-        }
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().page(page).pageSize(pageSize).columns(columns).condition(condition).build();
-        return paginate(mapperMethodName, queryParamInnerDto);
-    }
-
-    /**
      * 根据条件获取分页数据
      *
      * @param dbQueryParamInnerDto 条件查询
@@ -381,15 +333,15 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 根据条件获取分页数据
      *
+     * @param tableName 表名字
      * @param page      当前页
      * @param pageSize  每页大小
-     * @param tableName 表名字
      * @param condition 查询条件
      * @param columns   需要的数据列
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(Integer page, Integer pageSize, String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
