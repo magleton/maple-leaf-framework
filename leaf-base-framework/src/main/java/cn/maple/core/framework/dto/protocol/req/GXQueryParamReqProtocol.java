@@ -1,5 +1,6 @@
 package cn.maple.core.framework.dto.protocol.req;
 
+import cn.maple.core.framework.constant.GXCommonConstant;
 import com.google.common.collect.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,15 +13,15 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
     /**
      * 当前页
      */
-    private Integer page = 1;
+    private Integer page = GXCommonConstant.DEFAULT_CURRENT_PAGE;
 
     /**
      * 每页大小
      */
-    private Integer pageSize = 20;
+    private Integer pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
 
     /**
      * 查询条件
      */
-    private Table<String, String, Object> condition;
+    private transient Table<String, String, Object> condition;
 }
