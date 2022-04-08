@@ -234,6 +234,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param groupField 分组字段
      * @return List
      */
+    @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).orderByField(orderField).groupByField(groupField).build();
         return findByCondition(queryParamInnerDto);
@@ -284,6 +285,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param extraData 额外参数
      * @return 一条数据
      */
+    @Override
     public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).extraData(extraData).build();
         return findOneByCondition(queryParamInnerDto);
@@ -297,6 +299,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param condition 搜索条件
      * @return 一条数据
      */
+    @Override
     public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition) {
         return findOneByCondition(tableName, columns, condition, Dict.create());
     }
@@ -308,6 +311,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param extraData 额外参数
      * @return 一条数据
      */
+    @Override
     public R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
         return findOneByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, extraData);
     }

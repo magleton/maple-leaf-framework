@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.framework.constant.GXBuilderConstant;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -14,6 +15,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,7 +170,7 @@ public class GXDBCommonUtils {
      * 获取SELECT　SQL语句
      *
      * @param dbQueryParamInnerDto 查询条件
-     * @return　string
+     * @return SQL
      */
     public static String getSelectONESQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return GXBaseBuilder.findOneByCondition(dbQueryParamInnerDto);
@@ -193,5 +195,25 @@ public class GXDBCommonUtils {
             }
         }));
         return updateWrapper;
+    }
+
+    /**
+     * 构造分页对象
+     *
+     * @param page     当前页
+     * @param pageSize 每页大小
+     * @return 分页对象
+     */
+    public static <R> IPage<R> constructPageObject(Integer page, Integer pageSize) {
+        int defaultCurrentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
+        int defaultPageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
+        int defaultMaxPageSize = GXCommonConstant.DEFAULT_MAX_PAGE_SIZE;
+        if (Objects.isNull(page) || page < 0) {
+            page = defaultCurrentPage;
+        }
+        if (Objects.isNull(pageSize) || pageSize > defaultMaxPageSize || pageSize <= 0) {
+            pageSize = defaultPageSize;
+        }
+        return new Page<>(page, pageSize);
     }
 }

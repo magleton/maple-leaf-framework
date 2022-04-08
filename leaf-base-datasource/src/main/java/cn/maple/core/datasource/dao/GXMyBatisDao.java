@@ -9,7 +9,6 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.constant.GXBuilderConstant;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
@@ -20,7 +19,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -46,7 +44,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
+        IPage<R> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         String mapperMethodName = dbQueryParamInnerDto.getMapperMethodName();
         if (CharSequenceUtil.isEmpty(mapperMethodName)) {
             mapperMethodName = "paginate";
@@ -122,6 +120,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         condition = Optional.ofNullable(condition).orElse(HashBasedTable.create());
         String pkName = getPrimaryKeyName();
@@ -165,26 +164,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findByCondition(dbQueryParamInnerDto);
-    }
-
-    /**
-     * 构造分页对象
-     *
-     * @param page     当前页
-     * @param pageSize 每页大小
-     * @return 分页对象
-     */
-    public IPage<R> constructPageObject(Integer page, Integer pageSize) {
-        int defaultCurrentPage = GXCommonConstant.DEFAULT_CURRENT_PAGE;
-        int defaultPageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
-        int defaultMaxPageSize = GXCommonConstant.DEFAULT_MAX_PAGE_SIZE;
-        if (Objects.isNull(page) || page < 0) {
-            page = defaultCurrentPage;
-        }
-        if (Objects.isNull(pageSize) || pageSize > defaultMaxPageSize || pageSize <= 0) {
-            pageSize = defaultPageSize;
-        }
-        return new Page<>(page, pageSize);
     }
 
     /**
