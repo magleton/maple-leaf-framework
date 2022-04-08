@@ -5,7 +5,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
@@ -23,6 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, R extends GXBaseResDto, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
     /**
@@ -42,64 +39,34 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     private static final Logger LOGGER = LoggerFactory.getLogger(GXMyBatisDao.class);
 
     /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    @Override
-    public ID create(T entity) {
-        save(entity);
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName()));
-        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
-    }
-
-    /**
      * 分页  返回实体对象
      *
-     * @param dbQueryParamInnerDto     查询条件
-     * @param mapperPaginateMethodName Mapper中的分页方法名字
+     * @param dbQueryParamInnerDto 查询条件
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperPaginateMethodName) {
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        if (CharSequenceUtil.isEmpty(mapperPaginateMethodName)) {
-            mapperPaginateMethodName = "paginate";
+        String mapperMethodName = dbQueryParamInnerDto.getMapperMethodName();
+        if (CharSequenceUtil.isEmpty(mapperMethodName)) {
+            mapperMethodName = "paginate";
         }
         Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
         if (Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperPaginateMethodName, IPage.class, dbQueryParamInnerDto.getClass());
+        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.nonNull(mapperMethod)) {
-            final List<R> list = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
-            iPage.setRecords(list);
+            final List<R> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
         Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
         if (interfaces.length > 0) {
             String canonicalName = interfaces[0].getCanonicalName();
-            throw new GXBusinessException(CharSequenceUtil.format("请在{}类中实现{}方法", canonicalName, mapperPaginateMethodName));
+            throw new GXBusinessException(CharSequenceUtil.format("请在{}类中申明{}方法", canonicalName, mapperMethodName));
         }
-        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperPaginateMethodName));
-    }
-
-    /**
-     * 通过条件获取分页数据列表
-     *
-     * @param dbQueryParamInnerDto 查询条件
-     * @return 列表
-     */
-    @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        IPage<R> iPage = constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
-        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
-            dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
-        }
-        List<R> records = baseMapper.paginate(iPage, dbQueryParamInnerDto);
-        iPage.setRecords(records);
-        return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
+        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperMethodName));
     }
 
     /**
@@ -156,39 +123,26 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        if (Objects.isNull(condition) || condition.isEmpty()) {
-            saveOrUpdate(entity);
+        condition = Optional.ofNullable(condition).orElse(HashBasedTable.create());
+        String pkName = getPrimaryKeyName();
+        String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
+        Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
+        String op = GXBuilderConstant.EQ;
+        Class<Object> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
+        if (String.class.isAssignableFrom(retIDClazz)) {
+            op = GXBuilderConstant.STR_EQ;
+        }
+        if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o) && Objects.isNull(condition.get(pkName, op))) {
+            condition.put(pkName, op, o);
+        }
+        if (condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
+            save(entity);
         } else {
-            UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-            condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> setUpdateWrapper(updateWrapper, Dict.create().set("op", op).set("column", column).set("value", value))));
-            saveOrUpdate(entity, updateWrapper);
+            UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);
+            update(entity, updateWrapper);
         }
-        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(getPrimaryKeyName()));
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
-    }
-
-    /**
-     * 设置更新条件对象的值
-     *
-     * @param updateWrapper MyBatis更新条件对象
-     * @param condition     条件
-     */
-    protected void setUpdateWrapper(UpdateWrapper<T> updateWrapper, Dict condition) {
-        String op = condition.getStr("op");
-        String column = condition.getStr("column");
-        String value = condition.getStr("value");
-        if (CharSequenceUtil.isBlank(value)) {
-            return;
-        }
-        column = CharSequenceUtil.toUnderlineCase(column);
-        Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
-        String methodName = methodNameDict.getStr(op);
-        if (Objects.nonNull(methodName)) {
-            if (!GXCommonUtils.digitalRegularExpression(value)) {
-                value = CharSequenceUtil.format("'{}'", value);
-            }
-            GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
-        }
     }
 
     /**
@@ -260,12 +214,11 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     /**
      * 获取表名字
      *
-     * @param clazz 实体的类型
      * @return 数据库表的名字
      */
     @Override
-    public String getTableName(Class<T> clazz) {
-        return GXDBCommonUtils.getTableName(clazz);
+    public String getTableName() {
+        return GXDBCommonUtils.getTableName(GXCommonUtils.getGenericClassType(getClass(), 1));
     }
 
     /**
@@ -275,7 +228,8 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @SuppressWarnings("all")
     private Class<ID> getIDClassType() {
-        return (Class<ID>) TypeUtil.getClass(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[3]);
+        Class<ID> clazz = GXCommonUtils.getGenericClassType(getClass(), 3);
+        return clazz;
     }
 
     /**

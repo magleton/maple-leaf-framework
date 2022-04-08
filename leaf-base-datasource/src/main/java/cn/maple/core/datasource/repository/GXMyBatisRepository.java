@@ -19,11 +19,9 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXTypeOfUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
@@ -56,6 +54,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+        GXValidatorUtils.validateEntity(entity);
         return baseDao.updateOrCreate(entity, condition);
     }
 
@@ -68,21 +67,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     @Override
     public ID updateOrCreate(T entity) {
-        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
-        String op = GXBuilderConstant.EQ;
-        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
-            op = GXBuilderConstant.STR_EQ;
-        }
-        GXValidatorUtils.validateEntity(entity);
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(entity.getClass());
-        String keyProperty = tableInfo.getKeyProperty();
-        Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
-        HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-        if (Objects.isNull(idVal) || Objects.equals(idVal, GXCommonUtils.getClassDefaultValue(GXTypeOfUtils.typeof(idVal)))) {
-            idVal = -1;
-        }
-        condition.put(keyProperty, op, idVal);
-        return updateOrCreate(entity, condition);
+        return updateOrCreate(entity, HashBasedTable.create());
     }
 
     /**
@@ -334,18 +319,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 根据条件获取分页数据 调用自定义的mapper接口中提供的方法
      *
-     * @param mapperPaginateMethodName mapper中的分页方法的名字
+     * @param mapperMethodName mapper中的分页方法的名字
      * @param dbQueryParamInnerDto     查询信息
      * @return 分页数据
      */
-    public GXPaginationResDto<R> paginate(String mapperPaginateMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        if (Objects.isNull(mapperPaginateMethodName)) {
-            mapperPaginateMethodName = "paginate";
+    public GXPaginationResDto<R> paginate(String mapperMethodName, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        if (Objects.isNull(mapperMethodName)) {
+            mapperMethodName = "paginate";
         }
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto, mapperPaginateMethodName);
+        dbQueryParamInnerDto.setMapperMethodName(mapperMethodName);
+        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
         String[] methodName = new String[]{"customizeProcess"};
         if (Objects.nonNull(dbQueryParamInnerDto.getMethodName())) {
             methodName[0] = dbQueryParamInnerDto.getMethodName();

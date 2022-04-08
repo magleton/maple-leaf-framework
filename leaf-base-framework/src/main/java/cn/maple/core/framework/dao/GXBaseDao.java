@@ -12,14 +12,6 @@ import java.util.List;
 
 public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID extends Serializable> {
     /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    ID create(T entity);
-
-    /**
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名字
@@ -93,25 +85,15 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
     /**
      * 分页
      *
-     * @param dbQueryParamInnerDto 查询参数
-     * @return 分页数据
+     * @param dbQueryParamInnerDto 查询条件
+     * @return GXPagination
      */
     GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
-     * 分页  返回实体对象
-     *
-     * @param dbQueryParamInnerDto 查询条件
-     * @param mapperMethodName     Mapper方法
-     * @return GXPagination
-     */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName);
-
-    /**
      * 获取表名字
      *
-     * @param clazz 实体的类型
      * @return 数据库表的名字
      */
-    String getTableName(Class<T> clazz);
+    String getTableName();
 }

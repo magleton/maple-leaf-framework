@@ -54,7 +54,7 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * orderByField.put("username" , "asc");
      * </code>
      */
-    private Map<String, String> orderByField;
+    private transient Map<String, String> orderByField;
 
     /**
      * 分组字段

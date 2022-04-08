@@ -9,12 +9,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.annotations.*;
-import org.mybatis.dynamic.sql.util.mybatis3.CommonSelectMapper;
 
 import java.util.List;
 
 @Mapper
-public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> extends BaseMapper<T>, CommonSelectMapper {
+public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> extends BaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 

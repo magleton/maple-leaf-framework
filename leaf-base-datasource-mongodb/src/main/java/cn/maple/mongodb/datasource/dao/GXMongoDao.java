@@ -38,17 +38,6 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
     }
 
     /**
-     * 保存数据
-     *
-     * @param entity 需要保存的数据
-     * @return ID
-     */
-    @Override
-    public ID create(T entity) {
-        return null;
-    }
-
-    /**
      * 通过SQL语句批量插入数据
      *
      * @param tableName 表名字
@@ -130,25 +119,12 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
     }
 
     /**
-     * 分页  返回实体对象
-     *
-     * @param dbQueryParamInnerDto 查询条件
-     * @param mapperMethodName     Mapper方法
-     * @return GXPagination
-     */
-    @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto, String mapperMethodName) {
-        return null;
-    }
-
-    /**
      * 获取表名字
      *
-     * @param clazz 实体的类型
      * @return 数据库表的名字
      */
     @Override
-    public String getTableName(Class<T> clazz) {
+    public String getTableName() {
         return null;
     }
 }

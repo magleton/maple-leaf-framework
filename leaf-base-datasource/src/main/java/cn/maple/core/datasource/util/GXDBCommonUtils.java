@@ -9,13 +9,17 @@ import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -164,9 +168,30 @@ public class GXDBCommonUtils {
      * 获取SELECT　SQL语句
      *
      * @param dbQueryParamInnerDto 查询条件
-     * @return　String
+     * @return　string
      */
     public static String getSelectONESQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return GXBaseBuilder.findOneByCondition(dbQueryParamInnerDto);
+    }
+
+    /**
+     * 设置更新条件对象的值
+     *
+     * @param condition 条件
+     */
+    public static <T> UpdateWrapper<T> assemblyUpdateWrapper(Table<String, String, Object> condition) {
+        UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
+        Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
+        condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> {
+            column = CharSequenceUtil.toUnderlineCase(column);
+            String methodName = methodNameDict.getStr(op);
+            if (Objects.nonNull(methodName)) {
+                if (!GXCommonUtils.digitalRegularExpression((String) value)) {
+                    value = CharSequenceUtil.format("'{}'", value);
+                }
+                GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
+            }
+        }));
+        return updateWrapper;
     }
 }

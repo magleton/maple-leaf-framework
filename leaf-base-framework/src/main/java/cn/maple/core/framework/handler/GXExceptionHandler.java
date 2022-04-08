@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.ValidationException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,5 +148,11 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleException(Exception e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "系统内部错误");
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public GXResultUtils<Dict> handException(SQLIntegrityConstraintViolationException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据已经存在");
     }
 }
