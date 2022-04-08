@@ -519,7 +519,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Collection
      */
     @Override
-    public Collection<R> findByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
+    public Collection<R> findByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
         Object o = callMethod(baseMapper, mapperMethodMethod, params);
         if (Objects.isNull(o)) {
             return Collections.emptyList();
@@ -535,8 +535,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Object
      */
     @Override
-    public Collection<R> findByCallMethod(String mapperMethodMethod, Object... params) {
-        return findByCallMethod(mapperMethodMethod, null, null, params);
+    public Collection<R> findByCallMapperMethod(String mapperMethodMethod, Object... params) {
+        return findByCallMapperMethod(mapperMethodMethod, null, null, params);
     }
 
     /**
@@ -549,7 +549,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Object
      */
     @Override
-    public R findOneByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
+    public R findOneByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params) {
         Object o = callMethod(baseMapper, mapperMethodMethod, params);
         if (Objects.isNull(o)) {
             return null;
@@ -565,8 +565,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return Object
      */
     @Override
-    public R findOneByCallMethod(String mapperMethodName, Object... params) {
-        return findOneByCallMethod(mapperMethodName, null, null, params);
+    public R findOneByCallMapperMethod(String mapperMethodName, Object... params) {
+        return findOneByCallMapperMethod(mapperMethodName, null, null, params);
     }
 
     /**

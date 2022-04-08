@@ -359,7 +359,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param params             参数
      * @return Collection
      */
-    Collection<R> findByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
+    Collection<R> findByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
 
     /**
      * 动态调用指定的指定Class中的方法
@@ -368,7 +368,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param params             参数
      * @return Object
      */
-    Collection<R> findByCallMethod(String mapperMethodMethod, Object... params);
+    Collection<R> findByCallMapperMethod(String mapperMethodMethod, Object... params);
 
     /**
      * 动态调用指定的指定Class中的方法
@@ -379,7 +379,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param params             参数
      * @return Object
      */
-    R findOneByCallMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
+    R findOneByCallMapperMethod(String mapperMethodMethod, String convertMethodName, CopyOptions copyOptions, Object... params);
 
     /**
      * 动态调用指定的指定Class中的方法
@@ -388,7 +388,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @param params           参数
      * @return Object
      */
-    R findOneByCallMethod(String mapperMethodName, Object... params);
+    R findOneByCallMapperMethod(String mapperMethodName, Object... params);
 
     /**
      * 获取 Primary Key
