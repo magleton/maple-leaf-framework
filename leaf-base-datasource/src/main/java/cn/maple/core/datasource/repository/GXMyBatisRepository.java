@@ -153,9 +153,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
                 if (CharSequenceUtil.isBlank(methodName)) {
                     methodName = "customizeProcess";
                 }
-                if (null != dbQueryInnerDto.getExtraData()) {
-                    GXCommonUtils.reflectCallObjectMethod(r, methodName, dbQueryInnerDto.getExtraData());
-                }
+                Object extraData = Optional.ofNullable(dbQueryInnerDto.getExtraData()).orElse(Dict.create());
+                GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
             });
         }
         return rs;
@@ -189,9 +188,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             if (CharSequenceUtil.isBlank(methodName)) {
                 methodName = "customizeProcess";
             }
-            if (null != dbQueryParamInnerDto.getExtraData()) {
-                GXCommonUtils.reflectCallObjectMethod(r, methodName, dbQueryParamInnerDto.getExtraData());
-            }
+            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
+            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
         }
         return r;
     }
