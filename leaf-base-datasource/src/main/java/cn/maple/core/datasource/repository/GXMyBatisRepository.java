@@ -147,16 +147,14 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @SuppressWarnings("all")
     public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
         List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
-        if (!rs.isEmpty()) {
-            rs.forEach(r -> {
-                String methodName = dbQueryInnerDto.getMethodName();
-                if (CharSequenceUtil.isBlank(methodName)) {
-                    methodName = "customizeProcess";
-                }
-                Object extraData = Optional.ofNullable(dbQueryInnerDto.getExtraData()).orElse(Dict.create());
-                GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
-            });
-        }
+        rs.forEach(r -> {
+            String methodName = dbQueryInnerDto.getMethodName();
+            if (CharSequenceUtil.isBlank(methodName)) {
+                methodName = "customizeProcess";
+            }
+            Object extraData = Optional.ofNullable(dbQueryInnerDto.getExtraData()).orElse(Dict.create());
+            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
+        });
         return rs;
     }
 
@@ -325,7 +323,16 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return baseDao.paginate(dbQueryParamInnerDto);
+        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
+        paginate.getRecords().forEach(r -> {
+            String methodName = dbQueryParamInnerDto.getMethodName();
+            if (CharSequenceUtil.isBlank(methodName)) {
+                methodName = "customizeProcess";
+            }
+            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
+            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
+        });
+        return paginate;
     }
 
     /**
