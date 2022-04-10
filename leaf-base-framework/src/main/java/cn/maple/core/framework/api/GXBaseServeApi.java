@@ -25,7 +25,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     /**
      * 服务类的Class 对象
      */
-    Map<String, Class<?>> serveServiceClassMap = new ConcurrentHashMap<String, Class<?>>();
+    Map<String, Class<?>> serveServiceClassMap = new ConcurrentHashMap<>();
 
     /**
      * 目标服务的类型

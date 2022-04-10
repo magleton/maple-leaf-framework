@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("all")
 public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
     private static final long serialVersionUID = -7685836286570517029L;
 
@@ -23,5 +24,5 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
     /**
      * 查询条件
      */
-    private transient Table<String, String, Object> condition;
+    private Table<String, String, Object> condition;
 }
