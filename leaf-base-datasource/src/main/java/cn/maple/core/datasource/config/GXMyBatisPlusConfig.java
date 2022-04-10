@@ -4,13 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.datasource.service.GXTenantIdService;
 import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.handlers.MybatisMapWrapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -115,14 +116,8 @@ public class GXMyBatisPlusConfig {
          */
         private static final CaffeineCacheManager caffeineCacheManager;
 
-        /**
-         * DB的Schema服务类
-         */
-        private static final GXDBSchemaService dbSchemaService;
-
         static {
             caffeineCacheManager = GXSpringContextUtils.getBean(CaffeineCacheManager.class);
-            dbSchemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
         }
 
         /**
@@ -169,15 +164,12 @@ public class GXMyBatisPlusConfig {
             if (Objects.nonNull(hasTenantIdField)) {
                 return Boolean.TRUE.equals(hasTenantIdField);
             }
-            assert dbSchemaService != null;
-            List<GXDBSchemaService.TableField> tableFieldList = dbSchemaService.getTableColumn(tableName);
-            for (GXDBSchemaService.TableField tableField : tableFieldList) {
-                String name = tableField.getColumnName();
-                if (CharSequenceUtil.equalsIgnoreCase(name, getTenantIdColumn())) {
-                    cache.put(tableName, Boolean.FALSE);
-                    return false;
-                }
+            TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
+            if (Objects.nonNull(tableInfo) && CollUtil.contains(tableInfo.getFieldList(), field -> CharSequenceUtil.equalsIgnoreCase(field.getColumn(), getTenantIdColumn()))) {
+                cache.put(tableName, Boolean.FALSE);
+                return false;
             }
+
             cache.put(tableName, Boolean.TRUE);
             return true;
         }

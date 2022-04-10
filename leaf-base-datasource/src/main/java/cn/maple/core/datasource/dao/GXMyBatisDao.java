@@ -96,20 +96,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     }
 
     /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名字
-     * @param dataList  数据集合
-     * @return int
-     */
-    @Override
-    @SuppressWarnings("all")
-    @Transactional(rollbackFor = Exception.class)
-    public Integer saveBatch(String tableName, List<Dict> dataList) {
-        return baseMapper.saveBatch(tableName, dataList);
-    }
-
-    /**
      * 保存数据
      *
      * @param entity    需要更新或者保存的数据

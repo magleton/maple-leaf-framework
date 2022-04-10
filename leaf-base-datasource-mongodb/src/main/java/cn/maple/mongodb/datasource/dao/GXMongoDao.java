@@ -38,18 +38,6 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
     }
 
     /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名字
-     * @param dataList  数据集合
-     * @return int
-     */
-    @Override
-    public Integer saveBatch(String tableName, List<Dict> dataList) {
-        return null;
-    }
-
-    /**
      * 保存数据
      *
      * @param entity    需要更新或者保存的数据

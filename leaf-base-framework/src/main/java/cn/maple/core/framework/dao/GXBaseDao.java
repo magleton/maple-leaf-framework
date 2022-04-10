@@ -12,15 +12,6 @@ import java.util.List;
 
 public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID extends Serializable> {
     /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名字
-     * @param dataList  数据集合
-     * @return int
-     */
-    Integer saveBatch(String tableName, List<Dict> dataList);
-
-    /**
      * 保存数据
      *
      * @param entity    需要更新或者保存的数据

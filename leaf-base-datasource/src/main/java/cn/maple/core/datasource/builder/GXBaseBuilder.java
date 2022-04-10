@@ -7,20 +7,15 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.model.GXMyBatisModel;
-import cn.maple.core.datasource.service.GXAlterTableService;
-import cn.maple.core.datasource.service.GXDBSchemaService;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXLoggerUtils;
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.util.GXTypeOfUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
@@ -28,7 +23,6 @@ import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -121,95 +115,6 @@ public interface GXBaseBuilder {
         sql.LIMIT(1);
         condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, op);
         return sql.toString();
-    }
-
-    /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名
-     * @param dataList  需要插入的数据列表
-     * @return String
-     */
-    @SuppressWarnings("all")
-    static String saveBatch(String tableName, List<Dict> dataList) {
-        if (dataList.isEmpty()) {
-            throw new GXBusinessException("批量插入数据为空");
-        }
-        try {
-            GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
-            assert tableService != null;
-            List<GXDBSchemaService.TableField> tableColumns = tableService.getTableColumns(tableName);
-            HashMap<String, Object> columns = new HashMap<>();
-            tableColumns.forEach(c -> columns.put(c.getColumnName(), c.getExtra()));
-            dataList.forEach(dict -> dict.set("createdAt", DateUtil.currentSeconds()));
-            final Set<String> fieldSet = new HashSet<>(columns.keySet());
-            String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
-            StringBuilder values = new StringBuilder();
-            for (Dict dict : dataList) {
-                combinedFieldValue(dict, columns, values);
-            }
-            return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
-        } catch (SQLException e) {
-            throw new GXBusinessException("获取表的列信息失败!", e);
-        }
-    }
-
-    /**
-     * 组合字段的值
-     *
-     * @param data    需要插入的数据
-     * @param columns 数据库字段
-     */
-    private static void combinedFieldValue(Dict data, HashMap<String, Object> columns, StringBuilder values) {
-        values.append("(");
-        Set<String> fieldSet = columns.keySet();
-        List<String> tmp = new ArrayList<>();
-        for (String field : fieldSet) {
-            Object value = data.getObj(CharSequenceUtil.toCamelCase(field));
-            if ((CollUtil.contains(Arrays.asList("0", ""), value) || Objects.isNull(value)) && CharSequenceUtil.equalsIgnoreCase(field, GXBuilderConstant.DEFAULT_ID_NAME) && !CharSequenceUtil.equalsIgnoreCase(Optional.ofNullable(columns.get(field)).orElse("").toString(), "auto_increment")) {
-                value = IdUtil.getSnowflake().nextId();
-                data.set(GXBuilderConstant.DEFAULT_ID_NAME, value);
-            }
-            if (Objects.isNull(value)) {
-                tmp.add(null);
-                continue;
-            }
-            if (value instanceof Map) {
-                value = JSONUtil.toJsonStr(value);
-            }
-            String valueTemplate = "'{}'";
-            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                valueTemplate = "{}";
-            }
-            tmp.add(CharSequenceUtil.format(valueTemplate, value));
-        }
-        values.append(String.join(",", tmp)).append("),");
-    }
-
-    /**
-     * 保存一条数据
-     *
-     * @param tableName 表名字
-     * @param data      待插入数据
-     * @return 影响行数
-     */
-    @SuppressWarnings("all")
-    static String save(String tableName, Dict data) {
-        try {
-            Dict dict = GXCommonUtils.convertSourceToDict(data);
-            GXAlterTableService tableService = GXSpringContextUtils.getBean(GXAlterTableService.class);
-            assert tableService != null;
-            List<GXDBSchemaService.TableField> tableColumns = tableService.getTableColumns(tableName);
-            HashMap<String, Object> columns = new HashMap<>();
-            tableColumns.forEach(c -> columns.put(c.getColumnName(), c.getExtra()));
-            final Set<String> fieldSet = new HashSet<>(columns.keySet());
-            String sql = "INSERT INTO " + tableName + "(`" + CollUtil.join(fieldSet, "`,`") + "`) VALUES ";
-            StringBuilder values = new StringBuilder();
-            combinedFieldValue(dict, columns, values);
-            return sql + CharSequenceUtil.sub(values, 0, values.lastIndexOf(","));
-        } catch (SQLException e) {
-            throw new GXBusinessException("获取表的列信息失败!", e);
-        }
     }
 
     /**
@@ -619,49 +524,5 @@ public interface GXBaseBuilder {
             return GXCommonConstant.NOT_STR_DELETED_MARK;
         }
         return GXCommonConstant.NOT_INT_DELETED_MARK;
-    }
-
-    /**
-     * 获取SQL语句的查询字段
-     *
-     * @param tableName  表名
-     * @param targetSet  目标字段集合
-     * @param tableAlias 表的别名
-     * @param remove     是否移除
-     * @return String
-     */
-    default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove, boolean saveJSONField) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
-        assert schemaService != null;
-        return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove, saveJSONField);
-    }
-
-    /**
-     * 获取SQL语句的查询字段
-     *
-     * @param tableName  表名
-     * @param targetSet  目标字段集合
-     * @param tableAlias 表的别名
-     * @param remove     是否移除
-     * @return String
-     */
-    default String getSelectField(String tableName, Set<String> targetSet, String tableAlias, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
-        assert schemaService != null;
-        return schemaService.getSelectFieldStr(tableName, targetSet, tableAlias, remove);
-    }
-
-    /**
-     * 获取SQL语句的查询字段
-     *
-     * @param tableName 表名
-     * @param targetSet 目标字段集合
-     * @param remove    是否移除
-     * @return String
-     */
-    default String getSelectField(String tableName, Set<String> targetSet, boolean remove) {
-        final GXDBSchemaService schemaService = GXSpringContextUtils.getBean(GXDBSchemaService.class);
-        assert schemaService != null;
-        return schemaService.getSelectFieldStr(tableName, targetSet, remove);
     }
 }

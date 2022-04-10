@@ -250,29 +250,6 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     }
 
     /**
-     * 批量插入数据
-     *
-     * @param tableName 表名
-     * @param dataList  数据集合
-     * @return 影响行数
-     */
-    @Override
-    public Integer saveBatch(String tableName, List<Dict> dataList) {
-        return null;
-    }
-
-    /**
-     * 批量插入数据
-     *
-     * @param dataList 数据集合
-     * @return 影响行数
-     */
-    @Override
-    public Integer saveBatch(List<Dict> dataList) {
-        return null;
-    }
-
-    /**
      * 通过条件更新数据
      *
      * @param tableName 需要更新的表名

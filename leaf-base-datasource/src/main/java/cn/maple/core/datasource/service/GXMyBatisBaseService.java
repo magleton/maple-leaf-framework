@@ -68,23 +68,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition);
 
     /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名
-     * @param dataList  数据集合
-     * @return int
-     */
-    Integer batchSave(String tableName, List<Dict> dataList);
-
-    /**
-     * 批量插入数据
-     *
-     * @param dataList 待插入的数据
-     * @return 插入的行数
-     */
-    Integer batchSave(List<Dict> dataList);
-
-    /**
      * 列表或者搜索(分页)
      *
      * @param searchReqDto 参数

@@ -107,30 +107,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     }
 
     /**
-     * 通过SQL语句批量插入数据
-     *
-     * @param tableName 表名
-     * @param dataList  数据集合
-     * @return int
-     */
-    @SuppressWarnings("all")
-    @Override
-    public Integer batchSave(String tableName, List<Dict> dataList) {
-        return repository.saveBatch(tableName, dataList);
-    }
-
-    /**
-     * 批量插入数据
-     *
-     * @param dataList 待插入的数据
-     * @return 插入的行数
-     */
-    @Override
-    public Integer batchSave(List<Dict> dataList) {
-        return batchSave(repository.getTableName(), dataList);
-    }
-
-    /**
      * 列表或者搜索(分页)
      *
      * @param queryParamReqDto 参数
