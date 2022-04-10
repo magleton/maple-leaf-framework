@@ -165,13 +165,13 @@ public class GXMyBatisPlusConfig {
                 return Boolean.TRUE.equals(hasTenantIdField);
             }
             TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
-            if (Objects.nonNull(tableInfo) && CollUtil.contains(tableInfo.getFieldList(), field -> CharSequenceUtil.equalsIgnoreCase(field.getColumn(), getTenantIdColumn()))) {
-                cache.put(tableName, Boolean.FALSE);
-                return false;
+            if (Objects.isNull(tableInfo)) {
+                cache.put(tableName, Boolean.TRUE);
+                return true;
             }
-
-            cache.put(tableName, Boolean.TRUE);
-            return true;
+            boolean contains = !CollUtil.contains(tableInfo.getFieldList(), field -> CharSequenceUtil.equalsIgnoreCase(field.getColumn(), getTenantIdColumn()));
+            cache.put(tableName, contains);
+            return contains;
         }
     }
 }
