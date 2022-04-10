@@ -62,10 +62,10 @@ public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializ
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
+    List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 根据条件获取所有数据

@@ -91,11 +91,11 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
+    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return Collections.emptyList();
     }
 

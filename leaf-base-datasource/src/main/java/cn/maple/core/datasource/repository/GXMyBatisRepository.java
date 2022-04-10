@@ -140,21 +140,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
     @Override
-    @SuppressWarnings("all")
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto) {
-        List<R> rs = baseDao.findByCondition(dbQueryInnerDto);
-        rs.forEach(r -> {
-            String methodName = dbQueryInnerDto.getMethodName();
-            if (CharSequenceUtil.isBlank(methodName)) {
-                methodName = "customizeProcess";
-            }
-            Object extraData = Optional.ofNullable(dbQueryInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
-        });
+    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        List<R> rs = baseDao.findByCondition(dbQueryParamInnerDto);
+        rs.forEach(r -> callResultMethod(dbQueryParamInnerDto, r));
         return rs;
     }
 
@@ -178,16 +170,10 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    @SuppressWarnings("all")
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
-            String methodName = dbQueryParamInnerDto.getMethodName();
-            if (CharSequenceUtil.isBlank(methodName)) {
-                methodName = "customizeProcess";
-            }
-            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
+            callResultMethod(dbQueryParamInnerDto, r);
         }
         return r;
     }
@@ -324,14 +310,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
         GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
-        paginate.getRecords().forEach(r -> {
-            String methodName = dbQueryParamInnerDto.getMethodName();
-            if (CharSequenceUtil.isBlank(methodName)) {
-                methodName = "customizeProcess";
-            }
-            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
-        });
+        paginate.getRecords().forEach(r -> callResultMethod(dbQueryParamInnerDto, r));
         return paginate;
     }
 
@@ -495,5 +474,20 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         Class<?> entityClass = GXCommonUtils.getGenericClassType(getClass(), 1);
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
         return tableInfo.getTableName();
+    }
+
+    /**
+     * 条用数据库查询的结果集回调处理函数
+     *
+     * @param dbQueryParamInnerDto 查询参数
+     * @param r                    结果集数据
+     */
+    private void callResultMethod(GXBaseQueryParamInnerDto dbQueryParamInnerDto, R r) {
+        String methodName = dbQueryParamInnerDto.getMethodName();
+        if (CharSequenceUtil.isBlank(methodName)) {
+            methodName = "customizeProcess";
+        }
+        Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
+        GXCommonUtils.reflectCallObjectMethod(r, methodName, extraData);
     }
 }
