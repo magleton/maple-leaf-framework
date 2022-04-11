@@ -2,7 +2,6 @@ package cn.maple.core.framework.aspect;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.annotation.GXValidateRequestParam;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,21 +19,16 @@ import java.util.Set;
 
 @Aspect
 @Component
-public class GXParamAspect {
-    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXValidateRequestParam)")
-    public void requestParamRequire() {
+public class GXValidateRequestParamAspect {
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
+    public void requestParamValidate() {
         //标识切面的入口
     }
 
-    @Around("requestParamRequire()")
+    @Around("requestParamValidate()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
-        final GXValidateRequestParam paramAnnotation = method.getAnnotation(GXValidateRequestParam.class);
-        final boolean require = paramAnnotation.require();
-        if (!require) {
-            return point.proceed(point.getArgs());
-        }
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<? extends ConstraintViolation<Object>> constraintViolations = validator.forExecutables().validateParameters(GXSpringContextUtils.getBean(method.getDeclaringClass()), method, point.getArgs());
         if (!constraintViolations.isEmpty()) {
