@@ -5,14 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GXParam {
-    /**
-     * 参数名字
-     */
-    String[] paramNames();
-
+public @interface GXValidateRequestParam {
     /**
      * 是否必须
      */
