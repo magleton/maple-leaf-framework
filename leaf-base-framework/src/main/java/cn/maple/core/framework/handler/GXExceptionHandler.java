@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -151,8 +152,14 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public GXResultUtils<Dict> handException(SQLIntegrityConstraintViolationException e) {
+    public GXResultUtils<Dict> handleException(SQLIntegrityConstraintViolationException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据已经存在");
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public GXResultUtils<Dict> handleException(UnexpectedTypeException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "使用的数据验证器不能验证请求的参数!");
     }
 }
