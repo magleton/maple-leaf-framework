@@ -355,15 +355,28 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 创建或者更新
      *
-     * @param req       请求参数
-     * @param condition 条件
+     * @param req         请求参数
+     * @param condition   条件
+     * @param copyOptions 复制可选项
      * @return ID
      */
     @Override
-    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition) {
+    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
-        T entity = convertSourceToTarget(req, targetClazz, null, null);
+        T entity = convertSourceToTarget(req, targetClazz, "customizeProcess", copyOptions);
         return updateOrCreate(entity, condition);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param req         请求参数
+     * @param copyOptions 复制可选项
+     * @return ID
+     */
+    @Override
+    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, CopyOptions copyOptions) {
+        return updateOrCreate(req, HashBasedTable.create(), copyOptions);
     }
 
     /**
@@ -372,9 +385,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param req 请求参数
      * @return ID
      */
-    @Override
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req) {
-        return updateOrCreate(req, HashBasedTable.create());
+        return updateOrCreate(req, CopyOptions.create());
     }
 
     /**

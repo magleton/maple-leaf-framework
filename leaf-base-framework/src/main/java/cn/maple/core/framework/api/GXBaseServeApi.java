@@ -115,12 +115,13 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 创建或者更新数据
      *
-     * @param reqDto    请求参数
-     * @param condition 更新条件
+     * @param reqDto      请求参数
+     * @param condition   更新条件
+     * @param copyOptions 复制可选项
      * @return ID
      */
-    default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition) {
-        Object id = callMethod("updateOrCreate", reqDto, condition);
+    default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
+        Object id = callMethod("updateOrCreate", reqDto, condition, copyOptions);
         if (Objects.nonNull(id)) {
             return (ID) id;
         }
@@ -130,11 +131,22 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 创建或者更新数据
      *
+     * @param reqDto      请求参数
+     * @param copyOptions 复制可选项
+     * @return ID
+     */
+    default ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
+        return updateOrCreate(reqDto, HashBasedTable.create(), copyOptions);
+    }
+
+    /**
+     * 创建或者更新数据
+     *
      * @param reqDto 请求参数
      * @return ID
      */
     default ID updateOrCreate(Q reqDto) {
-        return updateOrCreate(reqDto, HashBasedTable.create());
+        return updateOrCreate(reqDto, CopyOptions.create());
     }
 
     /**
