@@ -11,6 +11,7 @@ import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -348,6 +349,31 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         return repository.updateOrCreate(entity, condition);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param req       请求参数
+     * @param condition 条件
+     * @return ID
+     */
+    @Override
+    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition) {
+        Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
+        T entity = convertSourceToTarget(req, targetClazz, null, null);
+        return updateOrCreate(entity, condition);
+    }
+
+    /**
+     * 创建或者更新
+     *
+     * @param req      请求参数
+     * @return ID
+     */
+    @Override
+    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req) {
+        return updateOrCreate(req, HashBasedTable.create());
     }
 
     /**
