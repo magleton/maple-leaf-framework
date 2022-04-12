@@ -14,7 +14,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <dubbo.version>3.0.6</dubbo.version>
+        <dubbo.version>3.0.7</dubbo.version>
         <fastjson.version>1.2.80</fastjson.version>
     </properties>
 
@@ -34,6 +34,10 @@
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>${dubbo.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
@@ -72,6 +76,10 @@
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
