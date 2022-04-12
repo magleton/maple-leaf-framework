@@ -361,14 +361,14 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
-        T entity = convertSourceToTarget(req, targetClazz, null, null);
+        T entity = convertSourceToTarget(req, targetClazz, "customizeProcess", null);
         return updateOrCreate(entity, condition);
     }
 
     /**
      * 创建或者更新
      *
-     * @param req      请求参数
+     * @param req 请求参数
      * @return ID
      */
     @Override

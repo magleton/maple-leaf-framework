@@ -7,6 +7,7 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.util.GXCommonUtils;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
@@ -129,7 +130,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return ID
      */
     default ID updateOrCreate(Q reqDto) {
-        return updateOrCreate(reqDto, null);
+        return updateOrCreate(reqDto, HashBasedTable.create());
     }
 
     /**
