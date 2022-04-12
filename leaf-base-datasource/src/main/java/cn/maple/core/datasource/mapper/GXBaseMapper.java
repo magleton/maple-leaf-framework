@@ -5,8 +5,8 @@ import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.google.common.collect.Table;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import java.util.List;
 
 @Mapper
-public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> extends BaseMapper<T> {
+public interface GXBaseMapper<T extends GXMyBatisModel, R extends GXBaseResDto> extends MPJBaseMapper<T> {
     @UpdateProvider(type = GXBaseBuilder.class, method = "updateFieldByCondition")
     Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
 

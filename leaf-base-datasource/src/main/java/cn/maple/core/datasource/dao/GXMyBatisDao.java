@@ -19,7 +19,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.base.MPJBaseService;
+import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, R extends GXBaseResDto, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
+public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, R extends GXBaseResDto, ID extends Serializable> extends MPJBaseServiceImpl<M, T> implements MPJBaseService<T>, GXBaseDao<T, R, ID> {
     /**
      * 日志对象
      */
