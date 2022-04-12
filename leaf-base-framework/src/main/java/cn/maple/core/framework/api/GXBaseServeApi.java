@@ -4,7 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <ID> 唯一标识的类型  一般是一个实体对象的ID类型
  */
 @SuppressWarnings("all")
-public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, ID extends Serializable> {
+public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> {
     /**
      * 服务类的Class 对象
      */
@@ -39,7 +39,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return List
      */
     default List<R> findByCondition(Table<String, String, Object> condition) {
-        return findByCondition(condition, Dict.create());
+        List<R> rs = findByCondition(condition, Dict.create());
+        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+        return GXCommonUtils.convertSourceListToTargetList(rs, retClazz, null, null);
     }
 
     /**
@@ -49,9 +51,10 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      * @return List
      */
     default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
+        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
         Object rLst = callMethod("findByCondition", condition, extraData);
         if (Objects.nonNull(rLst)) {
-            return (List<R>) rLst;
+            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
         }
         return Collections.emptyList();
     }
@@ -101,8 +104,9 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
      */
     default R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
         Object r = callMethod("findOneByCondition", condition, extraData);
+        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
         if (Objects.nonNull(r)) {
-            return (R) r;
+            return GXCommonUtils.convertSourceToTarget(r, retClazz, null, null);
         }
         return null;
     }
@@ -141,7 +145,12 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseResDto, 
     default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
         Object paginate = callMethod("paginate", reqProtocol);
         if (Objects.nonNull(paginate)) {
-            return (GXPaginationResDto<R>) paginate;
+            GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
+            List<R> records = retPaginate.getRecords();
+            Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, null);
+            retPaginate.setRecords(records);
+            return retPaginate;
         }
         return null;
     }

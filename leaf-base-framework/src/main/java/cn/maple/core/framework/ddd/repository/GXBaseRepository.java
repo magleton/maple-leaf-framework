@@ -2,6 +2,7 @@ package cn.maple.core.framework.ddd.repository;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.google.common.collect.Table;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<T, R extends GXBaseResDto, ID extends Serializable> {
+public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serializable> {
     /**
      * 保存或者更新数据
      *
