@@ -7,6 +7,7 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -241,6 +242,23 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return ID
      */
     ID updateOrCreate(T entity, Table<String, String, Object> condition);
+
+    /**
+     * 创建或者更新
+     *
+     * @param req       请求参数
+     * @param condition 条件
+     * @return ID
+     */
+    <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition);
+
+    /**
+     * 创建或者更新
+     *
+     * @param req      请求参数
+     * @return ID
+     */
+    <Q extends GXBaseReqDto> ID updateOrCreate(Q req);
 
     /**
      * 复制一条数据
