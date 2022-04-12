@@ -110,7 +110,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
         String op = GXBuilderConstant.EQ;
-        Class<Object> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
+        Class<ID> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
         if (String.class.isAssignableFrom(retIDClazz)) {
             op = GXBuilderConstant.STR_EQ;
         }
@@ -124,7 +124,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
             save(entity);
         }
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
-        return Convert.convert(getIDClassType(), GXCommonUtils.reflectCallObjectMethod(entity, methodName));
+        return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(entity, methodName));
     }
 
     /**
@@ -181,17 +181,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     public String getTableName() {
         return GXDBCommonUtils.getTableName(GXCommonUtils.getGenericClassType(getClass(), 1));
-    }
-
-    /**
-     * 获取主键标识的类型
-     *
-     * @return Class
-     */
-    @SuppressWarnings("all")
-    private Class<ID> getIDClassType() {
-        Class<ID> clazz = GXCommonUtils.getGenericClassType(getClass(), 3);
-        return clazz;
     }
 
     /**
