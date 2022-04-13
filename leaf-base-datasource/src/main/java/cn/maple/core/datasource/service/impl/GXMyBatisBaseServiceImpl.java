@@ -22,6 +22,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -333,8 +334,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param entity 数据实体
      * @return ID
      */
-    @SuppressWarnings("all")
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, HashBasedTable.create());
     }
@@ -347,11 +348,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         return repository.updateOrCreate(entity, condition);
     }
-
-
+    
     /**
      * 创建或者更新
      *
@@ -361,6 +362,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
         T entity = convertSourceToTarget(req, targetClazz, "customizeProcess", copyOptions);
@@ -375,6 +377,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, CopyOptions copyOptions) {
         return updateOrCreate(req, HashBasedTable.create(), copyOptions);
     }
@@ -385,6 +388,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @param req 请求参数
      * @return ID
      */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req) {
         return updateOrCreate(req, CopyOptions.create());
     }
@@ -398,6 +403,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 新数据ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Dict extraData) {
         R oneData = findOneByCondition(repository.getTableName(), copyCondition);
         if (Objects.isNull(oneData)) {
@@ -424,6 +430,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 新数据ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData) {
         return copyOneData(copyCondition, replaceData, Dict.create());
     }

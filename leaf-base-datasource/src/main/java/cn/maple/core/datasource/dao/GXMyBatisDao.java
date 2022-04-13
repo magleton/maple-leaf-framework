@@ -15,6 +15,7 @@ import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -106,6 +107,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+        GXValidatorUtils.validateEntity(entity);
         condition = Optional.ofNullable(condition).orElse(HashBasedTable.create());
         String pkName = getPrimaryKeyName();
         String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));

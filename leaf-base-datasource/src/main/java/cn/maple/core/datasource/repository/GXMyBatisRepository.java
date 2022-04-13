@@ -27,6 +27,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -54,6 +55,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         GXValidatorUtils.validateEntity(entity);
         return baseDao.updateOrCreate(entity, condition);
@@ -65,8 +67,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @param entity 数据实体
      * @return ID
      */
-    @SuppressWarnings("all")
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, HashBasedTable.create());
     }
