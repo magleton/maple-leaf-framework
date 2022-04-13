@@ -226,7 +226,7 @@ public interface GXBaseBuilder {
             String orClause = Optional.ofNullable(join.getOr()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
             String assemblySql = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, tableName, tableAliasName, andClause, orClause);
             if (CharSequenceUtil.isNotEmpty(orClause)) {
-                assemblySql = CharSequenceUtil.format("{} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
+                assemblySql = CharSequenceUtil.format("{} {} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
             }
             if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType.getJoinType())) {
                 sql.LEFT_OUTER_JOIN(assemblySql);
