@@ -215,10 +215,10 @@ public interface GXBaseBuilder {
      * 处理JOIN表
      *
      * @param sql      SQL语句
-     * @param newJoins joins信息
+     * @param joins joins信息
      */
-    static void handleSQLJoin(SQL sql, List<GXJoinDto> newJoins) {
-        newJoins.forEach(join -> {
+    static void handleSQLJoin(SQL sql, List<GXJoinDto> joins) {
+        joins.forEach(join -> {
             GXJoinTypeEnums joinType = join.getJoinType();
             String tableName = join.getJoinTableName();
             String tableAliasName = join.getJoinTableNameAlias();
