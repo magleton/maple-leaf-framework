@@ -13,7 +13,7 @@ public class GXDbJoinOp extends GXBaseDto {
     /**
      * 主表别名
      */
-    protected String masterAliasTableName;
+    protected String masterTableNameAlias;
 
     /**
      * 主表字段
@@ -48,8 +48,8 @@ public class GXDbJoinOp extends GXBaseDto {
         return this;
     }
 
-    public GXDbJoinOp setMasterAliasTableName(String masterAliasTableName) {
-        this.masterAliasTableName = masterAliasTableName;
+    public GXDbJoinOp setMasterTableNameAlias(String masterTableNameAlias) {
+        this.masterTableNameAlias = masterTableNameAlias;
         return this;
     }
 
@@ -73,13 +73,13 @@ public class GXDbJoinOp extends GXBaseDto {
     }
 
     public String opString() {
-        if (CharSequenceUtil.isNotEmpty(masterAliasTableName) && CharSequenceUtil.isNotEmpty(masterFieldName)) {
-            masterFieldName = CharSequenceUtil.format("{}.{}", masterAliasTableName, masterFieldName);
+        if (CharSequenceUtil.isNotEmpty(masterTableNameAlias) && CharSequenceUtil.isNotEmpty(masterFieldName)) {
+            masterFieldName = CharSequenceUtil.format("{}.{}", masterTableNameAlias, masterFieldName);
         }
         if (CharSequenceUtil.isNotEmpty(joinTableNameAlias) && CharSequenceUtil.isNotEmpty(joinFieldName)) {
             joinFieldName = CharSequenceUtil.format("{}.{}", joinTableNameAlias, joinFieldName);
         }
-        if (Objects.nonNull(fieldValue) && CharSequenceUtil.isNotEmpty(masterFieldName) && CharSequenceUtil.isNotEmpty(masterAliasTableName) && CharSequenceUtil.contains(masterFieldName, masterAliasTableName)) {
+        if (Objects.nonNull(fieldValue) && CharSequenceUtil.isNotEmpty(masterFieldName) && CharSequenceUtil.isNotEmpty(masterTableNameAlias) && CharSequenceUtil.contains(masterFieldName, masterTableNameAlias)) {
             return masterFieldName + getOp() + fieldValue;
         } else if (Objects.nonNull(fieldValue) && CharSequenceUtil.isNotEmpty(joinFieldName) && CharSequenceUtil.isNotEmpty(joinTableNameAlias) && CharSequenceUtil.contains(joinFieldName, joinTableNameAlias)) {
             return joinFieldName + getOp() + fieldValue;

@@ -42,8 +42,8 @@ public class GXJoinDto {
 
     public void setAnd(List<GXDbJoinOp> and) {
         and.forEach(op -> {
-            if (CharSequenceUtil.isEmpty(op.getMasterAliasTableName())) {
-                op.setMasterAliasTableName(masterTableNameAlias);
+            if (CharSequenceUtil.isEmpty(op.getMasterTableNameAlias())) {
+                op.setMasterTableNameAlias(masterTableNameAlias);
             }
             if (CharSequenceUtil.isEmpty(op.getJoinTableNameAlias())) {
                 op.setJoinTableNameAlias(joinTableNameAlias);
@@ -54,8 +54,8 @@ public class GXJoinDto {
 
     public void setOr(List<GXDbJoinOp> or) {
         or.forEach(op -> {
-            if (CharSequenceUtil.isEmpty(op.getMasterAliasTableName())) {
-                op.setMasterAliasTableName(masterTableNameAlias);
+            if (CharSequenceUtil.isEmpty(op.getMasterTableNameAlias())) {
+                op.setMasterTableNameAlias(masterTableNameAlias);
             }
             if (CharSequenceUtil.isEmpty(op.getJoinTableNameAlias())) {
                 op.setJoinTableNameAlias(joinTableNameAlias);
