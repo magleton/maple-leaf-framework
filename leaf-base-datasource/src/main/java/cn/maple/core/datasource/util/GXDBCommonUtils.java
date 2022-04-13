@@ -162,7 +162,7 @@ public class GXDBCommonUtils {
      * @param dbQueryParamInnerDto 查询条件
      * @return String
      */
-    public static String getSelectSQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public static String getSelectSql(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return GXBaseBuilder.findByCondition(dbQueryParamInnerDto);
     }
 
@@ -172,7 +172,7 @@ public class GXDBCommonUtils {
      * @param dbQueryParamInnerDto 查询条件
      * @return SQL
      */
-    public static String getSelectONESQL(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public static String getSelectOneSql(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return GXBaseBuilder.findOneByCondition(dbQueryParamInnerDto);
     }
 
