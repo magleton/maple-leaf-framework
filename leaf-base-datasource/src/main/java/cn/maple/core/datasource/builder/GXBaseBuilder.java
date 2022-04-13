@@ -172,15 +172,10 @@ public interface GXBaseBuilder {
             selectStr = String.join(",", columns);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
-        Table<String, String, Table<String, String, Dict>> joins = dbQueryParamInnerDto.getJoins();
         // 处理JOIN
+        List<GXJoinDto> joins = dbQueryParamInnerDto.getJoins();
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             handleSQLJoin(sql, joins);
-        }
-        // 处理新JOIN
-        List<GXJoinDto> newJoins = dbQueryParamInnerDto.getNewJoins();
-        if (Objects.nonNull(newJoins) && !newJoins.isEmpty()) {
-            handleSQLJoin(sql, newJoins);
         }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         // 获取是否排除删除条件的标识, 若不为null,则需要排除is_deleted条件,也就是会查询所有数据
@@ -218,29 +213,6 @@ public interface GXBaseBuilder {
 
     /**
      * 处理JOIN表
-     * <pre>
-     * {@code
-     * Table<String, String, Object> joins = HashBasedTable.create();
-     * HashBasedTable<String, String, Dict> joinAdmin = HashBasedTable.create();
-     * joinAdmin.put("子表别名", "主表别名", Dict.create()
-     * .set("子表字段名字A", "主表表字段名字A")
-     * .set("子表字段名字B", "主表表字段名字B")
-     * .set("子表字段名字C", "主表表字段名字C"));
-     * joins.put("right", "s_admin", joinAdmin);
-     * handleSQLJoin(sql , joins);
-     * }
-     * </pre>
-     *
-     * @param sql   SQL语句
-     * @param joins joins信息
-     */
-    static void handleSQLJoin(SQL sql, Table<String, String, Table<String, String, Dict>> joins) {
-        Map<String, Map<String, Table<String, String, Dict>>> conditionMap = joins.rowMap();
-        conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((subTableName, joinSpecification) -> handleJoinOnSpecification(sql, joinType, subTableName, joinSpecification)));
-    }
-
-    /**
-     * 处理JOIN表
      *
      * @param sql      SQL语句
      * @param newJoins joins信息
@@ -264,50 +236,6 @@ public interface GXBaseBuilder {
                 sql.INNER_JOIN(assemblySql);
             }
         });
-    }
-
-    /**
-     * 处理JOIN后面的ON条件
-     * <pre>
-     * {@code
-     * HashBasedTable<String, String, Dict> joinInfo = HashBasedTable.create();
-     * joinInfo.put("子表别名", "主表别名", Dict.create()
-     * .set("子表字段名字A", "主表表字段名字A")
-     * .set("子表字段名字B", "主表表字段名字B")
-     * .set("子表字段名字C" , "&88899")
-     * .set("子表字段名字D", "主表表字段名字D"));
-     * handleJoinOnSpecification(sql , "left" , "address" , joinInfo);
-     * }
-     * </pre>
-     *
-     * @param sql          SQL语句
-     * @param joinType     链接类型
-     * @param subTableName 子表名字(需要链接的表的名字)
-     * @param join         JOIN信息
-     */
-    static void handleJoinOnSpecification(SQL sql, String joinType, String subTableName, Table<String, String, Dict> join) {
-        if (Objects.nonNull(join) && !join.isEmpty()) {
-            Map<String, Map<String, Dict>> rowMap = join.rowMap();
-            String[] joinOnStr = new String[]{""};
-            rowMap.forEach((subTableAlias, joinInfo) -> joinInfo.forEach((mainTableAlias, joinSpecification) -> {
-                List<String> joinOnList = CollUtil.newArrayList();
-                joinSpecification.forEach((subTableField, mainTableField) -> {
-                    String onStr = CharSequenceUtil.format("{}.{} = {}.{}", subTableAlias, subTableField, mainTableAlias, mainTableField);
-                    if (CharSequenceUtil.startWith(mainTableField.toString(), GXBuilderConstant.JOIN_ON_START_WITH_MARKER, true)) {
-                        onStr = CharSequenceUtil.format("{}.{} = {}", subTableAlias, subTableField, CharSequenceUtil.subAfter(mainTableField.toString(), GXBuilderConstant.JOIN_ON_START_WITH_MARKER, false));
-                    }
-                    joinOnList.add(onStr);
-                });
-                joinOnStr[0] = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, subTableName, subTableAlias, CollUtil.join(joinOnList, " and "));
-            }));
-            if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {
-                sql.LEFT_OUTER_JOIN(joinOnStr[0]);
-            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.RIGHT_JOIN_TYPE, joinType)) {
-                sql.RIGHT_OUTER_JOIN(joinOnStr[0]);
-            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.INNER_JOIN_TYPE, joinType)) {
-                sql.INNER_JOIN(joinOnStr[0]);
-            }
-        }
     }
 
     /**

@@ -1,7 +1,6 @@
 package cn.maple.core.framework.dto.inner;
 
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseDto;
 import com.google.common.collect.Table;
 import lombok.Builder;
@@ -90,22 +89,8 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
 
     /**
      * JOIN链接信息
-     * <pre>
-     * {@code
-     * Table<String, String, Table<String, String, Dict>> joins = HashBasedTable.create();
-     * HashBasedTable<String, String, Dict> joinData = HashBasedTable.create();
-     * joinData.put("子表别名" , "主表别名" , Dict.create().set("子表字段" , "主表字段"))
-     * joins.put("链接类型" , "子表名字" , joinData);
-     * }
-     * </pre>
      */
-    @Deprecated
-    private transient Table<String, String, Table<String, String, Dict>> joins;
-
-    /**
-     * JOIN链接信息
-     */
-    private transient List<GXJoinDto> newJoins;
+    private transient List<GXJoinDto> joins;
 
     /**
      * 额外参数
