@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,7 +99,13 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * }
      * </pre>
      */
+    @Deprecated
     private transient Table<String, String, Table<String, String, Dict>> joins;
+
+    /**
+     * JOIN链接信息
+     */
+    private transient List<GXJoinDto> newJoins;
 
     /**
      * 额外参数

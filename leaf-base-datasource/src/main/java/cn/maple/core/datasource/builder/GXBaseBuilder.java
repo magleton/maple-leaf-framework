@@ -13,6 +13,8 @@ import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXJoinDto;
+import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXLoggerUtils;
@@ -174,6 +176,11 @@ public interface GXBaseBuilder {
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             handleSQLJoin(sql, joins);
         }
+        // 处理新JOIN
+        List<GXJoinDto> newJoins = dbQueryParamInnerDto.getNewJoins();
+        if (Objects.nonNull(newJoins) && !newJoins.isEmpty()) {
+            handleSQLJoin(sql, newJoins);
+        }
         Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
         // 获取是否排除删除条件的标识, 若不为null,则需要排除is_deleted条件,也就是会查询所有数据
         Object retentionDelCondition = null;
@@ -227,10 +234,35 @@ public interface GXBaseBuilder {
      * @param joins joins信息
      */
     static void handleSQLJoin(SQL sql, Table<String, String, Table<String, String, Dict>> joins) {
-        if (Objects.nonNull(joins) && !joins.isEmpty()) {
-            Map<String, Map<String, Table<String, String, Dict>>> conditionMap = joins.rowMap();
-            conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((subTableName, joinSpecification) -> handleJoinOnSpecification(sql, joinType, subTableName, joinSpecification)));
-        }
+        Map<String, Map<String, Table<String, String, Dict>>> conditionMap = joins.rowMap();
+        conditionMap.forEach((joinType, joinInfo) -> joinInfo.forEach((subTableName, joinSpecification) -> handleJoinOnSpecification(sql, joinType, subTableName, joinSpecification)));
+    }
+
+    /**
+     * 处理JOIN表
+     *
+     * @param sql      SQL语句
+     * @param newJoins joins信息
+     */
+    static void handleSQLJoin(SQL sql, List<GXJoinDto> newJoins) {
+        newJoins.forEach(join -> {
+            String joinType = join.getJoinType();
+            String tableName = join.getJoinTableName();
+            String tableAliasName = join.getJoinTableNameAlias();
+            String andClause = Optional.ofNullable(join.getAnd()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
+            String orClause = Optional.ofNullable(join.getOr()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
+            String assemblySql = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, tableName, tableAliasName, andClause, orClause);
+            if (CharSequenceUtil.isNotEmpty(orClause)) {
+                assemblySql = CharSequenceUtil.format("{} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
+            }
+            if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {
+                sql.LEFT_OUTER_JOIN(assemblySql);
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.RIGHT_JOIN_TYPE, joinType)) {
+                sql.RIGHT_OUTER_JOIN(assemblySql);
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.INNER_JOIN_TYPE, joinType)) {
+                sql.INNER_JOIN(assemblySql);
+            }
+        });
     }
 
     /**

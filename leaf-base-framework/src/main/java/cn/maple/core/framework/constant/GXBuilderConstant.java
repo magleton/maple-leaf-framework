@@ -104,7 +104,7 @@ public class GXBuilderConstant {
     /**
      * JOIN的ON模板字符串
      */
-    public static final String JOIN_ON_STR = "{} {} ON {}";
+    public static final String JOIN_ON_STR = "{} {} ON ({})";
 
     /**
      * 更新字段时需要移除的json字段的前缀
@@ -154,9 +154,18 @@ public class GXBuilderConstant {
      * JOIN条件值开头的标识
      * eg:
      * ON a.id = b.aid and type = 1
-     *
      */
     public static final String JOIN_ON_START_WITH_MARKER = "&";
+
+    /**
+     * SQL AND操作
+     */
+    public static final String AND_OP = " AND ";
+
+    /**
+     * SQL OR操作
+     */
+    public static final String OR_OP = " OR ";
 
     private GXBuilderConstant() {
     }
