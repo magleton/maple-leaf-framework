@@ -14,6 +14,7 @@ import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
+import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.filter.GXSQLFilter;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -246,7 +247,7 @@ public interface GXBaseBuilder {
      */
     static void handleSQLJoin(SQL sql, List<GXJoinDto> newJoins) {
         newJoins.forEach(join -> {
-            String joinType = join.getJoinType();
+            GXJoinTypeEnums joinType = join.getJoinType();
             String tableName = join.getJoinTableName();
             String tableAliasName = join.getJoinTableNameAlias();
             String andClause = Optional.ofNullable(join.getAnd()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
@@ -255,11 +256,11 @@ public interface GXBaseBuilder {
             if (CharSequenceUtil.isNotEmpty(orClause)) {
                 assemblySql = CharSequenceUtil.format("{} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
             }
-            if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType)) {
+            if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.LEFT_JOIN_TYPE, joinType.getJoinType())) {
                 sql.LEFT_OUTER_JOIN(assemblySql);
-            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.RIGHT_JOIN_TYPE, joinType)) {
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.RIGHT_JOIN_TYPE, joinType.getJoinType())) {
                 sql.RIGHT_OUTER_JOIN(assemblySql);
-            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.INNER_JOIN_TYPE, joinType)) {
+            } else if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.INNER_JOIN_TYPE, joinType.getJoinType())) {
                 sql.INNER_JOIN(assemblySql);
             }
         });

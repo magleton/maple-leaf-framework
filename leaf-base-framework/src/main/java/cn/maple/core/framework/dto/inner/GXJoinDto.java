@@ -28,7 +28,7 @@ public class GXJoinDto {
     /**
      * 链接类型
      */
-    private String joinType;
+    private GXJoinTypeEnums joinType;
 
     /**
      * 链接的AND条件
