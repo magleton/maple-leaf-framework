@@ -33,7 +33,7 @@ public class GXDbJoinOp extends GXBaseDto {
     /**
      * 字段的值  用于查询固定指端的场景
      */
-    protected Object fieldValue;
+    protected transient Object fieldValue;
 
     public GXDbJoinOp() {
     }
