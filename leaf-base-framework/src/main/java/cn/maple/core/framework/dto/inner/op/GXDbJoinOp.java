@@ -1,11 +1,8 @@
 package cn.maple.core.framework.dto.inner.op;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.maple.core.framework.dto.GXBaseDto;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
-public class GXDbJoinOp extends GXBaseDto {
+public class GXDbJoinOp {
     /**
      * 主表别名
      */
