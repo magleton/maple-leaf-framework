@@ -5,8 +5,8 @@ public class GXDbJoinGE extends GXDbJoinOp {
         super();
     }
 
-    public GXDbJoinGE(String masterFieldName, String subFieldName) {
-        super(masterFieldName, subFieldName);
+    public GXDbJoinGE(String masterFieldName, String joinFieldName) {
+        super(masterFieldName, joinFieldName);
     }
 
     @Override

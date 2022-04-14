@@ -5,8 +5,8 @@ public class GXDbJoinEQ extends GXDbJoinOp {
         super();
     }
 
-    public GXDbJoinEQ(String masterFieldName, String subFieldName) {
-        super(masterFieldName, subFieldName);
+    public GXDbJoinEQ(String masterFieldName, String joinFieldName) {
+        super(masterFieldName, joinFieldName);
     }
 
     @Override
