@@ -106,8 +106,8 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return R
      */
     default R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
-        Object r = callMethod("findOneByCondition", condition, extraData);
         Class<R> retClazz = getGenericClassType();
+        Object r = callMethod("findOneByCondition", condition, extraData);
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, retClazz, null, null);
         }
