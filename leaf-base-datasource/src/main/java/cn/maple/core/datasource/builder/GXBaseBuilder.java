@@ -214,7 +214,7 @@ public interface GXBaseBuilder {
     /**
      * 处理JOIN表
      *
-     * @param sql      SQL语句
+     * @param sql   SQL语句
      * @param joins joins信息
      */
     static void handleSQLJoin(SQL sql, List<GXJoinDto> joins) {
@@ -224,7 +224,7 @@ public interface GXBaseBuilder {
             String tableAliasName = join.getJoinTableNameAlias();
             String andClause = Optional.ofNullable(join.getAnd()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
             String orClause = Optional.ofNullable(join.getOr()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
-            String assemblySql = CharSequenceUtil.format(GXBuilderConstant.JOIN_ON_STR, tableName, tableAliasName, andClause, orClause);
+            String assemblySql = CharSequenceUtil.format("{} {} ON ({})", tableName, tableAliasName, andClause);
             if (CharSequenceUtil.isNotEmpty(orClause)) {
                 assemblySql = CharSequenceUtil.format("{} {} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
             }

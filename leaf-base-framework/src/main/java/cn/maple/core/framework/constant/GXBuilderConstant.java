@@ -102,11 +102,6 @@ public class GXBuilderConstant {
     public static final String INNER_JOIN_TYPE = "inner";
 
     /**
-     * JOIN的ON模板字符串
-     */
-    public static final String JOIN_ON_STR = "{} {} ON ({})";
-
-    /**
      * 更新字段时需要移除的json字段的前缀
      * <pre>
      * {@code
@@ -133,17 +128,6 @@ public class GXBuilderConstant {
      * 如果额外传输了该字段, 则查询SQL中会查询所有满足条件的数据 , 无论删除与否
      */
     public static final String EXCLUSION_DELETED_CONDITION_FLAG = "exclusion_deleted_condition";
-
-    /**
-     * 排除删除条件的标识的值
-     * EXCLUSION_DELETED_CONDITION_FLAG 标识字段的值
-     */
-    public static final String EXCLUSION_DELETED_CONDITION_VALUE = "";
-
-    /**
-     * 数据库主键字段的默认名字
-     */
-    public static final String DEFAULT_ID_NAME = "id";
 
     /**
      * 数据库JSON查询字符串模板表达式
