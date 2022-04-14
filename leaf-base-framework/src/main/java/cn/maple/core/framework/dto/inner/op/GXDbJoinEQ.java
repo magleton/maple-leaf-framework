@@ -1,10 +1,9 @@
 package cn.maple.core.framework.dto.inner.op;
 
-public class GXDbJoinEQ extends GXDbJoinOp {
-    public GXDbJoinEQ() {
-        super();
-    }
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
+public class GXDbJoinEQ extends GXDbJoinOp {
     public GXDbJoinEQ(String masterFieldName, String joinFieldName) {
         super(masterFieldName, joinFieldName);
     }

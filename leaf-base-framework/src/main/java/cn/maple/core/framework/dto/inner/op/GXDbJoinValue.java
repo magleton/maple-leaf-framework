@@ -1,5 +1,8 @@
 package cn.maple.core.framework.dto.inner.op;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
 public class GXDbJoinValue extends GXDbJoinOp {
     private final String tableNameAlias;
 

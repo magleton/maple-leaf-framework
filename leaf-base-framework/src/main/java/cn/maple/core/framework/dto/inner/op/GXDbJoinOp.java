@@ -2,13 +2,9 @@ package cn.maple.core.framework.dto.inner.op;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.dto.GXBaseDto;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
 @EqualsAndHashCode(callSuper = true)
-@Data
 public class GXDbJoinOp extends GXBaseDto {
     /**
      * 主表别名
@@ -36,6 +32,7 @@ public class GXDbJoinOp extends GXBaseDto {
     protected transient Object fieldValue;
 
     public GXDbJoinOp() {
+
     }
 
     public GXDbJoinOp(String masterFieldName, String subFieldName) {
@@ -43,29 +40,20 @@ public class GXDbJoinOp extends GXBaseDto {
         this.joinFieldName = subFieldName;
     }
 
-    public GXDbJoinOp setFieldValue(Object fieldValue) {
-        this.fieldValue = fieldValue;
-        return this;
+    public String getMasterTableNameAlias() {
+        return masterTableNameAlias;
     }
 
-    public GXDbJoinOp setMasterTableNameAlias(String masterTableNameAlias) {
+    public void setMasterTableNameAlias(String masterTableNameAlias) {
         this.masterTableNameAlias = masterTableNameAlias;
-        return this;
     }
 
-    public GXDbJoinOp setJoinTableNameAlias(String joinTableNameAlias) {
+    public String getJoinTableNameAlias() {
+        return joinTableNameAlias;
+    }
+
+    public void setJoinTableNameAlias(String joinTableNameAlias) {
         this.joinTableNameAlias = joinTableNameAlias;
-        return this;
-    }
-
-    public GXDbJoinOp setMasterFieldName(String masterFieldName) {
-        this.masterFieldName = masterFieldName;
-        return this;
-    }
-
-    public GXDbJoinOp setJoinFieldName(String joinFieldName) {
-        this.joinFieldName = joinFieldName;
-        return this;
     }
 
     protected String getOp() {
@@ -78,11 +66,6 @@ public class GXDbJoinOp extends GXBaseDto {
         }
         if (CharSequenceUtil.isNotEmpty(joinTableNameAlias) && CharSequenceUtil.isNotEmpty(joinFieldName)) {
             joinFieldName = CharSequenceUtil.format("{}.{}", joinTableNameAlias, joinFieldName);
-        }
-        if (Objects.nonNull(fieldValue) && CharSequenceUtil.isNotEmpty(masterFieldName) && CharSequenceUtil.isNotEmpty(masterTableNameAlias) && CharSequenceUtil.contains(masterFieldName, masterTableNameAlias)) {
-            return masterFieldName + getOp() + fieldValue;
-        } else if (Objects.nonNull(fieldValue) && CharSequenceUtil.isNotEmpty(joinFieldName) && CharSequenceUtil.isNotEmpty(joinTableNameAlias) && CharSequenceUtil.contains(joinFieldName, joinTableNameAlias)) {
-            return joinFieldName + getOp() + fieldValue;
         }
         return masterFieldName + getOp() + joinFieldName;
     }
