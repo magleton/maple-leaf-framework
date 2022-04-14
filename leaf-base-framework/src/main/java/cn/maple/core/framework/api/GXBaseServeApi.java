@@ -2,6 +2,7 @@ package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
@@ -11,6 +12,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,7 +43,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default List<R> findByCondition(Table<String, String, Object> condition) {
         List<R> rs = findByCondition(condition, Dict.create());
-        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+        Class<R> retClazz = getGenericClassType();
         return GXCommonUtils.convertSourceListToTargetList(rs, retClazz, null, null);
     }
 
@@ -52,7 +54,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return List
      */
     default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
-        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+        Class<R> retClazz = getGenericClassType();
         Object rLst = callMethod("findByCondition", condition, extraData);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
@@ -105,7 +107,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
         Object r = callMethod("findOneByCondition", condition, extraData);
-        Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+        Class<R> retClazz = getGenericClassType();
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, retClazz, null, null);
         }
@@ -160,7 +162,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
         if (Objects.nonNull(paginate)) {
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
             List<R> records = retPaginate.getRecords();
-            Class<R> retClazz = GXCommonUtils.getGenericClassType(getClass(), 1);
+            Class<R> retClazz = getGenericClassType();
             List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, null);
             retPaginate.setRecords(records);
             return retPaginate;
@@ -298,5 +300,14 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
             return GXCommonUtils.reflectCallObjectMethod(serveServiceClass, methodName, params);
         }
         return null;
+    }
+
+    /**
+     * 获取返回的Class
+     *
+     * @return
+     */
+    default Class<R> getGenericClassType() {
+        return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[1]);
     }
 }
