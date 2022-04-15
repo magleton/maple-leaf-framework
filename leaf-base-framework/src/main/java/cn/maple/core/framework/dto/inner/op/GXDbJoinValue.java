@@ -1,7 +1,7 @@
 package cn.maple.core.framework.dto.inner.op;
 
 @SuppressWarnings("all")
-public class GXDbJoinValue extends GXDbJoinOp {
+public abstract class GXDbJoinValue extends GXDbJoinOp {
     private final String tableNameAlias;
 
     private final String fieldName;

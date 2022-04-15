@@ -7,7 +7,7 @@ public class GXDbJoinGE extends GXDbJoinOp {
     }
 
     @Override
-    protected String getOp() {
-        return ">";
+    public String getOp() {
+        return ">=";
     }
 }

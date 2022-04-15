@@ -2,7 +2,7 @@ package cn.maple.core.framework.dto.inner.op;
 
 import cn.hutool.core.text.CharSequenceUtil;
 
-public class GXDbJoinOp {
+public abstract class GXDbJoinOp {
     /**
      * 主表别名
      */
@@ -53,9 +53,7 @@ public class GXDbJoinOp {
         this.joinTableNameAlias = joinTableNameAlias;
     }
 
-    protected String getOp() {
-        return "=";
-    }
+    abstract String getOp();
 
     public String opString() {
         if (CharSequenceUtil.isNotEmpty(masterTableNameAlias) && CharSequenceUtil.isNotEmpty(masterFieldName)) {
