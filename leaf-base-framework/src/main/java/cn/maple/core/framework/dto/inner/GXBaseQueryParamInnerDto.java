@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("all")
 @Data
 @Builder
 public class GXBaseQueryParamInnerDto extends GXBaseDto {
@@ -38,7 +39,7 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * 搜索条件
      */
-    private transient Table<String, String, Object> condition;
+    private Table<String, String, Object> condition;
 
     /**
      * 需要查询的数据列
@@ -90,12 +91,12 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * JOIN链接信息
      */
-    private transient List<GXJoinDto> joins;
+    private List<GXJoinDto> joins;
 
     /**
      * 额外参数
      * <p>
      * 配合methodName一起使用
      */
-    private transient Object extraData;
+    private Object extraData;
 }

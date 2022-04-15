@@ -3,6 +3,7 @@ package cn.maple.core.framework.api;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.TypeUtil;
+import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
@@ -154,11 +155,11 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 分页数据
      *
-     * @param reqProtocol 查询条件
+     * @param baseQueryParamInnerDto 查询对象
      * @return 分页对象
      */
-    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
-        Object paginate = callMethod("paginate", reqProtocol);
+    default GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto baseQueryParamInnerDto) {
+        Object paginate = callMethod("paginate", baseQueryParamInnerDto);
         if (Objects.nonNull(paginate)) {
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
             List<R> records = retPaginate.getRecords();
@@ -168,6 +169,28 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
             return retPaginate;
         }
         return null;
+    }
+
+    /**
+     * 分页数据
+     *
+     * @param reqProtocol 查询条件
+     * @param copyOptions 复制可选项
+     * @return 分页对象
+     */
+    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, CopyOptions copyOptions) {
+        GXBaseQueryParamInnerDto baseQueryParamInnerDto = GXCommonUtils.convertSourceToTarget(reqProtocol, GXBaseQueryParamInnerDto.class, null, copyOptions);
+        return paginate(baseQueryParamInnerDto);
+    }
+
+    /**
+     * 分页数据
+     *
+     * @param reqProtocol 查询条件
+     * @return 分页对象
+     */
+    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
+        return paginate(reqProtocol, null);
     }
 
     /**
