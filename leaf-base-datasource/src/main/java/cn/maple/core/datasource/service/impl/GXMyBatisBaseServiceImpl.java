@@ -352,7 +352,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
         return repository.updateOrCreate(entity, condition);
     }
-    
+
     /**
      * 创建或者更新
      *
@@ -619,5 +619,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public String getPrimaryKeyName(T entity) {
         return repository.getPrimaryKeyName(entity);
+    }
+
+    /**
+     * 获取表的名字
+     *
+     * @return String
+     */
+    @Override
+    public String getTableName() {
+        return repository.getTableName();
     }
 }

@@ -2,6 +2,7 @@ package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
@@ -155,10 +156,15 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 分页数据
      *
-     * @param baseQueryParamInnerDto 查询对象
+     * @param reqProtocol 查询条件
+     * @param copyOptions 复制可选项
      * @return 分页对象
      */
-    default GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto baseQueryParamInnerDto) {
+    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, CopyOptions copyOptions) {
+        GXBaseQueryParamInnerDto baseQueryParamInnerDto = GXCommonUtils.convertSourceToTarget(reqProtocol, GXBaseQueryParamInnerDto.class, null, copyOptions);
+        if (CharSequenceUtil.isEmpty(baseQueryParamInnerDto.getTableName())) {
+            baseQueryParamInnerDto.setTableName(getTableName());
+        }
         Object paginate = callMethod("paginate", baseQueryParamInnerDto);
         if (Objects.nonNull(paginate)) {
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
@@ -169,18 +175,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
             return retPaginate;
         }
         return null;
-    }
-
-    /**
-     * 分页数据
-     *
-     * @param reqProtocol 查询条件
-     * @param copyOptions 复制可选项
-     * @return 分页对象
-     */
-    default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, CopyOptions copyOptions) {
-        GXBaseQueryParamInnerDto baseQueryParamInnerDto = GXCommonUtils.convertSourceToTarget(reqProtocol, GXBaseQueryParamInnerDto.class, null, copyOptions);
-        return paginate(baseQueryParamInnerDto);
     }
 
     /**
@@ -312,6 +306,19 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return Object
      */
     default Object callMethod(String methodName, Object... params) {
+        Class<?> serveServiceClass = getServeServiceClass();
+        if (Objects.nonNull(serveServiceClass)) {
+            return GXCommonUtils.reflectCallObjectMethod(serveServiceClass, methodName, params);
+        }
+        return null;
+    }
+
+    /**
+     * 获取底层服务类的Class
+     *
+     * @return
+     */
+    default Class<?> getServeServiceClass() {
         Class<?> serveServiceClass = targetServeServiceClassThreadLocal.get();
         if (Objects.nonNull(serveServiceClass)) {
             targetServeServiceClassThreadLocal.remove();
@@ -319,10 +326,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
         if (Objects.isNull(serveServiceClass)) {
             serveServiceClass = serveServiceClassMap.get(getClass().getSimpleName());
         }
-        if (Objects.nonNull(serveServiceClass)) {
-            return GXCommonUtils.reflectCallObjectMethod(serveServiceClass, methodName, params);
-        }
-        return null;
+        return serveServiceClass;
     }
 
     /**
@@ -332,5 +336,14 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default Class<R> getGenericClassType() {
         return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[1]);
+    }
+
+    /**
+     * 获取表的名字
+     *
+     * @return
+     */
+    default String getTableName() {
+        return (String) callMethod("getTableName");
     }
 }

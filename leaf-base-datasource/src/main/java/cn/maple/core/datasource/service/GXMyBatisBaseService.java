@@ -264,7 +264,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 创建或者更新
      *
-     * @param req         请求参数
+     * @param req 请求参数
      * @return ID
      */
     <Q extends GXBaseReqDto> ID updateOrCreate(Q req);
@@ -407,4 +407,11 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return String
      */
     String getPrimaryKeyName(T entity);
+
+    /**
+     * 获取表的名字
+     *
+     * @return String
+     */
+    String getTableName();
 }
