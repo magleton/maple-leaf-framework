@@ -23,16 +23,11 @@ public abstract class GXDbJoinOp {
      */
     protected String joinFieldName;
 
-    /**
-     * 字段的值  用于查询固定指端的场景
-     */
-    protected transient Object fieldValue;
-
-    public GXDbJoinOp() {
+    protected GXDbJoinOp() {
 
     }
 
-    public GXDbJoinOp(String masterFieldName, String subFieldName) {
+    protected GXDbJoinOp(String masterFieldName, String subFieldName) {
         this.masterFieldName = masterFieldName;
         this.joinFieldName = subFieldName;
     }

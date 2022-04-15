@@ -5,6 +5,12 @@ public abstract class GXDbJoinValue extends GXDbJoinOp {
     private final String tableNameAlias;
 
     private final String fieldName;
+    
+    /**
+     * 字段的值
+     * 用于查询固定值的场景
+     */
+    protected Object fieldValue;
 
     public GXDbJoinValue(String tableNameAlias, String fieldName, Object fieldValue) {
         this.tableNameAlias = tableNameAlias;
