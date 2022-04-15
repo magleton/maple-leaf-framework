@@ -116,6 +116,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
+        if (CharSequenceUtil.isEmpty(queryParamReqDto.getTableName())) {
+            queryParamReqDto.setTableName(repository.getTableName());
+        }
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }

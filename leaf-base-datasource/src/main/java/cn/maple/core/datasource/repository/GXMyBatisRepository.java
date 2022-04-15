@@ -177,6 +177,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        if (CharSequenceUtil.isEmpty(dbQueryParamInnerDto.getTableName())) {
+            dbQueryParamInnerDto.setTableName(getTableName());
+        }
         R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
         if (Objects.nonNull(r)) {
             callResultMethod(dbQueryParamInnerDto, r);
