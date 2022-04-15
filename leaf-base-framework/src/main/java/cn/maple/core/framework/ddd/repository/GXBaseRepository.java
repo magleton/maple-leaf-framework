@@ -1,10 +1,11 @@
 package cn.maple.core.framework.ddd.repository;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
@@ -84,7 +85,17 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @return 列表
      */
     default List<R> findByCondition(Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return findByCondition(getTableName(), condition);
+    }
+
+    /**
+     * 获取所有数据
+     *
+     * @return 列表
+     */
+    default List<R> findByCondition() {
+        return findByCondition(getTableName(), HashBasedTable.create());
     }
 
     /**
@@ -111,6 +122,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @return R 返回数据
      */
     default R findOneByCondition(Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return findOneByCondition(getTableName(), condition);
     }
 

@@ -3,6 +3,7 @@ package cn.maple.core.datasource.repository;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -16,7 +17,6 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -57,6 +57,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         GXValidatorUtils.validateEntity(entity);
         return baseDao.updateOrCreate(entity, condition);
     }
@@ -136,6 +137,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
         return findByCondition(paramInnerDto, targetClazz, Dict.create());
     }
@@ -162,6 +164,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(CollUtil.newHashSet("*")).build();
         return findByCondition(queryParamInnerDto);
     }
@@ -190,6 +193,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return findOneByCondition(tableName, condition, null);
     }
 
@@ -203,6 +207,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+        Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
         return findOneByCondition(queryParamInnerDto);
     }
@@ -222,6 +227,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     @Override
     @SuppressWarnings("all")
     public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).build();
         return findFieldByCondition(paramInnerDto, targetClazz, Dict.create());
     }
@@ -329,6 +335,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+        Assert.notNull(condition, "条件不能为null");
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
         }
@@ -345,6 +352,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return baseDao.deleteSoftCondition(tableName, condition);
     }
 
@@ -357,6 +365,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return baseDao.deleteCondition(tableName, condition);
     }
 
@@ -369,6 +378,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+        Assert.notNull(condition, "条件不能为null");
         return baseDao.checkRecordIsExists(tableName, condition);
     }
 
@@ -406,7 +416,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
-        if (Objects.isNull(condition) || condition.isEmpty()) {
+        Assert.notNull(condition, "条件不能为null");
+        if (condition.isEmpty()) {
             throw new GXBusinessException("更新数据需要指定条件");
         }
         return baseDao.updateFieldByCondition(tableName, data, condition);
@@ -429,6 +440,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     public <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
+        Assert.notNull(condition, "条件不能为null");
         return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
 
