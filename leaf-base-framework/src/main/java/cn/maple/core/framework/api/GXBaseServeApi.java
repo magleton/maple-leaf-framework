@@ -168,10 +168,11 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
         Object paginate = callMethod("paginate", baseQueryParamInnerDto);
         if (Objects.nonNull(paginate)) {
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
-            List<R> records = retPaginate.getRecords();
+            // XXXDBResDto
+            List<?> records = retPaginate.getRecords();
             Class<R> retClazz = getGenericClassType();
             List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, null);
-            retPaginate.setRecords(records);
+            retPaginate.setRecords(rs);
             return retPaginate;
         }
         return null;

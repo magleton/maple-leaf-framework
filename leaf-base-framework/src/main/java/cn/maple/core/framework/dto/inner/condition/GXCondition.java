@@ -2,26 +2,23 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 
-public abstract class GXCondition {
+import java.util.function.Supplier;
+
+public abstract class GXCondition<T> {
     private final String tableNameAlias;
 
     private final String fieldName;
-    private final Object value;
+    private final Supplier<T> valueSupplier;
 
-    protected GXCondition(String tableNameAlias, String fieldName, Object value) {
+    protected GXCondition(String tableNameAlias, String fieldName, Supplier<T> valueSupplier) {
         this.tableNameAlias = tableNameAlias;
         this.fieldName = fieldName;
-        this.value = value;
+        this.valueSupplier = valueSupplier;
     }
 
     abstract String getOp();
 
-    public String getValueFormat() {
-        return "{}";
-    }
-
     public String whereString() {
-        String format = CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, fieldName, getOp(), getValueFormat());
-        return CharSequenceUtil.format(format, value);
+        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, fieldName, getOp(), valueSupplier.get());
     }
 }

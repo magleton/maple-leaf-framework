@@ -9,15 +9,15 @@ public abstract class GXUpdateField<T> {
 
     private final String fieldName;
 
-    protected Supplier<T> value;
+    protected Supplier<T> valueSupplier;
 
-    protected GXUpdateField(String tableNameAlias, String fieldName, Supplier<T> value) {
+    protected GXUpdateField(String tableNameAlias, String fieldName, Supplier<T> valueSupplier) {
         this.tableNameAlias = tableNameAlias;
         this.fieldName = fieldName;
-        this.value = value;
+        this.valueSupplier = valueSupplier;
     }
 
     public String updateString() {
-        return CharSequenceUtil.format("{}.{} = {}", tableNameAlias, fieldName, value.get());
+        return CharSequenceUtil.format("{}.{} = {}", tableNameAlias, fieldName, valueSupplier.get());
     }
 }
