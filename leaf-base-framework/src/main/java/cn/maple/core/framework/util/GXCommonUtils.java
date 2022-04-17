@@ -567,7 +567,8 @@ public class GXCommonUtils {
                     throw (GXBeanValidateException) targetException;
                 }
             }
-            throw new GXBusinessException(e.getMessage(), cause);
+            LOG.error("反射调用失败 [methodName: {}] [params: {}] [错误消息 : {}] [cause : {}]", methodName, params, e.getMessage(), cause);
+            throw new GXBusinessException("系统内部错误", cause);
         }
         return retVal;
     }
