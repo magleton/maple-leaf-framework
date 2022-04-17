@@ -6,7 +6,6 @@ public abstract class GXCondition {
     private final String tableNameAlias;
 
     private final String fieldName;
-
     private final Object value;
 
     protected GXCondition(String tableNameAlias, String fieldName, Object value) {
@@ -17,7 +16,12 @@ public abstract class GXCondition {
 
     abstract String getOp();
 
+    public String getValueFormat() {
+        return "{}";
+    }
+
     public String whereString() {
-        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, fieldName, getOp(), value);
+        String format = CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, fieldName, getOp(), getValueFormat());
+        return CharSequenceUtil.format(format, value);
     }
 }
