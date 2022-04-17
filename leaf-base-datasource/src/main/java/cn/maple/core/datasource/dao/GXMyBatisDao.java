@@ -2,15 +2,16 @@ package cn.maple.core.datasource.dao;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
-import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -21,8 +22,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +74,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
         if (Objects.isNull(condition) || condition.isEmpty()) {
             throw new GXBusinessException("更新数据需要指定条件");
         }
@@ -90,7 +89,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return int
      */
     @Override
-    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).build();
         Integer val = baseMapper.checkRecordIsExists(queryParamInnerDto);
         return Objects.nonNull(val);
@@ -105,19 +104,15 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         GXValidatorUtils.validateEntity(entity);
-        condition = Optional.ofNullable(condition).orElse(HashBasedTable.create());
+        condition = Optional.ofNullable(condition).orElse(Collections.emptyList());
         String pkName = getPrimaryKeyName();
         String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
-        String op = GXBuilderConstant.EQ;
         Class<ID> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
-        if (String.class.isAssignableFrom(retIDClazz)) {
-            op = GXBuilderConstant.STR_EQ;
-        }
-        if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o) && Objects.isNull(condition.get(pkName, op))) {
-            condition.put(pkName, op, o);
+        if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o)) {
+            condition.add(new GXConditionEQ(getTableName(), pkName, (Long) o));
         }
         if (!condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
             UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);
@@ -159,7 +154,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         return baseMapper.deleteSoftCondition(tableName, condition);
     }
 
@@ -171,7 +166,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return 影响行数
      */
     @Override
-    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return baseMapper.deleteCondition(tableName, condition);
     }
 

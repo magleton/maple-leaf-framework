@@ -4,13 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.dao.GXMongoDao;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidatorContext;
@@ -35,7 +34,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return ID
      */
     @Override
-    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         return baseDao.updateOrCreate(entity, condition);
     }
 
@@ -47,7 +46,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public ID updateOrCreate(T entity) {
-        return updateOrCreate(entity, HashBasedTable.create());
+        return updateOrCreate(entity, Collections.emptyList());
     }
 
     /**
@@ -85,7 +84,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 列表
      */
     @Override
-    public <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         return Collections.emptyList();
     }
 
@@ -108,7 +107,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
+    public List<R> findByCondition(String tableName, List<GXCondition<?>> condition) {
         return Collections.emptyList();
     }
 
@@ -131,7 +130,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
+    public R findOneByCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -144,7 +143,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns) {
+    public R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
         return null;
     }
 
@@ -195,7 +194,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns) {
+    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
         return null;
     }
 
@@ -207,7 +206,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -219,7 +218,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响行数
      */
     @Override
-    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -231,7 +230,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 1 存在 0 不存在
      */
     @Override
-    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
         return false;
     }
 
@@ -259,7 +258,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 影响的行数
      */
     @Override
-    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -278,7 +277,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> E findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         return null;
     }
 
@@ -321,7 +320,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 目标类型的值
      */
     @Override
-    public <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
+    public <E> E getSingleField(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
         return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
 

@@ -2,22 +2,26 @@ package cn.maple.core.datasource.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.*;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import com.google.common.collect.Table;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * 业务DB基础Service
@@ -32,6 +36,16 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
+    @SuppressWarnings("all")
+    Map<String, Function<Dict, GXCondition<?>>> CONDITION_FUNCTION = new HashMap<>() {{
+        put(GXBuilderConstant.EQ, (data) -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
+        put(GXBuilderConstant.STR_EQ, (data) -> new GXConditionStrEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.IN, (data) -> new GXConditionNumberInField(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
+        put(GXBuilderConstant.STR_IN, (data) -> new GXConditionStrInField(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
+        put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNumberNotInField(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
+        put(GXBuilderConstant.STR_NOT_IN, (data) -> new GXConditionStrNotInField(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
+    }};
+
     /**
      * 检测给定条件的记录是否存在
      *
@@ -414,4 +428,37 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return String
      */
     String getTableName();
+
+    /**
+     * 将Table类型的条件转换为DB中的条件
+     *
+     * @param tableNameAlias 表别名
+     * @param condition      原始条件
+     * @return 转换后的条件
+     */
+    default List<GXCondition<?>> convertTableToCondition(String tableNameAlias, Table<String, String, Object> condition) {
+        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
+            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
+            Function<Dict, GXCondition<?>> function = CONDITION_FUNCTION.get(op);
+            if (Objects.isNull(function)) {
+                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
+            }
+            conditions.add(function.apply(data));
+        }));
+        return conditions;
+    }
+
+    /**
+     * 将Dict类型的数据字段转换为DB类型的数据字段
+     *
+     * @param tableNameAlias 表别名
+     * @param data           原始数据字段
+     * @return DB数据字段
+     */
+    default List<GXUpdateField<?>> convertDictToUpdateField(String tableNameAlias, Dict data) {
+        List<GXUpdateField<?>> fields = new ArrayList<>();
+        data.forEach((k, v) -> new GXUpdateStrField(tableNameAlias, k, v.toString()));
+        return fields;
+    }
 }

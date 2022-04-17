@@ -19,6 +19,17 @@ public abstract class GXCondition<T> {
     abstract String getOp();
 
     public String whereString() {
+        if (CharSequenceUtil.isEmpty(tableNameAlias)) {
+            return CharSequenceUtil.format("{} {} {}", fieldName, getOp(), valueSupplier.get());
+        }
         return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, fieldName, getOp(), valueSupplier.get());
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public Supplier<T> getValueSupplier() {
+        return valueSupplier;
     }
 }

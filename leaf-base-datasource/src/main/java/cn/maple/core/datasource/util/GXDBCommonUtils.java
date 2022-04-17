@@ -8,15 +8,14 @@ import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,19 +180,9 @@ public class GXDBCommonUtils {
      *
      * @param condition 条件
      */
-    public static <T> UpdateWrapper<T> assemblyUpdateWrapper(Table<String, String, Object> condition) {
+    public static <T> UpdateWrapper<T> assemblyUpdateWrapper(List<GXCondition<?>> condition) {
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        Dict methodNameDict = Dict.create().set(GXBuilderConstant.EQ, "eq").set(GXBuilderConstant.STR_EQ, "eq").set(GXBuilderConstant.NOT_EQ, "ne").set(GXBuilderConstant.STR_NOT_EQ, "ne").set(GXBuilderConstant.NOT_IN, "notIn").set(GXBuilderConstant.STR_NOT_IN, "notIn").set(GXBuilderConstant.GE, "ge").set(GXBuilderConstant.GT, "gt").set(GXBuilderConstant.LE, "le").set(GXBuilderConstant.LT, "lt");
-        condition.columnMap().forEach((op, columnData) -> columnData.forEach((column, value) -> {
-            column = CharSequenceUtil.toUnderlineCase(column);
-            String methodName = methodNameDict.getStr(op);
-            if (Objects.nonNull(methodName)) {
-                if (!GXCommonUtils.digitalRegularExpression((String) value)) {
-                    value = CharSequenceUtil.format("'{}'", value);
-                }
-                GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
-            }
-        }));
+        condition.forEach(c -> updateWrapper.set(c.getFieldName(), c.getValueSupplier().get()));
         return updateWrapper;
     }
 

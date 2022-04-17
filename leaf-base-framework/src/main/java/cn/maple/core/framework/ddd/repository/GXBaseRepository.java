@@ -3,13 +3,14 @@ package cn.maple.core.framework.ddd.repository;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    ID updateOrCreate(T entity, Table<String, String, Object> condition);
+    ID updateOrCreate(T entity, List<GXCondition<?>> condition);
 
     /**
      * 创建或者更新
@@ -59,7 +60,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param targetClazz 结果数据类型
      * @return 列表
      */
-    <E> List<E> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 根据条件获取所有数据
@@ -76,7 +77,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 条件
      * @return 列表
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition);
+    List<R> findByCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件获取所有数据
@@ -84,7 +85,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 条件
      * @return 列表
      */
-    default List<R> findByCondition(Table<String, String, Object> condition) {
+    default List<R> findByCondition(List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return findByCondition(getTableName(), condition);
     }
@@ -95,7 +96,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @return 列表
      */
     default List<R> findByCondition() {
-        return findByCondition(getTableName(), HashBasedTable.create());
+        return findByCondition(getTableName(), Collections.emptyList());
     }
 
     /**
@@ -113,7 +114,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 查询条件
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition);
+    R findOneByCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件获取数据
@@ -121,7 +122,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 查询条件
      * @return R 返回数据
      */
-    default R findOneByCondition(Table<String, String, Object> condition) {
+    default R findOneByCondition(List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return findOneByCondition(getTableName(), condition);
     }
@@ -134,7 +135,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param columns   需要查询的列
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns);
+    R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 通过ID获取一条记录
@@ -173,7 +174,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, Table<String, String, Object> condition, Set<String> columns);
+    GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 根据条件软(逻辑)删除
@@ -182,7 +183,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件删除
@@ -191,7 +192,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 检测数据是否存在
@@ -200,7 +201,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 查询条件
      * @return 1 存在 0 不存在
      */
-    boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
+    boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 实现验证注解(返回true表示数据已经存在)
@@ -222,7 +223,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 更新条件
      * @return 影响的行数
      */
-    Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition);
 
     /**
      * 查询指定字段的值
@@ -238,7 +239,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+    <E> E findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -275,7 +276,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param targetClazz 返回的字段类型
      * @return 目标类型的值
      */
-    <E> E getSingleField(String tableName, Table<String, String, Object> condition, String fieldName, Class<E> targetClazz);
+    <E> E getSingleField(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
 
     /**
      * 获取 Primary Key

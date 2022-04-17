@@ -2,7 +2,7 @@ package cn.maple.core.framework.dto.inner;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.dto.GXBaseDto;
-import com.google.common.collect.Table;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +39,9 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * 搜索条件
      */
-    private Table<String, String, Object> condition;
+    //private Table<String, String, Object> condition;
+
+    private List<GXCondition<?>> condition;
 
     /**
      * 需要查询的数据列

@@ -11,6 +11,8 @@ import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -69,7 +71,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        return repository.checkRecordIsExists(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        return repository.checkRecordIsExists(tableName, conditionList);
     }
 
     /**
@@ -93,7 +96,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
-        return repository.updateFieldByCondition(tableName, data, condition);
+        List<GXUpdateField<?>> updateFields = convertDictToUpdateField(tableName, data);
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        return repository.updateFieldByCondition(tableName, updateFields, conditionList);
     }
 
     /**
@@ -187,8 +192,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
         String tableName = repository.getTableName();
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
         HashSet<String> columns = CollUtil.newHashSet("*");
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).extraData(extraData).build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
         return findByCondition(queryParamInnerDto);
     }
 
@@ -216,7 +222,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).orderByField(orderField).groupByField(groupField).build();
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).orderByField(orderField).groupByField(groupField).build();
         return findByCondition(queryParamInnerDto);
     }
 
@@ -267,7 +274,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).extraData(extraData).build();
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
         return findOneByCondition(queryParamInnerDto);
     }
 
@@ -353,7 +361,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        return repository.updateOrCreate(entity, condition);
+        List<GXCondition<?>> conditionList = convertTableToCondition(getTableName(), condition);
+        return repository.updateOrCreate(entity, conditionList);
     }
 
     /**
@@ -447,7 +456,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
-        return repository.deleteSoftCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        return repository.deleteSoftCondition(tableName, conditionList);
     }
 
     /**
@@ -470,7 +480,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
-        return repository.deleteCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        return repository.deleteCondition(tableName, conditionList);
     }
 
     /**
@@ -498,7 +509,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public <E> E findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
-        return repository.findFieldByCondition(tableName, condition, columns, targetClazz);
+        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        return repository.findFieldByCondition(tableName, conditionList, columns, targetClazz);
     }
 
     /**

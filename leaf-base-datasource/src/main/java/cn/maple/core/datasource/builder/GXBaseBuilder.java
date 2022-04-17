@@ -3,23 +3,17 @@ package cn.maple.core.datasource.builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.framework.constant.GXBuilderConstant;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.filter.GXSQLFilter;
-import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXLoggerUtils;
-import cn.maple.core.framework.util.GXTypeOfUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
@@ -49,51 +43,17 @@ public interface GXBaseBuilder {
      * </pre>
      *
      * @param tableName 表名
-     * @param data      数据
-     * @param whereData 条件
+     * @param fieldList 数据
+     * @param condition 条件
      * @return String
      */
-    @SuppressWarnings("all")
-    static String updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+    static String updateFieldByCondition(String tableName, List<GXUpdateField<?>> fieldList, List<GXCondition<?>> condition) {
         final SQL sql = new SQL().UPDATE(tableName);
-        final Set<String> fieldNames = data.keySet();
-        for (String fieldName : fieldNames) {
-            Object value = data.getObj(fieldName);
-            if (value instanceof Table) {
-                Table<String, String, Object> table = Convert.convert(new TypeReference<Table<String, String, Object>>() {
-                }, value);
-                final Map<String, Object> row = table.row(fieldName);
-                for (Map.Entry<String, Object> entry : row.entrySet()) {
-                    final String entryKey = entry.getKey();
-                    Object entryValue = entry.getValue();
-                    if (entryKey.startsWith(GXBuilderConstant.REMOVE_JSON_FIELD_PREFIX_FLAG)) {
-                        sql.SET(CharSequenceUtil.format("{} = JSON_REMOVE({} , '$.{}')", fieldName, fieldName, entryKey.substring(1)));
-                    } else {
-                        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, entryValue.toString())) {
-                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
-                        } else {
-                            if (!ClassUtil.isPrimitiveWrapper(entryValue.getClass()) && !ClassUtil.equals(entryValue.getClass(), "String", true) && (entryValue instanceof Map || entryValue instanceof GXMyBatisModel)) {
-                                entryValue = JSONUtil.toJsonStr(entryValue);
-                                entryValue = CharSequenceUtil.format("CAST('{}' as JSON)", entryValue);
-                            } else {
-                                entryValue = CharSequenceUtil.format("'{}'", entryValue);
-                            }
-                            sql.SET(CharSequenceUtil.format("{} = JSON_SET({} , '$.{}' , {})", fieldName, fieldName, entryKey, entryValue));
-                        }
-                    }
-                }
-                continue;
-            } else if (value instanceof Map) {
-                value = JSONUtil.toJsonStr(value);
-            }
-            if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-                sql.SET(CharSequenceUtil.format("{} " + GXBuilderConstant.EQ, fieldName, value));
-            } else {
-                sql.SET(CharSequenceUtil.format("{} " + CharSequenceUtil.replace(GXBuilderConstant.STR_EQ, "STR_", ""), fieldName, value));
-            }
+        for (GXUpdateField<?> field : fieldList) {
+            sql.SET(field.updateString());
         }
-        sql.SET(CharSequenceUtil.format(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds())));
-        handleSQLCondition(sql, condition, "");
+        sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
+        handleSQLCondition(sql, condition);
         return sql.toString();
     }
 
@@ -106,17 +66,10 @@ public interface GXBaseBuilder {
     static String checkRecordIsExists(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
-        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
-        String op = GXBuilderConstant.EQ;
-        Object isNotDeletedValue = getIsNotDeletedValue();
-        if (GXTypeOfUtils.typeof(isNotDeletedValue).getTypeName().equals(String.class.getTypeName())) {
-            op = GXBuilderConstant.STR_EQ;
-        }
-        condition.put(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, op, isNotDeletedValue);
+        List<GXCondition<?>> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        handleSQLCondition(sql, condition, tableNameAlias);
+        handleSQLCondition(sql, condition);
         sql.LIMIT(1);
-        condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, op);
         return sql.toString();
     }
 
@@ -177,18 +130,9 @@ public interface GXBaseBuilder {
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
             handleSQLJoin(sql, joins);
         }
-        Table<String, String, Object> condition = dbQueryParamInnerDto.getCondition();
-        // 获取是否排除删除条件的标识, 若不为null,则需要排除is_deleted条件,也就是会查询所有数据
-        Object retentionDelCondition = null;
+        List<GXCondition<?>> condition = dbQueryParamInnerDto.getCondition();
         // 处理WHERE
-        if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            retentionDelCondition = condition.remove(GXBuilderConstant.DELETED_FLAG_FIELD_NAME, GXBuilderConstant.EXCLUSION_DELETED_CONDITION_FLAG);
-            handleSQLCondition(sql, condition, tableNameAlias);
-        }
-        // 排除条件中的删除字段
-        if (Objects.isNull(retentionDelCondition)) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
-        }
+        handleSQLCondition(sql, condition);
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
@@ -307,57 +251,23 @@ public interface GXBaseBuilder {
     }
 
     /**
-     * 处理SQL语句
-     * <pre>
-     * {@code
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put(GXAdminConstant.PRIMARY_KEY, GXBuilderConstant.NUMBER_EQ, 22);
-     * condition.put("created_at", GXBuilderConstant.NUMBER_LE, 11111);
-     * condition.put("created_at", GXBuilderConstant.NUMBER_GE, 22222);
-     * condition.put("username", GXBuilderConstant.RIGHT_LIKE, "jetty");
-     * HashBasedTable<String, String, Object> multiColumn = HashBasedTable.create();
-     * multiColumn.put("username , '-' , nickname", GXBuilderConstant.RIGHT_LIKE, "77777");
-     * multiColumn.put("username ,'-' , real_name", GXBuilderConstant.RIGHT_LIKE, "99999");
-     * condition.put("T_FUNC" , "concat" , multiColumn);
-     * condition.put("T_FUNC" , "JSON_OVERLAPS", "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     * condition.put("T_FUNC" , "JSON_OVERLAPS", CollUtil.newHashSet("items->'$.zipcode', CAST('[94536]' AS JSON)", "items->'$.zipcode1', CAST('[94537]' AS JSON)"));
-     * handleSQLWhereCondition(sql , condition);
-     * }
-     * </pre>
+     * 处理SQL语句的Where条件
      *
-     * @param sql            SQL语句
-     * @param condition      条件
-     * @param tableNameAlias 表的别名
+     * @param sql       SQL对象
+     * @param condition 条件
      */
-    @SuppressWarnings("all")
-    static void handleSQLCondition(SQL sql, Table<String, String, Object> condition, String tableNameAlias) {
-        if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            Map<String, Map<String, Object>> conditionMap = condition.rowMap();
-            conditionMap.forEach((column, datum) -> {
-                List<String> wheres = new ArrayList<>();
-                datum.forEach((operator, value) -> {
-                    if (Objects.nonNull(value)) {
-                        String whereStr;
-                        if (CharSequenceUtil.equalsIgnoreCase(GXBuilderConstant.T_FUNC_MARK, column)) {
-                            handleWhereFuncValue(wheres, operator, value);
-                        } else {
-                            handleWhereValue(tableNameAlias, CharSequenceUtil.toUnderlineCase(column), wheres, operator, value);
-                        }
-                    }
-                });
-                List<String> lastWheres = new ArrayList<>();
-                wheres.forEach(str -> {
-                    if (CharSequenceUtil.isNotBlank(str)) {
-                        lastWheres.add(str);
-                    }
-                });
-                if (!lastWheres.isEmpty()) {
-                    String whereStr = String.join(" AND ", lastWheres);
-                    sql.WHERE(whereStr);
-                }
-            });
+    static void handleSQLCondition(SQL sql, List<GXCondition<?>> condition) {
+        List<String> lastWheres = new ArrayList<>();
+        condition.forEach(c -> {
+            String str = c.whereString();
+            lastWheres.add(str);
+        });
+        if (!lastWheres.isEmpty()) {
+            String whereStr = String.join(" AND ", lastWheres);
+            sql.WHERE(whereStr);
         }
     }
+
 
     /**
      * 处理where值为Table类型,一般为where条件后面跟函数调用
@@ -453,11 +363,10 @@ public interface GXBaseBuilder {
      * @param condition 删除条件
      * @return SQL语句
      */
-    static String deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+    static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
-        condition.put("is_deleted", GXBuilderConstant.EQ, getIsNotDeletedValue());
-        handleSQLCondition(sql, condition, "");
+        handleSQLCondition(sql, condition);
         return sql.toString();
     }
 
@@ -468,22 +377,9 @@ public interface GXBaseBuilder {
      * @param condition 删除条件
      * @return SQL语句
      */
-    static String deleteCondition(String tableName, Table<String, String, Object> condition) {
+    static String deleteCondition(String tableName, List<GXCondition<?>> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
-        handleSQLCondition(sql, condition, "");
+        handleSQLCondition(sql, condition);
         return sql.toString();
-    }
-
-    /**
-     * 获取数据库未删除的值
-     *
-     * @return Object
-     */
-    static Object getIsNotDeletedValue() {
-        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
-        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
-            return GXCommonConstant.NOT_STR_DELETED_MARK;
-        }
-        return GXCommonConstant.NOT_INT_DELETED_MARK;
     }
 }

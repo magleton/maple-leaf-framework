@@ -1,12 +1,12 @@
 package cn.maple.mongodb.datasource.dao;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
-import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,7 +21,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 影响的行数
      */
     @Override
-    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -33,7 +33,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return int
      */
     @Override
-    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
         return false;
     }
 
@@ -45,7 +45,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return ID
      */
     @Override
-    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
+    public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -79,7 +79,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -91,7 +91,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 影响行数
      */
     @Override
-    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
+    public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 

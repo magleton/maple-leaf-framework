@@ -1,11 +1,11 @@
 package cn.maple.core.framework.dao;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param condition 附加条件,用于一些特殊场景
      * @return ID
      */
-    ID updateOrCreate(T entity, Table<String, String, Object> condition);
+    ID updateOrCreate(T entity, List<GXCondition<?>> condition);
 
     /**
      * 通过SQL更新表中的数据
@@ -28,7 +28,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param condition 更新条件
      * @return 影响的行数
      */
-    Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition);
 
     /**
      * 检测给定条件的记录是否存在
@@ -37,7 +37,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param condition 条件
      * @return int
      */
-    boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
+    boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 通过条件获取数据
@@ -62,7 +62,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件删除
@@ -71,7 +71,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 分页
