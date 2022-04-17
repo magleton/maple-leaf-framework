@@ -5,6 +5,9 @@ import com.google.common.collect.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Map;
+import java.util.Set;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("all")
@@ -25,4 +28,20 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
      * 查询条件
      */
     private Table<String, String, Object> condition;
+
+    /**
+     * 排序字段
+     * eg:
+     * <code>
+     * Map&lt;String ,String&gt; orderByField = new HashMap<>();
+     * orderByField.put("created_at" , "desc");
+     * orderByField.put("username" , "asc");
+     * </code>
+     */
+    private Map<String, String> orderByField;
+
+    /**
+     * 分组字段
+     */
+    private Set<String> groupByField;
 }
