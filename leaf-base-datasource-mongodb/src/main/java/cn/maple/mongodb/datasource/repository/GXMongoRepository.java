@@ -277,7 +277,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> E findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         return null;
     }
 
@@ -300,7 +300,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
+    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
         return null;
     }
 
@@ -320,7 +320,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 目标类型的值
      */
     @Override
-    public <E> E getSingleField(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
+    public <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
         return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
     }
 

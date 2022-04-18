@@ -239,7 +239,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -259,7 +259,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param extraData       额外参数
      * @return 返回指定的类型的值对象
      */
-    <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData);
+    <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData);
 
     /**
      * 通过条件获取单字段的数据
@@ -276,7 +276,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param targetClazz 返回的字段类型
      * @return 目标类型的值
      */
-    <E> E getSingleField(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
+    <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
 
     /**
      * 获取 Primary Key

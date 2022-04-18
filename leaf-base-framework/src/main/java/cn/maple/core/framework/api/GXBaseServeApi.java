@@ -16,7 +16,10 @@ import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,41 +44,14 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取数据
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param columns     需要查询的列
+     * @param targetClazz 目标类型
      * @return List
      */
-    default List<R> findByCondition(Table<String, String, Object> condition) {
-        List<R> rs = findByCondition(condition, Dict.create());
-        Class<R> retClazz = getGenericClassType();
-        return GXCommonUtils.convertSourceListToTargetList(rs, retClazz, null, null);
-    }
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param condition 查询条件
-     * @return List
-     */
-    default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
-        Class<R> retClazz = getGenericClassType();
-        Object rLst = callMethod("findByCondition", condition, extraData);
-        if (Objects.nonNull(rLst)) {
-            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
-        }
-        return Collections.emptyList();
-    }
-
-    /**
-     * 根据条件获取数据
-     *
-     * @param condition 查询条件
-     * @param columns   需要查询的列
-     * @param extraData 额外数据
-     * @return List
-     */
-    default <E> List<E> findByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
-        List<R> rList = (List<R>) callMethod("findByCondition", condition, columns);
-        return GXCommonUtils.convertSourceListToTargetList(rList, targetClazz, null, null, extraData);
+    default <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+        List<E> rList = (List<E>) callMethod("findFieldByCondition", condition, columns, targetClazz);
+        return rList;
     }
 
     /**
@@ -89,7 +65,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
         Object data = callMethod("findOneByCondition", condition, columns);
-        return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, null, extraData);
+        return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, CopyOptions.create(), extraData);
     }
 
     /**
@@ -112,7 +88,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
         Class<R> retClazz = getGenericClassType();
         Object r = callMethod("findOneByCondition", condition, extraData);
         if (Objects.nonNull(r)) {
-            return GXCommonUtils.convertSourceToTarget(r, retClazz, null, null);
+            return GXCommonUtils.convertSourceToTarget(r, retClazz, null, CopyOptions.create());
         }
         return null;
     }
@@ -172,7 +148,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
             // XXXDBResDto
             List<?> records = retPaginate.getRecords();
             Class<R> retClazz = getGenericClassType();
-            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, null);
+            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, copyOptions);
             retPaginate.setRecords(rs);
             return retPaginate;
         }
@@ -279,7 +255,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return
      */
     default <T> T sourceToTarget(Q reqDto, Class<T> targetClass) {
-        return sourceToTarget(reqDto, targetClass, null, null);
+        return sourceToTarget(reqDto, targetClass, null, CopyOptions.create());
     }
 
     /**

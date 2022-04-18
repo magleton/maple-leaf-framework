@@ -229,7 +229,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     @SuppressWarnings("all")
-    public <E> E findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).build();
         return findFieldByCondition(paramInnerDto, targetClazz, Dict.create());
@@ -255,29 +255,34 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      */
     @Override
     @SuppressWarnings("all")
-    public <E> E findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
+    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
         Set<String> columns = dbQueryInnerDto.getColumns();
         if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
             throw new GXBusinessException("接收的数据类型不正确");
         }
-        R one = findOneByCondition(dbQueryInnerDto);
-        if (Objects.isNull(one)) {
-            return null;
-        }
-        Dict dict = GXCommonUtils.convertSourceToDict(one);
+        List<R> rList = findByCondition(dbQueryInnerDto);
         if (ClassUtil.isSimpleValueType(targetClazz)) {
             String[] columnNames = columns.toArray(new String[0]);
-            Object retValue = dict.getObj(columnNames[0]);
-            if (Objects.isNull(retValue)) {
-                return null;
-            }
-            return (E) retValue;
+            String columnName = columnNames[0];
+            List<Object> retList = new ArrayList<>();
+            rList.forEach(r -> {
+                Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
+                if (Objects.nonNull(dict.get(columnName))) {
+                    retList.add(dict.get(columnName));
+                }
+            });
+            return GXCommonUtils.convertSourceListToTargetList(retList, targetClazz, dbQueryInnerDto.getMethodName(), CopyOptions.create(), extraData);
         }
-        Dict retData = Dict.create();
-        columns.forEach(column -> {
-            retData.set(column, dict.getObj(column));
+        List<Dict> retListDict = new ArrayList<>();
+        rList.forEach(r -> {
+            Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
+            Dict tmpDict = Dict.create();
+            columns.forEach(column -> {
+                tmpDict.set(column, dict.getObj(column));
+            });
+            retListDict.add(tmpDict);
         });
-        return GXCommonUtils.convertSourceToTarget(retData, targetClazz, dbQueryInnerDto.getMethodName(), null, extraData);
+        return GXCommonUtils.convertSourceListToTargetList(retListDict, targetClazz, dbQueryInnerDto.getMethodName(), null, extraData);
     }
 
     /**
@@ -445,9 +450,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 目标类型的值
      */
     @Override
-    public <E> E getSingleField(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
+    public <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
         Assert.notNull(condition, "条件不能为null");
-        return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
+        List<E> eList = findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
+        if (eList.isEmpty()) {
+            return null;
+        }
+        return eList.get(0);
     }
 
     /**
