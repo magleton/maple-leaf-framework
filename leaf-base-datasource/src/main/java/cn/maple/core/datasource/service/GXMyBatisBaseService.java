@@ -46,6 +46,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
         put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNumberNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
         put(GXBuilderConstant.STR_NOT_IN, (data) -> new GXConditionStrNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
         put(GXBuilderConstant.RIGHT_LIKE, (data) -> new GXConditionRightLike(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.LIKE, (data) -> new GXConditionFullLike(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
     }};
 
     /**
