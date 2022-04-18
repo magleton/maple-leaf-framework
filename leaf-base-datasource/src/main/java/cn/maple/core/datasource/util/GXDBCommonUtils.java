@@ -11,6 +11,7 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -182,7 +183,25 @@ public class GXDBCommonUtils {
      */
     public static <T> UpdateWrapper<T> assemblyUpdateWrapper(List<GXCondition<?>> condition) {
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        condition.forEach(c -> updateWrapper.set(c.getFieldName(), c.getValueSupplier().get()));
+        Dict methodNameDict = Dict.create()
+                .set("=", "eq")
+                .set("!=", "ne")
+                .set("in", "in")
+                .set("not in", "notIn")
+                .set(">=", "ge")
+                .set(">", "gt")
+                .set("<=", "le")
+                .set("<", "lt");
+        condition.forEach(c -> {
+            String column = c.getFieldName();
+            Object value = c.getValueSupplier().get();
+            String op = c.getOp();
+            column = CharSequenceUtil.toUnderlineCase(column);
+            String methodName = methodNameDict.getStr(op);
+            if (Objects.nonNull(methodName)) {
+                GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
+            }
+        });
         return updateWrapper;
     }
 

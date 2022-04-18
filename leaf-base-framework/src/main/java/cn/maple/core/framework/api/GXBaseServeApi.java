@@ -51,6 +51,22 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     }
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param condition  搜索条件
+     * @param orderField 排序字段
+     * @return List
+     */
+    default List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField) {
+        Class<R> retClazz = getGenericClassType();
+        Object rLst = callMethod("findByCondition", condition, orderField);
+        if (Objects.nonNull(rLst)) {
+            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
      * 根据条件获取数据
      *
      * @param condition 查询条件

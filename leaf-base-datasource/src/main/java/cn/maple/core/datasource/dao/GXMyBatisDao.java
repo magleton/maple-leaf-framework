@@ -11,6 +11,7 @@ import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
+import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -112,7 +113,11 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
         Class<ID> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
         if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o)) {
-            condition.add(new GXConditionEQ(getTableName(), pkName, (Long) o));
+            if (o.getClass().isAssignableFrom(String.class)) {
+                condition.add(new GXConditionStrEQ(getTableName(), pkName, o.toString()));
+            } else {
+                condition.add(new GXConditionEQ(getTableName(), pkName, Long.valueOf(o.toString())));
+            }
         }
         if (!condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
             UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);

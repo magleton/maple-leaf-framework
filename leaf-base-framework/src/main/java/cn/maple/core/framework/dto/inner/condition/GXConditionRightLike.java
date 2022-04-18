@@ -9,6 +9,6 @@ public class GXConditionRightLike extends GXCondition<String> {
 
     @Override
     public String getOp() {
-        return " like ";
+        return "like";
     }
 }

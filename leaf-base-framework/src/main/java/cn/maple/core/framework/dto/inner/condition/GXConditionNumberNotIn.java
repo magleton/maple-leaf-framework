@@ -14,7 +14,7 @@ public class GXConditionNumberNotIn extends GXCondition<String> {
     }
 
     @Override
-    String getOp() {
+    public String getOp() {
         return "not in";
     }
 }

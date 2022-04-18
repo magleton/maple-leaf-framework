@@ -6,7 +6,7 @@ public class GXConditionGE extends GXCondition<Number> {
     }
 
     @Override
-    String getOp() {
+    public String getOp() {
         return ">=";
     }
 }

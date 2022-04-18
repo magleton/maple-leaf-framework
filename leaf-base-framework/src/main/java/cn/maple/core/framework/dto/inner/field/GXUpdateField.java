@@ -21,6 +21,6 @@ public abstract class GXUpdateField<T> {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
             return CharSequenceUtil.format("`{}` = {}", fieldName, valueSupplier.get());
         }
-        return CharSequenceUtil.format("`{}`.`{}` = {}", tableNameAlias, fieldName, valueSupplier.get());
+        return CharSequenceUtil.format("`{}`.`{}` = {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldName), valueSupplier.get());
     }
 }

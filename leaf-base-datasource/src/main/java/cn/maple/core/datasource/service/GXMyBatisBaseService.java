@@ -40,6 +40,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     Map<String, Function<Dict, GXCondition<?>>> CONDITION_FUNCTION = new HashMap<>() {{
         put(GXBuilderConstant.EQ, (data) -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         put(GXBuilderConstant.STR_EQ, (data) -> new GXConditionStrEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.STR_NOT_EQ, (data) -> new GXConditionStrNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
         put(GXBuilderConstant.IN, (data) -> new GXConditionNumberIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
         put(GXBuilderConstant.STR_IN, (data) -> new GXConditionStrIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
         put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNumberNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));

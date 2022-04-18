@@ -14,7 +14,7 @@ public class GXConditionNumberIn extends GXCondition<String> {
     }
 
     @Override
-    String getOp() {
+    public String getOp() {
         return "in";
     }
 }
