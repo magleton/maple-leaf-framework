@@ -5,8 +5,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GXConditionStrInField extends GXCondition<String> {
-    public GXConditionStrInField(String tableNameAlias, String fieldName, Set<String> value) {
+public class GXConditionStrNotIn extends GXCondition<String> {
+    public GXConditionStrNotIn(String tableNameAlias, String fieldName, Set<String> value) {
         super(tableNameAlias, fieldName, () -> {
             String str = value.stream().map(v -> CharSequenceUtil.format("'{}'", v)).collect(Collectors.joining(","));
             return CharSequenceUtil.format("({})", str);
@@ -15,6 +15,6 @@ public class GXConditionStrInField extends GXCondition<String> {
 
     @Override
     String getOp() {
-        return "in";
+        return "not in";
     }
 }

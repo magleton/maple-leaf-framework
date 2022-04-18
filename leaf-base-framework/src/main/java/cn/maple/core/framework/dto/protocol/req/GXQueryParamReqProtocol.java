@@ -1,10 +1,12 @@
 package cn.maple.core.framework.dto.protocol.req;
 
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import com.google.common.collect.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,9 +27,15 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
     private Integer pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
 
     /**
-     * 查询条件
+     * 请求(Request)查询条件
      */
-    private Table<String, String, Object> condition;
+    @Deprecated
+    private Table<String, String, Object> tableCondition;
+
+    /**
+     * DB查询条件
+     */
+    private List<GXCondition<?>> condition;
 
     /**
      * 排序字段

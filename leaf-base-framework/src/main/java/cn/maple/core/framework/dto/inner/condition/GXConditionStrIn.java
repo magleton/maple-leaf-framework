@@ -5,16 +5,16 @@ import cn.hutool.core.text.CharSequenceUtil;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GXConditionNumberNotInField extends GXCondition<String> {
-    public GXConditionNumberNotInField(String tableNameAlias, String fieldName, Set<Number> value) {
+public class GXConditionStrIn extends GXCondition<String> {
+    public GXConditionStrIn(String tableNameAlias, String fieldName, Set<String> value) {
         super(tableNameAlias, fieldName, () -> {
-            String str = value.stream().map(String::valueOf).collect(Collectors.joining(","));
+            String str = value.stream().map(v -> CharSequenceUtil.format("'{}'", v)).collect(Collectors.joining(","));
             return CharSequenceUtil.format("({})", str);
         });
     }
 
     @Override
     String getOp() {
-        return "not in";
+        return "in";
     }
 }

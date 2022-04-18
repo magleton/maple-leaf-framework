@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
@@ -185,7 +186,8 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return 分页对象
      */
     default GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
-        return paginate(reqProtocol, null);
+        convertTableToCondition(reqProtocol);
+        return paginate(reqProtocol, CopyOptions.create());
     }
 
     /**
@@ -346,5 +348,21 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default String getTableName() {
         return (String) callMethod("getTableName");
+    }
+
+    /**
+     * 转换Table条件为Condition
+     *
+     * @param reqProtocol
+     */
+    default void convertTableToCondition(GXQueryParamReqProtocol reqProtocol) {
+        Table<String, String, Object> condition = reqProtocol.getTableCondition();
+        if (Objects.nonNull(condition) || condition.isEmpty()) {
+            Class<?> serveServiceClass = getServeServiceClass();
+            String methodName = "convertTableToCondition";
+            String tableName = getTableName();
+            List<GXCondition<?>> conditionList = (List<GXCondition<?>>) callMethod(methodName, tableName, condition);
+            reqProtocol.setCondition(conditionList);
+        }
     }
 }

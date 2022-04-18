@@ -39,8 +39,6 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     /**
      * 搜索条件
      */
-    //private Table<String, String, Object> condition;
-
     private List<GXCondition<?>> condition;
 
     /**
