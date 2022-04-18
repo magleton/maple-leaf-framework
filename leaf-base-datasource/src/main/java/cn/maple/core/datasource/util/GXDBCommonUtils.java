@@ -195,6 +195,9 @@ public class GXDBCommonUtils {
         condition.forEach(c -> {
             String column = c.getFieldName();
             Object value = c.getValueSupplier().get();
+            if (String.class.isAssignableFrom(value.getClass())) {
+                value = CharSequenceUtil.replace(value.toString(), "'", "");
+            }
             String op = c.getOp();
             column = CharSequenceUtil.toUnderlineCase(column);
             String methodName = methodNameDict.getStr(op);
