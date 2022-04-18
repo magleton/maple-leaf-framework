@@ -86,7 +86,7 @@ public class GXMyBatisPlusConfig {
         List<String> activeProfiles = Convert.toList(String.class, applicationContext.getEnvironment().getActiveProfiles());
         // 除去正式环境,其他环境都开启sql性能规范插件
         if (!CollUtil.contains(activeProfiles, GXCommonConstant.RUN_ENV_PROD)) {
-            interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+            //interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
         interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
