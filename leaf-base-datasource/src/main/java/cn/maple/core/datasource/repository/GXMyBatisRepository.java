@@ -263,22 +263,22 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
         List<R> rList = findByCondition(dbQueryInnerDto);
         if (ClassUtil.isSimpleValueType(targetClazz)) {
             String[] columnNames = columns.toArray(new String[0]);
-            String columnName = columnNames[0];
-            List<Object> retList = new ArrayList<>();
+            String columnName = CharSequenceUtil.toCamelCase(columnNames[0]);
+            List<E> retList = new ArrayList<>();
             rList.forEach(r -> {
                 Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
                 if (Objects.nonNull(dict.get(columnName))) {
-                    retList.add(dict.get(columnName));
+                    retList.add((E) dict.get(columnName));
                 }
             });
-            return GXCommonUtils.convertSourceListToTargetList(retList, targetClazz, dbQueryInnerDto.getMethodName(), CopyOptions.create(), extraData);
+            return retList;
         }
         List<Dict> retListDict = new ArrayList<>();
         rList.forEach(r -> {
             Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
             Dict tmpDict = Dict.create();
             columns.forEach(column -> {
-                tmpDict.set(column, dict.getObj(column));
+                tmpDict.set(column, dict.getObj(CharSequenceUtil.toCamelCase(column)));
             });
             retListDict.add(tmpDict);
         });
