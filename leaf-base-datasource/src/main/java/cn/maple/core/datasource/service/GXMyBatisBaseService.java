@@ -250,6 +250,16 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
 
     /**
+     * 获取一条记录的指定字段
+     *
+     * @param condition   条件
+     * @param fieldName   字段名字
+     * @param targetClazz 返回的类型
+     * @return 指定的类型
+     */
+    <E> E findOneSingleFieldByCondition(Table<String, String, Object> condition, String fieldName, Class<E> targetClazz);
+
+    /**
      * 创建或者更新
      *
      * @param entity 数据实体

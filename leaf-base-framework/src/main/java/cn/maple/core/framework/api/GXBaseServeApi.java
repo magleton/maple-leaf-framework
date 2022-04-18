@@ -16,10 +16,7 @@ import com.google.common.collect.Table;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,6 +37,33 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * 目标服务的类型
      */
     ThreadLocal<Class<?>> targetServeServiceClassThreadLocal = new ThreadLocal<>();
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param condition 查询条件
+     * @return List
+     */
+    default List<R> findByCondition(Table<String, String, Object> condition) {
+        List<R> rs = findByCondition(condition, Dict.create());
+        Class<R> retClazz = getGenericClassType();
+        return GXCommonUtils.convertSourceListToTargetList(rs, retClazz, null, null);
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param condition 查询条件
+     * @return List
+     */
+    default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
+        Class<R> retClazz = getGenericClassType();
+        Object rLst = callMethod("findByCondition", condition, extraData);
+        if (Objects.nonNull(rLst)) {
+            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
+        }
+        return Collections.emptyList();
+    }
 
     /**
      * 根据条件获取数据

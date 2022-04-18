@@ -321,7 +321,11 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      */
     @Override
     public <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
-        return findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
+        List<E> rLst = findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
+        if (rLst.isEmpty()) {
+            return null;
+        }
+        return rLst.get(0);
     }
 
     /**
