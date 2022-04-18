@@ -107,7 +107,9 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         GXValidatorUtils.validateEntity(entity);
-        condition = Optional.ofNullable(condition).orElse(Collections.emptyList());
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            condition = new ArrayList<>(4);
+        }
         String pkName = getPrimaryKeyName();
         String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
