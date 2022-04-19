@@ -2,9 +2,10 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 
+import java.io.Serializable;
 import java.util.function.Supplier;
 
-public abstract class GXCondition<T> {
+public abstract class GXCondition<T> implements Serializable {
     private final String tableNameAlias;
 
     private final String fieldName;

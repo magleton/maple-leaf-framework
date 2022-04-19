@@ -2,9 +2,10 @@ package cn.maple.core.framework.dto.inner.field;
 
 import cn.hutool.core.text.CharSequenceUtil;
 
+import java.io.Serializable;
 import java.util.function.Supplier;
 
-public abstract class GXUpdateField<T> {
+public abstract class GXUpdateField<T> implements Serializable {
     private final String tableNameAlias;
 
     private final String fieldName;
