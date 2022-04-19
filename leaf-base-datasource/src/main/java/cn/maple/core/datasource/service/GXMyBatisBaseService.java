@@ -3,13 +3,13 @@ package cn.maple.core.datasource.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.datasource.constant.GXDataSourceConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
-import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
-import cn.maple.core.framework.dto.inner.condition.*;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
@@ -36,24 +36,6 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
-    @SuppressWarnings("all")
-    Map<String, Function<Dict, GXCondition<?>>> CONDITION_FUNCTION = new HashMap<>() {{
-        put(GXBuilderConstant.EQ, (data) -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
-        put(GXBuilderConstant.STR_EQ, (data) -> new GXConditionStrEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.STR_NOT_EQ, (data) -> new GXConditionStrNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.IN, (data) -> new GXConditionIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
-        put(GXBuilderConstant.STR_IN, (data) -> new GXConditionStrIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
-        put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
-        put(GXBuilderConstant.STR_NOT_IN, (data) -> new GXConditionStrNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
-        put(GXBuilderConstant.RIGHT_LIKE, (data) -> new GXConditionLikeRight(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.LIKE, (data) -> new GXConditionLikeFull(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.LEFT_LIKE, (data) -> new GXConditionLikeLeft(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.GT, (data) -> new GXConditionGT(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
-        put(GXBuilderConstant.LE, (data) -> new GXConditionLE(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
-        put(GXBuilderConstant.LT, (data) -> new GXConditionLT(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
-        put(GXBuilderConstant.NOT_EQ, (data) -> new GXConditionNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
-    }};
-
     /**
      * 检测给定条件的记录是否存在
      *
@@ -467,7 +449,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
         ArrayList<GXCondition<?>> conditions = new ArrayList<>();
         condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
             Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
-            Function<Dict, GXCondition<?>> function = CONDITION_FUNCTION.get(op);
+            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
             if (Objects.isNull(function)) {
                 throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
             }
