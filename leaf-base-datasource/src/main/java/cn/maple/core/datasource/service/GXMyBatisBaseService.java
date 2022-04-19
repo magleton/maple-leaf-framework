@@ -41,12 +41,17 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
         put(GXBuilderConstant.EQ, (data) -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         put(GXBuilderConstant.STR_EQ, (data) -> new GXConditionStrEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
         put(GXBuilderConstant.STR_NOT_EQ, (data) -> new GXConditionStrNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.IN, (data) -> new GXConditionNumberIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
+        put(GXBuilderConstant.IN, (data) -> new GXConditionIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
         put(GXBuilderConstant.STR_IN, (data) -> new GXConditionStrIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
-        put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNumberNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
+        put(GXBuilderConstant.NOT_IN, (data) -> new GXConditionNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<Number>) data.get("value")));
         put(GXBuilderConstant.STR_NOT_IN, (data) -> new GXConditionStrNotIn(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Set<String>) data.get("value")));
-        put(GXBuilderConstant.RIGHT_LIKE, (data) -> new GXConditionRightLike(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
-        put(GXBuilderConstant.LIKE, (data) -> new GXConditionFullLike(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.RIGHT_LIKE, (data) -> new GXConditionLikeRight(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.LIKE, (data) -> new GXConditionLikeFull(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.LEFT_LIKE, (data) -> new GXConditionLikeLeft(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        put(GXBuilderConstant.GT, (data) -> new GXConditionGT(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
+        put(GXBuilderConstant.LE, (data) -> new GXConditionLE(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
+        put(GXBuilderConstant.LT, (data) -> new GXConditionLT(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
+        put(GXBuilderConstant.NOT_EQ, (data) -> new GXConditionNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), (Number) data.getLong("value")));
     }};
 
     /**

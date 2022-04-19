@@ -5,14 +5,14 @@ import cn.hutool.core.text.CharSequenceUtil;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GXConditionNumberNotIn extends GXCondition<String> {
-    public GXConditionNumberNotIn(String tableNameAlias, String fieldName, Set<Number> value) {
+public class GXConditionIn extends GXCondition<String> {
+    public GXConditionIn(String tableNameAlias, String fieldName, Set<Number> value) {
         super(tableNameAlias, fieldName, value);
     }
 
     @Override
     public String getOp() {
-        return "not in";
+        return "in";
     }
 
     @Override

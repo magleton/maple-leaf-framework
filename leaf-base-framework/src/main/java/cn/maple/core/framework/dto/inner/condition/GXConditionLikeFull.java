@@ -2,8 +2,8 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 
-public class GXConditionRightLike extends GXCondition<String> {
-    public GXConditionRightLike(String tableNameAlias, String fieldName, String value) {
+public class GXConditionLikeFull extends GXCondition<String> {
+    public GXConditionLikeFull(String tableNameAlias, String fieldName, String value) {
         super(tableNameAlias, fieldName, value);
     }
 
@@ -14,6 +14,6 @@ public class GXConditionRightLike extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("'{}%'", value);
+        return CharSequenceUtil.format("'%{}%'", value);
     }
 }
