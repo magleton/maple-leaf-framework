@@ -271,7 +271,6 @@ public interface GXBaseBuilder {
         }
     }
 
-
     /**
      * 处理where值为Table类型,一般为where条件后面跟函数调用
      *
