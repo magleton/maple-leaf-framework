@@ -72,7 +72,8 @@ public interface GXBaseBuilder {
         Integer limit = dbQueryParamInnerDto.getLimit();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
         if (CollUtil.isNotEmpty(columns)) {
-            selectStr = String.join(",", columns);
+            List<String> columnsCollect = columns.stream().map(CharSequenceUtil::toUnderlineCase).collect(Collectors.toList());
+            selectStr = String.join(",", columnsCollect);
         }
         SQL sql = new SQL().SELECT(selectStr).FROM(CharSequenceUtil.format("{} {}", tableName, tableNameAlias));
         // 处理JOIN
