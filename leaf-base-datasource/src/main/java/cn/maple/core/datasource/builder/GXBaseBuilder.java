@@ -1,9 +1,7 @@
 package cn.maple.core.datasource.builder;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -12,10 +10,7 @@ import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
-import cn.maple.core.framework.filter.GXSQLFilter;
-import cn.maple.core.framework.util.GXLoggerUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.google.common.collect.Table;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -269,93 +264,6 @@ public interface GXBaseBuilder {
             String whereStr = String.join(" AND ", lastWheres);
             sql.WHERE(whereStr);
         }
-    }
-
-    /**
-     * 处理where值为Table类型,一般为where条件后面跟函数调用
-     *
-     * @param wheres   where条件列表
-     * @param operator 操作
-     * @param value    值
-     */
-    private static void handleWhereFuncValue(List<String> wheres, String operator, Object value) {
-        String whereStr;
-        if (value instanceof Table) {
-            Table<String, String, Object> table = Convert.convert(new TypeReference<>() {
-            }, value);
-            Map<String, Map<String, Object>> rowMap = table.rowMap();
-            rowMap.forEach((c, op) -> op.forEach((k, v) -> wheres.add(CharSequenceUtil.format(CharSequenceUtil.format("{} ({}) {} ", operator, c, k), v.toString()))));
-        } else if (value instanceof Set) {
-            Set<String> stringSet = Convert.toSet(String.class, value);
-            stringSet.forEach(v -> wheres.add(CharSequenceUtil.format("{} ({}) ", operator, v)));
-        } else {
-            whereStr = CharSequenceUtil.format("{} ({}) ", operator, value.toString());
-            wheres.add(whereStr);
-        }
-    }
-
-    /**
-     * 处理where值为常规字段
-     * eg: String , Number , Set
-     *
-     * @param tableNameAlias 表别名
-     * @param column         字段
-     * @param wheres         where条件列表
-     * @param operator       操作
-     * @param value          where的值
-     */
-    private static void handleWhereValue(String tableNameAlias, String column, List<String> wheres, String operator, Object value) {
-        String whereColumnName = handleWhereColumn(column, tableNameAlias);
-        String format = "";
-        String lastValueStr = "";
-        if (value instanceof String) {
-            if (!CharSequenceUtil.startWith(operator, "STR_")) {
-                GXLoggerUtils.logDebug(LOGGER, "SQL语句会发生隐式类型转换,请修改!!!");
-            }
-            if (CharSequenceUtil.isNotEmpty(value.toString())) {
-                GXLoggerUtils.logDebug(LOGGER, "SQL语句优化了空字符串查询");
-            }
-            if (CharSequenceUtil.isNotEmpty(value.toString())) {
-                format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
-                lastValueStr = GXSQLFilter.sqlInject(value.toString());
-            }
-        } else if (value instanceof Number) {
-            if (CharSequenceUtil.startWith(operator, "STR_")) {
-                GXLoggerUtils.logDebug(LOGGER, "SQL语句会发生隐式类型转换,请修改");
-            }
-            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
-            lastValueStr = GXSQLFilter.sqlInject(value.toString());
-        } else if (value instanceof Set) {
-            String[] tmpFormat = {"{}"};
-            if (CharSequenceUtil.startWith(operator, "STR_")) {
-                tmpFormat[0] = "'{}'";
-            }
-            Set<Object> values = Convert.convert(new TypeReference<>() {
-            }, value);
-            lastValueStr = values.stream().map(str -> CharSequenceUtil.format(CharSequenceUtil.format("{}", tmpFormat[0]), str)).collect(Collectors.joining(","));
-            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
-        } else {
-            format = "{} " + CharSequenceUtil.replace(operator, "STR_", "");
-            lastValueStr = GXSQLFilter.sqlInject(value.toString());
-        }
-        if (CharSequenceUtil.isNotBlank(lastValueStr)) {
-            String whereStr = CharSequenceUtil.format(format, whereColumnName, lastValueStr);
-            wheres.add(whereStr);
-        }
-    }
-
-    /**
-     * 处理where条件的字段列名字
-     *
-     * @param column         字段名字
-     * @param tableNameAlias 表的别名
-     * @return String
-     */
-    static String handleWhereColumn(String column, String tableNameAlias) {
-        if (CharSequenceUtil.isNotEmpty(tableNameAlias) && !CharSequenceUtil.contains(column, '.')) {
-            column = CharSequenceUtil.format("{}.{}", tableNameAlias, column);
-        }
-        return column;
     }
 
     /**
