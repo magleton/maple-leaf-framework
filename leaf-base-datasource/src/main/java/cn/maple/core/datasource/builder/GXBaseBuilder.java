@@ -257,16 +257,17 @@ public interface GXBaseBuilder {
      * @param condition 条件
      */
     static void handleSQLCondition(SQL sql, List<GXCondition<?>> condition) {
+        if (Objects.isNull(condition) || condition.isEmpty()) {
+            return;
+        }
         List<String> lastWheres = new ArrayList<>();
-        if (Objects.nonNull(condition) && !condition.isEmpty()) {
-            condition.forEach(c -> {
-                String str = c.whereString();
-                lastWheres.add(str);
-            });
-            if (!lastWheres.isEmpty()) {
-                String whereStr = String.join(" AND ", lastWheres);
-                sql.WHERE(whereStr);
-            }
+        condition.forEach(c -> {
+            String str = c.whereString();
+            lastWheres.add(str);
+        });
+        if (!lastWheres.isEmpty()) {
+            String whereStr = String.join(" AND ", lastWheres);
+            sql.WHERE(whereStr);
         }
     }
 
