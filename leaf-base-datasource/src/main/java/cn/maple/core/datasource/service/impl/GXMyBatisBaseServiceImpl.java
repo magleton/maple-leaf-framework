@@ -71,7 +71,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         return repository.checkRecordIsExists(tableName, conditionList);
     }
 
@@ -97,7 +97,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
         List<GXUpdateField<?>> updateFields = convertDictToUpdateField(tableName, data);
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         return repository.updateFieldByCondition(tableName, updateFields, conditionList);
     }
 
@@ -192,7 +192,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
         String tableName = repository.getTableName();
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         HashSet<String> columns = CollUtil.newHashSet("*");
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
         return findByCondition(queryParamInnerDto);
@@ -222,7 +222,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).orderByField(orderField).groupByField(groupField).build();
         return findByCondition(queryParamInnerDto);
     }
@@ -274,7 +274,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
         return findOneByCondition(queryParamInnerDto);
     }
@@ -362,7 +362,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public <E> E findOneSingleFieldByCondition(Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(getTableName(), condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         return findOneSingleFieldByCondition(conditionList, fieldName, targetClazz);
     }
 
@@ -388,7 +388,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(getTableName(), condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         return repository.updateOrCreate(entity, conditionList);
     }
 
@@ -483,7 +483,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         return repository.deleteSoftCondition(tableName, conditionList);
     }
 
@@ -507,7 +507,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         return repository.deleteCondition(tableName, conditionList);
     }
 
@@ -536,7 +536,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      */
     @Override
     public <E> List<E> findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
-        List<GXCondition<?>> conditionList = convertTableToCondition(tableName, condition);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         return repository.findFieldByCondition(tableName, conditionList, columns, targetClazz);
     }
 

@@ -439,13 +439,13 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     String getTableName();
 
     /**
-     * 将Table类型的条件转换为DB中的条件
+     * 将Table类型的条件转换为条件表达式
      *
      * @param tableNameAlias 表别名
      * @param condition      原始条件
      * @return 转换后的条件
      */
-    default List<GXCondition<?>> convertTableToCondition(String tableNameAlias, Table<String, String, Object> condition) {
+    default List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
         ArrayList<GXCondition<?>> conditions = new ArrayList<>();
         condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
             Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
