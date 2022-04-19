@@ -24,21 +24,9 @@ public interface GXBaseBuilder {
 
     /**
      * 更新实体字段和虚拟字段
-     * <pre>
-     * {@code
-     * final Table<String, String, Object> extData = HashBasedTable.create();
-     * extData.put("ext", "name", "jack");
-     * extData.put("ext", "address", "四川成都");
-     * extData.put("ext", GXBuilderConstant.REMOVE_JSON_FIELD_PREFIX_FLAG + "salary" , "");
-     * final Dict data = Dict.create().set("category_name", "打折商品").set("ext", extData);
-     * Table<String , String , Object> condition = HashBasedTable.create();
-     * condition.put("category_id" ,  GXBuilderConstant.STR_EQ , 11111);
-     * updateFieldByCondition("s_category", data, condition);
-     * }
-     * </pre>
      *
      * @param tableName 表名
-     * @param fieldList 数据
+     * @param fieldList 数据列表
      * @param condition 条件
      * @return String
      */
@@ -70,39 +58,6 @@ public interface GXBaseBuilder {
 
     /**
      * 通过条件获取数据列表
-     * <pre>
-     * {@code
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("path" , "like" , "aaa%");
-     * condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     * condition.put("level" , "=" , "1111");
-     * GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
-     * .columns(CollUtil.newHashSet("*"))
-     * .tableName("s_admin")
-     * .condition(condition)
-     * .groupByField(CollUtil.newHashSet("created_at", "nickname"))
-     * .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
-     * findByCondition(queryInnerDto);
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     * Table<String, String, Object> joins = HashBasedTable.create();
-     * HashBasedTable<String, String, Dict> joinAdmin = HashBasedTable.create();
-     * joinAdmin.put("子表别名", "主表别名", Dict.create()
-     * .set("子表字段名字A", "主表表字段名字A")
-     * .set("子表字段名字B", "主表表字段名字B")
-     * .set("子表字段名字C", "主表表字段名字C"));
-     * joins.put("链接类型A", "子表名字A", joinAdmin);
-     * GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
-     * .columns(CollUtil.newHashSet("id" , "username"))
-     * .tableName("s_admin")
-     * .tableNameAlias("admin")
-     * .joins(joins)
-     * .condition(condition)
-     * .groupByField(CollUtil.newHashSet("created_at", "nickname"))
-     * .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
-     * findByCondition(queryInnerDto);
-     * }
-     * </pre>
      *
      * @param dbQueryParamInnerDto 查询条件
      * @return SQL语句
@@ -179,30 +134,6 @@ public interface GXBaseBuilder {
 
     /**
      * 通过条件获取分类数据
-     * <pre>
-     * {@code
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("path" , "like" , "aaa%");
-     * condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     * condition.put("level" , "=" , "1111");
-     * GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
-     * .columns(CollUtil.newHashSet("*"))
-     * .tableName("s_admin")
-     * .condition(condition)
-     * .groupByField(CollUtil.newHashSet("created_at", "nickname"))
-     * .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
-     * paginate(page , queryInnerDto);
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     * GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
-     * .columns(CollUtil.newHashSet("id" , "username"))
-     * .tableName("s_admin")
-     * .condition(condition)
-     * .groupByField(CollUtil.newHashSet("created_at", "nickname"))
-     * .orderByField(Dict.create().set("username", "asc").set("nickname", "desc")).build();
-     * paginate(page , queryInnerDto);
-     * }
-     * </pre>
      *
      * @param page                 分页对象
      * @param dbQueryParamInnerDto 查询对象
@@ -215,23 +146,6 @@ public interface GXBaseBuilder {
 
     /**
      * 通过条件获取数据列表
-     *
-     * <pre>
-     * {@code
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("path" , "like" , "aaa%");
-     * condition.put("path" , "in" , "(1,2,3,4,5,6)");
-     * condition.put("level" , "=" , "1111");
-     * findByCondition("test" , condition, CollUtil.newHashSet("id" , "username"));
-     * Table<String, String, Object> condition = HashBasedTable.create();
-     * condition.put("T_FUNC" , "JSON_OVERLAPS" , "items->'$.zipcode', CAST('[94536]' AS JSON)");
-     * GXDBQueryInnerDto queryInnerDto = GXDBQueryInnerDto.builder()
-     * .tableName("test")
-     * .condition(condition)
-     * .columns( CollUtil.newHashSet("id" , "username")).build();
-     * findByCondition(queryInnerDto);
-     * }
-     * </pre>
      *
      * @param dbQueryParamInnerDto 查询条件
      * @return SQL语句
