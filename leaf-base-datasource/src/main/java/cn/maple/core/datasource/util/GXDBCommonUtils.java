@@ -194,7 +194,7 @@ public class GXDBCommonUtils {
                 .set("<", "lt");
         condition.forEach(c -> {
             String column = c.getFieldName();
-            Object value = c.getValueSupplier().get();
+            Object value = c.getFieldValue();
             if (String.class.isAssignableFrom(value.getClass())) {
                 value = CharSequenceUtil.replace(value.toString(), "'", "");
             }

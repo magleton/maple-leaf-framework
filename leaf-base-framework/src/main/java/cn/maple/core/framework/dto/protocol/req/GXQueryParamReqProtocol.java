@@ -52,4 +52,9 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
      * 分组字段
      */
     private Set<String> groupByField;
+
+    /**
+     * 额外参数(用于回调)
+     */
+    private Object extraData;
 }

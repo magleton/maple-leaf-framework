@@ -372,12 +372,12 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param reqProtocol
      */
     default void convertTableToCondition(GXQueryParamReqProtocol reqProtocol) {
-        Table<String, String, Object> condition = reqProtocol.getTableCondition();
-        if (Objects.nonNull(condition) || condition.isEmpty()) {
+        Table<String, String, Object> tableCondition = reqProtocol.getTableCondition();
+        if (Objects.nonNull(tableCondition) && !tableCondition.isEmpty()) {
             Class<?> serveServiceClass = getServeServiceClass();
             String methodName = "convertTableToCondition";
             String tableName = getTableName();
-            List<GXCondition<?>> conditionList = (List<GXCondition<?>>) callMethod(methodName, tableName, condition);
+            List<GXCondition<?>> conditionList = (List<GXCondition<?>>) callMethod(methodName, tableName, tableCondition);
             reqProtocol.setCondition(conditionList);
         }
     }

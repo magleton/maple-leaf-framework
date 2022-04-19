@@ -3,34 +3,33 @@ package cn.maple.core.framework.dto.inner.condition;
 import cn.hutool.core.text.CharSequenceUtil;
 
 import java.io.Serializable;
-import java.util.function.Supplier;
 
 public abstract class GXCondition<T> implements Serializable {
     private final String tableNameAlias;
 
     private final String fieldName;
-    private final Supplier<T> valueSupplier;
 
-    protected GXCondition(String tableNameAlias, String fieldName, Supplier<T> valueSupplier) {
+    @SuppressWarnings("all")
+    protected Object value;
+
+    protected GXCondition(String tableNameAlias, String fieldName, Object value) {
         this.tableNameAlias = tableNameAlias;
         this.fieldName = fieldName;
-        this.valueSupplier = valueSupplier;
+        this.value = value;
     }
 
     public abstract String getOp();
 
     public String whereString() {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
-            return CharSequenceUtil.format("{} {} {}", fieldName, getOp(), valueSupplier.get());
+            return CharSequenceUtil.format("{} {} {}", fieldName, getOp(), getFieldValue());
         }
-        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldName), getOp(), valueSupplier.get());
+        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldName), getOp(), getFieldValue());
     }
 
     public String getFieldName() {
         return CharSequenceUtil.toUnderlineCase(fieldName);
     }
 
-    public Supplier<T> getValueSupplier() {
-        return valueSupplier;
-    }
+    public abstract T getFieldValue();
 }

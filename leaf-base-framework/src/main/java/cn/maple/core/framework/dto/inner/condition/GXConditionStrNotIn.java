@@ -7,14 +7,17 @@ import java.util.stream.Collectors;
 
 public class GXConditionStrNotIn extends GXCondition<String> {
     public GXConditionStrNotIn(String tableNameAlias, String fieldName, Set<String> value) {
-        super(tableNameAlias, fieldName, () -> {
-            String str = value.stream().map(v -> CharSequenceUtil.format("'{}'", v)).collect(Collectors.joining(","));
-            return CharSequenceUtil.format("({})", str);
-        });
+        super(tableNameAlias, fieldName, value);
     }
 
     @Override
     public String getOp() {
         return "not in";
+    }
+
+    @Override
+    public String getFieldValue() {
+        String str = ((Set<String>) value).stream().map(v -> CharSequenceUtil.format("'{}'", v)).collect(Collectors.joining(","));
+        return CharSequenceUtil.format("({})", str);
     }
 }

@@ -7,14 +7,17 @@ import java.util.stream.Collectors;
 
 public class GXConditionNumberIn extends GXCondition<String> {
     public GXConditionNumberIn(String tableNameAlias, String fieldName, Set<Number> value) {
-        super(tableNameAlias, fieldName, () -> {
-            String str = value.stream().map(String::valueOf).collect(Collectors.joining(","));
-            return CharSequenceUtil.format("({})", str);
-        });
+        super(tableNameAlias, fieldName, value);
     }
 
     @Override
     public String getOp() {
         return "in";
+    }
+
+    @Override
+    public String getFieldValue() {
+        String str = ((Set<Number>) value).stream().map(String::valueOf).collect(Collectors.joining(","));
+        return CharSequenceUtil.format("({})", str);
     }
 }
