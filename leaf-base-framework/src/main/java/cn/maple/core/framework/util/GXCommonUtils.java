@@ -371,9 +371,7 @@ public class GXCommonUtils {
         try {
             copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
             T target = ReflectUtil.newInstanceIfPossible(tClass);
-            reflectCallObjectMethod(target, "beforeMapping", copyOptions);
             BeanUtil.copyProperties(source, target, copyOptions);
-            reflectCallObjectMethod(target, "afterMapping", source);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
                 reflectCallObjectMethod(target, methodName, extraData);
             }

@@ -1,6 +1,5 @@
 package cn.maple.core.framework.dto;
 
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -19,13 +18,6 @@ public abstract class GXBaseData implements Serializable {
 
     /**
      * @author britton
-     * 对请求参数进行补充校验
-     */
-    protected void verify() {
-    }
-
-    /**
-     * @author britton
      * 参数
      * 验证请求参数之后进行数据修复(自动填充一些信息)
      */
@@ -33,19 +25,10 @@ public abstract class GXBaseData implements Serializable {
     }
 
     /**
-     * 转换之前的回调
-     *
-     * @param copyOptions 拷贝的选项
+     * @author britton
+     * 对请求参数进行补充校验
      */
-    protected void beforeMapping(CopyOptions copyOptions) {
-    }
-
-    /**
-     * 转换完成之后的回调
-     *
-     * @param source 源数据对象
-     */
-    protected void afterMapping(Object source) {
+    protected void verify() {
     }
 
     /**
