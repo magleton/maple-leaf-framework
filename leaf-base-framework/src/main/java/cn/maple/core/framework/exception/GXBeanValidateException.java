@@ -1,23 +1,10 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-public class GXBeanValidateException extends RuntimeException {
-    
-    private final String msg;
+public class GXBeanValidateException extends GXBusinessException {
 
-    private final int code;
-
-    private final Dict dict;
-
-    public GXBeanValidateException(String msg, int code, Dict dict) {
-        super(msg);
-        this.msg = msg;
-        this.code = code;
-        this.dict = dict;
+    public GXBeanValidateException(String msg, int code, Dict data) {
+        super(msg, code, data);
     }
 }

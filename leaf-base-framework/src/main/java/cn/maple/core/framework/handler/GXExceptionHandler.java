@@ -29,6 +29,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 异常处理器
@@ -45,7 +46,7 @@ public class GXExceptionHandler {
     @ExceptionHandler(GXBeanValidateException.class)
     public GXResultUtils<Dict> handleBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getDict());
+        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
@@ -120,7 +121,11 @@ public class GXExceptionHandler {
     @ExceptionHandler(GXBusinessException.class)
     public GXResultUtils<Dict> handleBusinessException(GXBusinessException e) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+        Dict data = e.getData();
+        if (Objects.nonNull(e.getCause())) {
+            data = ((GXBusinessException) e.getCause()).getData();
+        }
+        return GXResultUtils.error(e.getCode(), e.getMsg(), data);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
