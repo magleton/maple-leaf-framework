@@ -349,9 +349,8 @@ public class GXCommonUtils {
      * @param serviceClass 目标对象类型 必须存在于Spring Bean容器中
      * @param methodName   对象中的方法
      * @param params       参数
-     * @param <R>          对象类型
      */
-    public static <R> Object reflectCallObjectMethod(Class<?> serviceClass, String methodName, Object... params) {
+    public static Object reflectCallObjectMethod(Class<?> serviceClass, String methodName, Object... params) {
         Object target = GXSpringContextUtils.getBean(serviceClass);
         return reflectCallObjectMethod(target, methodName, params);
     }
@@ -532,7 +531,7 @@ public class GXCommonUtils {
      * @param str 字符串
      * @return Dict
      */
-    public static Dict strToDict(String str) {
+    public static Dict convertStrToDict(String str) {
         if (CharSequenceUtil.isBlank(str)) {
             return Dict.create();
         }
