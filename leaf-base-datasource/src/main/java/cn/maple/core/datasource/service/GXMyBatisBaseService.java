@@ -467,7 +467,10 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      */
     default List<GXUpdateField<?>> convertDictToUpdateField(String tableNameAlias, Dict data) {
         List<GXUpdateField<?>> fields = new ArrayList<>();
-        data.forEach((k, v) -> new GXUpdateStrField(tableNameAlias, k, v.toString()));
+        data.forEach((k, v) -> {
+            GXUpdateStrField updateField = new GXUpdateStrField(tableNameAlias, k, v.toString());
+            fields.add(updateField);
+        });
         return fields;
     }
 }

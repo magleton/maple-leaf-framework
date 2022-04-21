@@ -4,12 +4,15 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
@@ -84,6 +87,9 @@ public interface GXBaseBuilder {
         List<GXCondition<?>> condition = dbQueryParamInnerDto.getCondition();
         // 处理WHERE
         handleSQLCondition(sql, condition);
+        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
+        }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
             sql.GROUP_BY(groupByField.toArray(new String[0]));
@@ -172,8 +178,10 @@ public interface GXBaseBuilder {
         }
         List<String> lastWheres = new ArrayList<>();
         condition.forEach(c -> {
-            String str = c.whereString();
-            lastWheres.add(str);
+            if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
+                String str = c.whereString();
+                lastWheres.add(str);
+            }
         });
         if (!lastWheres.isEmpty()) {
             String whereStr = String.join(" AND ", lastWheres);
@@ -206,5 +214,18 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().DELETE_FROM(tableName);
         handleSQLCondition(sql, condition);
         return sql.toString();
+    }
+
+    /**
+     * 获取数据库未删除的值
+     *
+     * @return Object
+     */
+    static Object getIsNotDeletedValue() {
+        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
+        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
+            return GXCommonConstant.NOT_STR_DELETED_MARK;
+        }
+        return GXCommonConstant.NOT_INT_DELETED_MARK;
     }
 }
