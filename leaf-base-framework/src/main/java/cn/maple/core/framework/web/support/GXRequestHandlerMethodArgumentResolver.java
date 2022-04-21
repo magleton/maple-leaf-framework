@@ -5,7 +5,6 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.code.GXHttpStatusCode;
-import cn.maple.core.framework.dto.protocol.req.GXBaseReqProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,9 +77,9 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(@NonNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
-        if (!parameterType.getSuperclass().isAssignableFrom(GXBaseReqProtocol.class)) {
+        /*if (!parameterType.getSuperclass().isAssignableFrom(GXBaseReqProtocol.class)) {
             throw new GXBusinessException("接受的类型不正确!");
-        }
+        }*/
         if (JSONUtil.isTypeJSONArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
             List<?> bean = jsonToTargetList(body, actualTypeArgument);
