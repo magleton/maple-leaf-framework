@@ -21,11 +21,4 @@ public class GXBaseReqDto extends GXBaseDto {
      */
     protected void afterRepair() {
     }
-
-    /**
-     * @author britton
-     * 对请求参数进行补充校验
-     */
-    protected void verify() {
-    }
 }

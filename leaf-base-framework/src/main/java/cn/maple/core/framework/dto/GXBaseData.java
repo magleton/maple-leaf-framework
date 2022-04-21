@@ -15,7 +15,14 @@ public abstract class GXBaseData implements Serializable {
      * @param data 参数
      * @author britton
      */
-    public void customizeProcess(Dict data) {
+    protected void customizeProcess(Dict data) {
+    }
+
+    /**
+     * @author britton
+     * 对请求参数进行补充校验
+     */
+    protected void verify() {
     }
 
     /**
