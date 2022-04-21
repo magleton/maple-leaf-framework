@@ -13,8 +13,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serializable> {
     /**
@@ -279,42 +277,6 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @return 目标类型的值
      */
     <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
-
-    /**
-     * 查询一条数据
-     *
-     * @param baseQueryParamInnerDto 查询条件
-     * @param rowMapper              转换函数
-     * @return R
-     */
-    default R findOneByCondition(GXBaseQueryParamInnerDto baseQueryParamInnerDto, UnaryOperator<R> rowMapper) {
-        return rowMapper.apply(findOneByCondition(baseQueryParamInnerDto));
-    }
-
-    /**
-     * 查询多条数据
-     *
-     * @param baseQueryParamInnerDto 查询条件
-     * @param rowMapper              转换函数
-     * @return List
-     */
-    default List<R> findByCondition(GXBaseQueryParamInnerDto baseQueryParamInnerDto, UnaryOperator<R> rowMapper) {
-        return findByCondition(baseQueryParamInnerDto).stream().map(rowMapper).collect(Collectors.toList());
-    }
-
-    /**
-     * 查询分页数据
-     *
-     * @param baseQueryParamInnerDto 查询条件
-     * @param rowMapper              转换函数
-     * @return 分页对象
-     */
-    default GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto baseQueryParamInnerDto, UnaryOperator<R> rowMapper) {
-        GXPaginationResDto<R> paginate = paginate(baseQueryParamInnerDto);
-        List<R> collect = paginate.getRecords().stream().map(rowMapper).collect(Collectors.toList());
-        paginate.setRecords(collect);
-        return paginate;
-    }
 
     /**
      * 获取 Primary Key
