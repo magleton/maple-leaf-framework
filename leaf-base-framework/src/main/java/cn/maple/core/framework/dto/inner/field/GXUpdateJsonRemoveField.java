@@ -3,15 +3,15 @@ package cn.maple.core.framework.dto.inner.field;
 import cn.hutool.core.text.CharSequenceUtil;
 
 public class GXUpdateJsonRemoveField extends GXUpdateField<String> {
-    private final String jsonPathFieldName;
+    private final String path;
 
-    public GXUpdateJsonRemoveField(String tableNameAlias, String fieldName, String jsonPathFieldName) {
+    public GXUpdateJsonRemoveField(String tableNameAlias, String fieldName, String path) {
         super(tableNameAlias, fieldName, null);
-        this.jsonPathFieldName = jsonPathFieldName;
+        this.path = path;
     }
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("JSON_REMOVE({} , '$.{}')", fieldName, jsonPathFieldName);
+        return CharSequenceUtil.format("JSON_REMOVE({} , '$.{}')", fieldName, path);
     }
 }
