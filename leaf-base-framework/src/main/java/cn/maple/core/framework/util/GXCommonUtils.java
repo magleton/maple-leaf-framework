@@ -212,7 +212,6 @@ public class GXCommonUtils {
             if (CharSequenceUtil.isNotEmpty(methodName)) {
                 reflectCallObjectMethod(target, methodName, extraData);
             }
-            reflectCallObjectMethod(target, "verify");
             return target;
         } catch (Exception e) {
             Throwable cause = Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause());

@@ -10,28 +10,6 @@ import java.util.List;
 
 public abstract class GXBaseData implements Serializable {
     /**
-     * @author britton
-     * 在验证请求参数之前进行数据修复(自动填充一些信息)
-     */
-    protected void beforeRepair() {
-    }
-
-    /**
-     * @author britton
-     * 参数
-     * 验证请求参数之后进行数据修复(自动填充一些信息)
-     */
-    protected void afterRepair() {
-    }
-
-    /**
-     * @author britton
-     * 对请求参数进行补充校验
-     */
-    protected void verify() {
-    }
-
-    /**
      * 调用自定义的方法进行参数的处理
      *
      * @param data 参数
