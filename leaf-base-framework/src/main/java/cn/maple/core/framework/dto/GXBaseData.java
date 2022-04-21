@@ -34,10 +34,10 @@ public abstract class GXBaseData implements Serializable {
     /**
      * 调用自定义的方法进行参数的处理
      *
-     * @param extraData 额外参数数据
+     * @param data 参数
      * @author britton
      */
-    public void customizeProcess(Dict extraData) {
+    public void customizeProcess(Dict data) {
     }
 
     /**
