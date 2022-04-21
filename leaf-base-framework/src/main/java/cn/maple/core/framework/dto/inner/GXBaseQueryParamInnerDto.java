@@ -94,6 +94,11 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
     private List<GXJoinDto> joins;
 
     /**
+     * 返回数据的元素类型
+     */
+    private Class<?> targetClazz;
+
+    /**
      * 额外参数
      * <p>
      * 配合methodName一起使用

@@ -360,7 +360,7 @@ public class GXCommonUtils {
      * @param source      源对象
      * @param tClass      目标对象类型
      * @param methodName  需要条用的方法名字
-     * @param copyOptions 复制选项
+     * @param copyOptions 复制选项  可以设置自定义的TypeConvert来自定义转换规则
      * @param extraData   额外参数
      * @return 目标对象
      */
@@ -514,7 +514,6 @@ public class GXCommonUtils {
      * @param params       参数
      * @param <R>          对象类型
      */
-    @SuppressWarnings("all")
     public static <R> Object reflectCallObjectMethod(Class<?> serviceClass, String methodName, Object... params) {
         Object target = GXSpringContextUtils.getBean(serviceClass);
         return reflectCallObjectMethod(target, methodName, params);
@@ -528,7 +527,6 @@ public class GXCommonUtils {
      * @param params     参数
      * @param <R>        对象类型
      */
-    @SuppressWarnings("all")
     public static <R> Object reflectCallObjectMethod(R object, String methodName, Object... params) {
         if (Objects.isNull(object)) {
             LOG.warn("反射调用的object对象为null");
@@ -554,7 +552,7 @@ public class GXCommonUtils {
             LOG.warn("反射调用类{}中的方法{}({})失败", object.getClass().getSimpleName(), methodName, params);
             return null;
         }
-        Object retVal = null;
+        Object retVal;
         try {
             retVal = ReflectUtil.invoke(object, method, params);
         } catch (UtilException e) {
