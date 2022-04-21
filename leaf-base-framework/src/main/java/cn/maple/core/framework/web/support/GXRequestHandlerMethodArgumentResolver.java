@@ -5,6 +5,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.dto.protocol.req.GXBaseReqProtocol;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -77,13 +78,16 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(@NonNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final String body = getRequestBody(webRequest);
         final Class<?> parameterType = parameter.getParameterType();
+        if (!parameterType.getSuperclass().isAssignableFrom(GXBaseReqProtocol.class)) {
+            throw new GXBusinessException("接受的类型不正确!");
+        }
         if (JSONUtil.isTypeJSONArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
-            List<?> bean = jsonToTargetList(body, actualTypeArgument);//JSONUtil.toList(body, actualTypeArgument);
+            List<?> bean = jsonToTargetList(body, actualTypeArgument);
             bean.forEach(dto -> dealSingleBean(dto, parameter, actualTypeArgument));
             return bean;
         }
-        Object bean = jsonToTarget(body, parameterType);//Convert.convertWithCheck(parameterType, JSONUtil.toBean(body, parameterType), null, false);
+        Object bean = jsonToTarget(body, parameterType);
         if (Objects.nonNull(bean)) {
             dealSingleBean(bean, parameter, parameterType);
         }
@@ -100,7 +104,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     private void dealSingleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
         GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
         final String value = Objects.requireNonNull(requestBody).value();
-        boolean validateTarget = requestBody.validateTarget();
+
         // 对请求数据进行验证之前的修复处理
         callUserDefinedMethod(parameterType, bean, BEFORE_REPAIR_METHOD);
 
@@ -109,6 +113,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         // 数据验证
         Class<?>[] groups = requestBody.groups();
+        boolean validateTarget = requestBody.validateTarget();
         if (validateTarget) {
             if (parameter.hasParameterAnnotation(Validated.class)) {
                 groups = Objects.requireNonNull(parameter.getParameterAnnotation(Validated.class)).value();
