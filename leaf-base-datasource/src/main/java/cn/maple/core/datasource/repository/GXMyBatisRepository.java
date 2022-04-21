@@ -139,7 +139,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     public <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
-        return findByCondition(paramInnerDto, targetClazz, Dict.create());
+        return findByCondition(paramInnerDto, targetClazz);
     }
 
     /**
@@ -443,12 +443,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
 
     /**
      * 通过条件获取单字段的数据
-     * <pre>
-     * {@code
-     * HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-     * String username = getSingleField("s_admin" ,condition , "username" , String.class);
-     * }
-     * </pre>
      *
      * @param tableName   表名
      * @param condition   查询条件
