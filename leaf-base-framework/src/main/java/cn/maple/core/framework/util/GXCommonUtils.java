@@ -13,17 +13,12 @@ import cn.hutool.core.util.*;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HtmlUtil;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,22 +84,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 获取Dict中指定的key的值
-     *
-     * @param param 目标dict
-     * @param key   需要获取的key名字
-     * @param clazz 返回的数据类型
-     * @return R
-     */
-    public static <R> R getValueFromDict(Dict param, String key, Class<R> clazz) {
-        Object obj = param.getObj(key);
-        if (Objects.nonNull(obj)) {
-            return Convert.convert(clazz, obj);
-        }
-        return null;
-    }
-
-    /**
      * 获取激活的Profile
      *
      * @return String
@@ -125,41 +104,6 @@ public class GXCommonUtils {
             return Convert.convert(clazzType, ClassUtil.getDefaultValue(clazzType));
         }
         return ReflectUtil.newInstanceIfPossible(clazzType);
-    }
-
-    /**
-     * 获取Class的JVM默认值
-     *
-     * @param clazzType Class 对象
-     * @param <R>       R
-     * @return R
-     */
-    public static <R> R getClassDefaultValue(Type clazzType) {
-        Class<?> aClass = TypeUtil.getClass(clazzType);
-        Object o = ReflectUtil.newInstanceIfPossible(aClass);
-        return Convert.convert(clazzType, o);
-    }
-
-    /**
-     * 通过路径获取对象中的值
-     * <pre>{@code
-     *     getDataByPath(Dict.create().set("aaa", "bbbb"),"aaa" ,String.class)
-     *     }
-     * </pre>
-     *
-     * @param obj       对象
-     * @param key       键
-     * @param clazzType Class对象
-     * @param <R>       R
-     * @return R
-     */
-    public static <R> R getObjectFieldValueByPath(Object obj, String key, Class<R> clazzType) {
-        final JSON parse = JSONUtil.parse(obj);
-        final R value = parse.getByPath(key, clazzType);
-        if (null == value) {
-            return getClassDefaultValue(clazzType);
-        }
-        return value;
     }
 
     /**
@@ -234,113 +178,6 @@ public class GXCommonUtils {
      */
     public static Map<String, Object> convertStrToMap(String mapString) {
         return Arrays.stream(mapString.replace("{", "").replace("}", "").split(",")).map(arrayData -> arrayData.split("=")).collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
-    }
-
-    /**
-     * 将一个新key放入已经存在的json字符串中
-     *
-     * @param jsonStr  JSON字符串
-     * @param jsonPath JSON路径
-     * @param object   Object
-     * @param override 是否复写已经存在的值
-     * @return JSONObject
-     */
-    public static JSONObject putDataToJsonStr(String jsonStr, String jsonPath, Object object, boolean override) {
-        if (!JSONUtil.isTypeJSONObject(jsonStr)) {
-            return new JSONObject();
-        }
-        final JSONObject jsonObject = new JSONObject(jsonStr);
-        if (override) {
-            jsonObject.putByPath(jsonPath, object);
-        } else {
-            jsonObject.putIfAbsent(jsonPath, object);
-        }
-        return jsonObject;
-    }
-
-    /**
-     * 将json字符串转换为任意对象
-     *
-     * @param jsonStr JSON字符串
-     * @param clazz   Class 对象
-     * @param <R>     R
-     * @return R
-     */
-    public static <R> R jsonStrConvertToTarget(String jsonStr, Class<R> clazz) {
-        if (!JSONUtil.isTypeJSON(jsonStr)) {
-            LOG.error("不合法的JSON字符串 : {}", jsonStr);
-            return getClassDefaultValue(clazz);
-        }
-        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
-        try {
-            assert objectMapper != null;
-            return objectMapper.readValue(jsonStr, clazz);
-        } catch (JsonProcessingException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        return getClassDefaultValue(clazz);
-    }
-
-    /**
-     * 获取json字符串中的任意一个key的数据
-     * <pre>
-     *     {@code
-     *     System.out.println(GXCommonUtils.getJSONValueByAnyPath(s, "data.data1.data2.name", String.class));
-     *     System.out.println(GXCommonUtils.getJSONValueByAnyPath(s, "data.data1.data2", Dict.class));
-     *     System.out.println(GXCommonUtils.getJSONValueByAnyPath(s, "data.data1", Dict.class));
-     *     System.out.println(GXCommonUtils.getJSONValueByAnyPath(s, "data.data1.data2.name.kkkk", String.class));
-     *     System.out.println(GXCommonUtils.getJSONValueByAnyPath(s, "data", Dict.class));
-     *     }
-     * </pre>
-     *
-     * @param jsonStr JSON字符串
-     * @param path    路径
-     * @param clazz   Class 对象
-     * @param <R>     R
-     * @return R
-     */
-    public static <R> R getJsonValueByPath(String jsonStr, String path, Class<R> clazz) {
-        if (!JSONUtil.isTypeJSON(jsonStr)) {
-            LOG.error("不合法的JSON字符串");
-            return getClassDefaultValue(clazz);
-        }
-        final ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
-        try {
-            assert objectMapper != null;
-            Dict data = objectMapper.readValue(jsonStr, Dict.class);
-            String[] paths = CharSequenceUtil.split(path, ".").toArray(new String[0]);
-            final Object firstObj = data.getObj(paths[0]);
-            if (null == firstObj) {
-                return getClassDefaultValue(clazz);
-            }
-            if (!(firstObj instanceof Map)) {
-                return Convert.convert(clazz, firstObj);
-            }
-            Dict tempDict = Convert.convert(Dict.class, firstObj);
-            int length = paths.length;
-            if (length < 2) {
-                return Convert.convert(clazz, tempDict);
-            }
-            for (int i = 1; i < length - 1; i++) {
-                final Object obj = tempDict.getObj(paths[i]);
-                if (null == obj) {
-                    break;
-                }
-                if (obj instanceof Map) {
-                    tempDict = Convert.convert(Dict.class, obj);
-                }
-            }
-            if (!tempDict.isEmpty()) {
-                final Object obj = tempDict.getObj(paths[length - 1]);
-                if (Objects.nonNull(obj)) {
-                    return Convert.convert(clazz, obj);
-                }
-            }
-        } catch (Exception e) {
-            LOG.error("从JSON字符串中获取数据出错 , 错误信息 : {}", e.getMessage());
-            return getClassDefaultValue(clazz);
-        }
-        return getClassDefaultValue(clazz);
     }
 
     /**
@@ -570,49 +407,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 移除JSON中任意路径的值
-     *
-     * @param jsonStr JSON字符串
-     * @param path    路径
-     * @param clazz   Type 对象
-     * @param <R>     泛型类型
-     * @return R
-     */
-    @SuppressWarnings("all")
-    public static <R> R removeJsonStrAnyPath(String jsonStr, String path, Class<R> clazz) {
-        final JSONObject parse = JSONUtil.parseObj(jsonStr);
-        int index = CharSequenceUtil.indexOf(path, '.');
-        if (index != -1) {
-            String mainPath = CharSequenceUtil.sub(path, 0, CharSequenceUtil.lastIndexOfIgnoreCase(path, "."));
-            String subPath = CharSequenceUtil.sub(path, CharSequenceUtil.lastIndexOfIgnoreCase(path, ".") + 1, path.length());
-            final Object o = parse.get(mainPath);
-            if (Objects.nonNull(o)) {
-                if (JSONUtil.isTypeJSONArray(o.toString()) && NumberUtil.isInteger(subPath)) {
-                    final int delIndex = Integer.parseInt(subPath);
-                    if (null != parse.getByPath(mainPath, JSONArray.class)) {
-                        parse.getByPath(mainPath, JSONArray.class).remove(delIndex);
-                    }
-                } else if (null != parse.getByPath(mainPath, JSONObject.class)) {
-                    final Object remove = parse.getByPath(mainPath, JSONObject.class).remove(subPath);
-                    return Convert.convert(clazz, remove);
-                }
-            }
-            return getClassDefaultValue(clazz);
-        }
-        return Convert.convert(clazz, parse.remove(path));
-    }
-
-    /**
-     * 移除JSON中任意路径的值
-     *
-     * @param jsonStr JSON字符串
-     * @param path    路径
-     */
-    public static void removeJsonStrAnyPath(String jsonStr, String path) {
-        removeJsonStrAnyPath(jsonStr, path, Object.class);
-    }
-
-    /**
      * 验证手机号码
      *
      * @param phone 手机号码
@@ -726,28 +520,6 @@ public class GXCommonUtils {
             return JSONUtil.toBean(JSONUtil.parseObj(obj), beanType, ignoreError);
         }
         return null;
-    }
-
-    /**
-     * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
-     * 例如：hello_world=》helloWorld
-     *
-     * @param name 转换前的下划线大写方式命名的字符串
-     * @return 转换后的驼峰式命名的字符串
-     */
-    public static String toCamelCase(CharSequence name) {
-        return CharSequenceUtil.toCamelCase(name);
-    }
-
-    /**
-     * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
-     *
-     * @param str    转换前的驼峰式命名的字符串，也可以为符号连接形式
-     * @param symbol 连接符
-     * @return 转换后符号连接方式命名的字符串
-     */
-    public static String toSymbolCase(CharSequence str, char symbol) {
-        return CharSequenceUtil.toSymbolCase(str, symbol);
     }
 
     /**

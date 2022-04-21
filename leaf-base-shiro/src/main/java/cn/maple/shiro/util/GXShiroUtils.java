@@ -1,6 +1,7 @@
 package cn.maple.shiro.util;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.util.GXCommonUtils;
 import org.apache.shiro.SecurityUtils;
@@ -33,7 +34,7 @@ public class GXShiroUtils {
         }
         Long adminId = getAdminData().getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME);
         if (null == adminId) {
-            adminId = getAdminData().getLong(GXCommonUtils.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+            adminId = getAdminData().getLong(CharSequenceUtil.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
         }
         return null == adminId ? 0 : adminId;
     }

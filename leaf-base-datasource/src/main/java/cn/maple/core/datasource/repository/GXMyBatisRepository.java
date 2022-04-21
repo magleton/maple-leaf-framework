@@ -93,7 +93,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             rList.forEach(data -> {
                 Dict dict = GXCommonUtils.convertSourceToDict(data);
                 for (String key : columns) {
-                    Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(GXCommonUtils.toCamelCase(key)));
+                    Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(CharSequenceUtil.toCamelCase(key)));
                     list.add(Convert.convert(targetClazz, obj));
                 }
             });
@@ -104,7 +104,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             Dict dict = GXCommonUtils.convertSourceToDict(data);
             Dict tmpDict = Dict.create();
             for (String key : columns) {
-                Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(GXCommonUtils.toCamelCase(key)));
+                Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(CharSequenceUtil.toCamelCase(key)));
                 tmpDict.set(key, obj);
             }
             dictList.add(tmpDict);

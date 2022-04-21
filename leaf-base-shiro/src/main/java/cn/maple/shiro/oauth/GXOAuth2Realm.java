@@ -1,6 +1,7 @@
 package cn.maple.shiro.oauth;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTokenManagerUtils;
@@ -38,7 +39,7 @@ public class GXOAuth2Realm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         log.debug("授权验证权限时调用-->GXOAuth2Realm.doGetAuthorizationInfo() principals : " + principals.getPrimaryPrincipal());
         Dict dict = (Dict) principals.getPrimaryPrincipal();
-        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)).orElse(dict.getLong(GXCommonUtils.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)));
+        Long adminId = Optional.ofNullable(dict.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)).orElse(dict.getLong(CharSequenceUtil.toCamelCase(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME)));
         // 获取用户权限列表
         Set<String> permsSet = shiroService.getAdminAllPermissions(adminId);
         // 获取用户角色列表
