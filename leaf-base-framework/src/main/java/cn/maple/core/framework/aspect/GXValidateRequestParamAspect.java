@@ -20,6 +20,12 @@ import java.util.Set;
 @Aspect
 @Component
 public class GXValidateRequestParamAspect {
+    private static final Validator validator;
+
+    static {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void requestParamValidate() {
         //标识切面的入口
@@ -29,7 +35,6 @@ public class GXValidateRequestParamAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<? extends ConstraintViolation<Object>> constraintViolations = validator.forExecutables().validateParameters(GXSpringContextUtils.getBean(method.getDeclaringClass()), method, point.getArgs());
         if (!constraintViolations.isEmpty()) {
             final Dict dict = Dict.create();
