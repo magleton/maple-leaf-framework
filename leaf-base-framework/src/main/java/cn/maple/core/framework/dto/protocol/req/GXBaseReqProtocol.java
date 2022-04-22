@@ -14,6 +14,21 @@ import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
  */
 public abstract class GXBaseReqProtocol extends GXBaseReqDto {
     /**
+     * @author britton
+     * 在验证请求参数之前进行数据修复(自动填充一些信息)
+     */
+    protected void beforeRepair() {
+    }
+
+    /**
+     * @author britton
+     * 参数
+     * 验证请求参数之后进行数据修复(自动填充一些信息)
+     */
+    protected void afterRepair() {
+    }
+
+    /**
      * 获取用户的登录信息
      *
      * @param tokenName      token的名字
