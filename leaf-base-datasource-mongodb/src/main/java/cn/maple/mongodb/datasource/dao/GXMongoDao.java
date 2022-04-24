@@ -1,17 +1,17 @@
 package cn.maple.mongodb.datasource.dao;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID extends Serializable> implements GXBaseDao<T, R, ID> {
+public class GXMongoDao<T extends GXMongoModel, ID extends Serializable> implements GXBaseDao<T, ID> {
     /**
      * 通过SQL更新表中的数据
      *
@@ -56,7 +56,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 列表
      */
     @Override
-    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return null;
     }
 
@@ -67,7 +67,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return null;
     }
 
@@ -102,7 +102,7 @@ public class GXMongoDao<T extends GXMongoModel, R extends GXBaseResDto, ID exten
      * @return 分页数据
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return null;
     }
 

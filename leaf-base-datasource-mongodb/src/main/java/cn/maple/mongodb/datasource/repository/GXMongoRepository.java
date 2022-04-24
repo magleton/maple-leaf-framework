@@ -6,7 +6,6 @@ import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.mongodb.datasource.dao.GXMongoDao;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
@@ -18,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> implements GXBaseRepository<T, R, ID> {
+public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
     /**
      * 基础DAO
      */
@@ -52,50 +51,11 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询对象
-     * @param targetClazz     目标对象
-     * @param extraData       自定义填充数据
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
-        return Collections.emptyList();
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param dbQueryInnerDto 查询对象
-     * @param targetClazz     目标对象类型
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
-        return findByCondition(dbQueryInnerDto, targetClazz, Dict.create());
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     查询列
-     * @param targetClazz 结果数据类型
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        return Collections.emptyList();
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return Collections.emptyList();
     }
 
@@ -107,8 +67,21 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, List<GXCondition<?>> condition) {
-        return Collections.emptyList();
+    public List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition) {
+        return findByCondition(tableName, condition, CollUtil.newHashSet("*"));
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @param columns   需要查询的列名字
+     * @return 列表
+     */
+    public List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).columns(columns).condition(condition).build();
+        return findByCondition(queryParamInnerDto);
     }
 
     /**
@@ -118,7 +91,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return null;
     }
 
@@ -130,7 +103,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, List<GXCondition<?>> condition) {
+    public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition) {
         return null;
     }
 
@@ -143,7 +116,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
+    public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
         return null;
     }
 
@@ -156,7 +129,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 返回数据
      */
     @Override
-    public R findOneById(String tableName, ID id, Set<String> columns) {
+    public Dict findOneById(String tableName, ID id, Set<String> columns) {
         return null;
     }
 
@@ -168,7 +141,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 返回数据
      */
     @Override
-    public R findOneById(String tableName, ID id) {
+    public Dict findOneById(String tableName, ID id) {
         return null;
     }
 
@@ -179,7 +152,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 分页数据
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return null;
     }
 
@@ -194,7 +167,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
+    public GXPaginationResDto<Dict> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
         return null;
     }
 
@@ -260,72 +233,6 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, R
     @Override
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
         return null;
-    }
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code
-     *     findFieldByCondition("s_admin", condition, CollUtil.newHashSet("nickname", "username"), Dict.class);
-     *     }
-     * </pre>
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     字段名字集合
-     * @param targetClazz 值的类型
-     * @return 返回指定的类型的值对象
-     */
-    @Override
-    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        return null;
-    }
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code
-     *     GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
-     *                       .tableName("s_admin")
-     *                       .columns(CollUtil.newHashSet("nickname", "username"))
-     *                       .condition(condition)
-     *                       .build();
-     *     findFieldByCondition(paramInnerDto, Dict.class);
-     *     }
-     * </pre>
-     *
-     * @param dbQueryInnerDto 查询数据
-     * @param targetClazz     值的类型
-     * @param extraData       自定义填充数据
-     * @return 返回指定的类型的值对象
-     */
-    @Override
-    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
-        return null;
-    }
-
-    /**
-     * 通过条件获取单字段的数据
-     * <pre>
-     * {@code
-     * HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-     * String username = getSingleField("s_admin" ,condition , "username" , String.class);
-     * }
-     * </pre>
-     *
-     * @param tableName   表名
-     * @param condition   查询条件
-     * @param fieldName   需要的字段名字
-     * @param targetClazz 返回的字段类型
-     * @return 目标类型的值
-     */
-    @Override
-    public <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
-        List<E> rLst = findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
-        if (rLst.isEmpty()) {
-            return null;
-        }
-        return rLst.get(0);
     }
 
     /**

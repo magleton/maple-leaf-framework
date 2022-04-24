@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 
 import javax.validation.ConstraintValidatorContext;
@@ -14,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serializable> {
+public interface GXBaseRepository<T, ID extends Serializable> {
     /**
      * 保存或者更新数据
      *
@@ -35,40 +34,10 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询对象
-     * @param targetClazz     目标对象类型
-     * @param extraData       额外数据
-     * @return 列表
-     */
-    <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData);
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param dbQueryInnerDto 查询对象
-     * @param targetClazz     目标对象类型
-     * @return 列表
-     */
-    <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz);
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     查询列
-     * @param targetClazz 结果数据类型
-     * @return 列表
-     */
-    <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
-
-    /**
-     * 根据条件获取所有数据
-     *
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 根据条件获取所有数据
@@ -77,7 +46,17 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 条件
      * @return 列表
      */
-    List<R> findByCondition(String tableName, List<GXCondition<?>> condition);
+    List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition);
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @param columns   需要查询的列名字
+     * @return 列表
+     */
+    List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 根据条件获取所有数据
@@ -85,7 +64,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 条件
      * @return 列表
      */
-    default List<R> findByCondition(List<GXCondition<?>> condition) {
+    default List<Dict> findByCondition(List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return findByCondition(getTableName(), condition);
     }
@@ -95,7 +74,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      *
      * @return 列表
      */
-    default List<R> findByCondition() {
+    default List<Dict> findByCondition() {
         return findByCondition(getTableName(), Collections.emptyList());
     }
 
@@ -105,7 +84,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param dbQueryParamInnerDto 查询参数
      * @return R 返回数据
      */
-    R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 根据条件获取数据
@@ -114,7 +93,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 查询条件
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, List<GXCondition<?>> condition);
+    Dict findOneByCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件获取数据
@@ -122,7 +101,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param condition 查询条件
      * @return R 返回数据
      */
-    default R findOneByCondition(List<GXCondition<?>> condition) {
+    default Dict findOneByCondition(List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return findOneByCondition(getTableName(), condition);
     }
@@ -135,7 +114,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param columns   需要查询的列
      * @return R 返回数据
      */
-    R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns);
+    Dict findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 通过ID获取一条记录
@@ -145,7 +124,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param columns   需要返回的列
      * @return 返回数据
      */
-    R findOneById(String tableName, ID id, Set<String> columns);
+    Dict findOneById(String tableName, ID id, Set<String> columns);
 
     /**
      * 通过ID获取一条记录
@@ -154,7 +133,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param id        ID值
      * @return 返回数据
      */
-    R findOneById(String tableName, ID id);
+    Dict findOneById(String tableName, ID id);
 
     /**
      * 根据条件获取分页数据
@@ -162,7 +141,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param dbQueryParamInnerDto 条件查询
      * @return 分页数据
      */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 根据条件获取分页数据
@@ -174,7 +153,7 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @param columns   需要的数据列
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns);
+    GXPaginationResDto<Dict> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 根据条件软(逻辑)删除
@@ -224,59 +203,6 @@ public interface GXBaseRepository<T, R extends GXBaseDBResDto, ID extends Serial
      * @return 影响的行数
      */
     Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition);
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code
-     *     findFieldByCondition("s_admin", condition, CollUtil.newHashSet("nickname", "username"), Dict.class);
-     *     }
-     * </pre>
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     字段名字集合
-     * @param targetClazz 值的类型
-     * @return 返回指定的类型的值对象
-     */
-    <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code
-     *     GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
-     *                       .tableName("s_admin")
-     *                       .columns(CollUtil.newHashSet("nickname", "username"))
-     *                       .condition(condition)
-     *                       .build();
-     *     findFieldByCondition(paramInnerDto, Dict.class);
-     *     }
-     * </pre>
-     *
-     * @param dbQueryInnerDto 查询数据
-     * @param targetClazz     值的类型
-     * @param extraData       额外参数
-     * @return 返回指定的类型的值对象
-     */
-    <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData);
-
-    /**
-     * 通过条件获取单字段的数据
-     * <pre>
-     * {@code
-     * HashBasedTable<String, String, Object> condition = HashBasedTable.create();
-     * String username = getSingleField("s_admin" ,condition , "username" , String.class);
-     * }
-     * </pre>
-     *
-     * @param tableName   表名
-     * @param condition   查询条件
-     * @param fieldName   需要的字段名字
-     * @param targetClazz 返回的字段类型
-     * @return 目标类型的值
-     */
-    <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
 
     /**
      * 获取 Primary Key

@@ -1,12 +1,9 @@
 package cn.maple.core.datasource.repository;
 
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -18,7 +15,6 @@ import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -31,9 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> implements GXBaseRepository<T, R, ID> {
+public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
     /**
      * 日志对象
      */
@@ -77,85 +75,12 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
     /**
      * 根据条件获取所有数据
      *
-     * @param dbQueryInnerDto 查询对象
-     * @param extraData       额外数据
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
-        Set<String> columns = dbQueryInnerDto.getColumns();
-        if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
-            throw new GXBusinessException("接收的数据类型不正确");
-        }
-        List<R> rList = findByCondition(dbQueryInnerDto);
-        if (columns.size() == 1 && ClassUtil.isSimpleValueType(targetClazz)) {
-            ArrayList<E> list = new ArrayList<>();
-            rList.forEach(data -> {
-                Dict dict = GXCommonUtils.convertSourceToDict(data);
-                for (String key : columns) {
-                    Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(CharSequenceUtil.toCamelCase(key)));
-                    list.add(Convert.convert(targetClazz, obj));
-                }
-            });
-            return list;
-        }
-        ArrayList<Dict> dictList = new ArrayList<>();
-        rList.forEach(data -> {
-            Dict dict = GXCommonUtils.convertSourceToDict(data);
-            Dict tmpDict = Dict.create();
-            for (String key : columns) {
-                Object obj = Optional.ofNullable(dict.getObj(key)).orElse(dict.getObj(CharSequenceUtil.toCamelCase(key)));
-                tmpDict.set(key, obj);
-            }
-            dictList.add(tmpDict);
-        });
-        String methodName = dbQueryInnerDto.getMethodName();
-        CopyOptions copyOptions = dbQueryInnerDto.getCopyOptions();
-        return GXCommonUtils.convertSourceListToTargetList(dictList, targetClazz, methodName, copyOptions, extraData);
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param dbQueryInnerDto 查询对象
-     * @param targetClazz     目标对象类型
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz) {
-        return findByCondition(dbQueryInnerDto, targetClazz, Dict.create());
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     查询列
-     * @param targetClazz 结果数据类型
-     * @return 列表
-     */
-    @Override
-    public <E> List<E> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        Assert.notNull(condition, "条件不能为null");
-        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
-        return findByCondition(paramInnerDto, targetClazz);
-    }
-
-    /**
-     * 根据条件获取所有数据
-     *
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        List<R> rs = baseDao.findByCondition(dbQueryParamInnerDto);
-        rs.forEach(r -> {
-            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, dbQueryParamInnerDto.getMethodName(), extraData);
-        });
-        return rs;
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        return baseDao.findByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -166,9 +91,22 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(String tableName, List<GXCondition<?>> condition) {
+    public List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(CollUtil.newHashSet("*")).build();
+        return findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param tableName 表名字
+     * @param condition 条件
+     * @param columns   需要查询的列名字
+     * @return 列表
+     */
+    public List<Dict> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).columns(columns).condition(condition).build();
         return findByCondition(queryParamInnerDto);
     }
 
@@ -179,16 +117,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (CharSequenceUtil.isEmpty(dbQueryParamInnerDto.getTableName())) {
             dbQueryParamInnerDto.setTableName(getTableName());
         }
-        R r = baseDao.findOneByCondition(dbQueryParamInnerDto);
-        if (Objects.nonNull(r)) {
-            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, dbQueryParamInnerDto.getMethodName(), extraData);
-        }
-        return r;
+        return baseDao.findOneByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -199,7 +132,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, List<GXCondition<?>> condition) {
+    public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return findOneByCondition(tableName, condition, null);
     }
@@ -213,80 +146,10 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return R 返回数据
      */
     @Override
-    public R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
+    public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
         Assert.notNull(condition, "条件不能为null");
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).columns(columns).build();
         return findOneByCondition(queryParamInnerDto);
-    }
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
-     * </pre>
-     *
-     * @param tableName   表名字
-     * @param condition   查询条件
-     * @param columns     字段名字集合
-     * @param targetClazz 值的类型
-     * @return 返回指定的类型的值对象
-     */
-    @Override
-    @SuppressWarnings("all")
-    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        Assert.notNull(condition, "条件不能为null");
-        GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).build();
-        return findFieldByCondition(paramInnerDto, targetClazz, Dict.create());
-    }
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code
-     *     GXBaseQueryParamInnerDto paramInnerDto = GXBaseQueryParamInnerDto.builder()
-     *                       .tableName("s_admin")
-     *                       .columns(CollUtil.newHashSet("nickname", "username"))
-     *                       .condition(condition)
-     *                       .build();
-     *     findFieldByCondition(paramInnerDto, Dict.class);
-     *     }
-     * </pre>
-     *
-     * @param dbQueryInnerDto 查询数据
-     * @param targetClazz     值的类型
-     * @param extraData       额外参数
-     * @return 返回指定的类型的值对象
-     */
-    @Override
-    @SuppressWarnings("all")
-    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto, Class<E> targetClazz, Dict extraData) {
-        Set<String> columns = dbQueryInnerDto.getColumns();
-        if (columns.size() > 1 && ClassUtil.isSimpleValueType(targetClazz)) {
-            throw new GXBusinessException("接收的数据类型不正确");
-        }
-        List<R> rList = findByCondition(dbQueryInnerDto);
-        if (ClassUtil.isSimpleValueType(targetClazz)) {
-            String[] columnNames = columns.toArray(new String[0]);
-            String columnName = CharSequenceUtil.toCamelCase(columnNames[0]);
-            List<E> retList = new ArrayList<>();
-            rList.forEach(r -> {
-                Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
-                if (Objects.nonNull(dict.get(columnName))) {
-                    retList.add((E) dict.get(columnName));
-                }
-            });
-            return retList;
-        }
-        List<Dict> retListDict = new ArrayList<>();
-        rList.forEach(r -> {
-            Dict dict = GXCommonUtils.convertSourceToTarget(r, Dict.class, null, null);
-            Dict tmpDict = Dict.create();
-            columns.forEach(column -> {
-                tmpDict.set(column, dict.getObj(CharSequenceUtil.toCamelCase(column)));
-            });
-            retListDict.add(tmpDict);
-        });
-        return GXCommonUtils.convertSourceListToTargetList(retListDict, targetClazz, dbQueryInnerDto.getMethodName(), null, extraData);
     }
 
     /**
@@ -297,7 +160,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 返回数据
      */
     @Override
-    public R findOneById(String tableName, ID id) {
+    public Dict findOneById(String tableName, ID id) {
         return findOneById(tableName, id, CollUtil.newHashSet("*"));
     }
 
@@ -310,7 +173,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 返回数据
      */
     @Override
-    public R findOneById(String tableName, ID id, Set<String> columns) {
+    public Dict findOneById(String tableName, ID id, Set<String> columns) {
         GXCondition<?> condition;
         String pkFieldName = getPrimaryKeyName();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, id.toString())) {
@@ -328,16 +191,11 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 分页数据
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        GXPaginationResDto<R> paginate = baseDao.paginate(dbQueryParamInnerDto);
-        paginate.getRecords().forEach(r -> {
-            Object extraData = Optional.ofNullable(dbQueryParamInnerDto.getExtraData()).orElse(Dict.create());
-            GXCommonUtils.reflectCallObjectMethod(r, dbQueryParamInnerDto.getMethodName(), extraData);
-        });
-        return paginate;
+        return baseDao.paginate(dbQueryParamInnerDto);
     }
 
     /**
@@ -351,7 +209,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
+    public GXPaginationResDto<Dict> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
         Assert.notNull(condition, "条件不能为null");
         if (Objects.isNull(columns)) {
             columns = CollUtil.newHashSet("*");
@@ -439,25 +297,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T, R>, T extend
             throw new GXBusinessException("更新数据需要指定条件");
         }
         return baseDao.updateFieldByCondition(tableName, data, condition);
-    }
-
-    /**
-     * 通过条件获取单字段的数据
-     *
-     * @param tableName   表名
-     * @param condition   查询条件
-     * @param fieldName   需要的字段名字
-     * @param targetClazz 返回的字段类型
-     * @return 目标类型的值
-     */
-    @Override
-    public <E> E findOneSingleFieldByCondition(String tableName, List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
-        Assert.notNull(condition, "条件不能为null");
-        List<E> eList = findFieldByCondition(tableName, condition, CollUtil.newHashSet(fieldName), targetClazz);
-        if (eList.isEmpty()) {
-            return null;
-        }
-        return eList.get(0);
     }
 
     /**

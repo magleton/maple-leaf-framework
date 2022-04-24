@@ -2,9 +2,11 @@ package cn.maple.core.datasource.service.impl;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -30,6 +32,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 业务基础Service
@@ -41,7 +44,7 @@ import java.util.*;
  * @param <R>  响应对象类型
  * @param <ID> 实体的主键ID类型
  */
-public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessServiceImpl implements GXMyBatisBaseService<P, M, T, D, R, ID> {
+public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>, M extends GXBaseMapper<T>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessServiceImpl implements GXMyBatisBaseService<P, M, T, D, R, ID> {
     /**
      * 日志对象
      */
@@ -127,7 +130,20 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
-        return repository.paginate(queryParamReqDto);
+        CopyOptions copyOptions = Optional.ofNullable(queryParamReqDto.getCopyOptions()).orElse(CopyOptions.create());
+        copyOptions.setConverter((type, value) -> {
+            if (Dict.class.isAssignableFrom((Class<?>) type) && JSONUtil.isTypeJSON(value.toString())) {
+                return JSONUtil.toBean(value.toString(), Dict.class);
+            }
+            return Convert.convertWithCheck(type, value, null, false);
+        });
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        GXPaginationResDto<Dict> paginate = repository.paginate(queryParamReqDto);
+        List<R> collect = paginate.getRecords().stream().map(dict -> {
+            Object extraData = Optional.ofNullable(queryParamReqDto.getExtraData()).orElse(Dict.create());
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamReqDto.getMethodName(), copyOptions, extraData);
+        }).collect(Collectors.toList());
+        return new GXPaginationResDto<>(collect, paginate.getTotal(), paginate.getPageSize(), paginate.getCurrentPage());
     }
 
     /**
@@ -143,7 +159,14 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
             tableName = repository.getTableName();
             queryParamInnerDto.setTableName(tableName);
         }
-        return repository.findByCondition(queryParamInnerDto);
+        CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        List<Dict> list = repository.findByCondition(queryParamInnerDto);
+        List<R> lst = list.stream().map(dict -> {
+            Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamInnerDto.getMethodName(), copyOptions, extraData);
+        }).collect(Collectors.toList());
+        return lst;
     }
 
     /**
@@ -230,6 +253,21 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件查询列表信息
      *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(String tableName, List<GXCondition<?>> condition) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
+                .tableName(tableName)
+                .columns(CollUtil.newHashSet("*")).condition(condition).build();
+        return findByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
      * @param condition  搜索条件
      * @param orderField 排序字段
      * @param groupField 分组字段
@@ -255,12 +293,20 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件获取一条数据
      *
-     * @param searchReqDto 搜索条件
+     * @param queryParamInnerDto 搜索条件
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto) {
-        return repository.findOneByCondition(searchReqDto);
+    public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        Dict dict = repository.findOneByCondition(queryParamInnerDto);
+        if (Objects.isNull(dict)) {
+            return null;
+        }
+        String methodName = queryParamInnerDto.getMethodName();
+        Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
+        CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName, copyOptions, extraData);
     }
 
     /**
@@ -276,6 +322,19 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
+        return findOneByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(String tableName, List<GXCondition<?>> condition) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(CollUtil.newHashSet("*")).condition(condition).extraData(Dict.create()).build();
         return findOneByCondition(queryParamInnerDto);
     }
 
@@ -343,13 +402,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
      * 获取一条记录的指定字段
      *
      * @param condition   条件
-     * @param fieldName   字段名字
+     * @param column      字段名字
      * @param targetClazz 返回的类型
      * @return 指定的类型
      */
     @Override
-    public <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz) {
-        return repository.findOneSingleFieldByCondition(getTableName(), condition, fieldName, targetClazz);
+    public <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
+        Dict dict = repository.findOneByCondition(getTableName(), condition, CollUtil.newHashSet(column));
+        if (Objects.isNull(dict)) {
+            return null;
+        }
+        return Convert.convert(targetClazz, dict.getObj(column));
     }
 
     /**
@@ -537,7 +600,23 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public <E> List<E> findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        return repository.findFieldByCondition(tableName, conditionList, columns, targetClazz);
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).condition(conditionList).columns(columns).build();
+        return findFieldByCondition(queryParamInnerDto, targetClazz);
+    }
+
+    /**
+     * 查询指定字段的值
+     *
+     * @param queryParamInnerDto 查询参数
+     * @param targetClazz        返回数据的类型
+     * @return 返回指定的类型的值对象
+     */
+    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
+        List<Dict> list = repository.findByCondition(queryParamInnerDto);
+        CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
+        return list.stream().map(dict -> {
+            return GXCommonUtils.convertSourceToTarget(copyOptions, targetClazz, null, copyOptions);
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -554,21 +633,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, R, 
     @Override
     public <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
         return findFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
-    }
-
-    /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
-     * </pre>
-     *
-     * @param condition 查询条件
-     * @param columns   字段名字集合
-     * @return 返回指定的类型的值对象
-     */
-    @Override
-    public List<R> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns) {
-        return findFieldByCondition(repository.getTableName(), condition, columns, GXCommonUtils.getGenericClassType(getClass(), 3));
     }
 
     /**

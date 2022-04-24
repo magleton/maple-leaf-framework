@@ -2,6 +2,7 @@ package cn.maple.core.datasource.dao;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -13,7 +14,6 @@ import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -31,7 +31,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, R extends GXBaseResDto, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, R, ID> {
+public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXMyBatisModel, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, ID> {
     /**
      * 日志对象
      */
@@ -44,8 +44,8 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return GXPagination
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        IPage<R> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         String mapperMethodName = "paginate";
         Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
         if (Objects.isNull(fieldSet)) {
@@ -53,7 +53,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         }
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.nonNull(mapperMethod)) {
-            final List<R> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
@@ -113,7 +113,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
         String pkName = getPrimaryKeyName();
         String pkMethodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         Object o = GXCommonUtils.reflectCallObjectMethod(entity, pkMethodName);
-        Class<ID> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 3);
+        Class<ID> retIDClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
         if (Objects.nonNull(o) && !CollUtil.contains(Arrays.asList("0", "", 0), o)) {
             if (o.getClass().isAssignableFrom(String.class)) {
                 condition.add(new GXConditionStrEQ(getTableName(), pkName, o.toString()));
@@ -138,7 +138,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return 列表
      */
     @Override
-    public R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findOneByCondition(dbQueryParamInnerDto);
     }
 
@@ -149,7 +149,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T, R>, T extends GXMyBatisModel
      * @return 列表
      */
     @Override
-    public List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findByCondition(dbQueryParamInnerDto);
     }
 

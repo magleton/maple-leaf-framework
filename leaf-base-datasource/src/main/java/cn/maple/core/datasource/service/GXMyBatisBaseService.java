@@ -1,8 +1,10 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.constant.GXDataSourceConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -35,7 +37,7 @@ import java.util.function.Function;
  * @author britton chen <britton@126.com>
  */
 @SuppressWarnings("unused")
-public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, ID>, M extends GXBaseMapper<T, R>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, R, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
+public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>, M extends GXBaseMapper<T>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
     /**
      * 检测给定条件的记录是否存在
      *
@@ -106,6 +108,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return List
      */
     List<R> findByCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return List
+     */
+    List<R> findByCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 通过条件查询列表信息
@@ -188,10 +199,10 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
     /**
      * 通过条件获取一条数据
      *
-     * @param searchReqDto 搜索条件
+     * @param queryParamInnerDto 搜索条件
      * @return 一条数据
      */
-    R findOneByCondition(GXBaseQueryParamInnerDto searchReqDto);
+    R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
 
     /**
      * 通过条件获取一条数据
@@ -201,6 +212,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * @return 一条数据
      */
     R findOneByCondition(String tableName, Table<String, String, Object> condition);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param tableName 表名字
+     * @param condition 搜索条件
+     * @return 一条数据
+     */
+    R findOneByCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 通过条件获取一条数据
@@ -232,11 +252,11 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
      * 获取一条记录的指定字段
      *
      * @param condition   条件
-     * @param fieldName   字段名字
+     * @param column      字段名字
      * @param targetClazz 返回的类型
      * @return 指定的类型
      */
-    <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String fieldName, Class<E> targetClazz);
+    <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz);
 
     /**
      * 获取一条记录的指定字段
@@ -374,15 +394,12 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
 
     /**
      * 查询指定字段的值
-     * <pre>
-     *     {@code findFieldByCondition(condition, CollUtil.newHashSet("nickname", "username"));}
-     * </pre>
      *
-     * @param condition 查询条件
-     * @param columns   字段名字集合
+     * @param queryParamInnerDto 查询参数
+     * @param targetClazz        返回数据的类型
      * @return 返回指定的类型的值对象
      */
-    List<R> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns);
+    <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
      * 动态调用指定的指定Class中的方法
@@ -472,5 +489,22 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, R, 
             fields.add(updateField);
         });
         return fields;
+    }
+
+    /**
+     * 从参数中获取 CopyOptions
+     *
+     * @param queryParamInnerDto 查询参数
+     * @return CopyOptions
+     */
+    default CopyOptions getCopyOptions(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        CopyOptions copyOptions = Optional.ofNullable(queryParamInnerDto.getCopyOptions()).orElse(CopyOptions.create());
+        copyOptions.setConverter((type, value) -> {
+            if (Dict.class.isAssignableFrom((Class<?>) type) && JSONUtil.isTypeJSON(value.toString())) {
+                return JSONUtil.toBean(value.toString(), Dict.class);
+            }
+            return Convert.convertWithCheck(type, value, null, false);
+        });
+        return copyOptions;
     }
 }

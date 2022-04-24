@@ -1,16 +1,16 @@
 package cn.maple.core.framework.dao;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID extends Serializable> {
+public interface GXBaseDao<T extends GXBaseData, ID extends Serializable> {
     /**
      * 保存数据
      *
@@ -45,7 +45,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param dbQueryParamInnerDto 查询参数
      * @return 列表
      */
-    R findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 通过条件获取数据列表
@@ -53,7 +53,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
-    List<R> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 根据条件软(逻辑)删除
@@ -79,7 +79,7 @@ public interface GXBaseDao<T extends GXBaseData, R extends GXBaseResDto, ID exte
      * @param dbQueryParamInnerDto 查询条件
      * @return GXPagination
      */
-    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+    GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
      * 获取表名字
