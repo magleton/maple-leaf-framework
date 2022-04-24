@@ -40,6 +40,9 @@ public interface GXBaseBuilder {
         }
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
         handleSQLCondition(sql, condition);
+        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+        }
         return sql.toString();
     }
 
@@ -55,6 +58,9 @@ public interface GXBaseBuilder {
         List<GXCondition<?>> condition = dbQueryParamInnerDto.getCondition();
         final SQL sql = new SQL().SELECT("1").FROM(tableName);
         handleSQLCondition(sql, condition);
+        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
+        }
         sql.LIMIT(1);
         return sql.toString();
     }
@@ -200,6 +206,9 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         handleSQLCondition(sql, condition);
+        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+        }
         return sql.toString();
     }
 
@@ -213,6 +222,9 @@ public interface GXBaseBuilder {
     static String deleteCondition(String tableName, List<GXCondition<?>> condition) {
         SQL sql = new SQL().DELETE_FROM(tableName);
         handleSQLCondition(sql, condition);
+        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+        }
         return sql.toString();
     }
 
