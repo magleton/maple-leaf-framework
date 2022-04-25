@@ -501,10 +501,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = Optional.ofNullable(queryParamInnerDto.getCopyOptions()).orElse(CopyOptions.create());
         copyOptions.setConverter((type, value) -> {
             if (Objects.nonNull(value) && JSONUtil.isTypeJSON(value.toString())) {
-                if (JSONUtil.isTypeJSONArray(value.toString())) {
-                    return JSONUtil.toList(value.toString(), Dict.class);
-                }
-                return JSONUtil.toBean(value.toString(), Dict.class);
+                return JSONUtil.parse(value);
             }
             return Convert.convertWithCheck(type, value, null, false);
         });
