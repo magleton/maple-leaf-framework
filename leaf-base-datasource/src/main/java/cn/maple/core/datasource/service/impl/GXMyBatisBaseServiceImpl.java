@@ -6,7 +6,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.json.JSONUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -130,13 +129,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
-        CopyOptions copyOptions = Optional.ofNullable(queryParamReqDto.getCopyOptions()).orElse(CopyOptions.create());
-        copyOptions.setConverter((type, value) -> {
-            if (Dict.class.isAssignableFrom((Class<?>) type) && JSONUtil.isTypeJSON(value.toString())) {
-                return JSONUtil.toBean(value.toString(), Dict.class);
-            }
-            return Convert.convertWithCheck(type, value, null, false);
-        });
+        CopyOptions copyOptions = getCopyOptions(queryParamReqDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         GXPaginationResDto<Dict> paginate = repository.paginate(queryParamReqDto);
         List<R> collect = paginate.getRecords().stream().map(dict -> {
@@ -259,9 +252,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public List<R> findByCondition(String tableName, List<GXCondition<?>> condition) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder()
-                .tableName(tableName)
-                .columns(CollUtil.newHashSet("*")).condition(condition).build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(CollUtil.newHashSet("*")).condition(condition).build();
         return findByCondition(queryParamInnerDto);
     }
 
