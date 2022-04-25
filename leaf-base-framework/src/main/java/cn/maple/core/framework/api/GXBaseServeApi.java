@@ -5,6 +5,9 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
@@ -239,8 +242,26 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param condition 更新条件
      * @return Integer
      */
+    @Deprecated(since = "4.0.0")
     default Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
-        Object cnt = callMethod("updateFieldByCondition", data, condition);
+        List<GXUpdateField<?>> updateFields = new ArrayList<>();
+        data.forEach((k, v) -> {
+            GXUpdateField<?> updateField = new GXUpdateStrField(getTableName(), k, v.toString());
+            updateFields.add(updateField);
+        });
+        return updateFieldByCondition(updateFields, condition);
+    }
+
+    /**
+     * 通过SQL更新表中的数据
+     *
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
+     * @return Integer
+     */
+    default Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, Table<String, String, Object> condition) {
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(condition);
+        Object cnt = callMethod("updateFieldByCondition", updateFields, conditionList);
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
@@ -353,6 +374,17 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default Class<R> getGenericClassType() {
         return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[1]);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param condition 搜索条件
+     * @param extraData 额外数据
+     * @return List
+     */
+    default List<GXCondition<?>> convertTableConditionToConditionExp(Table<String, String, Object> condition) {
+        return (List<GXCondition<?>>) callMethod("convertTableConditionToConditionExp", getTableName(), condition);
     }
 
     /**

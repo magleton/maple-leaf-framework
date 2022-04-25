@@ -225,13 +225,13 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, I
     /**
      * 通过条件更新数据
      *
-     * @param tableName 需要更新的表名
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param tableName    需要更新的表名
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return 影响的行数
      */
     @Override
-    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         return null;
     }
 

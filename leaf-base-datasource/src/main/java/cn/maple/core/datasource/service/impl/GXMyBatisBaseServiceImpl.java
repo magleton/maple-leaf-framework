@@ -91,28 +91,26 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 通过SQL更新表中的数据
      *
-     * @param tableName 表名
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param tableName    表名字
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return Integer
      */
     @Override
-    public Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition) {
-        List<GXUpdateField<?>> updateFields = convertDictToUpdateField(tableName, data);
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        return repository.updateFieldByCondition(tableName, updateFields, conditionList);
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
+        return repository.updateFieldByCondition(tableName, updateFields, condition);
     }
 
     /**
      * 通过SQL更新表中的数据
      *
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return Integer
      */
     @Override
-    public Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
-        return updateFieldByCondition(repository.getTableName(), data, condition);
+    public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
+        return updateFieldByCondition(repository.getTableName(), updateFields, condition);
     }
 
     /**

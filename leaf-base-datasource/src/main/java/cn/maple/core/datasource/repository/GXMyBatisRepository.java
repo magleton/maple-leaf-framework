@@ -285,18 +285,18 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     /**
      * 通过条件更新数据
      *
-     * @param tableName 需要更新的表名
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param tableName    需要更新的表名
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return 影响的行数
      */
     @Override
-    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> data, List<GXCondition<?>> condition) {
+    public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         if (condition.isEmpty()) {
             throw new GXBusinessException("更新数据需要指定条件");
         }
-        return baseDao.updateFieldByCondition(tableName, data, condition);
+        return baseDao.updateFieldByCondition(tableName, updateFields, condition);
     }
 
     /**

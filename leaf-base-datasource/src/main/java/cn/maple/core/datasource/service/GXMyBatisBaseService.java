@@ -13,7 +13,6 @@ import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -58,21 +57,21 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 通过SQL更新表中的数据
      *
-     * @param tableName 表名字
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param tableName    表名字
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return Integer
      */
-    Integer updateFieldByCondition(String tableName, Dict data, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition);
 
     /**
      * 通过SQL更新表中的数据
      *
-     * @param data      需要更新的数据
-     * @param condition 更新条件
+     * @param updateFields 需要更新的数据
+     * @param condition    更新条件
      * @return Integer
      */
-    Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition);
 
     /**
      * 列表或者搜索(分页)
@@ -473,22 +472,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
             conditions.add(function.apply(data));
         }));
         return conditions;
-    }
-
-    /**
-     * 将Dict类型的数据字段转换为DB类型的数据字段
-     *
-     * @param tableNameAlias 表别名
-     * @param data           原始数据字段
-     * @return DB数据字段
-     */
-    default List<GXUpdateField<?>> convertDictToUpdateField(String tableNameAlias, Dict data) {
-        List<GXUpdateField<?>> fields = new ArrayList<>();
-        data.forEach((k, v) -> {
-            GXUpdateStrField updateField = new GXUpdateStrField(tableNameAlias, k, v.toString());
-            fields.add(updateField);
-        });
-        return fields;
     }
 
     /**
