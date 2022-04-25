@@ -1,9 +1,11 @@
 package cn.maple.core.datasource.repository;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -273,10 +275,10 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
             throw new GXBusinessException(CharSequenceUtil.format("请指定表名 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
         GXCondition<?> condition;
-        if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, value.toString())) {
-            condition = new GXConditionEQ(tableName, fieldName, (Long) value);
+        if (NumberUtil.isNumber(value.toString()) && NumberUtil.isValidNumber(Convert.toNumber(value))) {
+            condition = new GXConditionEQ(tableName, fieldName, Convert.toLong(value));
         } else {
-            condition = new GXConditionStrEQ(tableName, fieldName, value.toString());
+            condition = new GXConditionStrEQ(tableName, fieldName, Convert.toStr(value));
         }
 
         return checkRecordIsExists(tableName, List.of(condition));
