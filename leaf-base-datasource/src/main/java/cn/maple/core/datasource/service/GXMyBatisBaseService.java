@@ -366,7 +366,19 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz 返回的类型
      * @return 指定的类型
      */
-    <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz);
+    default <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).columns(CollUtil.newHashSet(column)).build();
+        return findSingleFieldByCondition(queryParamInnerDto, targetClazz);
+    }
+
+    /**
+     * 获取一条记录的指定单字段
+     *
+     * @param queryParamInnerDto 查询条件
+     * @param targetClazz        返回的类型
+     * @return 指定的类型
+     */
+    <E> E findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
      * 获取指定单字段的列表
@@ -377,9 +389,9 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param groupByField 分组
      * @return 指定的类型
      */
-    default <E> List<E> findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz, Set<String> groupByField) {
+    default <E> List<E> findSingleFieldLstByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz, Set<String> groupByField) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).columns(CollUtil.newHashSet(column)).groupByField(groupByField).build();
-        return findSingleFieldByCondition(queryParamInnerDto, targetClazz);
+        return findSingleFieldLstByCondition(queryParamInnerDto, targetClazz);
     }
 
     /**
@@ -389,7 +401,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz        目标类型
      * @return 指定的类型
      */
-    <E> List<E> findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
+    <E> List<E> findSingleFieldLstByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
      * 动态调用指定的指定Class中的方法

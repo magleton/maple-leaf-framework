@@ -542,18 +542,20 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 获取一条记录的指定单字段
      *
-     * @param condition   条件
-     * @param column      字段名字
-     * @param targetClazz 返回的类型
+     * @param queryParamInnerDto 查询条件
+     * @param targetClazz        返回的类型
      * @return 指定的类型
      */
     @Override
-    public <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
-        Dict dict = repository.findOneByCondition(getTableName(), condition, CollUtil.newHashSet(column));
+    public <E> E findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
+        queryParamInnerDto.setLimit(1);
+        String column = queryParamInnerDto.getColumns().toArray(new String[0])[0];
+        Dict dict = repository.findOneByCondition(queryParamInnerDto);
         if (Objects.isNull(dict)) {
             return null;
         }
-        return Convert.convert(targetClazz, dict.getObj(column));
+        Object o = Optional.ofNullable(dict.get(column)).orElse(dict.get(CharSequenceUtil.toCamelCase(column)));
+        return Convert.convert(targetClazz, o);
     }
 
     /**
@@ -564,7 +566,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 指定的类型
      */
     @Override
-    public <E> List<E> findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
+    public <E> List<E> findSingleFieldLstByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         if (queryParamInnerDto.getColumns().size() != 1) {
             throw new GXBusinessException("字段列长度只能为1!!!");
         }
