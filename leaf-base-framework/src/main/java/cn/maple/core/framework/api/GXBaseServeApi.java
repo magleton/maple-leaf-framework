@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
+import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
@@ -12,6 +13,7 @@ import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -20,6 +22,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * 暴露服务的基础API接口
@@ -76,7 +79,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
         Class<R> retClazz = getGenericClassType();
-        Object rLst = callMethod("findByCondition", condition, extraData);
+        Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
         }
@@ -92,7 +95,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return List
      */
     default <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
-        List<E> rList = (List<E>) callMethod("findFieldByCondition", condition, columns, targetClazz);
+        List<E> rList = (List<E>) callMethod("findFieldByCondition", convertTableConditionToConditionExp(condition), columns, targetClazz);
         return rList;
     }
 
@@ -106,7 +109,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return R
      */
     default <E> E findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz, Dict extraData) {
-        Object data = callMethod("findOneByCondition", condition, columns);
+        Object data = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), columns);
         return GXCommonUtils.convertSourceToTarget(data, targetClazz, null, CopyOptions.create(), extraData);
     }
 
@@ -128,7 +131,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
         Class<R> retClazz = getGenericClassType();
-        Object r = callMethod("findOneByCondition", condition, extraData);
+        Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, retClazz, null, CopyOptions.create());
         }
@@ -144,7 +147,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return ID
      */
     default ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
-        Object id = callMethod("updateOrCreate", reqDto, condition, copyOptions);
+        Object id = callMethod("updateOrCreate", reqDto, convertTableConditionToConditionExp(condition), copyOptions);
         if (Objects.nonNull(id)) {
             return (ID) id;
         }
@@ -214,7 +217,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return 删除行数
      */
     default Integer deleteCondition(Table<String, String, Object> condition) {
-        Object cnt = callMethod("deleteCondition", condition);
+        Object cnt = callMethod("deleteCondition", convertTableConditionToConditionExp(condition));
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
@@ -228,7 +231,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return 删除行数
      */
     default Integer deleteSoftCondition(Table<String, String, Object> condition) {
-        Object cnt = callMethod("deleteSoftCondition", condition);
+        Object cnt = callMethod("deleteSoftCondition", convertTableConditionToConditionExp(condition));
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
         }
@@ -275,7 +278,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return int
      */
     default boolean checkRecordIsExists(Table<String, String, Object> condition) {
-        Object exists = callMethod("checkRecordIsExists", condition);
+        Object exists = callMethod("checkRecordIsExists", convertTableConditionToConditionExp(condition));
         return (Boolean) exists;
     }
 
@@ -384,7 +387,27 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return List
      */
     default List<GXCondition<?>> convertTableConditionToConditionExp(Table<String, String, Object> condition) {
-        return (List<GXCondition<?>>) callMethod("convertTableConditionToConditionExp", getTableName(), condition);
+        return convertTableConditionToConditionExp(getTableName(), condition);
+    }
+
+    /**
+     * 将Table类型的条件转换为条件表达式
+     *
+     * @param tableNameAlias 表别名
+     * @param condition      原始条件
+     * @return 转换后的条件
+     */
+    default List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
+        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
+            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
+            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
+            if (Objects.isNull(function)) {
+                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
+            }
+            conditions.add(function.apply(data));
+        }));
+        return conditions;
     }
 
     /**

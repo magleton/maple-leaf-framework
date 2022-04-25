@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.datasource.constant.GXDataSourceConstant;
+import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -44,7 +44,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 条件
      * @return int
      */
-    boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition);
+    boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 检测给定条件的记录是否存在
@@ -52,7 +52,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 条件
      * @return int
      */
-    boolean checkRecordIsExists(Table<String, String, Object> condition);
+    boolean checkRecordIsExists(List<GXCondition<?>> condition);
 
     /**
      * 通过SQL更新表中的数据
@@ -97,16 +97,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 搜索条件
      * @return List
      */
-    List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition);
-
-    /**
-     * 通过条件查询列表信息
-     *
-     * @param tableName 表名字
-     * @param condition 搜索条件
-     * @return List
-     */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition);
+    List<R> findByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition);
 
     /**
      * 通过条件查询列表信息
@@ -123,7 +114,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 搜索条件
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition);
+    List<R> findByCondition(List<GXCondition<?>> condition);
 
     /**
      * 通过条件查询列表信息
@@ -132,7 +123,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param extraData 额外数据
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Object extraData);
+    List<R> findByCondition(List<GXCondition<?>> condition, Object extraData);
 
     /**
      * 通过条件查询列表信息
@@ -141,7 +132,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param columns   需要查询的列
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Set<String> columns);
+    List<R> findByCondition(List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 通过条件查询列表信息
@@ -153,7 +144,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param groupField 分组字段
      * @return List
      */
-    List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField);
+    List<R> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField);
 
     /**
      * 通过条件查询列表信息
@@ -163,7 +154,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param groupField 分组字段
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Set<String> groupField);
+    List<R> findByCondition(List<GXCondition<?>> condition, Map<String, String> orderField, Set<String> groupField);
 
     /**
      * 通过条件查询列表信息
@@ -172,7 +163,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param orderField 排序字段
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField);
+    List<R> findByCondition(List<GXCondition<?>> condition, Map<String, String> orderField);
 
     /**
      * 通过条件获取一条数据
@@ -183,7 +174,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param extraData 额外参数
      * @return 一条数据
      */
-    R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData);
+    R findOneByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition, Object extraData);
 
     /**
      * 通过条件获取一条数据
@@ -193,7 +184,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 搜索条件
      * @return 一条数据
      */
-    R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition);
+    R findOneByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition);
 
     /**
      * 通过条件获取一条数据
@@ -202,15 +193,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
-
-    /**
-     * 通过条件获取一条数据
-     *
-     * @param tableName 表名字
-     * @param condition 搜索条件
-     * @return 一条数据
-     */
-    R findOneByCondition(String tableName, Table<String, String, Object> condition);
 
     /**
      * 通过条件获取一条数据
@@ -228,7 +210,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param extraData 额外参数
      * @return 一条数据
      */
-    R findOneByCondition(Table<String, String, Object> condition, Object extraData);
+    R findOneByCondition(List<GXCondition<?>> condition, Object extraData);
 
     /**
      * 通过条件获取一条数据
@@ -236,7 +218,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 搜索条件
      * @return 一条数据
      */
-    R findOneByCondition(Table<String, String, Object> condition);
+    R findOneByCondition(List<GXCondition<?>> condition);
 
     /**
      * 通过条件获取一条数据
@@ -245,7 +227,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param columns   字段集合
      * @return 一条数据
      */
-    R findOneByCondition(Table<String, String, Object> condition, Set<String> columns);
+    R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns);
 
     /**
      * 获取一条记录的指定字段
@@ -256,16 +238,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 指定的类型
      */
     <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz);
-
-    /**
-     * 获取一条记录的指定字段
-     *
-     * @param condition   条件
-     * @param fieldName   字段名字
-     * @param targetClazz 返回的类型
-     * @return 指定的类型
-     */
-    <E> E findOneSingleFieldByCondition(Table<String, String, Object> condition, String fieldName, Class<E> targetClazz);
 
     /**
      * 创建或者更新
@@ -282,7 +254,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 更新条件
      * @return ID
      */
-    ID updateOrCreate(T entity, Table<String, String, Object> condition);
+    ID updateOrCreate(T entity, List<GXCondition<?>> condition);
 
     /**
      * 创建或者更新
@@ -292,7 +264,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param copyOptions 复制可选项
      * @return ID
      */
-    <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition, CopyOptions copyOptions);
+    <Q extends GXBaseReqDto> ID updateOrCreate(Q req, List<GXCondition<?>> condition, CopyOptions copyOptions);
 
     /**
      * 创建或者更新
@@ -319,7 +291,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param extraData     额外数据
      * @return 新数据ID
      */
-    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Dict extraData);
+    ID copyOneData(List<GXCondition<?>> copyCondition, Dict replaceData, Dict extraData);
 
     /**
      * 复制一条数据
@@ -328,7 +300,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param replaceData   需要替换的数据
      * @return 新数据ID
      */
-    ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData);
+    ID copyOneData(List<GXCondition<?>> copyCondition, Dict replaceData);
 
     /**
      * 根据条件软(逻辑)删除
@@ -337,7 +309,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件软(逻辑)删除
@@ -345,7 +317,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteSoftCondition(Table<String, String, Object> condition);
+    Integer deleteSoftCondition(List<GXCondition<?>> condition);
 
     /**
      * 根据条件删除
@@ -354,7 +326,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteCondition(String tableName, Table<String, String, Object> condition);
+    Integer deleteCondition(String tableName, List<GXCondition<?>> condition);
 
     /**
      * 根据条件删除
@@ -362,7 +334,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param condition 删除条件
      * @return 影响行数
      */
-    Integer deleteCondition(Table<String, String, Object> condition);
+    Integer deleteCondition(List<GXCondition<?>> condition);
 
     /**
      * 查询指定字段的值
@@ -376,7 +348,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> List<E> findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -389,7 +361,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -453,26 +425,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return String
      */
     String getTableName();
-
-    /**
-     * 将Table类型的条件转换为条件表达式
-     *
-     * @param tableNameAlias 表别名
-     * @param condition      原始条件
-     * @return 转换后的条件
-     */
-    default List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
-        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
-        condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
-            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
-            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
-            if (Objects.isNull(function)) {
-                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
-            }
-            conditions.add(function.apply(data));
-        }));
-        return conditions;
-    }
 
     /**
      * 从参数中获取 CopyOptions

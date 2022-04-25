@@ -72,9 +72,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return int
      */
     @Override
-    public boolean checkRecordIsExists(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        return repository.checkRecordIsExists(tableName, conditionList);
+    public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
+        return repository.checkRecordIsExists(tableName, condition);
     }
 
     /**
@@ -84,7 +83,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return int
      */
     @Override
-    public boolean checkRecordIsExists(Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(List<GXCondition<?>> condition) {
         return checkRecordIsExists(repository.getTableName(), condition);
     }
 
@@ -130,11 +129,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = getCopyOptions(queryParamReqDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         GXPaginationResDto<Dict> paginate = repository.paginate(queryParamReqDto);
-        List<R> collect = paginate.getRecords().stream().map(dict -> {
+        List<R> lst = paginate.getRecords().stream().map(dict -> {
             Object extraData = Optional.ofNullable(queryParamReqDto.getExtraData()).orElse(Dict.create());
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamReqDto.getMethodName(), copyOptions, extraData);
         }).collect(Collectors.toList());
-        return new GXPaginationResDto<>(collect, paginate.getTotal(), paginate.getPageSize(), paginate.getCurrentPage());
+        return new GXPaginationResDto<>(lst, paginate.getTotal(), paginate.getPageSize(), paginate.getCurrentPage());
     }
 
     /**
@@ -168,30 +167,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition) {
+    public List<R> findByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition) {
         return findByCondition(tableName, condition, columns, null, null);
     }
 
     /**
      * 通过条件查询列表信息
      *
-     * @param tableName 表名字
      * @param condition 搜索条件
      * @return List
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition) {
-        return findByCondition(tableName, CollUtil.newHashSet("*"), condition);
-    }
-
-    /**
-     * 通过条件查询列表信息
-     *
-     * @param condition 搜索条件
-     * @return List
-     */
-    @Override
-    public List<R> findByCondition(Table<String, String, Object> condition) {
+    public List<R> findByCondition(List<GXCondition<?>> condition) {
         return findByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition);
     }
 
@@ -203,11 +190,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
-        String tableName = repository.getTableName();
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
+    public List<R> findByCondition(List<GXCondition<?>> condition, Object extraData) {
         HashSet<String> columns = CollUtil.newHashSet("*");
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(repository.getTableName()).columns(columns).condition(condition).extraData(extraData).build();
         return findByCondition(queryParamInnerDto);
     }
 
@@ -219,7 +204,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Set<String> columns) {
+    public List<R> findByCondition(List<GXCondition<?>> condition, Set<String> columns) {
         return findByCondition(repository.getTableName(), columns, condition);
     }
 
@@ -234,9 +219,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).orderByField(orderField).groupByField(groupField).build();
+    public List<R> findByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).orderByField(orderField).groupByField(groupField).build();
         return findByCondition(queryParamInnerDto);
     }
 
@@ -262,7 +246,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Set<String> groupField) {
+    public List<R> findByCondition(List<GXCondition<?>> condition, Map<String, String> orderField, Set<String> groupField) {
         return findByCondition(repository.getTableName(), condition, CollUtil.newHashSet("*"), orderField, groupField);
     }
 
@@ -274,7 +258,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField) {
+    public List<R> findByCondition(List<GXCondition<?>> condition, Map<String, String> orderField) {
         return findByCondition(condition, orderField, null);
     }
 
@@ -307,9 +291,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition, Object extraData) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(conditionList).extraData(extraData).build();
+    public R findOneByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition, Object extraData) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).extraData(extraData).build();
         return findOneByCondition(queryParamInnerDto);
     }
 
@@ -335,7 +318,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(String tableName, Set<String> columns, Table<String, String, Object> condition) {
+    public R findOneByCondition(String tableName, Set<String> columns, List<GXCondition<?>> condition) {
         return findOneByCondition(tableName, columns, condition, Dict.create());
     }
 
@@ -347,30 +330,18 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
+    public R findOneByCondition(List<GXCondition<?>> condition, Object extraData) {
         return findOneByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition, extraData);
     }
 
     /**
      * 通过条件获取一条数据
      *
-     * @param tableName 表名字
      * @param condition 搜索条件
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(String tableName, Table<String, String, Object> condition) {
-        return findOneByCondition(tableName, CollUtil.newHashSet("*"), condition);
-    }
-
-    /**
-     * 通过条件获取一条数据
-     *
-     * @param condition 搜索条件
-     * @return 一条数据
-     */
-    @Override
-    public R findOneByCondition(Table<String, String, Object> condition) {
+    public R findOneByCondition(List<GXCondition<?>> condition) {
         return findOneByCondition(repository.getTableName(), CollUtil.newHashSet("*"), condition);
     }
 
@@ -382,7 +353,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     @Override
-    public R findOneByCondition(Table<String, String, Object> condition, Set<String> columns) {
+    public R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns) {
         return findOneByCondition(repository.getTableName(), columns, condition);
     }
 
@@ -404,20 +375,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
-     * 获取一条记录的指定字段
-     *
-     * @param condition   条件
-     * @param fieldName   字段名字
-     * @param targetClazz 返回的类型
-     * @return 指定的类型
-     */
-    @Override
-    public <E> E findOneSingleFieldByCondition(Table<String, String, Object> condition, String fieldName, Class<E> targetClazz) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
-        return findOneSingleFieldByCondition(conditionList, fieldName, targetClazz);
-    }
-
-    /**
      * 创建或者更新
      *
      * @param entity 数据实体
@@ -426,7 +383,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
-        return updateOrCreate(entity, HashBasedTable.create());
+        return updateOrCreate(entity, Collections.emptyList());
     }
 
     /**
@@ -438,9 +395,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ID updateOrCreate(T entity, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
-        return repository.updateOrCreate(entity, conditionList);
+    public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
+        return repository.updateOrCreate(entity, condition);
     }
 
     /**
@@ -453,7 +409,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, Table<String, String, Object> condition, CopyOptions copyOptions) {
+    public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, List<GXCondition<?>> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
         T entity = convertSourceToTarget(req, targetClazz, "customizeProcess", copyOptions);
         return updateOrCreate(entity, condition);
@@ -469,7 +425,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, CopyOptions copyOptions) {
-        return updateOrCreate(req, HashBasedTable.create(), copyOptions);
+        return updateOrCreate(req, Collections.emptyList(), copyOptions);
     }
 
     /**
@@ -487,15 +443,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 复制一条数据
      *
-     * @param copyCondition 复制的条件
+     * @param conditions 复制的条件
      * @param replaceData   需要替换的数据
      * @param extraData     额外数据
      * @return 新数据ID
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData, Dict extraData) {
-        R oneData = findOneByCondition(repository.getTableName(), copyCondition);
+    public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData, Dict extraData) {
+        R oneData = findOneByCondition(repository.getTableName(), conditions);
         if (Objects.isNull(oneData)) {
             throw new GXDBNotExistsException("待拷贝的数据不存在!!");
         }
@@ -515,14 +471,14 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 复制一条数据
      *
-     * @param copyCondition 复制的条件
+     * @param conditions 复制的条件
      * @param replaceData   需要替换的数据
      * @return 新数据ID
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ID copyOneData(Table<String, String, Object> copyCondition, Dict replaceData) {
-        return copyOneData(copyCondition, replaceData, Dict.create());
+    public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData) {
+        return copyOneData(conditions, replaceData, Dict.create());
     }
 
     /**
@@ -533,9 +489,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        return repository.deleteSoftCondition(tableName, conditionList);
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+        return repository.deleteSoftCondition(tableName, condition);
     }
 
     /**
@@ -545,7 +500,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(List<GXCondition<?>> condition) {
         return deleteSoftCondition(repository.getTableName(), condition);
     }
 
@@ -557,9 +512,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    public Integer deleteCondition(String tableName, Table<String, String, Object> condition) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        return repository.deleteCondition(tableName, conditionList);
+    public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
+        return repository.deleteCondition(tableName, condition);
     }
 
     /**
@@ -569,7 +523,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    public Integer deleteCondition(Table<String, String, Object> condition) {
+    public Integer deleteCondition(List<GXCondition<?>> condition) {
         return deleteCondition(repository.getTableName(), condition);
     }
 
@@ -586,9 +540,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> List<E> findFieldByCondition(String tableName, Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
-        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(tableName, condition);
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).condition(conditionList).columns(columns).build();
+    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).condition(condition).columns(columns).build();
         return findFieldByCondition(queryParamInnerDto, targetClazz);
     }
 
@@ -602,9 +555,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        return list.stream().map(dict -> {
-            return GXCommonUtils.convertSourceToTarget(copyOptions, targetClazz, null, copyOptions);
-        }).collect(Collectors.toList());
+        return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(copyOptions, targetClazz, null, copyOptions)).collect(Collectors.toList());
     }
 
     /**
@@ -619,7 +570,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         return findFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
     }
 

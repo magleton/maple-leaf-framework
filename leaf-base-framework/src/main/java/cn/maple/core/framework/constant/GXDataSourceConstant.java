@@ -1,7 +1,6 @@
-package cn.maple.core.datasource.constant;
+package cn.maple.core.framework.constant;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.condition.*;
 
 import java.util.HashMap;
