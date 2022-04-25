@@ -573,7 +573,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         ArrayList<E> lst = new ArrayList<>();
         dictList.forEach(dict -> {
             Object o = Optional.ofNullable(dict.get(column)).orElse(dict.get(CharSequenceUtil.toCamelCase(column)));
-            lst.add(Convert.convert(targetClazz, o));
+            if (Objects.nonNull(o)) {
+                lst.add(Convert.convert(targetClazz, o));
+            }
         });
         return lst;
     }
