@@ -253,7 +253,6 @@ public class GXCommonUtils {
      * @param copyOptions 需要拷贝的选项
      * @return List
      */
-    @SuppressWarnings("all")
     public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions) {
         return convertSourceListToTargetList(collection, tClass, methodName, copyOptions, Dict.create());
     }
@@ -268,13 +267,11 @@ public class GXCommonUtils {
      * @param extraData   额外参数
      * @return List
      */
-    @SuppressWarnings("all")
     public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass, String methodName, CopyOptions copyOptions, Object extraData) {
         if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }
-        List<R> rList = collection.stream().map((source) -> convertSourceToTarget(source, tClass, methodName, copyOptions, extraData)).collect(Collectors.toList());
-        return rList;
+        return collection.stream().map(source -> convertSourceToTarget(source, tClass, methodName, copyOptions, extraData)).collect(Collectors.toList());
     }
 
     /**
@@ -288,9 +285,9 @@ public class GXCommonUtils {
         if (Objects.isNull(source)) {
             return null;
         }
-        M bean = GXSpringContextUtils.getBean(mapStructClass);
-        assert bean != null;
-        return bean.sourceToTarget(source);
+        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
+        assert mapStruct != null;
+        return mapStruct.sourceToTarget(source);
     }
 
     /**
@@ -300,14 +297,13 @@ public class GXCommonUtils {
      * @param mapStructClass 转换器
      * @return 目标对象列表
      */
-    @SuppressWarnings("all")
     public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<T> convertSourceListToTargetList(List<S> sourceList, Class<M> mapStructClass) {
         if (CollUtil.isEmpty(sourceList)) {
             return Collections.emptyList();
         }
-        M bean = GXSpringContextUtils.getBean(mapStructClass);
-        List<T> ts = bean.sourceToTarget(sourceList);
-        return ts;
+        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
+        assert mapStruct != null;
+        return mapStruct.sourceToTarget(sourceList);
     }
 
     /**
@@ -321,9 +317,9 @@ public class GXCommonUtils {
         if (Objects.isNull(target)) {
             return null;
         }
-        M bean = GXSpringContextUtils.getBean(mapStructClass);
-        assert bean != null;
-        return bean.targetToSource(target);
+        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
+        assert mapStruct != null;
+        return mapStruct.targetToSource(target);
     }
 
     /**
@@ -333,14 +329,13 @@ public class GXCommonUtils {
      * @param mapStructClass 转换器
      * @return 源对象列表
      */
-    @SuppressWarnings("all")
     public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<S> convertTargetListToSourceList(List<T> targetList, Class<M> mapStructClass) {
         if (CollUtil.isEmpty(targetList)) {
             return Collections.emptyList();
         }
-        M bean = GXSpringContextUtils.getBean(mapStructClass);
-        List<S> sList = bean.targetToSource(targetList);
-        return sList;
+        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
+        assert mapStruct != null;
+        return mapStruct.targetToSource(targetList);
     }
 
     /**
@@ -540,19 +535,6 @@ public class GXCommonUtils {
         }
         return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
         }, convertStrToMap(str));
-    }
-
-    /**
-     * 获取当前登录用户的ID
-     * {@code
-     * 0  : 表示普通用户
-     * >0 : 表示管理员
-     * }
-     *
-     * @return Long
-     */
-    public static long getCurrentSessionUserId() {
-        return 0L;
     }
 
     /**

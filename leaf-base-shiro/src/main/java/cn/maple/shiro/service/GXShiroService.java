@@ -2,7 +2,6 @@ package cn.maple.shiro.service;
 
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.code.GXBusinessStatusCode;
-import cn.maple.core.framework.util.GXCommonUtils;
 import org.apache.shiro.authc.LockedAccountException;
 
 import java.util.Objects;
@@ -51,7 +50,7 @@ public interface GXShiroService {
      * @return Long
      */
     default Long currentSessionUserId() {
-        return GXCommonUtils.getCurrentSessionUserId();
+        return 0L;
     }
 
     /**
