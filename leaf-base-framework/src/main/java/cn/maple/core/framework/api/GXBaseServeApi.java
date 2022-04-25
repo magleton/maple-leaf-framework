@@ -64,7 +64,8 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     default List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField) {
         Class<R> retClazz = getGenericClassType();
-        Object rLst = callMethod("findByCondition", condition, orderField);
+        List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
+        Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
         }
