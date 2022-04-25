@@ -358,23 +358,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
-     * 获取一条记录的指定字段
-     *
-     * @param condition   条件
-     * @param column      字段名字
-     * @param targetClazz 返回的类型
-     * @return 指定的类型
-     */
-    @Override
-    public <E> E findOneSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
-        Dict dict = repository.findOneByCondition(getTableName(), condition, CollUtil.newHashSet(column));
-        if (Objects.isNull(dict)) {
-            return null;
-        }
-        return Convert.convert(targetClazz, dict.getObj(column));
-    }
-
-    /**
      * 创建或者更新
      *
      * @param entity 数据实体
