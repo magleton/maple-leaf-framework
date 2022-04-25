@@ -1,6 +1,7 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
@@ -366,6 +367,29 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 指定的类型
      */
     <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz);
+
+    /**
+     * 获取指定单字段的列表
+     *
+     * @param condition    条件
+     * @param column       字段名字
+     * @param targetClazz  返回的类型
+     * @param groupByField 分组
+     * @return 指定的类型
+     */
+    default <E> List<E> findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz, Set<String> groupByField) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).columns(CollUtil.newHashSet(column)).groupByField(groupByField).build();
+        return findSingleFieldByCondition(queryParamInnerDto, targetClazz);
+    }
+
+    /**
+     * 获取指定单字段的列表
+     *
+     * @param queryParamInnerDto 条件
+     * @param targetClazz        目标类型
+     * @return 指定的类型
+     */
+    <E> List<E> findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
      * 动态调用指定的指定Class中的方法

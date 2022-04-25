@@ -536,7 +536,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(copyOptions, targetClazz, null, copyOptions)).collect(Collectors.toList());
+        return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(dict, targetClazz, null, copyOptions)).collect(Collectors.toList());
     }
 
     /**
@@ -554,6 +554,28 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             return null;
         }
         return Convert.convert(targetClazz, dict.getObj(column));
+    }
+
+    /**
+     * 获取指定单字段的列表
+     *
+     * @param queryParamInnerDto 条件
+     * @param targetClazz        目标类型
+     * @return 指定的类型
+     */
+    @Override
+    public <E> List<E> findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
+        if (queryParamInnerDto.getColumns().size() != 1) {
+            throw new GXBusinessException("字段列长度只能为1!!!");
+        }
+        String column = queryParamInnerDto.getColumns().toArray(new String[0])[0];
+        List<Dict> dictList = repository.findByCondition(queryParamInnerDto);
+        ArrayList<E> lst = new ArrayList<>();
+        dictList.forEach(dict -> {
+            Object o = Optional.ofNullable(dict.get(column)).orElse(dict.get(CharSequenceUtil.toCamelCase(column)));
+            lst.add(Convert.convert(targetClazz, o));
+        });
+        return lst;
     }
 
     /**
