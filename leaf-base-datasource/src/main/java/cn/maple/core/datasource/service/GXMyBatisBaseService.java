@@ -358,6 +358,16 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
+     * 获取一条记录的指定单字段
+     *
+     * @param condition   条件
+     * @param column      字段名字
+     * @param targetClazz 返回的类型
+     * @return 指定的类型
+     */
+    <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz);
+
+    /**
      * 动态调用指定的指定Class中的方法
      *
      * @param mapperMethodMethod 需要调用的方法

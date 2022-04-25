@@ -21,8 +21,6 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -426,9 +424,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 复制一条数据
      *
-     * @param conditions 复制的条件
-     * @param replaceData   需要替换的数据
-     * @param extraData     额外数据
+     * @param conditions  复制的条件
+     * @param replaceData 需要替换的数据
+     * @param extraData   额外数据
      * @return 新数据ID
      */
     @Override
@@ -454,8 +452,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 复制一条数据
      *
-     * @param conditions 复制的条件
-     * @param replaceData   需要替换的数据
+     * @param conditions  复制的条件
+     * @param replaceData 需要替换的数据
      * @return 新数据ID
      */
     @Override
@@ -539,6 +537,23 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(copyOptions, targetClazz, null, copyOptions)).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取一条记录的指定单字段
+     *
+     * @param condition   条件
+     * @param column      字段名字
+     * @param targetClazz 返回的类型
+     * @return 指定的类型
+     */
+    @Override
+    public <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
+        Dict dict = repository.findOneByCondition(getTableName(), condition, CollUtil.newHashSet(column));
+        if (Objects.isNull(dict)) {
+            return null;
+        }
+        return Convert.convert(targetClazz, dict.getObj(column));
     }
 
     /**
