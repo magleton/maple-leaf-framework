@@ -153,11 +153,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
-        List<R> lst = list.stream().map(dict -> {
+        return list.stream().map(dict -> {
             Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamInnerDto.getMethodName(), copyOptions, extraData);
         }).collect(Collectors.toList());
-        return lst;
     }
 
     /**
