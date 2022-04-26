@@ -9,7 +9,7 @@ public class GXConditionFuncConcat extends GXConditionFunc<String> {
 
     @Override
     public String getOp() {
-        return "like";
+        return op;
     }
 
     @Override
