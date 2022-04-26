@@ -5,9 +5,9 @@ import cn.hutool.core.text.CharSequenceUtil;
 import java.io.Serializable;
 
 public abstract class GXCondition<T> implements Serializable {
-    private final String tableNameAlias;
+    protected final String tableNameAlias;
 
-    private final String fieldName;
+    protected final String fieldName;
 
     @SuppressWarnings("all")
     protected Object value;
