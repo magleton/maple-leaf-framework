@@ -144,10 +144,14 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
+        String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
+        if (CharSequenceUtil.isEmpty(methodName[0])) {
+            methodName[0] = "customizeProcess";
+        }
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         Function<Dict, R> rowMapper = dict -> {
             Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
-            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamInnerDto.getMethodName(), copyOptions, extraData);
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
         };
         return findByCondition(queryParamInnerDto, rowMapper);
     }
@@ -282,12 +286,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        String methodName = queryParamInnerDto.getMethodName();
+        String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
+        if (CharSequenceUtil.isEmpty(methodName[0])) {
+            methodName[0] = "customizeProcess";
+        }
         Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         Function<Dict, R> rowMapper = dict -> {
-            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName, copyOptions, extraData);
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
         };
         return findOneByCondition(queryParamInnerDto, rowMapper);
     }
