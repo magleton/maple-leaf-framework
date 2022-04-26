@@ -29,6 +29,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -142,18 +143,31 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        Function<Dict, R> rowMapper = dict -> {
+            Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamInnerDto.getMethodName(), copyOptions, extraData);
+        };
+        return findByCondition(queryParamInnerDto, rowMapper);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param queryParamInnerDto 查询条件
+     * @param rowMapper          映射函数
+     * @return List
+     */
+    @Override
+    public <E> List<E> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Function<Dict, E> rowMapper) {
         String tableName = queryParamInnerDto.getTableName();
         if (CharSequenceUtil.isBlank(tableName)) {
             tableName = repository.getTableName();
             queryParamInnerDto.setTableName(tableName);
         }
-        CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
-        return list.stream().map(dict -> {
-            Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
-            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, queryParamInnerDto.getMethodName(), copyOptions, extraData);
-        }).collect(Collectors.toList());
+        return list.stream().map(rowMapper).collect(Collectors.toList());
     }
 
     /**
@@ -268,15 +282,30 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        Dict dict = repository.findOneByCondition(queryParamInnerDto);
-        if (Objects.isNull(dict)) {
-            return null;
-        }
         String methodName = queryParamInnerDto.getMethodName();
         Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
-        return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName, copyOptions, extraData);
+        Function<Dict, R> rowMapper = dict -> {
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName, copyOptions, extraData);
+        };
+        return findOneByCondition(queryParamInnerDto, rowMapper);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param queryParamInnerDto 搜索条件
+     * @param rowMapper          映射函数
+     * @return 一条数据
+     */
+    @Override
+    public <E> E findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Function<Dict, E> rowMapper) {
+        Dict dict = repository.findOneByCondition(queryParamInnerDto);
+        if (Objects.isNull(dict)) {
+            return null;
+        }
+        return rowMapper.apply(dict);
     }
 
     /**

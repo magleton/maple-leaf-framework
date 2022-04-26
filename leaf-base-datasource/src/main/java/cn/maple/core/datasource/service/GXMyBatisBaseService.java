@@ -19,6 +19,7 @@ import cn.maple.core.framework.service.GXBusinessService;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * 业务DB基础Service
@@ -84,6 +85,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param queryParamInnerDto 查询条件
+     * @param rowMapper          映射函数
+     * @return List
+     */
+    <E> List<E> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Function<Dict, E> rowMapper);
 
     /**
      * 通过条件查询列表信息
@@ -189,6 +199,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param queryParamInnerDto 搜索条件
+     * @param rowMapper          映射函数
+     * @return 一条数据
+     */
+    <E> E findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Function<Dict, E> rowMapper);
 
     /**
      * 通过条件获取一条数据
