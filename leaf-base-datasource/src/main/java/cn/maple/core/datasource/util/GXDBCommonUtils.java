@@ -9,6 +9,7 @@ import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -192,19 +193,26 @@ public class GXDBCommonUtils {
                 .set(">", "gt")
                 .set("<=", "le")
                 .set("<", "lt");
+
         condition.forEach(c -> {
-            String column = c.getFieldExpression();
-            Object value = c.getFieldValue();
-            if (String.class.isAssignableFrom(value.getClass())) {
-                value = CharSequenceUtil.replace(value.toString(), "'", "");
-            }
-            String op = c.getOp();
-            column = CharSequenceUtil.toUnderlineCase(column);
-            String methodName = methodNameDict.getStr(op);
-            if (Objects.nonNull(methodName)) {
-                GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
+            if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
+                String column = c.getFieldExpression();
+                Object value = c.getFieldValue();
+
+                if (String.class.isAssignableFrom(value.getClass())) {
+                    value = CharSequenceUtil.replace(value.toString(), "'", "");
+                }
+
+                String op = c.getOp();
+                column = CharSequenceUtil.toUnderlineCase(column);
+                String methodName = methodNameDict.getStr(op);
+
+                if (Objects.nonNull(methodName)) {
+                    GXCommonUtils.reflectCallObjectMethod(updateWrapper, methodName, true, column, value);
+                }
             }
         });
+
         return updateWrapper;
     }
 
