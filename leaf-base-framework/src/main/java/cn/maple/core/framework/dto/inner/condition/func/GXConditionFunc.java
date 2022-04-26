@@ -24,7 +24,7 @@ public abstract class GXConditionFunc<T> extends GXCondition<T> {
 
     @Override
     public String getFieldExpression() {
-        return Arrays.stream(expression).map(o -> CharSequenceUtil.format("{}.{}", tableNameAlias, o)).collect(Collectors.joining(",'-',"));
+        return Arrays.stream(expression).map(o -> CharSequenceUtil.format("{}.{}", tableNameAlias, o)).collect(Collectors.joining(","));
     }
 
     protected abstract String getFunctionName();
