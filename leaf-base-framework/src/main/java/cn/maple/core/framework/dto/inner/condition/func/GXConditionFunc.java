@@ -12,8 +12,8 @@ public abstract class GXConditionFunc<T> extends GXCondition<T> {
     @SuppressWarnings("all")
     protected Object[] expression;
 
-    protected GXConditionFunc(String tableNameAlias, String fieldName, Object value) {
-        super(tableNameAlias, fieldName, value);
+    protected GXConditionFunc(String tableNameAlias, String fieldExpression, Object value) {
+        super(tableNameAlias, fieldExpression, value);
     }
 
     protected GXConditionFunc(String tableNameAlias, String op, Object value, Object... expression) {
@@ -23,7 +23,7 @@ public abstract class GXConditionFunc<T> extends GXCondition<T> {
     }
 
     @Override
-    public String getFieldName() {
+    public String getFieldExpression() {
         return Arrays.stream(expression).map(o -> CharSequenceUtil.format("{}.{}", tableNameAlias, o)).collect(Collectors.joining(",'-',"));
     }
 
@@ -31,6 +31,6 @@ public abstract class GXConditionFunc<T> extends GXCondition<T> {
 
     @Override
     public String whereString() {
-        return CharSequenceUtil.format("{}({}) {} {}", getFunctionName(), getFieldName(), getOp(), getFieldValue());
+        return CharSequenceUtil.format("{}({}) {} {}", getFunctionName(), getFieldExpression(), getOp(), getFieldValue());
     }
 }

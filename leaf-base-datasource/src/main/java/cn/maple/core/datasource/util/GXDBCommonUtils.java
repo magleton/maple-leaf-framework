@@ -193,7 +193,7 @@ public class GXDBCommonUtils {
                 .set("<=", "le")
                 .set("<", "lt");
         condition.forEach(c -> {
-            String column = c.getFieldName();
+            String column = c.getFieldExpression();
             Object value = c.getFieldValue();
             if (String.class.isAssignableFrom(value.getClass())) {
                 value = CharSequenceUtil.replace(value.toString(), "'", "");

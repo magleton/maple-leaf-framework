@@ -7,14 +7,23 @@ import java.io.Serializable;
 public abstract class GXCondition<T> implements Serializable {
     protected final String tableNameAlias;
 
-    protected final String fieldName;
+    /**
+     * 可以是一个具体的字段名字  goods_name
+     * <p>
+     * 也可以是一个函数表达式  concat(g_goods.goods_name , '-' , g_goods.goods_sn)
+     */
+    protected final String fieldExpression;
 
     @SuppressWarnings("all")
     protected Object value;
 
-    protected GXCondition(String tableNameAlias, String fieldName, Object value) {
+    protected GXCondition(String fieldExpression, Object value) {
+        this("", fieldExpression, value);
+    }
+
+    protected GXCondition(String tableNameAlias, String fieldExpression, Object value) {
         this.tableNameAlias = tableNameAlias;
-        this.fieldName = fieldName;
+        this.fieldExpression = fieldExpression;
         this.value = value;
     }
 
@@ -22,13 +31,13 @@ public abstract class GXCondition<T> implements Serializable {
 
     public String whereString() {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
-            return CharSequenceUtil.format("{} {} {}", fieldName, getOp(), getFieldValue());
+            return CharSequenceUtil.format("{} {} {}", fieldExpression, getOp(), getFieldValue());
         }
-        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldName), getOp(), getFieldValue());
+        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldExpression), getOp(), getFieldValue());
     }
 
-    public String getFieldName() {
-        return CharSequenceUtil.toUnderlineCase(fieldName);
+    public String getFieldExpression() {
+        return CharSequenceUtil.toUnderlineCase(fieldExpression);
     }
 
     public abstract T getFieldValue();
