@@ -146,7 +146,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
-            methodName[0] = "customizeProcess";
+            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         Function<Dict, R> rowMapper = dict -> {
@@ -288,7 +288,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
-            methodName[0] = "customizeProcess";
+            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
@@ -572,7 +572,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(dict, targetClazz, null, copyOptions)).collect(Collectors.toList());
+        String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
+        if (CharSequenceUtil.isEmpty(methodName[0])) {
+            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+        }
+        return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(dict, targetClazz, methodName[0], copyOptions)).collect(Collectors.toList());
     }
 
     /**
