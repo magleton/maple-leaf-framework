@@ -37,7 +37,7 @@ public class GXRediSearchRepository {
      *
      * @param dataIndexesParamInnerDto 索引数据
      * @param targetClass              目标类型
-     * @param extraData             额外数据
+     * @param extraData                额外数据
      * @return 列表
      */
     public <R> GXPaginationResDto<R> search(GXRediSearchQueryParamReqDto dataIndexesParamInnerDto, Class<R> targetClass, Dict extraData) {
@@ -52,7 +52,8 @@ public class GXRediSearchRepository {
 
         Integer currentPage = dataIndexesParamInnerDto.getCurrentPage();
         Integer pageSize = dataIndexesParamInnerDto.getPageSize();
-        searchOptions.page(new Page(currentPage, pageSize));
+        currentPage = Math.max((currentPage - 1), 0);
+        searchOptions.page(new Page(currentPage * pageSize, pageSize));
 
         SearchResult search = rediSearch.search(query, searchOptions);
         List<Document> documents = search.getDocuments();
