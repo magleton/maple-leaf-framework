@@ -391,7 +391,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 指定的类型
      */
     default <E> E findSingleFieldByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).columns(CollUtil.newHashSet(column)).build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(getTableName()).condition(condition).columns(CollUtil.newHashSet(column)).build();
         return findSingleFieldByCondition(queryParamInnerDto, targetClazz);
     }
 
@@ -414,7 +414,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 指定的类型
      */
     default <E> List<E> findSingleFieldLstByCondition(List<GXCondition<?>> condition, String column, Class<E> targetClazz, Set<String> groupByField) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).columns(CollUtil.newHashSet(column)).groupByField(groupByField).build();
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(getTableName()).condition(condition).columns(CollUtil.newHashSet(column)).groupByField(groupByField).build();
         return findSingleFieldLstByCondition(queryParamInnerDto, targetClazz);
     }
 
