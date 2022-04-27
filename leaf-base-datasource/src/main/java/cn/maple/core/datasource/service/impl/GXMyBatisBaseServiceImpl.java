@@ -550,6 +550,22 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
      * </pre>
      *
+     * @param condition   查询条件
+     * @param columns     字段名字集合
+     * @param targetClazz 值的类型
+     * @return 返回指定的类型的值对象
+     */
+    @Override
+    public <E> List<E> findMultiFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+        return findMultiFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
+    }
+
+    /**
+     * 查询指定字段的值
+     * <pre>
+     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
+     * </pre>
+     *
      * @param tableName   表名字
      * @param condition   查询条件
      * @param columns     字段名字集合
@@ -633,19 +649,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
-     * 查询指定字段的值
-     * <pre>
-     *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}
-     * </pre>
+     * 动态调用指定的指定Class中的方法
      *
-     * @param condition   查询条件
-     * @param columns     字段名字集合
-     * @param targetClazz 值的类型
-     * @return 返回指定的类型的值对象
+     * @param mapperMethodName 需要调用的方法
+     * @param params           参数
+     * @return Object
      */
     @Override
-    public <E> List<E> findMultiFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        return findMultiFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
+    public Collection<R> findByCallMapperMethod(String mapperMethodName, Object... params) {
+        return findByCallMapperMethod(mapperMethodName, null, null, params);
     }
 
     /**
@@ -674,8 +686,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Object
      */
     @Override
-    public Collection<R> findByCallMapperMethod(String mapperMethodName, Object... params) {
-        return findByCallMapperMethod(mapperMethodName, null, null, params);
+    public R findOneByCallMapperMethod(String mapperMethodName, Object... params) {
+        return findOneByCallMapperMethod(mapperMethodName, null, null, params);
     }
 
     /**
@@ -694,18 +706,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             return null;
         }
         return GXCommonUtils.convertSourceToTarget(o, GXCommonUtils.getGenericClassType(getClass(), 4), convertMethodName, copyOptions, Dict.create());
-    }
-
-    /**
-     * 动态调用指定的指定Class中的方法
-     *
-     * @param mapperMethodName 需要调用的方法
-     * @param params           参数
-     * @return Object
-     */
-    @Override
-    public R findOneByCallMapperMethod(String mapperMethodName, Object... params) {
-        return findOneByCallMapperMethod(mapperMethodName, null, null, params);
     }
 
     /**
