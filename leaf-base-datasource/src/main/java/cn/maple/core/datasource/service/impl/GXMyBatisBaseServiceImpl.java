@@ -590,6 +590,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public <E> E findSingleFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         queryParamInnerDto.setLimit(1);
         String column = queryParamInnerDto.getColumns().toArray(new String[0])[0];
+        String tableName = queryParamInnerDto.getTableName();
+        if (CharSequenceUtil.isEmpty(tableName)) {
+            tableName = getTableName();
+            queryParamInnerDto.setTableName(tableName);
+        }
         Dict dict = repository.findOneByCondition(queryParamInnerDto);
         if (Objects.isNull(dict)) {
             return null;
@@ -611,6 +616,11 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             throw new GXBusinessException("字段列长度只能为1!!!");
         }
         String column = queryParamInnerDto.getColumns().toArray(new String[0])[0];
+        String tableName = queryParamInnerDto.getTableName();
+        if (CharSequenceUtil.isEmpty(tableName)) {
+            tableName = getTableName();
+            queryParamInnerDto.setTableName(tableName);
+        }
         List<Dict> dictList = repository.findByCondition(queryParamInnerDto);
         ArrayList<E> lst = new ArrayList<>();
         dictList.forEach(dict -> {
