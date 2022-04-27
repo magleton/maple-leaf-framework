@@ -557,9 +557,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findMultiFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
         GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).condition(condition).columns(columns).build();
-        return findFieldByCondition(queryParamInnerDto, targetClazz);
+        return findMultiFieldByCondition(queryParamInnerDto, targetClazz);
     }
 
     /**
@@ -569,7 +569,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz        返回数据的类型
      * @return 返回指定的类型的值对象
      */
-    public <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
+    public <E> List<E> findMultiFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz) {
         List<Dict> list = repository.findByCondition(queryParamInnerDto);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
@@ -644,8 +644,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 返回指定的类型的值对象
      */
     @Override
-    public <E> List<E> findFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
-        return findFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
+    public <E> List<E> findMultiFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz) {
+        return findMultiFieldByCondition(repository.getTableName(), condition, columns, targetClazz);
     }
 
     /**

@@ -358,7 +358,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> List<E> findFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findMultiFieldByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -371,7 +371,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz 值的类型
      * @return 返回指定的类型的值对象
      */
-    <E> List<E> findFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findMultiFieldByCondition(List<GXCondition<?>> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 查询指定字段的值
@@ -380,7 +380,7 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @param targetClazz        返回数据的类型
      * @return 返回指定的类型的值对象
      */
-    <E> List<E> findFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
+    <E> List<E> findMultiFieldByCondition(GXBaseQueryParamInnerDto queryParamInnerDto, Class<E> targetClazz);
 
     /**
      * 获取一条记录的指定单字段
