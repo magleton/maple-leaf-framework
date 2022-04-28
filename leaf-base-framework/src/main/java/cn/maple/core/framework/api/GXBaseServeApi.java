@@ -8,7 +8,6 @@ import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
-import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
@@ -223,23 +222,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
             return (Integer) cnt;
         }
         return 0;
-    }
-
-    /**
-     * 通过SQL更新表中的数据
-     *
-     * @param data      需要更新的数据
-     * @param condition 更新条件
-     * @return Integer
-     */
-    @Deprecated(since = "4.0.0")
-    default Integer updateFieldByCondition(Dict data, Table<String, String, Object> condition) {
-        List<GXUpdateField<?>> updateFields = new ArrayList<>();
-        data.forEach((k, v) -> {
-            GXUpdateField<?> updateField = new GXUpdateStrField(getTableName(), k, v.toString());
-            updateFields.add(updateField);
-        });
-        return updateFieldByCondition(updateFields, condition);
     }
 
     /**
