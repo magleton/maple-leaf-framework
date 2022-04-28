@@ -15,7 +15,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <dubbo.version>3.0.7</dubbo.version>
-        <fastjson.version>2.0.1</fastjson.version>
+        <fastjson.version>1.2.80</fastjson.version>
     </properties>
 
     <dependencies>
