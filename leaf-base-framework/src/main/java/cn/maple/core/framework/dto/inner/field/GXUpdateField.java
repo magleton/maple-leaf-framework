@@ -14,7 +14,7 @@ public abstract class GXUpdateField<T> implements Serializable {
 
     protected GXUpdateField(String tableNameAlias, String fieldName, Object value) {
         this.tableNameAlias = tableNameAlias;
-        this.fieldName = fieldName;
+        this.fieldName = CharSequenceUtil.toUnderlineCase(fieldName);
         this.value = value;
     }
 
@@ -22,7 +22,7 @@ public abstract class GXUpdateField<T> implements Serializable {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
             return CharSequenceUtil.format("`{}` = {}", fieldName, getFieldValue());
         }
-        return CharSequenceUtil.format("`{}`.`{}` = {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldName), getFieldValue());
+        return CharSequenceUtil.format("`{}`.`{}` = {}", tableNameAlias, fieldName, getFieldValue());
     }
 
     public abstract T getFieldValue();
