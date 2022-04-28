@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import java.util.Map;
 
 public class GXUpdateMapField<T extends Map<String, Object>> extends GXUpdateField<String> {
-    public GXUpdateMapField(String tableNameAlias, String fieldName, Map<String, Object> value) {
+    public GXUpdateMapField(String tableNameAlias, String fieldName, T value) {
         super(tableNameAlias, fieldName, value);
     }
 
