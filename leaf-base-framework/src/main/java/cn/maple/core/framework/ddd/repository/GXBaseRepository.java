@@ -3,6 +3,7 @@ package cn.maple.core.framework.ddd.repository;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -185,14 +186,11 @@ public interface GXBaseRepository<T, ID extends Serializable> {
     /**
      * 实现验证注解(返回true表示数据已经存在)
      *
-     * @param value                      The value to check for
-     * @param tableName                  database table name
-     * @param fieldName                  The name of the field for which to check if the value exists
+     * @param validateExistsDto          business dto param
      * @param constraintValidatorContext The ValidatorContext
-     * @param param                      param
      * @return boolean
      */
-    boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException;
+    boolean validateExists(GXValidateExistsDto validateExistsDto, ConstraintValidatorContext constraintValidatorContext);
 
     /**
      * 通过条件更新数据

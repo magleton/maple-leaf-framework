@@ -181,6 +181,27 @@ public class GXCommonUtils {
     }
 
     /**
+     * 将字符串转化为一个Dict
+     * eg:
+     * convertStrToDict("type='news',phone='13800138000'")
+     * OR
+     * convertStrToDict("{\"type\":\"news\" , \"phone\":\"13800138000\"}")
+     *
+     * @param str 字符串
+     * @return Dict
+     */
+    public static Dict convertStrToDict(String str) {
+        if (CharSequenceUtil.isBlank(str)) {
+            return Dict.create();
+        }
+        if (JSONUtil.isTypeJSON(str)) {
+            return JSONUtil.toBean(str, Dict.class);
+        }
+        return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
+        }, convertStrToMap(str));
+    }
+
+    /**
      * 将任意对象转换为指定类型的对象
      * <p>
      * {@code}
@@ -514,27 +535,6 @@ public class GXCommonUtils {
             return JSONUtil.toBean(JSONUtil.parseObj(obj), beanType, ignoreError);
         }
         return null;
-    }
-
-    /**
-     * 将字符串转化为一个Dict
-     * eg:
-     * strToDict("type='news',phone='13800138000'")
-     * OR
-     * strToDict("{\"type\":\"news\" , \"phone\":\"13800138000\"}")
-     *
-     * @param str 字符串
-     * @return Dict
-     */
-    public static Dict convertStrToDict(String str) {
-        if (CharSequenceUtil.isBlank(str)) {
-            return Dict.create();
-        }
-        if (JSONUtil.isTypeJSON(str)) {
-            return JSONUtil.toBean(str, Dict.class);
-        }
-        return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
-        }, convertStrToMap(str));
     }
 
     /**

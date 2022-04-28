@@ -1,9 +1,9 @@
 package cn.maple.core.datasource.service.impl;
 
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
+import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -46,16 +46,21 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
         if (Objects.isNull(o)) {
-            throw new GXBusinessException(CharSequenceUtil.format("验证出错 , <{}>字段的值为<{}>", fieldName, o));
+            throw new GXBusinessException(CharSequenceUtil.format("验证出错 , <{}>字段的值为<{}>", fieldName, null));
         }
+
         if (null == service) {
             throw new GXBusinessException(CharSequenceUtil.format("字段<{}>的值<{}>需要指定相应的Service进行验证...", fieldName, o));
         }
-        Dict param = Dict.create();
-        param.set("spEL", spEL);
-        if (CharSequenceUtil.isNotBlank(condition)) {
-            param.putAll(GXCommonUtils.convertStrToMap(condition));
-        }
-        return service.validateExists(o, tableName, fieldName, constraintValidatorContext, param);
+
+        GXValidateExistsDto validateExistsDto = GXValidateExistsDto.builder()
+                .tableName(tableName)
+                .fieldName(fieldName)
+                .value(o)
+                .condition(GXCommonUtils.convertStrToDict(condition))
+                .spEL(spEL)
+                .build();
+        
+        return service.validateExists(validateExistsDto, constraintValidatorContext);
     }
 }

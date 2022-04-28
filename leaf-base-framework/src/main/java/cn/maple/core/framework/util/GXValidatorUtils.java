@@ -43,7 +43,7 @@ public class GXValidatorUtils {
             for (ConstraintViolation<Object> constraint : constraintViolations) {
                 final String rootBeanName = CharSequenceUtil.lowerFirst(constraint.getRootBean().getClass().getSimpleName());
                 final String currentFormName =/* rootBeanName + "." +*/ constraint.getPropertyPath().toString();
-                dict.set(currentFormName, constraint.getMessage());
+                dict.set(currentFormName, CharSequenceUtil.format("{} , value = {}", constraint.getMessage(), constraint.getInvalidValue()));
             }
             throw new GXBeanValidateException("数据验证错误", HttpStatus.HTTP_INTERNAL_ERROR, dict);
         }

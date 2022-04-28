@@ -13,6 +13,7 @@ import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
@@ -255,25 +256,27 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
-        Assert.notNull(condition, "条件不能为null");
+        Assert.notEmpty(condition, "条件不能为null");
         return baseDao.checkRecordIsExists(tableName, condition);
     }
 
     /**
      * 实现验证注解(返回true表示数据已经存在)
      *
-     * @param value                      The value to check for
-     * @param tableName                  database table name
-     * @param fieldName                  The name of the field for which to check if the value exists
+     * @param validateExistsDto          business dto param
      * @param constraintValidatorContext The ValidatorContext
-     * @param param                      param
      * @return boolean
      */
     @Override
-    public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
+    public boolean validateExists(GXValidateExistsDto validateExistsDto, ConstraintValidatorContext constraintValidatorContext) {
+        String tableName = CharSequenceUtil.isNotEmpty(validateExistsDto.getTableName()) ? validateExistsDto.getTableName() : getTableName();
+        String fieldName = validateExistsDto.getFieldName();
+        Object value = validateExistsDto.getValue();
+
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定表名 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
         }
+
         GXCondition<?> condition;
         if (NumberUtil.isNumber(value.toString()) && NumberUtil.isValidNumber(Convert.toNumber(value))) {
             condition = new GXConditionEQ(tableName, fieldName, Convert.toLong(value));

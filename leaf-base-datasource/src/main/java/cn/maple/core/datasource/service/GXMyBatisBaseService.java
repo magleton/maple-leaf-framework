@@ -16,6 +16,7 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 import java.io.Serializable;
 import java.util.*;
@@ -480,6 +481,13 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return String
      */
     String getTableName();
+
+    /**
+     * 获取MyBatis Plus数据表的信息
+     *
+     * @return TableInfo
+     */
+    TableInfo getTableInfo();
 
     /**
      * 从参数中获取 CopyOptions

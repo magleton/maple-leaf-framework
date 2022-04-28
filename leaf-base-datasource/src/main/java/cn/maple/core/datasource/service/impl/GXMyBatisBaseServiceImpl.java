@@ -12,6 +12,7 @@ import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
@@ -21,6 +22,8 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -711,22 +714,27 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     /**
      * 实现验证注解(返回true表示数据已经存在)
      *
-     * @param value                      The value to check for
-     * @param tableName                  database table name
-     * @param fieldName                  The name of the field for which to check if the value exists
+     * @param validateExistsDto          business dto param
      * @param constraintValidatorContext The ValidatorContext
-     * @param param                      param
      * @return boolean
      */
     @Override
-    public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
-        if (CharSequenceUtil.isBlank(tableName)) {
-            tableName = repository.getTableName();
+    public boolean validateExists(GXValidateExistsDto validateExistsDto, ConstraintValidatorContext constraintValidatorContext) {
+        if (CharSequenceUtil.isEmpty(validateExistsDto.getTableName())) {
+            validateExistsDto.setTableName(repository.getTableName());
         }
-        if (CharSequenceUtil.isBlank(fieldName)) {
-            fieldName = repository.getPrimaryKeyName();
-        }
-        return repository.validateExists(value, tableName, fieldName, constraintValidatorContext, param);
+        return repository.validateExists(validateExistsDto, constraintValidatorContext);
+    }
+
+    /**
+     * 获取MyBatis Plus数据表的信息
+     *
+     * @return TableInfo
+     */
+    @Override
+    public TableInfo getTableInfo() {
+        Class<?> entityClass = GXCommonUtils.getGenericClassType(getClass(), 2);
+        return TableInfoHelper.getTableInfo(entityClass);
     }
 
     /**

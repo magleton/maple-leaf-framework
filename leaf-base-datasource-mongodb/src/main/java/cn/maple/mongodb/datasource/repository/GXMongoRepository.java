@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -210,15 +211,12 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, I
     /**
      * 实现验证注解(返回true表示数据已经存在)
      *
-     * @param value                      The value to check for
-     * @param tableName                  database table name
-     * @param fieldName                  The name of the field for which to check if the value exists
+     * @param validateExistsDto          business dto param
      * @param constraintValidatorContext The ValidatorContext
-     * @param param                      param
      * @return boolean
      */
     @Override
-    public boolean validateExists(Object value, String tableName, String fieldName, ConstraintValidatorContext constraintValidatorContext, Dict param) throws UnsupportedOperationException {
+    public boolean validateExists(GXValidateExistsDto validateExistsDto, ConstraintValidatorContext constraintValidatorContext) {
         return false;
     }
 
