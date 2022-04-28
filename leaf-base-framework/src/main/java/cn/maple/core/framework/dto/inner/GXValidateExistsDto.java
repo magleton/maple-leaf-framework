@@ -16,7 +16,7 @@ public class GXValidateExistsDto extends GXBaseDto {
     private String fieldName;
 
     /**
-     * 分组验证
+     * 表名字
      */
     private String tableName;
 
