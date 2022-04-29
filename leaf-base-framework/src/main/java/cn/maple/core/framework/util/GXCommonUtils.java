@@ -415,7 +415,7 @@ public class GXCommonUtils {
                     throw (GXBeanValidateException) targetException;
                 }
             }
-            LOG.error("反射调用失败 [methodName: {}] [params: {}] [错误消息 : {}] [cause : {}]", methodName, params, e.getMessage(), cause);
+            LOG.error("反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
             throw new GXBusinessException("系统内部错误", cause);
         }
         return retVal;
