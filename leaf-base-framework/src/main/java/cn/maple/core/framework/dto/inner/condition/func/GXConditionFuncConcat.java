@@ -14,7 +14,7 @@ public class GXConditionFuncConcat extends GXConditionFunc<String> {
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("'{}'", value);
+        return CharSequenceUtil.format("'{}%'", value);
     }
 
     @Override
