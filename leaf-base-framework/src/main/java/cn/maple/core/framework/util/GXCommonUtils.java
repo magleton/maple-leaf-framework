@@ -401,7 +401,7 @@ public class GXCommonUtils {
             method = ReflectUtil.getMethodByName(object.getClass(), methodName);
         }
         if (Objects.isNull(method)) {
-            LOG.warn("反射调用类{}中的方法{}({})失败", object.getClass().getSimpleName(), methodName, params);
+            LOG.warn("方法{}.{}({})不存在,反射调用失败!", object.getClass().getSimpleName(), methodName, params);
             return null;
         }
         Object retVal;
