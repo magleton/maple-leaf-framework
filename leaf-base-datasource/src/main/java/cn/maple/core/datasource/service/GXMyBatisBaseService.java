@@ -2,9 +2,8 @@ package cn.maple.core.datasource.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.json.JSONUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -16,10 +15,14 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -496,13 +499,6 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return CopyOptions
      */
     default CopyOptions getCopyOptions(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        CopyOptions copyOptions = Optional.ofNullable(queryParamInnerDto.getCopyOptions()).orElse(CopyOptions.create());
-        copyOptions.setConverter((type, value) -> {
-            if (Objects.nonNull(value) && JSONUtil.isTypeJSON(value.toString())) {
-                return JSONUtil.parse(value);
-            }
-            return Convert.convertWithCheck(type, value, null, false);
-        });
-        return copyOptions;
+        return ObjectUtil.defaultIfNull(queryParamInnerDto.getCopyOptions(), GXCommonUtils::getDefaultCopyOptions);
     }
 }

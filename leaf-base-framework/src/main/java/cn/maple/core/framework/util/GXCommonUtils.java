@@ -227,7 +227,7 @@ public class GXCommonUtils {
             return null;
         }
         try {
-            copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create());
+            copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
             T target = ReflectUtil.newInstanceIfPossible(tClass);
             BeanUtil.copyProperties(source, target, copyOptions);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
@@ -631,6 +631,22 @@ public class GXCommonUtils {
         Dict dict = Dict.create();
         table.columnMap().forEach((operator, datum) -> datum.forEach(dict::set));
         return dict;
+    }
+
+    /**
+     * 获取默认的CopyOptions
+     *
+     * @return CopyOptions
+     */
+    public static CopyOptions getDefaultCopyOptions() {
+        CopyOptions copyOptions = CopyOptions.create();
+        copyOptions.setConverter((type, value) -> {
+            if (Objects.nonNull(value) && JSONUtil.isTypeJSON(value.toString())) {
+                return JSONUtil.parse(value);
+            }
+            return Convert.convertWithCheck(type, value, null, false);
+        });
+        return copyOptions;
     }
 
     /**
