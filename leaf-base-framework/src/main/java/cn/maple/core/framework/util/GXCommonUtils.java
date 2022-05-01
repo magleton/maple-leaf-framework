@@ -537,7 +537,7 @@ public class GXCommonUtils {
     public static CopyOptions getDefaultCopyOptions() {
         CopyOptions copyOptions = CopyOptions.create();
         copyOptions.setConverter((type, value) -> {
-            if (Objects.nonNull(value) && JSONUtil.isTypeJSON(value.toString())) {
+            if (Objects.nonNull(value) && value.getClass().isAssignableFrom(String.class) && JSONUtil.isTypeJSON(value.toString())) {
                 return JSONUtil.parse(value);
             }
             return Convert.convertWithCheck(type, value, null, false);
