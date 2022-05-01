@@ -5,6 +5,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -27,7 +28,7 @@ public class GXSpELToolUtils {
     /**
      * 日志对象
      */
-    private static final Logger LOG = GXCommonUtils.getLogger(GXSpELToolUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXSpELToolUtils.class);
 
     /**
      * 目标类中方法不存在的提示信息

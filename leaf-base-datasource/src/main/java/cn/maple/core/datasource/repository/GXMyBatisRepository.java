@@ -25,6 +25,7 @@ import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * 日志对象
      */
     @SuppressWarnings("all")
-    private static final Logger LOGGER = GXCommonUtils.getLogger(GXMyBatisRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GXMyBatisRepository.class);
 
     /**
      * 基础DAO

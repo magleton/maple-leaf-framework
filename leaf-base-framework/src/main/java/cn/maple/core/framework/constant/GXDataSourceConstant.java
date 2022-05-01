@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+@SuppressWarnings("all")
 public class GXDataSourceConstant {
     public static final Map<String, Function<Dict, GXCondition<?>>> CONDITION_FUNCTION = new HashMap<>();
-
-    public static final Map<String, Function<Dict, String>> MYSQL_FUNCTION = new HashMap<>();
 
     static {
         CONDITION_FUNCTION.put(GXBuilderConstant.EQ, data -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
@@ -28,12 +27,6 @@ public class GXDataSourceConstant {
         CONDITION_FUNCTION.put(GXBuilderConstant.LE, data -> new GXConditionLE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.LT, data -> new GXConditionLT(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.NOT_EQ, data -> new GXConditionNE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
-    }
-
-    static {
-        MYSQL_FUNCTION.put("concat", data -> {
-            return "concat(goods.goods_name)";
-        });
     }
 
     private GXDataSourceConstant() {

@@ -1,6 +1,7 @@
 package cn.maple.core.framework.util;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,7 +20,7 @@ public class GXSignatureUtils {
     /**
      * logger对象
      */
-    private static final Logger logger = GXCommonUtils.getLogger(GXSignatureUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(GXSignatureUtils.class);
 
     private GXSignatureUtils() {
     }

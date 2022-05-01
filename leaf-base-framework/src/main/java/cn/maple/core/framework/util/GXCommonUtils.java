@@ -10,8 +10,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -19,15 +17,12 @@ import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
-import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -158,16 +153,6 @@ public class GXCommonUtils {
             return Dict.create();
         }
         return JSONUtil.toBean(s, Dict.class);
-    }
-
-    /**
-     * 获取Logger对象
-     *
-     * @param clazz Class
-     * @return Logger
-     */
-    public static Logger getLogger(Class<?> clazz) {
-        return LoggerFactory.getLogger(clazz);
     }
 
     /**
@@ -470,74 +455,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 获取AES对象
-     *
-     * @param key AES的key
-     * @return AES
-     */
-    public static AES getAES(String key) {
-        return SecureUtil.aes(key.getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * 获取AES对象
-     *
-     * @return AES
-     */
-    public static AES getAES() {
-        String key = getEnvironmentValue("common.sensitive.data.key", String.class);
-        if (CharSequenceUtil.isBlank(key)) {
-            key = "XhFeV780D2218OBRm0xjcWvv";
-        }
-        return getAES(key);
-    }
-
-    /**
-     * 将任意对象转换为指定类型的对象
-     *
-     * @param obj       需要被转换的对象
-     * @param beanClass 目标类型
-     * @param <T>       目标类型
-     * @return T
-     */
-    public static <T> T toBean(Object obj, Class<T> beanClass) {
-        if (Objects.nonNull(obj) && !obj.getClass().getSimpleName().equalsIgnoreCase("object")) {
-            return JSONUtil.toBean(JSONUtil.parseObj(obj), beanClass);
-        }
-        return null;
-    }
-
-    /**
-     * 将任意对象转换为指定类型的对象
-     *
-     * @param obj           需要被转换的对象
-     * @param typeReference 目标类型
-     * @param <T>           目标类型
-     * @return T
-     */
-    public static <T> T toBean(Object obj, cn.hutool.core.lang.TypeReference<T> typeReference, boolean ignoreError) {
-        if (Objects.nonNull(obj) && !obj.getClass().getSimpleName().equalsIgnoreCase("object")) {
-            return JSONUtil.toBean(JSONUtil.parseObj(obj), typeReference.getType(), ignoreError);
-        }
-        return null;
-    }
-
-    /**
-     * 将任意对象转换为指定类型的对象
-     *
-     * @param obj      需要被转换的对象
-     * @param beanType 目标类型
-     * @param <T>      目标类型
-     * @return T
-     */
-    public static <T> T toBean(Object obj, Type beanType, boolean ignoreError) {
-        if (Objects.nonNull(obj) && !obj.getClass().getSimpleName().equalsIgnoreCase("object")) {
-            return JSONUtil.toBean(JSONUtil.parseObj(obj), beanType, ignoreError);
-        }
-        return null;
-    }
-
-    /**
      * 构建菜单树
      *
      * @param sourceList      源列表
@@ -546,14 +463,15 @@ public class GXCommonUtils {
      * @return 列表
      */
     public static <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
+        String methodName = "getParentId";
         // JDK8的stream处理, 把根分类区分出来
         List<R> roots = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, "getParentId");
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
             return Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 把非根分类区分出来
         List<R> subs = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, "getParentId");
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
             return !Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 递归构建结构化的分类信息
@@ -609,28 +527,6 @@ public class GXCommonUtils {
         }
         s = HtmlUtil.unescape(s);
         return Convert.convert(targetClazz, s);
-    }
-
-    /**
-     * 数字匹配正则表达式
-     *
-     * @param str 需要验证的表达式
-     * @return 是否匹配
-     */
-    public static boolean digitalRegularExpression(String str) {
-        return ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, str);
-    }
-
-    /**
-     * 将table转换为一个Dict
-     *
-     * @param table 需要转换的table
-     * @return Dict
-     */
-    public static Dict convertTableToDict(Table<String, String, Object> table) {
-        Dict dict = Dict.create();
-        table.columnMap().forEach((operator, datum) -> datum.forEach(dict::set));
-        return dict;
     }
 
     /**

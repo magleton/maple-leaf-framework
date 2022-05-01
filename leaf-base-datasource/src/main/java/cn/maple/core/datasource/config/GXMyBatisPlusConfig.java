@@ -90,7 +90,6 @@ public class GXMyBatisPlusConfig {
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
         interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
-        // interceptor.addInnerInterceptor(new TenantLineInnerInterceptor());
         // 动态表名插件
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
         dynamicTableNameInnerInterceptor.setTableNameHandler((sql, tableName) -> tableName);

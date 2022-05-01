@@ -1,8 +1,14 @@
 package cn.maple.shiro.util;
 
-import cn.maple.core.framework.util.GXCommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GXShiroCommonUtils {
+    /**
+     * 日志对象
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GXShiroCommonUtils.class);
+
     private GXShiroCommonUtils() {
     }
 
@@ -17,7 +23,7 @@ public class GXShiroCommonUtils {
         try {
             return GXShiroUtils.getAdminId();
         } catch (Exception e) {
-            GXCommonUtils.getLogger(GXShiroCommonUtils.class).error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return 0;
     }
