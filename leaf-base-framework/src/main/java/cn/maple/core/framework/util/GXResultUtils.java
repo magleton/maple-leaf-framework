@@ -91,7 +91,7 @@ public class GXResultUtils<T> {
     private static <T> void callUserDefinedMethod(T data) {
         if (Objects.nonNull(data)) {
             Class<?> aClass = TypeUtil.getClass(data.getClass());
-            Method method = ReflectUtil.getMethodByName(aClass, "processResValue");
+            Method method = ReflectUtil.getMethodByName(aClass, "customizeProcess");
             if (Objects.nonNull(method)) {
                 ReflectUtil.invoke(data, method);
             }
