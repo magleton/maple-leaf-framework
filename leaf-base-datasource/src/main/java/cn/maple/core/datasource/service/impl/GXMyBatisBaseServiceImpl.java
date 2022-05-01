@@ -11,6 +11,7 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
@@ -149,7 +150,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
-            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+            methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         Function<Dict, R> rowMapper = dict -> {
@@ -291,7 +292,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
-            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+            methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
@@ -431,7 +432,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, List<GXCondition<?>> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
-        T entity = convertSourceToTarget(req, targetClazz, "customizeProcess", copyOptions);
+        T entity = convertSourceToTarget(req, targetClazz, GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME, copyOptions);
         return updateOrCreate(entity, condition);
     }
 
@@ -593,7 +594,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
-            methodName[0] = DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+            methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         return list.stream().map(dict -> GXCommonUtils.convertSourceToTarget(dict, targetClazz, methodName[0], copyOptions)).collect(Collectors.toList());
     }

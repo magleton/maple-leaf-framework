@@ -5,6 +5,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import lombok.Data;
 
 import java.lang.reflect.Method;
@@ -95,7 +96,7 @@ public class GXResultUtils<T> {
             return;
         }
         if (!(data instanceof List)) {
-            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(data.getClass()), "customizeProcess");
+            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(data.getClass()), GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
             if (Objects.nonNull(method)) {
                 ReflectUtil.invoke(data, method);
             }
@@ -103,7 +104,7 @@ public class GXResultUtils<T> {
         }
         List<?> objects = Convert.toList(data);
         objects.forEach(d -> {
-            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(d.getClass()), "customizeProcess");
+            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(d.getClass()), GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
             if (Objects.nonNull(method)) {
                 ReflectUtil.invoke(d, method);
             }

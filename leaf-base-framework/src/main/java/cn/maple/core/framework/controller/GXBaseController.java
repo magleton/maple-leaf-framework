@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.protocol.res.GXBaseResProtocol;
@@ -20,11 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 public interface GXBaseController {
-    /**
-     * 默认处理的方法名字
-     */
-    String DEFAULT_PROCESS_METHOD_NAME = "customizeProcess";
-
     /**
      * 将源对象转换为目标对象
      *
@@ -98,7 +94,7 @@ public interface GXBaseController {
      */
     default <S, T> T convertSourceToTarget(S source, Class<T> clazz, String methodName, CopyOptions copyOptions, Dict extraData) {
         if (Objects.isNull(methodName)) {
-            methodName = DEFAULT_PROCESS_METHOD_NAME;
+            methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         return GXCommonUtils.convertSourceToTarget(source, clazz, methodName, copyOptions, extraData);
     }
@@ -115,7 +111,7 @@ public interface GXBaseController {
      */
     default <S, T> List<T> convertSourceListToTargetList(Collection<S> collection, Class<T> clazz, String methodName, CopyOptions copyOptions, Dict extraData) {
         if (Objects.isNull(methodName)) {
-            methodName = DEFAULT_PROCESS_METHOD_NAME;
+            methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         return GXCommonUtils.convertSourceListToTargetList(collection, clazz, methodName, copyOptions, extraData);
     }

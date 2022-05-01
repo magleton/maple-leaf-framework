@@ -90,6 +90,11 @@ public class GXCommonConstant {
      */
     public static final String DATA_SOURCE_SECRET_KEY_ENV = "JAVA_BIZ_SECRET_KEY";
 
+    /**
+     * 默认的自定义处理函数名字
+     */
+    public static final String DEFAULT_CUSTOMER_PROCESS_METHOD_NAME = "customizeProcess";
+
     private GXCommonConstant() {
     }
 }

@@ -385,7 +385,7 @@ public class GXCommonUtils {
             return null;
         }
         if (CharSequenceUtil.isEmpty(methodName)) {
-            methodName = "customizeProcess";
+            methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
         if (Objects.isNull(params)) {
             params = new Object[0];

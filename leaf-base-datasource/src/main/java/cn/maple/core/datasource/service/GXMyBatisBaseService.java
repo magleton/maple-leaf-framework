@@ -39,11 +39,6 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>, M extends GXBaseMapper<T>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService, GXValidateDBExistsService {
     /**
-     * 默认的自定义处理函数名字
-     */
-    String DEFAULT_CUSTOMER_PROCESS_METHOD_NAME = "customizeProcess";
-
-    /**
      * 检测给定条件的记录是否存在
      *
      * @param tableName 数据库表名字
