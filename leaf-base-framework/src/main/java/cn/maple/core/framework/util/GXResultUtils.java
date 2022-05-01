@@ -1,5 +1,6 @@
 package cn.maple.core.framework.util;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
@@ -7,6 +8,7 @@ import cn.maple.core.framework.code.GXHttpStatusCode;
 import lombok.Data;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -89,13 +91,23 @@ public class GXResultUtils<T> {
     }
 
     private static <T> void callUserDefinedMethod(T data) {
-        if (Objects.nonNull(data)) {
-            Class<?> aClass = TypeUtil.getClass(data.getClass());
-            Method method = ReflectUtil.getMethodByName(aClass, "customizeProcess");
+        if (Objects.isNull(data)) {
+            return;
+        }
+        if (!(data instanceof List)) {
+            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(data.getClass()), "customizeProcess");
             if (Objects.nonNull(method)) {
                 ReflectUtil.invoke(data, method);
             }
+            return;
         }
+        List<?> objects = Convert.toList(data);
+        objects.forEach(d -> {
+            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(d.getClass()), "customizeProcess");
+            if (Objects.nonNull(method)) {
+                ReflectUtil.invoke(d, method);
+            }
+        });
     }
 
     public static <T> GXResultUtils<T> ok() {
