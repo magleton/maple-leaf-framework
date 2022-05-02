@@ -445,16 +445,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 向Spring IOC容器中新增单列对象
-     *
-     * @param beanName        bean的名字
-     * @param singletonObject 需要存储的对象
-     */
-    public static void registerSingleton(String beanName, Object singletonObject) {
-        GXSpringContextUtils.registerSingleton(beanName, singletonObject);
-    }
-
-    /**
      * 构建菜单树
      *
      * @param sourceList      源列表
