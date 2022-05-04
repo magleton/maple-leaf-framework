@@ -10,6 +10,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.exception.GXTokenEmptyException;
 import cn.maple.core.framework.util.GXResultUtils;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
@@ -47,6 +48,19 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public GXResultUtils<String> handleInvalidFormatException(InvalidFormatException e) {
+        log.error(e.getMessage(), e);
+        String targetTypeSimpleName = e.getTargetType().getSimpleName();
+        Object value = e.getValue();
+        String[] msg = new String[]{""};
+        e.getPath().forEach(path -> {
+            String fieldName = path.getFieldName();
+            msg[0] = CharSequenceUtil.format("{}字段的值{}为{}类型不能转换为{}类型,请提供正确的类型!", fieldName, value, value.getClass().getSimpleName(), targetTypeSimpleName);
+        });
+        return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, msg[0]);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
