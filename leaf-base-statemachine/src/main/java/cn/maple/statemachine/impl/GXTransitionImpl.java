@@ -80,10 +80,10 @@ public class GXTransitionImpl<S, E, C> implements GXTransition<S, E, C> {
     }
 
     @Override
-    public GXState<S, E, C> transit(C ctx) {
+    public GXState<S, E, C> transit(C ctx, boolean checkCondition) {
         GXDebugger.debug("Do transition: " + this);
         this.verify();
-        if (condition == null || condition.isSatisfied(ctx)) {
+        if (!checkCondition || condition == null || condition.isSatisfied(ctx)) {
             if (action != null) {
                 action.execute(source.getId(), target.getId(), event, ctx);
             }

@@ -37,7 +37,7 @@ public class GXStateMachineImpl<S, E, C> implements GXStateMachine<S, E, C> {
             return sourceStateId;
         }
 
-        return transition.transit(ctx).getId();
+        return transition.transit(ctx, false).getId();
     }
 
     private GXTransition<S, E, C> routeTransition(S sourceStateId, E event, C ctx) {

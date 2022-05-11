@@ -54,7 +54,7 @@ public interface GXTransition<S, E, C> {
      * @return the target state
      */
 
-    GXState<S, E, C> transit(C ctx);
+    GXState<S, E, C> transit(C ctx, boolean checkCondition);
 
     /**
      * Verify transition correctness
