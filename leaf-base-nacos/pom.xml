@@ -14,8 +14,8 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <nacos-config-spring-boot.version>0.2.10</nacos-config-spring-boot.version>
-        <nacos.version>2.0.3</nacos.version>
+        <nacos-config-spring-boot.version>0.2.11-beta</nacos-config-spring-boot.version>
+        <nacos.version>2.1.0</nacos.version>
     </properties>
 
     <dependencies>
