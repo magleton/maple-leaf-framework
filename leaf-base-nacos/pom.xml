@@ -5,15 +5,13 @@
     <parent>
         <artifactId>maple-leaf-framework</artifactId>
         <groupId>cn.maple.framework</groupId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>leaf-base-nacos</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
         <nacos-config-spring-boot.version>0.2.11-beta</nacos-config-spring-boot.version>
         <nacos.version>2.1.0</nacos.version>
     </properties>
