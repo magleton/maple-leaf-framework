@@ -15,6 +15,9 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <mybatis-plus-boot.version>3.5.1</mybatis-plus-boot.version>
+        <mysql.version>8.0.29</mysql.version>
+        <druid-spring-boot.version>1.2.9</druid-spring-boot.version>
+        <p6spy.version>3.9.1</p6spy.version>
     </properties>
 
     <dependencies>
@@ -31,6 +34,7 @@
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -46,10 +50,18 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid-spring-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

@@ -11,6 +11,10 @@
 
     <artifactId>leaf-base-shiro</artifactId>
 
+    <properties>
+        <shiro-spring.version>1.9.0</shiro-spring.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>cn.maple.framework</groupId>
@@ -25,6 +29,7 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
+            <version>${shiro-spring.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
