@@ -1,6 +1,7 @@
 package cn.maple.mongodb.datasource.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.mongodb.datasource.properties.GXMongoDynamicDataSourceProperties;
@@ -16,9 +17,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -27,8 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author britton <britton@126.com>
  * @since 2021-09-23
  */
-@Component
 @Slf4j
+@Component
+@EnableMongoRepositories
 public class GXMongoConfig implements ApplicationContextAware {
     @Resource
     private GXMongoDynamicDataSourceProperties mongoDynamicDataSourceProperties;
@@ -42,9 +46,9 @@ public class GXMongoConfig implements ApplicationContextAware {
         mongoDynamicDataSourceProperties.getDatasource().forEach((k, dataSourceProperties) -> {
             String uri = GXCommonUtils.decodeConnectStr(dataSourceProperties.getUri(), String.class);
             String database = dataSourceProperties.getDatabase();
-            String username = GXCommonUtils.decodeConnectStr(dataSourceProperties.getUsername(), String.class);
+            String username = Objects.isNull(dataSourceProperties.getUsername()) ? null : GXCommonUtils.decodeConnectStr(dataSourceProperties.getUsername(), String.class);
             String authenticationDatabase = GXCommonUtils.decodeConnectStr(dataSourceProperties.getAuthenticationDatabase(), String.class);
-            char[] password = GXCommonUtils.decodeConnectStr(String.valueOf(dataSourceProperties.getPassword()), String.class).toCharArray();
+            char[] password = Objects.isNull(dataSourceProperties.getPassword()) ? null : GXCommonUtils.decodeConnectStr(String.valueOf(dataSourceProperties.getPassword()), String.class).toCharArray();
             MongoCredential credential = MongoCredential.createCredential(username, authenticationDatabase, password);
             ConnectionString connectionString = new ConnectionString(uri);
             MongoClientSettings mongoClientSettings = MongoClientSettings.builder().credential(credential).applyConnectionString(connectionString).build();
@@ -66,7 +70,10 @@ public class GXMongoConfig implements ApplicationContextAware {
     @Override
     @SuppressWarnings("all")
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        if (Objects.isNull(GXApplicationContextSingleton.INSTANCE.getApplicationContext())) {
+            GXApplicationContextSingleton.INSTANCE.setApplicationContext(applicationContext);
+        }
+        this.applicationContext = GXApplicationContextSingleton.INSTANCE.getApplicationContext();
     }
 
     private void dealMongoDynamicDataSourceProperties() {

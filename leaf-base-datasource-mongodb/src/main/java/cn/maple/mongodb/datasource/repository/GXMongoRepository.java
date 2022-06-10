@@ -35,7 +35,7 @@ public class GXMongoRepository<T extends GXMongoModel, D extends GXMongoDao<T, I
      */
     @Override
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
-        return baseDao.updateOrCreate(entity, condition);
+        return null;
     }
 
     /**
