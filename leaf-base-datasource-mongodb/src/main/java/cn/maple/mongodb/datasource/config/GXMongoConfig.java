@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 @Component
-@EnableMongoRepositories
 public class GXMongoConfig implements ApplicationContextAware {
     @Resource
     private GXMongoDynamicDataSourceProperties mongoDynamicDataSourceProperties;
