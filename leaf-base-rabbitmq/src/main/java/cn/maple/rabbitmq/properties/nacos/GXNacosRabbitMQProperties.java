@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Data
@@ -24,8 +25,7 @@ import org.springframework.stereotype.Component;
                 namespace = "${spring.cloud.nacos.config.namespace:${nacos.config.namespace:}}",
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
-//@ConfigurationProperties(prefix = "rabbit")
-@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "rabbit", dataId = "rabbit.yml", autoRefreshed = true, type = ConfigType.YAML)
+@ConfigurationProperties(prefix = "rabbit")
 public class GXNacosRabbitMQProperties extends GXRabbitMQProperties {
     public GXNacosRabbitMQProperties() {
         log.info("RabbitMQ数据源配置使用NACOS配置");

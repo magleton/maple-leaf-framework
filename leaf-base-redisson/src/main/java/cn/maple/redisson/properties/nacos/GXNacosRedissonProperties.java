@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -28,8 +29,7 @@ import java.util.Map;
                 namespace = "${spring.cloud.nacos.config.namespace:${nacos.config.namespace:}}",
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
-//@ConfigurationProperties(prefix = "redisson")
-@NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "redisson", dataId = "redisson.yml", autoRefreshed = true, type = ConfigType.YAML)
+@ConfigurationProperties(prefix = "redisson")
 public class GXNacosRedissonProperties extends GXRedissonProperties {
     private Map<String, GXRedissonConnectProperties> config = new LinkedHashMap<>();
 
