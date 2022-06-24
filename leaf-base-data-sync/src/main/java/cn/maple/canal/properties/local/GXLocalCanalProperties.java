@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/canal.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
+@PropertySource(value = {"classpath:/${spring.profiles.active}/canal.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "canal")
 public class GXLocalCanalProperties extends GXCanalProperties {
     public GXLocalCanalProperties() {

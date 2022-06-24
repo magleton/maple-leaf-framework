@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("all")
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/rabbit.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
+@PropertySource(value = {"classpath:/${spring.profiles.active}/rabbit.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "rabbit")
 public class GXLocalRabbitMQProperties extends GXRabbitMQProperties {
     public GXLocalRabbitMQProperties() {

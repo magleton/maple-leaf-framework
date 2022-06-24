@@ -23,7 +23,7 @@ import java.util.Map;
 @SuppressWarnings("all")
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@PropertySource(value = {"classpath:/ymls/${spring.profiles.active}/datasource.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
+@PropertySource(value = {"classpath:/${spring.profiles.active}/datasource.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "dynamic")
 public class GXLocalDynamicDataSourceProperties extends GXDynamicDataSourceProperties {
     private Map<String, GXDataSourceProperties> datasource = new LinkedHashMap<>();
