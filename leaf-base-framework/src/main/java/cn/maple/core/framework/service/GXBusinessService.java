@@ -3,6 +3,9 @@ package cn.maple.core.framework.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
+import cn.maple.core.framework.dto.res.GXBaseDBResDto;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
+import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
 
@@ -193,5 +196,22 @@ public interface GXBusinessService {
      */
     default Object callMethod(Object targetObject, String methodName, Object... params) {
         return GXCommonUtils.reflectCallObjectMethod(targetObject, methodName, params);
+    }
+
+    /**
+     * 将GXPaginationDBResDto转换为GXPaginationResDto
+     *
+     * @param pagination  源分页对象
+     * @param targetClazz 目标类型
+     * @return GXPaginationResProtocol对象
+     */
+    default <S extends GXBaseDBResDto, T extends GXBaseResDto> GXPaginationResDto<T> convertPaginationDBResDtoToResDto(GXPaginationResDto<S> pagination, Class<T> targetClazz) {
+        List<S> records = pagination.getRecords();
+        long total = pagination.getTotal();
+        long pages = pagination.getPages();
+        long pageSize = pagination.getPageSize();
+        long currentPage = pagination.getCurrentPage();
+        List<T> list = convertSourceListToTargetList(records, targetClazz, null, new CopyOptions(), Dict.create());
+        return new GXPaginationResDto<>(list, total, pages, pageSize, currentPage);
     }
 }
