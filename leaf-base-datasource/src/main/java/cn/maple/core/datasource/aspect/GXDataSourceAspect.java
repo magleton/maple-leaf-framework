@@ -22,7 +22,7 @@ import java.util.Objects;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
-public class GXDataSourceAnnotationAspect {
+public class GXDataSourceAspect {
     @Pointcut("@annotation(cn.maple.core.datasource.annotation.GXDataSource) " +
             "|| @within(cn.maple.core.datasource.annotation.GXDataSource) " +
             "|| target(cn.maple.core.datasource.service.GXMyBatisBaseService) " +
