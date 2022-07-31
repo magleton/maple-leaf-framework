@@ -2,7 +2,7 @@ package cn.maple.core.datasource.interceptor;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.dto.GXDataFilterInnerDto;
-import cn.maple.core.datasource.util.GXThreadLocalUtils;
+import cn.maple.core.datasource.util.GXDataFilterThreadLocalUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +46,7 @@ public class GXDataFilterInterceptor implements InnerInterceptor {
 
     private GXDataFilterInnerDto getDataScope() {
         // 判断参数里是否有DataScope对象
-        GXDataFilterInnerDto dataScope = GXThreadLocalUtils.getDataFilterThreadLocal().get();
-        GXThreadLocalUtils.getDataFilterThreadLocal().remove();
+        GXDataFilterInnerDto dataScope = GXDataFilterThreadLocalUtils.getDataFilterInnerDto();
         if (Objects.nonNull(dataScope)) {
             return dataScope;
         }

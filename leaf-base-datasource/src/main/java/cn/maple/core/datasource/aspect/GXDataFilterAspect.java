@@ -6,15 +6,13 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXDataFilter;
 import cn.maple.core.datasource.dto.GXDataFilterInnerDto;
 import cn.maple.core.datasource.service.GXDataScopeService;
-import cn.maple.core.datasource.util.GXThreadLocalUtils;
+import cn.maple.core.datasource.util.GXDataFilterThreadLocalUtils;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +35,18 @@ public class GXDataFilterAspect {
 
     }
 
+    @After("dataFilterPointCut()")
+    @AfterThrowing("dataFilterPointCut()")
+    public void dataFilterAfter() {
+        GXDataFilterInnerDto dataFilterInnerDto = GXDataFilterThreadLocalUtils.getDataFilterInnerDto();
+        if (Objects.nonNull(dataFilterInnerDto) && CharSequenceUtil.isNotEmpty(dataFilterInnerDto.getSqlFilter())) {
+            // 执行完成，要清除当前权限Sql
+            GXDataFilterThreadLocalUtils.cleanDataFilterInnerDto();
+        }
+    }
+
     @Before("dataFilterPointCut()")
-    public void dataFilter(JoinPoint point) {
+    public void dataFilterBefore(JoinPoint point) {
         Object params = point.getArgs()[0];
         if (Objects.nonNull(params) && (params instanceof Dict)) {
             GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
@@ -52,7 +60,7 @@ public class GXDataFilterAspect {
             try {
                 String sqlFilter = getSqlFilter(point);
                 GXDataFilterInnerDto dataScope = new GXDataFilterInnerDto(sqlFilter);
-                GXThreadLocalUtils.getDataFilterThreadLocal().set(dataScope);
+                GXDataFilterThreadLocalUtils.setDataFilterInnerDto(dataScope);
             } catch (Exception e) {
                 throw new GXBusinessException(e.getMessage(), e);
             }
