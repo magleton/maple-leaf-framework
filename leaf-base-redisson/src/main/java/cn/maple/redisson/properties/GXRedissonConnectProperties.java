@@ -18,4 +18,9 @@ public class GXRedissonConnectProperties {
      * 数据库
      */
     private Integer database;
+
+    /**
+     * 链接用户名
+     */
+    private String username = "default";
 }

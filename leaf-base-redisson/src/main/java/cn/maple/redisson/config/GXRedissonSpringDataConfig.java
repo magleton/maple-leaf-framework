@@ -44,6 +44,7 @@ public class GXRedissonSpringDataConfig {
         redissonConfig.getConfig().forEach((k, v) -> {
             v.setAddress(GXCommonUtils.decodeConnectStr(v.getAddress(), String.class));
             v.setPassword(GXCommonUtils.decodeConnectStr(v.getPassword(), String.class));
+            v.setUsername(GXCommonUtils.decodeConnectStr(v.getUsername(), String.class));
         });
         return JSONUtil.toBean(JSONUtil.toJsonStr(redissonConfig.getConfig()), Config.class);
     }
