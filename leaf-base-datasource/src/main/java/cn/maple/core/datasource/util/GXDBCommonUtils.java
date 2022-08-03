@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -18,6 +19,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,5 +236,22 @@ public class GXDBCommonUtils {
             pageSize = defaultPageSize;
         }
         return new Page<>(page, pageSize);
+    }
+
+    /**
+     * 拼装SQL对象的条件
+     *
+     * @param sql       SQL对象
+     * @param condition 条件
+     */
+    public static void assemblySqlObjectCondition(SQL sql, Dict condition) {
+        condition.forEach((column, val) -> {
+            final String value = Convert.toStr(val);
+            String template = "{} = '{}'";
+            if (ReUtil.isMatch("^[+-]?(0|([1-9]\\d*))(\\.\\d+)?$", value)) {
+                template = "{} = {}";
+            }
+            sql.WHERE(CharSequenceUtil.format(template, column, value));
+        });
     }
 }
