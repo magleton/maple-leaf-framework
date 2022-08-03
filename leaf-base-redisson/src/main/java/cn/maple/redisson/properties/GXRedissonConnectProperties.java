@@ -23,4 +23,14 @@ public class GXRedissonConnectProperties {
      * 链接用户名
      */
     private String username = "default";
+
+    /**
+     * 链接最小闲置大小
+     */
+    private Integer connectionMinimumIdleSize = 24;
+
+    /**
+     * 集群模式 链接最小闲置大小
+     */
+    private Integer slaveConnectionMinimumIdleSize = 24;
 }
