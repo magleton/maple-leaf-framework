@@ -1,10 +1,14 @@
 package cn.maple.core.datasource.handler;
 
 import cn.hutool.core.date.DateUtil;
+import cn.maple.core.datasource.service.GXMyBatisAutoFillMetaObjectService;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 /**
  * MyBatis公共字段自动填充器
@@ -16,13 +20,25 @@ import org.springframework.stereotype.Component;
 public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
+        String createdBy = "unknown";
+        GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
+        if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
+            createdBy = myBatisAutoFillMetaObjectService.getCreatedBy();
+        }
         final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("createdAt", timestamp, metaObject);
+        this.setFieldValByName("createdBy", createdBy, metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
+        String updatedBy = "unknown";
+        GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
+        if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
+            updatedBy = myBatisAutoFillMetaObjectService.getUpdatedBy();
+        }
         final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("updatedAt", timestamp, metaObject);
+        this.setFieldValByName("updatedBy", updatedBy, metaObject);
     }
 }
