@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
+import org.springframework.util.Base64Utils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -127,9 +128,7 @@ public class GXAuthCodeUtils {
      * @return 随机字符
      */
     private static String randomString(int lens) {
-        char[] chars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k',
-                'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-                'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        char[] chars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         int cLens = chars.length;
         StringBuilder sCode = new StringBuilder();
         for (int i = 0; i < lens; i++) {
@@ -147,7 +146,8 @@ public class GXAuthCodeUtils {
      * @return 加密结果
      */
     public static String authCodeEncode(String source, String key, int expiry) {
-        return authCode(source, key, GXAuthCodeMode.ENCODE, expiry);
+        String authCodeStr = authCode(source, key, GXAuthCodeMode.ENCODE, expiry);
+        return Base64Utils.encodeToUrlSafeString(authCodeStr.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -158,7 +158,7 @@ public class GXAuthCodeUtils {
      * @return 加密结果
      */
     public static String authCodeEncode(String source, String key) {
-        return authCode(source, key, GXAuthCodeMode.ENCODE, 0);
+        return authCodeEncode(source, key, 0);
     }
 
     /**
@@ -169,7 +169,8 @@ public class GXAuthCodeUtils {
      * @return 解密结果
      */
     public static String authCodeDecode(String source, String key) {
-        return authCode(source, key, GXAuthCodeMode.DECODE, 0);
+        String base64DecodeStr = new String(Base64Utils.decodeFromUrlSafeString(source));
+        return authCode(base64DecodeStr, key, GXAuthCodeMode.DECODE, 0);
     }
 
     /**
@@ -201,10 +202,7 @@ public class GXAuthCodeUtils {
                 byte[] temp;
                 temp = Base64.decode(cutString(source, cKeyLength).getBytes(StandardCharsets.UTF_8));
                 result = new String(rc4(temp, cryptKey));
-                if ((result.indexOf("0000000000") == 0
-                        || Integer.parseInt(cutString(result, 0, 10)) - DateUtil.currentSeconds() > 0)
-                        && cutString(result, 10, 16).equals(
-                        cutString(md5(cutString(result, 26) + keyB), 0, 16))) {
+                if ((result.indexOf("0000000000") == 0 || Integer.parseInt(cutString(result, 0, 10)) - DateUtil.currentSeconds() > 0) && cutString(result, 10, 16).equals(cutString(md5(cutString(result, 26) + keyB), 0, 16))) {
                     return cutString(result, 26);
                 }
                 return "{}";
