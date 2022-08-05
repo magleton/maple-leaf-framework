@@ -5,7 +5,6 @@ import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,10 +56,10 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
                 .tableName(tableName)
                 .fieldName(fieldName)
                 .value(o)
-                .condition(GXCommonUtils.convertStrToDict(condition))
+                .condition(condition)
                 .spEL(spEL)
                 .build();
-        
+
         return service.validateExists(validateExistsDto, constraintValidatorContext);
     }
 }

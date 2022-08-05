@@ -1,6 +1,5 @@
 package cn.maple.core.framework.dto.inner;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseDto;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +32,7 @@ public class GXValidateExistsDto extends GXBaseDto {
     private String spEL;
 
     /**
-     * 验证条件
+     * 附加验证条件 用于指定一些固定条件值
      */
-    private Dict condition;
+    private String condition;
 }

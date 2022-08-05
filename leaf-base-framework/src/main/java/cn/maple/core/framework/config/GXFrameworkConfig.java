@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -59,5 +60,12 @@ public class GXFrameworkConfig {
             }
         });
         return objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean localValidatorFactoryBean() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.getValidationPropertyMap().put("hibernate.validator.fail_fast", "true");
+        return bean;
     }
 }
