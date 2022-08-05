@@ -7,6 +7,7 @@ import cn.maple.core.framework.annotation.GXPermissionCtl;
 import cn.maple.core.framework.dto.inner.permission.GXBasePermissionInnerDto;
 import cn.maple.core.framework.event.GXPermissionEvent;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -27,8 +28,9 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
         ConcurrentHashMap<String, List<GXBasePermissionInnerDto>> concurrentHashMap = new ConcurrentHashMap<>();
         Map<String, Object> beansWithAnnotation = applicationStartedEvent.getApplicationContext().getBeanFactory().getBeansWithAnnotation(GXPermissionCtl.class);
         beansWithAnnotation.forEach((k, v) -> {
-            Method[] declaredMethods = v.getClass().getDeclaredMethods();
-            GXPermissionCtl permissionCtl = v.getClass().getAnnotation(GXPermissionCtl.class);
+            Class<?> targetClass = AopUtils.getTargetClass(v);
+            Method[] declaredMethods = targetClass.getDeclaredMethods();
+            GXPermissionCtl permissionCtl = targetClass.getAnnotation(GXPermissionCtl.class);
             String moduleCode = permissionCtl.moduleCode();
             String moduleName = permissionCtl.moduleName();
             List<GXBasePermissionInnerDto> permissionDtoList = new ArrayList<>();
