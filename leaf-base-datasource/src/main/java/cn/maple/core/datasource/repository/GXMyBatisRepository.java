@@ -16,7 +16,7 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
-import cn.maple.core.framework.dto.inner.condition.GXConditionOrigin;
+import cn.maple.core.framework.dto.inner.condition.GXConditionRaw;
 import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -291,7 +291,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
         List<GXCondition<?>> conditionLst = new ArrayList<>();
         conditionLst.add(condition);
         if (CharSequenceUtil.isNotEmpty(originCondition)) {
-            GXConditionOrigin conditionOrigin = new GXConditionOrigin(originCondition);
+            GXConditionRaw conditionOrigin = new GXConditionRaw(originCondition);
             conditionLst.add(conditionOrigin);
         }
 
