@@ -25,6 +25,12 @@ public class GXJoinDto {
      */
     private String masterTableNameAlias;
 
+
+    /**
+     * 主表名字
+     */
+    private String masterTableName;
+
     /**
      * 链接类型
      */

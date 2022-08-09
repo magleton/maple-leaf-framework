@@ -129,9 +129,14 @@ public interface GXBaseBuilder {
             GXJoinTypeEnums joinType = join.getJoinType();
             String tableName = join.getJoinTableName();
             String tableAliasName = join.getJoinTableNameAlias();
+            String masterTableName = join.getMasterTableName();
+            String masterTableNameAlias = join.getMasterTableNameAlias();
+            if (Objects.isNull(masterTableNameAlias)) {
+                masterTableNameAlias = masterTableName;
+            }
             String andClause = Optional.ofNullable(join.getAnd()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
             String orClause = Optional.ofNullable(join.getOr()).orElse(Collections.emptyList()).stream().map(GXDbJoinOp::opString).collect(Collectors.joining(GXBuilderConstant.AND_OP));
-            String assemblySql = CharSequenceUtil.format("{} {} ON ({})", tableName, tableAliasName, andClause);
+            String assemblySql = CharSequenceUtil.format("{} {} ON ({})", masterTableName, masterTableNameAlias, andClause);
             if (CharSequenceUtil.isNotEmpty(orClause)) {
                 assemblySql = CharSequenceUtil.format("{} {} ({})", assemblySql, GXBuilderConstant.OR_OP, orClause);
             }
