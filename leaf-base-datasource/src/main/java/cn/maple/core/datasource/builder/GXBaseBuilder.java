@@ -53,16 +53,9 @@ public interface GXBaseBuilder {
      * @return String
      */
     static String checkRecordIsExists(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        String tableName = dbQueryParamInnerDto.getTableName();
-        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
-        List<GXCondition<?>> condition = dbQueryParamInnerDto.getCondition();
-        final SQL sql = new SQL().SELECT("1").FROM(tableName);
-        handleSQLCondition(sql, condition);
-        if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
-        }
-        sql.LIMIT(1);
-        return sql.toString();
+        dbQueryParamInnerDto.setLimit(1);
+        dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("1"));
+        return findOneByCondition(dbQueryParamInnerDto);
     }
 
     /**
