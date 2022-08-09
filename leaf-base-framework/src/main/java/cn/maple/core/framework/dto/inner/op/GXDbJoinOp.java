@@ -51,6 +51,12 @@ public abstract class GXDbJoinOp {
     abstract String getOp();
 
     public String opString() {
+        if (CharSequenceUtil.contains(masterFieldName, ".")) {
+            masterFieldName = masterFieldName.split("\\.")[1];
+        }
+        if (CharSequenceUtil.contains(joinFieldName, ".")) {
+            joinFieldName = joinFieldName.split("\\.")[1];
+        }
         if (CharSequenceUtil.isNotEmpty(masterTableNameAlias) && CharSequenceUtil.isNotEmpty(masterFieldName)) {
             masterFieldName = CharSequenceUtil.format("{}.{}", masterTableNameAlias, masterFieldName);
         }
