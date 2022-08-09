@@ -8,10 +8,8 @@ import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.apache.ibatis.annotations.DeleteProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -24,12 +22,15 @@ public interface GXBaseMapper<T extends GXMyBatisModel> extends BaseMapper<T> {
     Integer checkRecordIsExists(GXBaseQueryParamInnerDto queryParamInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
     Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
     List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
     List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftCondition")
