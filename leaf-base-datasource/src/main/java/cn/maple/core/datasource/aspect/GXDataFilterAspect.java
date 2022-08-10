@@ -1,7 +1,6 @@
 package cn.maple.core.datasource.aspect;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXDataFilter;
 import cn.maple.core.datasource.dto.GXDataFilterInnerDto;
@@ -47,27 +46,21 @@ public class GXDataFilterAspect {
 
     @Before("dataFilterPointCut()")
     public void dataFilterBefore(JoinPoint point) {
-        Object params = point.getArgs()[0];
-        if (Objects.nonNull(params) && (params instanceof Dict)) {
-            GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
-            boolean isSuperAdmin = !Objects.nonNull(dataScopeService) || dataScopeService.isSuperAdmin();
-            // 如果是超级管理员，则不进行数据过滤
-            if (isSuperAdmin) {
-                return;
-            }
-
-            // 否则进行数据过滤
-            try {
-                String sqlFilter = getSqlFilter(point);
-                GXDataFilterInnerDto dataScope = new GXDataFilterInnerDto(sqlFilter);
-                GXDataFilterThreadLocalUtils.setDataFilterInnerDto(dataScope);
-            } catch (Exception e) {
-                throw new GXBusinessException(e.getMessage(), e);
-            }
+        GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
+        boolean isSuperAdmin = !Objects.nonNull(dataScopeService) || dataScopeService.isSuperAdmin();
+        // 如果是超级管理员，则不进行数据过滤
+        if (isSuperAdmin) {
             return;
         }
 
-        throw new GXBusinessException("数据权限错误", 10013);
+        // 否则进行数据过滤
+        try {
+            String sqlFilter = getSqlFilter(point);
+            GXDataFilterInnerDto dataScope = new GXDataFilterInnerDto(sqlFilter);
+            GXDataFilterThreadLocalUtils.setDataFilterInnerDto(dataScope);
+        } catch (Exception e) {
+            throw new GXBusinessException(e.getMessage(), e);
+        }
     }
 
     /**
