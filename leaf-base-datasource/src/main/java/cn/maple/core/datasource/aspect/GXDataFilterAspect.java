@@ -43,7 +43,10 @@ public class GXDataFilterAspect {
     @Before("dataFilterPointCut()")
     public void dataFilterBefore(JoinPoint point) {
         GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
-        boolean isSuperAdmin = !Objects.nonNull(dataScopeService) || dataScopeService.isSuperAdmin();
+        if (Objects.isNull(dataScopeService)) {
+            throw new GXBusinessException(CharSequenceUtil.format("请实现{}接口", GXDataScopeService.class.getName()));
+        }
+        boolean isSuperAdmin = dataScopeService.isSuperAdmin();
         // 如果是超级管理员，则不进行数据过滤
         if (isSuperAdmin) {
             return;
