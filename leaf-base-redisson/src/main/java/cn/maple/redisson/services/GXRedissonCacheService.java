@@ -16,6 +16,28 @@ public interface GXRedissonCacheService {
     Object setCache(String bucketName, String key, Object value, int expired, TimeUnit timeUnit);
 
     /**
+     * 设置缓存 有过期时间
+     *
+     * @param bucketName 数据桶的名字 来源于 CacheConstant
+     * @param key        缓存key
+     * @param value      缓存值
+     * @return 是否成功
+     */
+    Object setCache(String bucketName, String key, Object value);
+
+    /**
+     * 设置缓存 没有过期时间
+     *
+     * @param bucketName 数据桶的名字 来源于 CacheConstant
+     * @param key        缓存key
+     * @param value      缓存值
+     * @param expired    过期时间
+     * @param timeUnit   时间单位
+     * @return 是否成功
+     */
+    Object setCache(String bucketName, String key, String value, int expired, TimeUnit timeUnit);
+
+    /**
      * 设置缓存 没有过期时间
      *
      * @param bucketName 数据桶的名字 来源于 CacheConstant

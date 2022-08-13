@@ -31,6 +31,34 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
+     * 设置缓存 有过期时间
+     *
+     * @param bucketName 数据桶的名字 来源于 CacheConstant
+     * @param key        缓存key
+     * @param value      缓存值
+     * @return 是否成功
+     */
+    @Override
+    public Object setCache(String bucketName, String key, Object value) {
+        return setCache(bucketName, key, value, 0, TimeUnit.MICROSECONDS);
+    }
+
+    /**
+     * 设置缓存 没有过期时间
+     *
+     * @param bucketName 数据桶的名字 来源于 CacheConstant
+     * @param key        缓存key
+     * @param value      缓存值
+     * @param expired    过期时间
+     * @param timeUnit   时间单位
+     * @return 是否成功
+     */
+    @Override
+    public Object setCache(String bucketName, String key, String value, int expired, TimeUnit timeUnit) {
+        return redissonClient.getMapCache(bucketName).put(key, value, expired, timeUnit);
+    }
+
+    /**
      * 设置缓存 没有过期时间
      *
      * @param bucketName 数据桶的名字 来源于 CacheConstant
@@ -40,7 +68,7 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Object setCache(String bucketName, String key, String value) {
-        return redissonClient.getMapCache(bucketName).put(key, value);
+        return setCache(bucketName, key, value, 0, TimeUnit.MICROSECONDS);
     }
 
     /**
