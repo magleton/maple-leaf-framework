@@ -130,6 +130,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         if (Objects.isNull(queryParamReqDto.getColumns())) {
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
+        if (Objects.isNull(queryParamReqDto.getMethodName())) {
+            queryParamReqDto.setMethodName("customizeProcess");
+        }
         CopyOptions copyOptions = getCopyOptions(queryParamReqDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
         GXPaginationResDto<Dict> paginate = repository.paginate(queryParamReqDto);
