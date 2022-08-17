@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>cn.maple.framework</groupId>
-            <artifactId>leaf-base-nacos</artifactId>
+            <artifactId>leaf-base-redisson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

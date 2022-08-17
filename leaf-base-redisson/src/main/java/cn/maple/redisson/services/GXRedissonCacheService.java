@@ -84,4 +84,28 @@ public interface GXRedissonCacheService {
      * @return 是否成功
      */
     boolean updateCacheExpiredTime(String bucketName, String keyName, Integer expired, Integer refreshThreshold);
+
+    /**
+     * 清楚指定桶中的所有数据
+     *
+     * @param bucketName 缓存桶名字
+     */
+    void clear(String bucketName);
+
+    /**
+     * 查询桶中有多少的key
+     *
+     * @param bucketName 缓存桶名字
+     * @return key的数量
+     */
+    Integer size(String bucketName);
+
+    /**
+     * 指定的桶中是否有指定的key
+     *
+     * @param bucketName 桶名字
+     * @param key        指定的key
+     * @return 是否存在
+     */
+    boolean exists(String bucketName, String key);
 }

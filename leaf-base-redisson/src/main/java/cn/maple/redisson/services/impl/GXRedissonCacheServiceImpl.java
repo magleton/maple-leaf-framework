@@ -132,4 +132,37 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
         }
         return true;
     }
+
+    /**
+     * 清楚指定桶中的所有数据
+     *
+     * @param bucketName 缓存桶名字
+     */
+    @Override
+    public void clear(String bucketName) {
+        redissonClient.getMapCache(bucketName).clear();
+    }
+
+    /**
+     * 查询桶中有多少的key
+     *
+     * @param bucketName 缓存桶名字
+     * @return key的数量
+     */
+    @Override
+    public Integer size(String bucketName) {
+        return redissonClient.getMapCache(bucketName).size();
+    }
+
+    /**
+     * 指定的桶中是否有指定的key
+     *
+     * @param bucketName 桶名字
+     * @param key        指定的key
+     * @return 是否存在
+     */
+    @Override
+    public boolean exists(String bucketName, String key) {
+        return Objects.nonNull(redissonClient.getMapCache(bucketName).get(key));
+    }
 }
