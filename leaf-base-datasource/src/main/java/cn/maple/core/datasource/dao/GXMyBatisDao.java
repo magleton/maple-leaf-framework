@@ -5,6 +5,9 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.maple.core.datasource.event.GXModelCreatedEvent;
+import cn.maple.core.datasource.event.GXModelCreatingEvent;
+import cn.maple.core.datasource.event.GXModelUpdatedEvent;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
@@ -17,6 +20,7 @@ import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXEventPublisherUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -122,10 +126,14 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXMyBatisModel, I
             }
         }
         if (!condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
+            GXEventPublisherUtils.publishEvent(new GXModelUpdatedEvent<T>(entity, "updating", Dict.create()));
             UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);
             update(entity, updateWrapper);
+            GXEventPublisherUtils.publishEvent(new GXModelUpdatedEvent<T>(entity, "updated", Dict.create()));
         } else {
+            GXEventPublisherUtils.publishEvent(new GXModelCreatingEvent<>(entity, "creating", Dict.create()));
             save(entity);
+            GXEventPublisherUtils.publishEvent(new GXModelCreatedEvent<>(entity, "created", Dict.create()));
         }
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst(pkName));
         return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(entity, methodName));
