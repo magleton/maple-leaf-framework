@@ -2,15 +2,20 @@ package cn.maple.core.framework.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public interface GXBusinessService {
     /**
@@ -213,5 +218,74 @@ public interface GXBusinessService {
         long currentPage = pagination.getCurrentPage();
         List<T> list = convertSourceListToTargetList(records, targetClazz, null, new CopyOptions(), Dict.create());
         return new GXPaginationResDto<>(list, total, pages, pageSize, currentPage);
+    }
+
+    /**
+     * 获取前端用户的登录ID
+     *
+     * @param tokenName      token的名字
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getFrontEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
+        if (Objects.isNull(tokenSecretKey)) {
+            throw new GXBusinessException("请传递token密钥!");
+        }
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
+    }
+
+    /**
+     * 获取前端用户的登录ID
+     *
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getFrontEndUserId(String tokenSecretKey, Class<R> targetClass) {
+        return getFrontEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
+    }
+
+    /**
+     * 获取后端用户的登录ID(管理端)
+     *
+     * @param tokenName      token的名字
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getBackEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
+        if (Objects.isNull(tokenSecretKey)) {
+            throw new GXBusinessException("请传递token密钥!");
+        }
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
+    }
+
+    /**
+     * 获取后端用户的登录ID(管理端)
+     *
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getBackEndUserId(String tokenSecretKey, Class<R> targetClass) {
+        return getBackEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
+    }
+
+    /**
+     * 从token中获取登录用户ID
+     *
+     * @param tokenName      header中Token的名字 eg : Authorization、token、adminToken
+     * @param tokenFieldName Token中包含的ID名字 eg : id、userId、adminId....
+     * @param clazz          返回值类型
+     * @param secretKey      加解密KEY
+     * @return R
+     */
+    default <R> R getLoginFieldFromToken(String tokenName, String tokenFieldName, Class<R> clazz, String secretKey) {
+        R fieldFromToken = GXCurrentRequestContextUtils.getLoginFieldFromToken(tokenName, tokenFieldName, clazz, secretKey);
+        if (Objects.isNull(fieldFromToken)) {
+            throw new GXBusinessException(CharSequenceUtil.format("token中不存在键为{}的值", tokenFieldName));
+        }
+        return fieldFromToken;
     }
 }

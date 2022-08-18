@@ -245,15 +245,42 @@ public interface GXBaseController {
     /**
      * 获取前端用户的登录ID
      *
+     * @param tokenName      token名字
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getFrontEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
+        if (Objects.isNull(tokenSecretKey)) {
+            throw new GXBusinessException("请传递token密钥!");
+        }
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
+    }
+
+    /**
+     * 获取前端用户的登录ID
+     *
      * @param tokenSecretKey token密钥
      * @param targetClass    返回的数据类型
      * @return R
      */
     default <R> R getFrontEndUserId(String tokenSecretKey, Class<R> targetClass) {
+        return getFrontEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
+    }
+
+    /**
+     * 获取后端用户的登录ID(管理端)
+     *
+     * @param tokenName      token名字
+     * @param tokenSecretKey token密钥
+     * @param targetClass    返回的数据类型
+     * @return R
+     */
+    default <R> R getBackEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
         if (Objects.isNull(tokenSecretKey)) {
             throw new GXBusinessException("请传递token密钥!");
         }
-        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
     }
 
     /**
@@ -264,10 +291,7 @@ public interface GXBaseController {
      * @return R
      */
     default <R> R getBackEndUserId(String tokenSecretKey, Class<R> targetClass) {
-        if (Objects.isNull(tokenSecretKey)) {
-            throw new GXBusinessException("请传递token密钥!");
-        }
-        return getLoginFieldFromToken(GXTokenConstant.TOKEN_NAME, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
+        return getBackEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
     }
 
     /**
