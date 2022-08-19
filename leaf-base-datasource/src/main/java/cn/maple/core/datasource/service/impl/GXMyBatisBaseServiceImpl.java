@@ -131,7 +131,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             queryParamReqDto.setColumns(CollUtil.newHashSet("*"));
         }
         if (Objects.isNull(queryParamReqDto.getMethodName())) {
-            queryParamReqDto.setMethodName("customizeProcess");
+            queryParamReqDto.setMethodName(GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
         }
         CopyOptions copyOptions = getCopyOptions(queryParamReqDto);
         Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);

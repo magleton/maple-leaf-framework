@@ -211,6 +211,9 @@ public class GXCommonUtils {
         if (Objects.isNull(source)) {
             return null;
         }
+        if (CharSequenceUtil.isBlank(methodName)) {
+            methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+        }
         try {
             copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
             T target = ReflectUtil.newInstanceIfPossible(tClass);
