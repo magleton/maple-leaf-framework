@@ -101,6 +101,10 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
+        boolean b = checkRecordIsExists(tableName, condition);
+        if (!b) {
+            throw new GXBusinessException("待更新的数据不存在!");
+        }
         return repository.updateFieldByCondition(tableName, updateFields, condition);
     }
 
