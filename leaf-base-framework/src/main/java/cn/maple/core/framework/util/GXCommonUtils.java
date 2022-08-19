@@ -13,10 +13,8 @@ import cn.hutool.core.util.*;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
-import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.mapstruct.GXBaseMapStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -256,6 +254,17 @@ public class GXCommonUtils {
     /**
      * 将任意对象转换为指定类型的对象
      *
+     * @param collection 需要转换的对象列表
+     * @param tClass     目标对象的类型
+     * @return List
+     */
+    public static <R> List<R> convertSourceListToTargetList(Collection<?> collection, Class<R> tClass) {
+        return convertSourceListToTargetList(collection, tClass, GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME, null);
+    }
+
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
      * @param collection  需要转换的对象列表
      * @param tClass      目标对象的类型
      * @param methodName  需要条用的方法名字
@@ -281,70 +290,6 @@ public class GXCommonUtils {
             return Collections.emptyList();
         }
         return collection.stream().map(source -> convertSourceToTarget(source, tClass, methodName, copyOptions, extraData)).collect(Collectors.toList());
-    }
-
-    /**
-     * 将任意源对象通过转换器转换为目标对象
-     *
-     * @param source         源对象
-     * @param mapStructClass 转换器
-     * @return 目标对象
-     */
-    public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> T convertSourceToTarget(S source, Class<M> mapStructClass) {
-        if (Objects.isNull(source)) {
-            return null;
-        }
-        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
-        assert mapStruct != null;
-        return mapStruct.sourceToTarget(source);
-    }
-
-    /**
-     * 将任意的源对象列表通过转换器转换为指定类型的目标对象列表
-     *
-     * @param sourceList     源列表
-     * @param mapStructClass 转换器
-     * @return 目标对象列表
-     */
-    public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<T> convertSourceListToTargetList(List<S> sourceList, Class<M> mapStructClass) {
-        if (CollUtil.isEmpty(sourceList)) {
-            return Collections.emptyList();
-        }
-        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
-        assert mapStruct != null;
-        return mapStruct.sourceToTarget(sourceList);
-    }
-
-    /**
-     * 将任意目标对象通过转换器转换为指定类型的目标对象
-     *
-     * @param target         目标对象
-     * @param mapStructClass 转换器
-     * @return 目标对象
-     */
-    public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> S convertTargetToSource(T target, Class<M> mapStructClass) {
-        if (Objects.isNull(target)) {
-            return null;
-        }
-        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
-        assert mapStruct != null;
-        return mapStruct.targetToSource(target);
-    }
-
-    /**
-     * 将任意对象列表通过转换器转换为指定类型的目标对象列表
-     *
-     * @param targetList     目标列表
-     * @param mapStructClass 转换器
-     * @return 源对象列表
-     */
-    public static <S extends GXBaseData, T extends GXBaseData, M extends GXBaseMapStruct<S, T>> List<S> convertTargetListToSourceList(List<T> targetList, Class<M> mapStructClass) {
-        if (CollUtil.isEmpty(targetList)) {
-            return Collections.emptyList();
-        }
-        M mapStruct = GXSpringContextUtils.getBean(mapStructClass);
-        assert mapStruct != null;
-        return mapStruct.targetToSource(targetList);
     }
 
     /**
