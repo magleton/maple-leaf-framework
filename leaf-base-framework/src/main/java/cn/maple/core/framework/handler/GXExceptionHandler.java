@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -180,5 +181,11 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleException(UnexpectedTypeException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "使用的数据验证器不能验证请求的参数!");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public GXResultUtils<Dict> handleException(HttpRequestMethodNotSupportedException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "不支持HTTP请求方法!");
     }
 }
