@@ -212,6 +212,9 @@ public class GXCommonUtils {
         if (CharSequenceUtil.isBlank(methodName)) {
             methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
+        if (Objects.isNull(extraData)) {
+            extraData = Dict.create();
+        }
         try {
             copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
             T target = ReflectUtil.newInstanceIfPossible(tClass);
