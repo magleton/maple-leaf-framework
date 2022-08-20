@@ -1,6 +1,5 @@
 package cn.maple.core.datasource.aspect;
 
-import cn.maple.core.datasource.annotation.GXCacheable;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +24,11 @@ public class GXCacheEvictAspect {
     @Around("evictCachePointCut()")
     public Object around(ProceedingJoinPoint point) {
         MethodSignature signature = (MethodSignature) point.getSignature();
-        Class<?> targetClass = point.getTarget().getClass();
         Method method = signature.getMethod();
-        GXCacheable cacheable = targetClass.getAnnotation(GXCacheable.class);
+        Object[] args = point.getArgs();
         try {
             Object proceed = point.proceed();
-            GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "invalidateCacheData", method.getName());
+            GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "invalidateCacheData", method.getName(), args);
             return proceed;
         } catch (Throwable e) {
             throw new GXBusinessException("清楚缓存数据失败", e);

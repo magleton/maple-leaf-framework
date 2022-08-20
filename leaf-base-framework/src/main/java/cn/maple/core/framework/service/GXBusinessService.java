@@ -268,4 +268,31 @@ public interface GXBusinessService {
         }
         return fieldFromToken;
     }
+
+    /**
+     * 自定义获取数据 可以从缓存获取
+     *
+     * @param scene 场景值
+     * @return 缓存数据
+     */
+    default Object getDataFromCache(String scene, Object... params) {
+        return null;
+    }
+
+    /**
+     * 缓存数据操作
+     *
+     * @param data  需要缓存的数据
+     * @param scene 场景值
+     */
+    default void setCacheData(String scene, Object data, Object... params) {
+    }
+
+    /**
+     * 失效缓存数据
+     *
+     * @param scene 场景值
+     */
+    default void invalidateCacheData(String scene, Object... params) {
+    }
 }

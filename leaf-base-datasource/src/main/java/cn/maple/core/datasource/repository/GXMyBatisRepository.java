@@ -7,8 +7,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.maple.core.datasource.annotation.GXCacheEvict;
-import cn.maple.core.datasource.annotation.GXCacheable;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -61,7 +59,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return ID
      */
     @Override
-    @GXCacheEvict
     @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
@@ -88,7 +85,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 列表
      */
     @Override
-    @GXCacheable
     public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseDao.findByCondition(dbQueryParamInnerDto);
     }
@@ -127,7 +123,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return R 返回数据
      */
     @Override
-    @GXCacheable
     public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (CharSequenceUtil.isEmpty(dbQueryParamInnerDto.getTableName())) {
             dbQueryParamInnerDto.setTableName(getTableName());
@@ -171,7 +166,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 返回数据
      */
     @Override
-    @GXCacheable
     public Dict findOneById(String tableName, ID id) {
         return findOneById(tableName, id, CollUtil.newHashSet("*"));
     }
@@ -203,7 +197,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 分页数据
      */
     @Override
-    @GXCacheable
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
@@ -239,7 +232,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 影响行数
      */
     @Override
-    @GXCacheEvict
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return baseDao.deleteSoftCondition(tableName, condition);
@@ -253,7 +245,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 影响行数
      */
     @Override
-    @GXCacheEvict
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         return baseDao.deleteCondition(tableName, condition);
@@ -316,7 +307,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return 影响的行数
      */
     @Override
-    @GXCacheEvict
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         if (condition.isEmpty()) {
