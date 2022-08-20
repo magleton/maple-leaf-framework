@@ -231,4 +231,31 @@ public interface GXBaseRepository<T, ID extends Serializable> {
      * @return 数据库表名字
      */
     String getTableName();
+
+    /**
+     * 自定义获取数据 可以从缓存获取
+     *
+     * @param scene 场景值
+     * @return 缓存数据
+     */
+    default Object getDataFromCache(String scene) {
+        return null;
+    }
+
+    /**
+     * 缓存数据操作
+     *
+     * @param data  需要缓存的数据
+     * @param scene 场景值
+     */
+    default void setDataToCache(Object data, String scene) {
+    }
+
+    /**
+     * 失效缓存数据
+     *
+     * @param scene 场景值
+     */
+    default void invalidateCacheData(String scene) {
+    }
 }
