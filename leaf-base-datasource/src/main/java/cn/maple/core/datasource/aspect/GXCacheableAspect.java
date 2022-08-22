@@ -36,7 +36,9 @@ public class GXCacheableAspect {
         }
         try {
             Object proceed = point.proceed();
-            GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", method.getName(), proceed, args);
+            if (Objects.nonNull(proceed)) {
+                GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", method.getName(), proceed, args);
+            }
             return proceed;
         } catch (Throwable e) {
             throw new GXBusinessException("设置缓存数据失败", e);
