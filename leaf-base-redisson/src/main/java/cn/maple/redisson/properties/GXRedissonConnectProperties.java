@@ -22,7 +22,7 @@ public class GXRedissonConnectProperties {
     /**
      * 链接用户名
      */
-    private String username = "default";
+    private String username;
 
     /**
      * 链接最小闲置大小
