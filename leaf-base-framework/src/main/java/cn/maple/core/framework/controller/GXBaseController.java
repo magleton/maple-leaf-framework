@@ -170,7 +170,6 @@ public interface GXBaseController {
         R fieldFromToken = GXCurrentRequestContextUtils.getLoginFieldFromToken(tokenName, tokenFieldName, clazz, secretKey);
         if (Objects.isNull(fieldFromToken)) {
             LOG.error("token中不存在键为{}的值", tokenFieldName);
-            return GXCommonUtils.getClassDefaultValue(clazz);
         }
         return fieldFromToken;
     }
