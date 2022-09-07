@@ -23,7 +23,7 @@ import java.util.Map;
 public class GXFrameworkConfig {
     @Bean
     @ConditionalOnMissingBean(ObjectMapper.class)
-    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         final ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         final SerializerProvider serializerProvider = objectMapper.getSerializerProvider();
         serializerProvider.setNullValueSerializer(new JsonSerializer<>() {

@@ -8,7 +8,6 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.exception.GXBusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -144,8 +143,9 @@ public class GXCurrentRequestContextUtils {
      */
     public static Dict getLoginCredentials(String tokenName, String secretKey) {
         String token = getHeader(tokenName);
-        if (Objects.isNull(token)) {
-            throw new GXBusinessException(CharSequenceUtil.format("{}不存在", tokenName));
+        if (CharSequenceUtil.isBlank(token)) {
+            LOG.error("{}不存在", tokenName);
+            return Dict.create();
         }
         String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {

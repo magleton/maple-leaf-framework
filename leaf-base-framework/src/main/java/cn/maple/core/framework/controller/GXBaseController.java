@@ -13,12 +13,19 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 public interface GXBaseController {
+    /**
+     * 日志对象
+     */
+    Logger LOG = LoggerFactory.getLogger(GXBaseController.class);
+
     /**
      * 将源对象转换为目标对象
      *
@@ -162,7 +169,8 @@ public interface GXBaseController {
     default <R> R getLoginFieldFromToken(String tokenName, String tokenFieldName, Class<R> clazz, String secretKey) {
         R fieldFromToken = GXCurrentRequestContextUtils.getLoginFieldFromToken(tokenName, tokenFieldName, clazz, secretKey);
         if (Objects.isNull(fieldFromToken)) {
-            throw new GXBusinessException(CharSequenceUtil.format("token中不存在键为{}的值", tokenFieldName));
+            LOG.error("token中不存在键为{}的值", tokenFieldName);
+            return GXCommonUtils.getClassDefaultValue(clazz);
         }
         return fieldFromToken;
     }
