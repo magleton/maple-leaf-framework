@@ -13,8 +13,8 @@
 
     <properties>
         <dubbo.version>3.0.10</dubbo.version>
-        <fastjson.version>2.0.12</fastjson.version>
-        <javassist.version>3.29.0-GA</javassist.version>
+        <fastjson.version>2.0.13</fastjson.version>
+        <javassist.version>3.29.1-GA</javassist.version>
     </properties>
 
     <dependencies>

@@ -12,7 +12,7 @@
     <artifactId>leaf-base-redisson-module</artifactId>
 
     <properties>
-        <redis-modules-java.version>2.0.0</redis-modules-java.version>
+        <redis-modules-java.version>2.0.1</redis-modules-java.version>
     </properties>
 
     <dependencies>
