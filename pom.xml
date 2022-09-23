@@ -35,7 +35,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <lombok.version>1.18.24</lombok.version>
-        <hutool.version>5.8.5</hutool.version>
+        <hutool.version>5.8.6</hutool.version>
         <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
         <guava.version>31.1-jre</guava.version>
         <okhttp.version>4.9.3</okhttp.version>

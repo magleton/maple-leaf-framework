@@ -194,16 +194,41 @@ public interface GXBusinessService {
      *
      * @param pagination  源分页对象
      * @param targetClazz 目标类型
+     * @param methodName  方法名字
+     * @param copyOptions copy选项
+     * @param extraData   额外数据
      * @return GXPaginationResProtocol对象
      */
-    default <S extends GXBaseDBResDto, T extends GXBaseResDto> GXPaginationResDto<T> convertPaginationDBResDtoToResDto(GXPaginationResDto<S> pagination, Class<T> targetClazz) {
+    default <S extends GXBaseDBResDto, T extends GXBaseResDto> GXPaginationResDto<T> convertPaginationDBResDtoToResDto(GXPaginationResDto<S> pagination, Class<T> targetClazz, String methodName, CopyOptions copyOptions, Dict extraData) {
         List<S> records = pagination.getRecords();
         long total = pagination.getTotal();
         long pages = pagination.getPages();
         long pageSize = pagination.getPageSize();
         long currentPage = pagination.getCurrentPage();
-        List<T> list = convertSourceListToTargetList(records, targetClazz, null, new CopyOptions(), Dict.create());
+        List<T> list = convertSourceListToTargetList(records, targetClazz, methodName, copyOptions, extraData);
         return new GXPaginationResDto<>(list, total, pages, pageSize, currentPage);
+    }
+
+    /**
+     * 将GXPaginationDBResDto转换为GXPaginationResDto
+     *
+     * @param pagination  源分页对象
+     * @param targetClazz 目标类型
+     * @return GXPaginationResProtocol对象
+     */
+    default <S extends GXBaseDBResDto, T extends GXBaseResDto> GXPaginationResDto<T> convertPaginationDBResDtoToResDto(GXPaginationResDto<S> pagination, Class<T> targetClazz, Dict extraData) {
+        return convertPaginationDBResDtoToResDto(pagination, targetClazz, null, new CopyOptions(), extraData);
+    }
+
+    /**
+     * 将GXPaginationDBResDto转换为GXPaginationResDto
+     *
+     * @param pagination  源分页对象
+     * @param targetClazz 目标类型
+     * @return GXPaginationResProtocol对象
+     */
+    default <S extends GXBaseDBResDto, T extends GXBaseResDto> GXPaginationResDto<T> convertPaginationDBResDtoToResDto(GXPaginationResDto<S> pagination, Class<T> targetClazz) {
+        return convertPaginationDBResDtoToResDto(pagination, targetClazz, Dict.create());
     }
 
     /**
