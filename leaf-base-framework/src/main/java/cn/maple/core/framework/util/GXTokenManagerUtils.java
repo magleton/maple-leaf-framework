@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXTokenInvalidException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,7 +48,7 @@ public class GXTokenManagerUtils {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
-                throw new GXBusinessException("无效用户身份!!!");
+                throw new GXTokenInvalidException("无效用户身份!!!");
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
@@ -91,7 +91,7 @@ public class GXTokenManagerUtils {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
-                throw new GXBusinessException("无效用户身份!!!");
+                throw new GXTokenInvalidException("无效用户身份!!!");
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {

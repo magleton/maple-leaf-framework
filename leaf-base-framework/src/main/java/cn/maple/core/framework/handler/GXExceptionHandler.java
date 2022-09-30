@@ -8,7 +8,7 @@ import cn.maple.core.framework.code.GXHttpStatusCode;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
-import cn.maple.core.framework.exception.GXTokenEmptyException;
+import cn.maple.core.framework.exception.GXTokenInvalidException;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -109,10 +109,10 @@ public class GXExceptionHandler {
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getCause().getMessage());
     }
 
-    @ExceptionHandler(GXTokenEmptyException.class)
-    public GXResultUtils<String> handleGXTokenEmptyException(GXTokenEmptyException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler(GXTokenInvalidException.class)
+    public GXResultUtils<String> handleGXTokenInvalidException(GXTokenInvalidException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtils.error(HttpStatus.HTTP_UNAUTHORIZED, e.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
