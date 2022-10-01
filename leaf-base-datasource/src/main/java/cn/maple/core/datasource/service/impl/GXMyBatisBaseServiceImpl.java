@@ -6,8 +6,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.maple.core.framework.annotation.GXCacheEvict;
-import cn.maple.core.framework.annotation.GXCacheable;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.model.GXMyBatisModel;
@@ -104,7 +102,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
-    @GXCacheEvict
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
@@ -134,7 +131,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return GXPagination
      */
     @Override
-    @GXCacheable
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
         if (CharSequenceUtil.isEmpty(queryParamReqDto.getTableName())) {
             queryParamReqDto.setTableName(repository.getTableName());
@@ -162,7 +158,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return List
      */
     @Override
-    @GXCacheable
     public List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
@@ -306,7 +301,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     @Override
-    @GXCacheable
     public R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
@@ -421,7 +415,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @GXCacheEvict
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, Collections.emptyList());
     }
@@ -435,7 +428,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @GXCacheEvict
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         return repository.updateOrCreate(entity, condition);
     }
@@ -541,7 +533,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @GXCacheEvict
     public Integer deleteSoftCondition(List<GXCondition<?>> condition) {
         return deleteSoftCondition(repository.getTableName(), condition);
     }
@@ -565,7 +556,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @GXCacheEvict
     public Integer deleteCondition(List<GXCondition<?>> condition) {
         return deleteCondition(repository.getTableName(), condition);
     }
@@ -696,7 +686,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Collection
      */
     @Override
-    @GXCacheable
     public Collection<R> findByCallMapperMethod(String mapperMethodName, String convertMethodName, CopyOptions copyOptions, Object... params) {
         Object o = callMethod(baseMapper, mapperMethodName, params);
         if (Objects.isNull(o)) {
@@ -727,7 +716,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Object
      */
     @Override
-    @GXCacheable
     public R findOneByCallMapperMethod(String mapperMethodName, String convertMethodName, CopyOptions copyOptions, Object... params) {
         Object o = callMethod(baseMapper, mapperMethodName, params);
         if (Objects.isNull(o)) {
