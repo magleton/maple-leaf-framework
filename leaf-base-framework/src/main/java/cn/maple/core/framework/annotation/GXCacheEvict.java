@@ -1,4 +1,4 @@
-package cn.maple.core.datasource.annotation;
+package cn.maple.core.framework.annotation;
 
 import java.lang.annotation.*;
 
@@ -6,9 +6,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface GXCacheable {
+public @interface GXCacheEvict {
     /**
-     * 场景值
+     * 缓存key
      */
-    String scene() default "";
+    String cacheKey() default "";
 }

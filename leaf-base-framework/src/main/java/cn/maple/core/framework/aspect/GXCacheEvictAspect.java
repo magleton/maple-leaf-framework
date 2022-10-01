@@ -1,7 +1,8 @@
-package cn.maple.core.datasource.aspect;
+package cn.maple.core.framework.aspect;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.maple.core.datasource.annotation.GXCacheable;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.annotation.GXCacheEvict;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,23 +20,20 @@ import java.util.Objects;
 @Aspect
 @Component
 @Slf4j
-public class GXCacheableAspect {
-    @Pointcut("@annotation(cn.maple.core.datasource.annotation.GXCacheable)" + "|| @within(cn.maple.core.datasource.annotation.GXCacheable)" + "|| target(cn.maple.core.datasource.service.GXMyBatisBaseService)")
-    public void cacheablePointCut() {
+public class GXCacheEvictAspect {
+    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXCacheEvict) " + "|| @within(cn.maple.core.framework.annotation.GXCacheEvict)")
+    public void evictCachePointCut() {
         // 这是是切点标记
     }
 
-    @Around("cacheablePointCut()")
+    @Around("evictCachePointCut()")
     public Object around(ProceedingJoinPoint point) {
         MethodSignature signature = (MethodSignature) point.getSignature();
-        Class<?> targetClass = point.getTarget().getClass();
         Method method = signature.getMethod();
+        Class<?> targetClass = point.getTarget().getClass();
+        GXCacheEvict cacheEvict = method.getAnnotation(GXCacheEvict.class);
+        String cacheKey = CharSequenceUtil.lowerFirst(targetClass.getSimpleName()) + ":" + (CharSequenceUtil.isEmpty(cacheEvict.cacheKey()) ? method.getName() : cacheEvict.cacheKey());
         Object[] args = point.getArgs();
-        GXCacheable cacheable = targetClass.getAnnotation(GXCacheable.class);
-        Object obtainData = GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "getDataFromCache", method.getName(), args);
-        if (Objects.nonNull(obtainData)) {
-            return obtainData;
-        }
         try {
             Object proceed;
             if (CollUtil.isNotEmpty(Arrays.asList(args))) {
@@ -44,7 +42,7 @@ public class GXCacheableAspect {
                 proceed = point.proceed();
             }
             if (Objects.nonNull(proceed)) {
-                GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", method.getName(), proceed, args);
+                GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "evictCacheData", cacheKey, args);
             }
             return proceed;
         } catch (Throwable e) {

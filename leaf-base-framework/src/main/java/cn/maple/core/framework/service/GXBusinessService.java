@@ -303,27 +303,27 @@ public interface GXBusinessService {
     /**
      * 自定义获取数据 可以从缓存获取
      *
-     * @param scene 场景值
+     * @param cacheKey 缓存key
      * @return 缓存数据
      */
-    default Object getDataFromCache(String scene, Object... params) {
+    default Object getDataFromCache(String cacheKey, Object... params) {
         return null;
     }
 
     /**
      * 缓存数据操作
      *
-     * @param data  需要缓存的数据
-     * @param scene 场景值
+     * @param cacheKey 缓存key
+     * @param data     需要缓存的数据
      */
-    default void setCacheData(String scene, Object data, Object... params) {
+    default void setCacheData(String cacheKey, Object data, Object... params) {
     }
 
     /**
      * 失效缓存数据
      *
-     * @param scene 场景值
+     * @param cacheKey 缓存key
      */
-    default void invalidateCacheData(String scene, Object... params) {
+    default void evictCacheData(String cacheKey, Object... params) {
     }
 }
