@@ -27,7 +27,7 @@ import java.util.Objects;
 public class GXCacheEvictAspect {
     private static final LocalVariableTableParameterNameDiscoverer parameterNameDiscover = new LocalVariableTableParameterNameDiscoverer();
 
-    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXCacheEvict) " + "|| @within(cn.maple.core.framework.annotation.GXCacheEvict)" + "|| target(cn.maple.core.datasource.service.GXMyBatisBaseService)")
+    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXCacheEvict) " + "|| @within(cn.maple.core.framework.annotation.GXCacheEvict)")
     public void evictCachePointCut() {
         // 这是是切点标记
     }

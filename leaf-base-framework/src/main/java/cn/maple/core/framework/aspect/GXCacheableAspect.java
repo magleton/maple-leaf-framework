@@ -27,7 +27,7 @@ import java.util.Objects;
 public class GXCacheableAspect {
     private static final LocalVariableTableParameterNameDiscoverer parameterNameDiscover = new LocalVariableTableParameterNameDiscoverer();
 
-    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXCacheable)" + "|| @within(cn.maple.core.framework.annotation.GXCacheable)" + "|| target(cn.maple.core.datasource.service.GXMyBatisBaseService)")
+    @Pointcut("@annotation(cn.maple.core.framework.annotation.GXCacheable)" + "|| @within(cn.maple.core.framework.annotation.GXCacheable)")
     public void cacheablePointCut() {
         // 这是是切点标记
     }
