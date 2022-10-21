@@ -198,7 +198,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        if (Objects.isNull(dbQueryParamInnerDto.getColumns())) {
+        if (CharSequenceUtil.isBlank(dbQueryParamInnerDto.getRawSQL()) && Objects.isNull(dbQueryParamInnerDto.getColumns())) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
         return baseDao.paginate(dbQueryParamInnerDto);

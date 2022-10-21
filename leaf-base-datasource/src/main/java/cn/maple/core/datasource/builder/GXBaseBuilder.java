@@ -152,6 +152,9 @@ public interface GXBaseBuilder {
      */
     @SuppressWarnings("unused")
     static <R> String paginate(IPage<R> page, GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        if (CharSequenceUtil.isNotBlank(dbQueryParamInnerDto.getRawSQL())) {
+            return dbQueryParamInnerDto.getRawSQL();
+        }
         return findByCondition(dbQueryParamInnerDto);
     }
 

@@ -52,7 +52,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXMyBatisModel, I
         IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
         String mapperMethodName = "paginate";
         Set<String> fieldSet = dbQueryParamInnerDto.getColumns();
-        if (Objects.isNull(fieldSet)) {
+        if (CharSequenceUtil.isBlank(dbQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
