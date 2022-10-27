@@ -12,9 +12,9 @@
     <artifactId>leaf-base-dubbo-nacos</artifactId>
 
     <properties>
-        <dubbo.version>3.0.10</dubbo.version>
-        <fastjson.version>2.0.13</fastjson.version>
-        <javassist.version>3.29.1-GA</javassist.version>
+        <dubbo.version>3.1.1</dubbo.version>
+        <fastjson.version>2.0.16</fastjson.version>
+        <javassist.version>3.29.2-GA</javassist.version>
     </properties>
 
     <dependencies>
