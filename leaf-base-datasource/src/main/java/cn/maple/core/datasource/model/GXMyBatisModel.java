@@ -1,10 +1,10 @@
 package cn.maple.core.datasource.model;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.model.GXBaseModel;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,6 +23,30 @@ public class GXMyBatisModel extends GXBaseModel {
     @TableField(fill = FieldFill.UPDATE)
     private String updatedBy;
 
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private Dict ext;
+    /**
+     * 扩展字段
+     */
+    private Object ext;
+
+    /**
+     * 获取扩展字符串
+     *
+     * @return JSON
+     */
+    public String getExt() {
+        return Convert.toStr(ext);
+    }
+
+    /**
+     * 将传入的扩展数据转换成JSON字符串
+     *
+     * @param ext 扩展数据
+     */
+    public void setExt(Object ext) {
+        if (JSONUtil.isTypeJSON(ext.toString())) {
+            this.ext = ext;
+        } else {
+            this.ext = JSONUtil.toJsonStr(ext);
+        }
+    }
 }
