@@ -1,6 +1,7 @@
 package cn.maple.core.datasource.model;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.model.GXBaseModel;
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -43,7 +44,10 @@ public class GXMyBatisModel extends GXBaseModel {
      * @param ext 扩展数据
      */
     public void setExt(Object ext) {
-        if (JSONUtil.isTypeJSON(ext.toString())) {
+        if (ObjectUtil.isNull(ext)) {
+            ext = "{}";
+        }
+        if (String.class.isAssignableFrom(ext.getClass()) && JSONUtil.isTypeJSON(ext.toString())) {
             this.ext = ext;
         } else {
             this.ext = JSONUtil.toJsonStr(ext);
