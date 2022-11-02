@@ -9,7 +9,6 @@ import cn.maple.core.datasource.event.GXModelCreatedEvent;
 import cn.maple.core.datasource.event.GXModelCreatingEvent;
 import cn.maple.core.datasource.event.GXModelUpdatedEvent;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -19,6 +18,7 @@ import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.model.GXBaseModel;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
@@ -35,7 +35,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXMyBatisModel, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, ID> {
+public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID extends Serializable> extends ServiceImpl<M, T> implements GXBaseDao<T, ID> {
     /**
      * 日志对象
      */

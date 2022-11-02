@@ -21,6 +21,7 @@ import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.model.GXBaseModel;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends GXMyBatisModel, D extends GXMyBatisDao<M, T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
+public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends GXBaseModel, D extends GXMyBatisDao<M, T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
     /**
      * 日志对象
      */
