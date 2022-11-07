@@ -8,9 +8,16 @@ import java.util.stream.Collectors;
 public class GXConditionFuncJsonContains extends GXConditionFunc<String> {
     private final List<String> values;
 
+    private final String jsonPath;
+
     public GXConditionFuncJsonContains(String tableNameAlias, String op, List<String> values) {
+        this(tableNameAlias, op, values, "$");
+    }
+
+    public GXConditionFuncJsonContains(String tableNameAlias, String op, List<String> values, String jsonPath) {
         super(tableNameAlias, op, "", null);
         this.values = values;
+        this.jsonPath = jsonPath;
     }
 
     @Override
@@ -20,7 +27,8 @@ public class GXConditionFuncJsonContains extends GXConditionFunc<String> {
 
     @Override
     public String getFieldExpression() {
-        return "`{}`->'$', CAST('[{}]' AS JSON)";
+        String format = "`{}`.`{}`->'" + jsonPath + "', CAST('[{}]' AS JSON)";
+        return CharSequenceUtil.format(format, tableNameAlias);
     }
 
     @Override
