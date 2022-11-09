@@ -1,0 +1,27 @@
+spring:
+  cache:
+    type: caffeine
+    cache-names:
+      - __DEFAULT__
+      - common
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+  protocol:
+    name: dubbo
+    port: 20884
+  config-center:
+    timeout: 10000
+  consumer:
+    retries: 0
+    check: false
+  provider:
+    timeout: 10000
+    filter: dubboExceptionFilter,-exception
+    retries: 0
+  registry:
+    address: nacos://127.0.0.1:8848
+    parameters: { namespace: f3c0da88-9018-4721-89fc-d3c64c636aa6 , group: DEFAULT_GROUP, id: provider }
+  scan:
+    base-packages: cn.gaple.manager

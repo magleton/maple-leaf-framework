@@ -13,7 +13,7 @@
 
     <properties>
         <nacos-config-spring-boot.version>0.2.12</nacos-config-spring-boot.version>
-        <nacos.version>2.1.1</nacos.version>
+        <nacos.version>2.1.2</nacos.version>
     </properties>
 
     <dependencies>
