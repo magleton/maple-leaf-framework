@@ -40,6 +40,7 @@ public class GXCacheEvictAspect {
         Class<?> targetClass = point.getTarget().getClass();
         Object[] args = point.getArgs();
         GXCacheEvict cacheEvict = method.getAnnotation(GXCacheEvict.class);
+        String cacheKey = parseCacheKey(parameterNames, targetClass, method, cacheEvict, args);
         try {
             Object proceed;
             if (CollUtil.isNotEmpty(Arrays.asList(args))) {
@@ -48,7 +49,6 @@ public class GXCacheEvictAspect {
                 proceed = point.proceed();
             }
             if (Objects.nonNull(proceed)) {
-                String cacheKey = parseCacheKey(parameterNames, targetClass, method, cacheEvict, args);
                 GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "evictCacheData", cacheKey, args);
             }
             return proceed;
@@ -102,7 +102,8 @@ public class GXCacheEvictAspect {
                     if (Objects.isNull(method)) {
                         throw new GXBusinessException("Leaf框架需要的缓存方法不存在!");
                     }
-                    return Objects.requireNonNull(GXCommonUtils.reflectCallObjectMethod(arg, getMethodName)).toString();
+                    Object o = GXCommonUtils.reflectCallObjectMethod(arg, getMethodName);
+                    return Objects.isNull(o) ? null : o.toString();
                 } else {
                     return arg.toString();
                 }

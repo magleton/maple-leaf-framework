@@ -110,7 +110,8 @@ public class GXCacheableAspect {
                     if (Objects.isNull(method)) {
                         throw new GXBusinessException("Leaf框架需要的缓存方法不存在!");
                     }
-                    return Objects.requireNonNull(GXCommonUtils.reflectCallObjectMethod(arg, getMethodName)).toString();
+                    Object o = GXCommonUtils.reflectCallObjectMethod(arg, getMethodName);
+                    return Objects.isNull(o) ? null : o.toString();
                 } else {
                     return arg.toString();
                 }
