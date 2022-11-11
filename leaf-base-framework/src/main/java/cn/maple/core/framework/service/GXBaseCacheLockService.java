@@ -1,7 +1,6 @@
 package cn.maple.core.framework.service;
 
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public interface GXBaseCacheLockService {
     /**
@@ -11,6 +10,6 @@ public interface GXBaseCacheLockService {
      * @return Lock对象
      */
     default Lock getLock(String lockName) {
-        return new ReentrantLock();
+        return null;
     }
 }
