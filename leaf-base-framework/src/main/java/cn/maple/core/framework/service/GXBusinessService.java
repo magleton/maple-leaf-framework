@@ -363,6 +363,6 @@ public interface GXBusinessService {
      */
     default String getCacheBucketName() {
         String s = ReUtil.replaceAll(getClass().getSimpleName(), "GX|ServiceImpl", "");
-        return CharSequenceUtil.toUnderlineCase(s) + "_bucket";
+        return "mapleaf_default_cache:" + CharSequenceUtil.toUnderlineCase(s) + "_bucket";
     }
 }
