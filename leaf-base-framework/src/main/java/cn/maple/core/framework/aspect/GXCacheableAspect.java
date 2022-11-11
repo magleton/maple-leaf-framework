@@ -51,6 +51,9 @@ public class GXCacheableAspect {
         String cacheKey = parseCacheKey(parameterNames, targetClass, method, cacheable, args);
         Object obtainData = GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "getDataFromCache", cacheKey, args);
         if (Objects.nonNull(obtainData)) {
+            if (tClass.isAssignableFrom(GXBaseResDto.class)) {
+                return obtainData;
+            }
             return GXCommonUtils.convertSourceToTarget(obtainData, tClass, methodName, null, Dict.create());
         }
         try {

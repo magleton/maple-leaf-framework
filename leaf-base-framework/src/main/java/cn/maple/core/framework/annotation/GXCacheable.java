@@ -13,7 +13,7 @@ public @interface GXCacheable {
     /**
      * 如果命中缓存 将缓存的类型转换为该类型
      */
-    Class<? extends GXBaseResDto> retType();
+    Class<? extends GXBaseResDto> retType() default GXBaseResDto.class;
 
     /**
      * 转换到指定类型可以指定该值来进行自定义转换规则
