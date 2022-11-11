@@ -1,9 +1,11 @@
 package cn.maple.core.framework.aspect;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.framework.annotation.GXCacheable;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +43,12 @@ public class GXCacheableAspect {
         Object[] args = point.getArgs();
         GXCacheable cacheable = method.getAnnotation(GXCacheable.class);
         boolean evictCache = cacheable.evictCache();
+        Class<? extends GXBaseResDto> tClass = cacheable.retType();
+        String methodName = cacheable.methodName();
         String cacheKey = parseCacheKey(parameterNames, targetClass, method, cacheable, args);
         Object obtainData = GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "getDataFromCache", cacheKey, args);
         if (Objects.nonNull(obtainData)) {
-            return obtainData;
+            return GXCommonUtils.convertSourceToTarget(obtainData, tClass, methodName, null, Dict.create());
         }
         try {
             Object proceed;
@@ -65,6 +69,7 @@ public class GXCacheableAspect {
         }
     }
 
+    @SuppressWarnings("all")
     private String parseCacheKey(String[] parameterNames, Class<?> targetClass, Method method, GXCacheable cacheable, Object[] args) {
         List<String> tmpLst = new ArrayList<>();
         String cacheKey = cacheable.cacheKey();
@@ -93,6 +98,7 @@ public class GXCacheableAspect {
         return retCacheKey;
     }
 
+    @SuppressWarnings("all")
     private String dealParam(String expr, String[] parameterNames, Object[] args) {
         String targetParamName = CharSequenceUtil.replace(expr, "#", "");
         String getMethodName = "";

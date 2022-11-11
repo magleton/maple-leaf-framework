@@ -57,6 +57,7 @@ public class GXCacheEvictAspect {
         }
     }
 
+    @SuppressWarnings("all")
     private String parseCacheKey(String[] parameterNames, Class<?> targetClass, Method method, GXCacheEvict cacheEvict, Object[] args) {
         List<String> tmpValues = new ArrayList<>();
         String cacheKey = cacheEvict.cacheKey();
@@ -85,6 +86,7 @@ public class GXCacheEvictAspect {
         return retCacheKey;
     }
 
+    @SuppressWarnings("all")
     private String dealParam(String expr, String[] parameterNames, Object[] args) {
         String targetParamName = CharSequenceUtil.replace(expr, "#", "");
         String getMethodName = "";
