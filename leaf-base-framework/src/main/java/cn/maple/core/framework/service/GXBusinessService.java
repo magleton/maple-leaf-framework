@@ -326,7 +326,14 @@ public interface GXBusinessService {
     default void setCacheData(String cacheKey, Object data, Object... params) {
         GXBaseCacheService cacheService = getCacheService();
         if (Objects.nonNull(cacheService)) {
+            GXBaseCacheLock cacheLock = getCacheLock();
+            if (Objects.nonNull(cacheLock)) {
+                cacheLock.lock(cacheKey);
+            }
             cacheService.setCache(getCacheBucketName(), cacheKey, data);
+            if (Objects.nonNull(cacheLock)) {
+                cacheLock.unlock(cacheKey);
+            }
         }
     }
 
@@ -338,7 +345,14 @@ public interface GXBusinessService {
     default void evictCacheData(String cacheKey, Object... params) {
         GXBaseCacheService cacheService = getCacheService();
         if (Objects.nonNull(cacheService)) {
+            GXBaseCacheLock cacheLock = getCacheLock();
+            if (Objects.nonNull(cacheLock)) {
+                cacheLock.lock(cacheKey);
+            }
             cacheService.deleteCache(getCacheBucketName(), cacheKey);
+            if (Objects.nonNull(cacheLock)) {
+                cacheLock.unlock(cacheKey);
+            }
         }
     }
 
@@ -364,5 +378,14 @@ public interface GXBusinessService {
     default String getCacheBucketName() {
         String s = ReUtil.replaceAll(getClass().getSimpleName(), "GX|ServiceImpl", "");
         return "mapleaf_default_cache:" + CharSequenceUtil.toUnderlineCase(s) + "_bucket";
+    }
+
+    /**
+     * 获取缓存锁
+     *
+     * @return 缓存锁
+     */
+    default GXBaseCacheLock getCacheLock() {
+        return GXSpringContextUtils.getBean(GXBaseCacheLock.class);
     }
 }
