@@ -9,6 +9,7 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -307,6 +308,10 @@ public interface GXBusinessService {
      * @return 缓存数据
      */
     default Object getDataFromCache(String cacheKey, Object... params) {
+        GXBaseCacheService cacheService = getCacheService();
+        if (Objects.nonNull(cacheService)) {
+            return cacheService.getCache(getCacheBucketName(), cacheKey);
+        }
         return null;
     }
 
@@ -317,6 +322,10 @@ public interface GXBusinessService {
      * @param data     需要缓存的数据
      */
     default void setCacheData(String cacheKey, Object data, Object... params) {
+        GXBaseCacheService cacheService = getCacheService();
+        if (Objects.nonNull(cacheService)) {
+            cacheService.setCache(getCacheBucketName(), cacheKey, data);
+        }
     }
 
     /**
@@ -325,5 +334,32 @@ public interface GXBusinessService {
      * @param cacheKey 缓存key
      */
     default void evictCacheData(String cacheKey, Object... params) {
+        GXBaseCacheService cacheService = getCacheService();
+        if (Objects.nonNull(cacheService)) {
+            cacheService.deleteCache(getCacheBucketName(), cacheKey);
+        }
+    }
+
+    /**
+     * 获取缓存服务对象
+     *
+     * @return 缓存服务对象
+     */
+    default GXBaseCacheService getCacheService() {
+        Object cacheService = GXSpringContextUtils.getBean("cn.maple.redisson.services.GXRedissonCacheService");
+        if (Objects.nonNull(cacheService)) {
+            return (GXBaseCacheService) cacheService;
+        }
+        return null;
+    }
+
+    /**
+     * 获取默认的Cache Bucket
+     *
+     * @return Cache Bucket
+     */
+    default String getCacheBucketName() {
+        String name = getClass().getName();
+        return name + "mapleaf_default_bucket_name";
     }
 }
