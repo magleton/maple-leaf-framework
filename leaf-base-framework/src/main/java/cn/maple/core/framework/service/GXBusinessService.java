@@ -2,6 +2,8 @@ package cn.maple.core.framework.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
@@ -346,10 +348,11 @@ public interface GXBusinessService {
      * @return 缓存服务对象
      */
     default GXBaseCacheService getCacheService() {
-        Object cacheService = GXSpringContextUtils.getBean("cn.maple.redisson.services.GXRedissonCacheService");
+        GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
         if (Objects.nonNull(cacheService)) {
-            return (GXBaseCacheService) cacheService;
+            return cacheService;
         }
+        LOG.warn("请提供缓存组件");
         return null;
     }
 
@@ -359,7 +362,7 @@ public interface GXBusinessService {
      * @return Cache Bucket
      */
     default String getCacheBucketName() {
-        String name = getClass().getName();
-        return name + "mapleaf_default_bucket_name";
+        String s = ReUtil.replaceAll(getClass().getSimpleName(), "GX|ServiceImpl", "");
+        return CharSequenceUtil.toUnderlineCase(s) + "_bucket";
     }
 }
