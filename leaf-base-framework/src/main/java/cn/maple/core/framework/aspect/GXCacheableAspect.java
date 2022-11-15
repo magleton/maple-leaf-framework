@@ -45,7 +45,6 @@ public class GXCacheableAspect {
         Class<?> targetClass = point.getTarget().getClass();
         Object[] args = point.getArgs();
         GXCacheable cacheable = method.getAnnotation(GXCacheable.class);
-        boolean evictCache = cacheable.evictCache();
         Class<? extends GXBaseResDto> tClass = cacheable.retType();
         String methodName = cacheable.methodName();
         String cacheKey = parseCacheKey(parameterNames, targetClass, method, cacheable, args);
@@ -67,8 +66,12 @@ public class GXCacheableAspect {
                 Lock cacheLock = getCacheLock(cacheKey);
                 try {
                     cacheLock.lock();
-                    if (evictCache) {
-                        GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "evictCacheData", cacheKey, args);
+                    obtainData = GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "getDataFromCache", cacheKey, args);
+                    if (Objects.nonNull(obtainData)) {
+                        if (tClass.isAssignableFrom(GXBaseResDto.class)) {
+                            return obtainData;
+                        }
+                        return GXCommonUtils.convertSourceToTarget(obtainData, tClass, methodName, null, Dict.create());
                     }
                     GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", cacheKey, proceed, args);
                 } finally {

@@ -24,9 +24,4 @@ public @interface GXCacheable {
      * 缓存key
      */
     String cacheKey() default "";
-
-    /**
-     * 清除缓存数据
-     */
-    boolean evictCache() default false;
 }
