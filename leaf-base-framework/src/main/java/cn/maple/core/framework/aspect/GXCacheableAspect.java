@@ -7,9 +7,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.framework.annotation.GXCacheable;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.service.GXBaseCacheLockService;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
 
 @Aspect
 @Component
@@ -63,20 +60,7 @@ public class GXCacheableAspect {
                 proceed = point.proceed();
             }
             if (Objects.nonNull(proceed)) {
-                Lock cacheLock = getCacheLock(cacheKey);
-                try {
-                    cacheLock.lock();
-                    obtainData = GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "getDataFromCache", cacheKey, args);
-                    if (Objects.nonNull(obtainData)) {
-                        if (tClass.isAssignableFrom(GXBaseResDto.class)) {
-                            return obtainData;
-                        }
-                        return GXCommonUtils.convertSourceToTarget(obtainData, tClass, methodName, null, Dict.create());
-                    }
-                    GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", cacheKey, proceed, args);
-                } finally {
-                    cacheLock.unlock();
-                }
+                GXCommonUtils.reflectCallObjectMethod(point.getTarget(), "setCacheData", cacheKey, proceed, args);
             }
             return proceed;
         } catch (Throwable e) {
@@ -139,16 +123,5 @@ public class GXCacheableAspect {
             }
         }
         return null;
-    }
-
-    /**
-     * 获取缓存锁
-     *
-     * @param lockName 锁的名字
-     * @return Lock 锁对象
-     */
-    @SuppressWarnings("all")
-    private Lock getCacheLock(String lockName) {
-        return Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseCacheLockService.class)).getLock(lockName);
     }
 }
