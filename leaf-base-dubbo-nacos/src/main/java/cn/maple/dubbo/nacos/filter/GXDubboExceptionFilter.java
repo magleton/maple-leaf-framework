@@ -7,14 +7,15 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXSentinelFlowException;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
-import org.apache.dubbo.common.logger.Logger;
-import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.common.utils.ReflectUtils;
 import org.apache.dubbo.rpc.*;
 import org.apache.dubbo.rpc.filter.ExceptionFilter;
 import org.apache.dubbo.rpc.service.GenericService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 @Activate(group = CommonConstants.PROVIDER)
 public class GXDubboExceptionFilter extends ExceptionFilter {
@@ -60,7 +61,7 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                 }
 
                 // (如果在方法声明中没有发现这个异常, 则在日志中以error级别打印这个异常) for the exception not found in method's signature, print ERROR message in server's log.
-                logger.error("Got unchecked and undeclared exception which called by " + RpcContext.getServiceContext().getRemoteHost() + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName() + ", exception: " + exception.getClass().getName() + ": " + exception.getMessage(), exception);
+                logger.error("[Dubbo服务调用出错]Got unchecked and undeclared exception which called by " + RpcContext.getServiceContext().getRemoteHost() + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName() + ", exception: " + exception.getClass().getName() + ": " + exception.getMessage(), exception);
 
                 //(如果这个异常与接口在同一个jar包中 则直接抛异常) directly throw if exception class and interface class are in the same jar file.
                 String serviceFile = ReflectUtils.getCodeBase(invoker.getInterface());
@@ -80,9 +81,12 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                 }
 
                 // otherwise, wrap with RuntimeException and throw back to the client
+                if (exception instanceof SQLException) {
+                    exception = new GXBusinessException("服务方出现数据SQL语句错误");
+                }
                 appResponse.setException(exception);
             } catch (Throwable e) {
-                logger.warn("Fail to ExceptionFilter when called by " + RpcContext.getServiceContext().getRemoteHost() + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName() + ", exception: " + e.getClass().getName() + ": " + e.getMessage(), e);
+                logger.warn("[Dubbo服务调用出错]Fail to ExceptionFilter when called by " + RpcContext.getServiceContext().getRemoteHost() + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName() + ", exception: " + e.getClass().getName() + ": " + e.getMessage(), e);
             }
         }
     }

@@ -2,11 +2,15 @@ package cn.maple.core.datasource.config;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.maple.core.datasource.annotation.GXDataSource;
 import cn.maple.core.datasource.properties.GXDataSourceProperties;
 import cn.maple.core.datasource.properties.GXDynamicDataSourceProperties;
+import cn.maple.core.framework.config.aware.GXApplicationContextAware;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +19,7 @@ import javax.sql.DataSource;
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -22,7 +27,7 @@ import java.util.Optional;
  */
 @Configuration
 @Slf4j
-public class GXDynamicDataSourceConfig {
+public class GXDynamicDataSourceConfig extends GXApplicationContextAware {
     @Resource
     private GXDynamicDataSourceProperties dynamicDataSourceProperties;
 
@@ -32,7 +37,14 @@ public class GXDynamicDataSourceConfig {
         if (!CharSequenceUtil.isEmpty(dataSourceProperties.getUrl())) {
             return dataSourceProperties;
         }
-        return dynamicDataSourceProperties.getDatasource().get("framework");
+        String[] defaultDataSourceName = new String[]{"framework"};
+        GXSpringContextUtils.getApplicationContext().getBeansWithAnnotation(SpringBootApplication.class).forEach((name, obj) -> {
+            GXDataSource annotation = obj.getClass().getAnnotation(GXDataSource.class);
+            if (Objects.nonNull(annotation)) {
+                defaultDataSourceName[0] = annotation.value();
+            }
+        });
+        return dynamicDataSourceProperties.getDatasource().get(defaultDataSourceName[0]);
     }
 
     @Bean
@@ -40,7 +52,14 @@ public class GXDynamicDataSourceConfig {
         GXDynamicDataSource dynamicDataSource = new GXDynamicDataSource();
         Map<Object, Object> dynamicDataSources = getDynamicDataSources();
         dynamicDataSource.setTargetDataSources(dynamicDataSources);
-        Optional<Object> firstDataSource = dynamicDataSources.keySet().stream().findFirst();
+        String[] defaultDataSourceName = new String[]{"framework"};
+        GXSpringContextUtils.getApplicationContext().getBeansWithAnnotation(SpringBootApplication.class).forEach((name, obj) -> {
+            GXDataSource annotation = obj.getClass().getAnnotation(GXDataSource.class);
+            if (Objects.nonNull(annotation)) {
+                defaultDataSourceName[0] = annotation.value();
+            }
+        });
+        Optional<Object> firstDataSource = dynamicDataSources.keySet().stream().filter(name -> name.equals(defaultDataSourceName[0])).findFirst();
         if (firstDataSource.isEmpty()) {
             throw new GXBusinessException("请配置正确的数据源");
         }
