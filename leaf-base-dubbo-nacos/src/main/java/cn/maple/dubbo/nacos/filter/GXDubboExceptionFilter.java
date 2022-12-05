@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 
 @Activate(group = CommonConstants.PROVIDER)
 public class GXDubboExceptionFilter extends ExceptionFilter {
@@ -81,8 +80,8 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                 }
 
                 // otherwise, wrap with RuntimeException and throw back to the client
-                if (exception instanceof SQLException) {
-                    exception = new GXBusinessException("服务方出现数据SQL语句错误");
+                if (exception instanceof RuntimeException) {
+                    exception = new GXBusinessException("服务方出现错误,请联系服务方!!");
                 }
                 appResponse.setException(exception);
             } catch (Throwable e) {
