@@ -6,7 +6,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.sso.config.GXSSOConfig;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.enums.GXTokenOrigin;
@@ -221,6 +221,6 @@ public class GXSSOToken extends GXAccessToken {
     }
 
     public String toCacheKey() {
-        return GXSSOConfig.toCacheKey(this.getUserId());
+        return GXSSOProperties.toCacheKey(this.getUserId());
     }
 }

@@ -2,7 +2,7 @@ package cn.maple.sso.web.interceptor;
 
 import cn.maple.core.framework.web.interceptor.GXBaseSSOPermissionInterceptor;
 import cn.maple.sso.annotation.GXPermissionAnnotation;
-import cn.maple.sso.config.GXSSOConfig;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.enums.GXAction;
 import cn.maple.sso.oauth.GXSSOAuthorization;
 import cn.maple.sso.security.token.GXSSOToken;
@@ -76,7 +76,7 @@ public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
      */
     protected boolean isVerification(HttpServletRequest request, Object handler, GXSSOToken token) {
         // URL 权限认证
-        if (GXSSOConfig.getInstance().isPermissionUri()) {
+        if (GXSSOProperties.getInstance().isPermissionUri()) {
             String uri = request.getRequestURI();
             if (uri == null || this.getAuthorization().isPermitted(token, uri)) {
                 return true;

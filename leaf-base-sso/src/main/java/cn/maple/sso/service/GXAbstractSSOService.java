@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.sso.cache.GXSSOCache;
-import cn.maple.sso.config.GXSSOConfig;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.security.token.GXSSOToken;
@@ -68,7 +68,7 @@ public abstract class GXAbstractSSOService extends GXSSOServiceSupport implement
     public boolean kickLogin(Object userId) {
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            return cache.delete(GXSSOConfig.toCacheKey(userId));
+            return cache.delete(GXSSOProperties.toCacheKey(userId));
         } else {
             log.debug(" kickLogin! please implements GXSsoCache class.");
         }

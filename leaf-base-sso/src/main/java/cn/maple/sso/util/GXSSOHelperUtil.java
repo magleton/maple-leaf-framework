@@ -2,9 +2,9 @@ package cn.maple.sso.util;
 
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
-import cn.maple.sso.config.GXSSOConfig;
 import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.properties.GXSSOConfigProperties;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.service.GXConfigurableAbstractSSOService;
 
@@ -27,7 +27,7 @@ public class GXSSOHelperUtil {
     /**
      * SSO配置
      */
-    protected static GXSSOConfig ssoConfig;
+    protected static GXSSOProperties ssoConfig;
 
     /**
      * SSO 服务处理
@@ -48,13 +48,13 @@ public class GXSSOHelperUtil {
      * @author britton
      * @since 2021-09-17
      */
-    public static GXSSOConfig getSSOConfig() {
+    public static GXSSOProperties getSSOConfig() {
         // 为每个应用设置自己的配置信息
         if (Objects.isNull(ssoConfig)) {
             if (Objects.nonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class))) {
                 ssoConfig = Objects.requireNonNull(GXSpringContextUtils.getBean(GXSSOConfigProperties.class)).getConfig();
             } else {
-                ssoConfig = new GXSSOConfig();
+                ssoConfig = new GXSSOProperties();
             }
             // 为每个应用配置自己的插件
             Map<String, GXSSOPlugin> ssoPluginMap = GXSpringContextUtils.getBeans(GXSSOPlugin.class);
@@ -78,7 +78,7 @@ public class GXSSOHelperUtil {
      * @author britton
      * @since 2021-09-17
      */
-    public static GXSSOConfig setSsoConfig(GXSSOConfig ssoConfig) {
+    public static GXSSOProperties setSsoConfig(GXSSOProperties ssoConfig) {
         GXSSOHelperUtil.ssoConfig = ssoConfig;
         return GXSSOHelperUtil.ssoConfig;
     }
@@ -211,7 +211,7 @@ public class GXSSOHelperUtil {
      * @return String
      */
     public static String getTokenCacheKey(Object userId) {
-        return GXSSOConfig.toCacheKey(userId);
+        return GXSSOProperties.toCacheKey(userId);
     }
 
     /**

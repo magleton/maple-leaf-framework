@@ -1,4 +1,4 @@
-package cn.maple.sso.config;
+package cn.maple.sso.properties;
 
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.sso.cache.GXSSOCache;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class GXSSOConfig {
+public class GXSSOProperties {
     /**
      * 编码格式，默认 UTF-8
      */
@@ -154,14 +154,14 @@ public class GXSSOConfig {
      */
     private GXSSOAuthorization authorization;
 
-    public GXSSOConfig() {
+    public GXSSOProperties() {
         /* 支持 setInstance 设置初始化 */
     }
 
     /**
      * new 当前对象
      */
-    public static GXSSOConfig getInstance() {
+    public static GXSSOProperties getInstance() {
         return GXSSOHelperUtil.getSSOConfig();
     }
 
@@ -209,7 +209,7 @@ public class GXSSOConfig {
         return authorization;
     }
 
-    public GXSSOConfig setAuthorization(GXSSOAuthorization authorization) {
+    public GXSSOProperties setAuthorization(GXSSOAuthorization authorization) {
         this.authorization = authorization;
         return this;
     }

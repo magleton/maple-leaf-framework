@@ -17,7 +17,7 @@ package cn.maple.sso.service;
 
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.sso.cache.GXSSOCache;
-import cn.maple.sso.config.GXSSOConfig;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
@@ -47,8 +47,8 @@ public class GXSSOServiceSupport {
     /**
      * 获取Sso配置
      */
-    public GXSSOConfig getConfig() {
-        return GXSSOConfig.getInstance();
+    public GXSSOProperties getConfig() {
+        return GXSSOProperties.getInstance();
     }
 
     // ------------------------------- 客户端相关方法 -------------------------------
