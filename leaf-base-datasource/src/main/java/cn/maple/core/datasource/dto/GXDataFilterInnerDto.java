@@ -13,7 +13,7 @@ public class GXDataFilterInnerDto {
     }
 
     public String getSqlFilter() {
-        return sqlFilter;
+        return "$$'" + sqlFilter + "'$$";
     }
 
     public void setSqlFilter(String sqlFilter) {

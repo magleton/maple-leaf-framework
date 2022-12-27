@@ -60,14 +60,15 @@ public class GXDataFilterInterceptor implements InnerInterceptor {
             PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
 
             Expression expression = plainSelect.getWhere();
+            StringValue stringValue = new StringValue("'" + scope.getSqlFilter() + "'");
             if (expression == null) {
-                plainSelect.setWhere(new StringValue(scope.getSqlFilter()));
+                plainSelect.setWhere(stringValue);
             } else {
-                AndExpression andExpression = new AndExpression(expression, new StringValue(scope.getSqlFilter()));
+                AndExpression andExpression = new AndExpression(expression, stringValue);
                 plainSelect.setWhere(andExpression);
             }
 
-            return select.toString();
+            return select.toString().replace("'$$'", "");
         } catch (JSQLParserException e) {
             return buildSql;
         }
