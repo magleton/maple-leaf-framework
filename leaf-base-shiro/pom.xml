@@ -12,7 +12,7 @@
     <artifactId>leaf-base-shiro</artifactId>
 
     <properties>
-        <shiro-spring.version>1.9.0</shiro-spring.version>
+        <shiro-spring.version>1.10.1</shiro-spring.version>
     </properties>
 
     <dependencies>
