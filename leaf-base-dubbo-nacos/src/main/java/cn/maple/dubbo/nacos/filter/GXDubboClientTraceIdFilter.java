@@ -13,18 +13,20 @@ import org.springframework.core.Ordered;
 public class GXDubboClientTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        // 在GXBaseRequestLoggingFilter中会设置该值
-        String traceId = GXTraceIdContextUtils.getTraceId();
-        if (CharSequenceUtil.isEmpty(traceId)) {
-            // 当改服务既是服务方又是消费方时 会在GXDubboServerTraceIdFilter设置该值
-            traceId = RpcContext.getClientAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+        try {
+            // 在GXBaseRequestLoggingFilter中会设置该值
+            String traceId = GXTraceIdContextUtils.getTraceId();
+            if (CharSequenceUtil.isEmpty(traceId)) {
+                // 当改服务既是服务方又是消费方时 会在GXDubboServerTraceIdFilter设置该值
+                traceId = RpcContext.getClientAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+            }
+            log.info("Dubbo消费者生成的TraceId : {}", traceId);
+            GXTraceIdContextUtils.setTraceId(traceId);
+            invocation.setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+            RpcContext.getServerAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+            return invoker.invoke(invocation);
+        } finally {
+            GXTraceIdContextUtils.removeTraceId();
         }
-        log.info("Dubbo消费者生成的TraceId : {}", traceId);
-        GXTraceIdContextUtils.setTraceId(traceId);
-        invocation.setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
-        RpcContext.getServerAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
-        Result result = invoker.invoke(invocation);
-        GXTraceIdContextUtils.removeTraceId();
-        return result;
     }
 }
