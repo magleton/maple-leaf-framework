@@ -8,8 +8,6 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 import org.springframework.core.Ordered;
 
-import java.util.Optional;
-
 @Activate(group = {CommonConstants.PROVIDER}, order = Ordered.LOWEST_PRECEDENCE)
 @Slf4j
 public class GXDubboServerTraceIdFilter implements Filter {
