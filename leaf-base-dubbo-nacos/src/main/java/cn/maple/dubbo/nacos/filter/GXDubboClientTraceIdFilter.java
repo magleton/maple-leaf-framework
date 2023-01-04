@@ -14,6 +14,8 @@ public class GXDubboClientTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try {
+            // 通过GXPenetrateAttachmentSelector设置的值可以通过以下方式获取
+            // RpcContext.getCurrentServiceContext().getObjectAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)
             // 在GXBaseRequestLoggingFilter中会设置该值
             String traceId = GXTraceIdContextUtils.getTraceId();
             if (CharSequenceUtil.isEmpty(traceId)) {
@@ -22,8 +24,7 @@ public class GXDubboClientTraceIdFilter implements Filter {
             }
             log.info("Dubbo消费者生成的TraceId : {}", traceId);
             GXTraceIdContextUtils.setTraceId(traceId);
-            invocation.setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
-            RpcContext.getServerAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+            RpcContext.getClientAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
             return invoker.invoke(invocation);
         } finally {
             GXTraceIdContextUtils.removeTraceId();
