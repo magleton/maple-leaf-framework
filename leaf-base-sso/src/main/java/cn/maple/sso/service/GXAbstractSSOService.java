@@ -3,14 +3,15 @@ package cn.maple.sso.service;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
-import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
-import cn.maple.sso.util.GXCookieHelperUtil;
-import cn.maple.sso.util.GXHttpUtil;
-import cn.maple.sso.util.GXRandomUtil;
+import cn.maple.sso.utils.GXCookieHelperUtil;
+import cn.maple.sso.utils.GXHttpUtil;
+import cn.maple.sso.utils.GXRandomUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
@@ -29,7 +30,7 @@ import java.util.Objects;
  * @since 2021-09-16
  */
 @Slf4j
-public abstract class GXAbstractSSOService extends GXSSOServiceSupport implements GXSSOService {
+public abstract class GXAbstractSSOService extends GXSSOSupportService implements GXSSOService {
     /**
      * 获取当前请求 GXSsoToken
      * 从 Cookie 解密 GXSsoToken 使用场景, 拦截器
@@ -94,7 +95,8 @@ public abstract class GXAbstractSSOService extends GXSSOServiceSupport implement
         // cache 缓存宕机，flag 设置为失效
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            boolean rlt = cache.set(ssoToken.toCacheKey(), ssoToken, getConfig().getCacheExpires());
+            GXSSOToken cookieSSOToken = getSSOTokenFromCookie(GXCurrentRequestContextUtils.getHttpServletRequest());
+            boolean rlt = cache.set(ssoToken.toCacheKey(), ssoToken, getConfig().getCacheExpires(), cookieSSOToken);
             if (!rlt) {
                 ssoToken.setFlag(GXTokenFlag.CACHE_SHUT);
             }

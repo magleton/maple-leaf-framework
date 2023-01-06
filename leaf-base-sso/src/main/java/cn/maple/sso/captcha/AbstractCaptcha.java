@@ -1,7 +1,7 @@
 package cn.maple.sso.captcha;
 
 import cn.maple.sso.enums.GXRandomType;
-import cn.maple.sso.util.GXRandomUtil;
+import cn.maple.sso.utils.GXRandomUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

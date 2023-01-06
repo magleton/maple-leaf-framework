@@ -1,6 +1,6 @@
 package cn.maple.sso.captcha;
 
-import cn.maple.sso.util.GXRandomUtil;
+import cn.maple.sso.utils.GXRandomUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

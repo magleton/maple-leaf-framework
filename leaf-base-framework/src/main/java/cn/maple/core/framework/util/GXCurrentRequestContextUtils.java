@@ -124,7 +124,7 @@ public class GXCurrentRequestContextUtils {
             return Convert.convert(clazz, attribute);
         }
         if (Objects.isNull(secretKey)) {
-            secretKey = GXTokenConstant.TOKEN_SECRET_KEY;
+            secretKey = GXTokenConstant.USER_TOKEN_SECRET_KEY;
         }
         Dict dict = getLoginCredentials(tokenName, secretKey);
         Object retValue = dict.getObj(tokenFieldName);

@@ -1,31 +1,16 @@
-/*
- * Copyright (c) 2011-2020, hubin (jobob@qq.com).
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package cn.maple.sso.service;
 
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.sso.cache.GXSSOCache;
-import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.security.token.GXToken;
-import cn.maple.sso.util.GXBrowserUtil;
-import cn.maple.sso.util.GXCookieHelperUtil;
-import cn.maple.sso.util.GXIpHelperUtil;
+import cn.maple.sso.utils.GXBrowserUtil;
+import cn.maple.sso.utils.GXCookieHelperUtil;
+import cn.maple.sso.utils.GXIpHelperUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
@@ -43,7 +28,7 @@ import java.util.Objects;
  * @since 2021-09-16
  */
 @Slf4j
-public class GXSSOServiceSupport {
+public abstract class GXSSOSupportService {
     /**
      * 获取Sso配置
      */
@@ -85,7 +70,7 @@ public class GXSSOServiceSupport {
                 return null;
             }
 
-            GXSSOToken cacheSSOToken = cache.get(cookieSSOToken.toCacheKey(), getConfig().getCacheExpires());
+            GXSSOToken cacheSSOToken = cache.get(cookieSSOToken.toCacheKey(), getConfig().getCacheExpires(), cookieSSOToken);
             if (Objects.isNull(cacheSSOToken)) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.debug("cacheSSOToken GXSsoToken is null.");
@@ -220,7 +205,6 @@ public class GXSSOServiceSupport {
             throw new GXBusinessException("Generate sso cookie exception ", e);
         }
     }
-
 
     /**
      * <p>

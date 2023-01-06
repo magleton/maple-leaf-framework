@@ -1,5 +1,6 @@
-package cn.maple.sso.util;
+package cn.maple.sso.utils;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,11 +52,12 @@ public class GXCookieHelperUtil {
      */
     public static Cookie findCookieByName(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null)
+        if (cookies == null) {
             return null;
-        for (int i = 0; i < cookies.length; i++) {
-            if (cookies[i].getName().equals(cookieName)) {
-                return cookies[i];
+        }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(cookieName)) {
+                return cookie;
             }
         }
         return null;
@@ -75,20 +77,19 @@ public class GXCookieHelperUtil {
 
     /**
      * <p>
-     * 清除指定doamin的所有Cookie
+     * 清除指定domain的所有Cookie
      * </p>
      *
      * @param request  请求对象
      * @param response 响应对象
      * @param domain   Cookie所在的域
      * @param path     Cookie 路径
-     * @return
      */
     public static void clearAllCookie(HttpServletRequest request, HttpServletResponse response, String domain,
                                       String path) {
         Cookie[] cookies = request.getCookies();
-        for (int i = 0; i < cookies.length; i++) {
-            clearCookie(response, cookies[i].getName(), domain, path);
+        for (Cookie cookie : cookies) {
+            clearCookie(response, cookie.getName(), domain, path);
         }
         log.debug("clearAllCookie in  domain " + domain);
     }
@@ -129,7 +130,7 @@ public class GXCookieHelperUtil {
         try {
             Cookie cookie = new Cookie(cookieName, "");
             cookie.setMaxAge(CLEAR_IMMEDIATELY_REMOVE);
-            if (StrUtil.isNotEmpty(domain)) {
+            if (CharSequenceUtil.isNotEmpty(domain)) {
                 cookie.setDomain(domain);
             }
             cookie.setPath(path);
@@ -159,7 +160,7 @@ public class GXCookieHelperUtil {
     public static void addCookie(HttpServletResponse response, String domain, String path, String name, String value, int maxAge, boolean httpOnly, boolean secured) {
         Cookie cookie = new Cookie(name, value);
         // 不设置该参数默认 当前所在域
-        if (StrUtil.isNotEmpty(domain)) {
+        if (CharSequenceUtil.isNotEmpty(domain)) {
             cookie.setDomain(domain);
         }
         cookie.setPath(path);

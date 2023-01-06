@@ -1,4 +1,4 @@
-package cn.maple.sso.util;
+package cn.maple.sso.utils;
 
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
@@ -6,7 +6,7 @@ import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.properties.GXSSOConfigProperties;
 import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
-import cn.maple.sso.service.GXConfigurableAbstractSSOService;
+import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ public class GXSSOHelperUtil {
     /**
      * SSO 服务处理
      */
-    protected static GXConfigurableAbstractSSOService ssoService;
+    protected static GXConfigurableAbstractSSOServiceImpl ssoService;
 
     /**
      * 私有构造函数
@@ -86,12 +86,12 @@ public class GXSSOHelperUtil {
     /**
      * Sso 服务初始化
      */
-    public static GXConfigurableAbstractSSOService getSSOService() {
+    public static GXConfigurableAbstractSSOServiceImpl getSSOService() {
         if (Objects.isNull(ssoService)) {
-            if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class))) {
-                ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSSOService.class);
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSSOServiceImpl.class))) {
+                ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSSOServiceImpl.class);
             } else {
-                ssoService = new GXConfigurableAbstractSSOService();
+                ssoService = new GXConfigurableAbstractSSOServiceImpl();
             }
         }
         return ssoService;
@@ -165,7 +165,6 @@ public class GXSSOHelperUtil {
      *
      * @param request  请求对象
      * @param response 响应对象
-     * @throws IOException
      */
     public static void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         getSSOService().logout(request, response);
@@ -188,7 +187,6 @@ public class GXSSOHelperUtil {
      *
      * @param request  请求对象
      * @param response 响应对象
-     * @throws IOException
      */
     public static void clearRedirectLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         getSSOService().clearRedirectLogin(request, response);

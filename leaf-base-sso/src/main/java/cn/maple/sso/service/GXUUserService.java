@@ -30,7 +30,7 @@ public interface GXUUserService {
      * @return T
      */
     default Dict getUserByUserId(Long userId) {
-        return null;
+        return Dict.create();
     }
 
     /**

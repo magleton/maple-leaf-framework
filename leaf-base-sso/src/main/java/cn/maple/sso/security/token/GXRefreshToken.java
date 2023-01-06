@@ -15,7 +15,7 @@ public class GXRefreshToken implements GXToken {
     private final String token;
 
     private GXRefreshToken(String userId, Dict extParam) {
-        token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.TOKEN_SECRET_KEY);
+        token = GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(extParam), GXTokenConstant.USER_TOKEN_SECRET_KEY);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package cn.maple.sso.util;
+package cn.maple.sso.utils;
 
 import cn.maple.sso.properties.GXSSOProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +24,16 @@ public class GXHttpUtil {
 
     public static final String X_REQUESTED_WITH = "X-Requested-With";
 
+    private GXHttpUtil() {
+    }
+
     /**
      * <p>
      * 判断请求是否为 AJAX
      * </p>
      *
      * @param request 当前请求
-     * @return
+     * @return boolean
      */
     public static boolean isAjax(HttpServletRequest request) {
         return XML_HTTP_REQUEST.equals(request.getHeader(X_REQUESTED_WITH));
@@ -41,9 +44,9 @@ public class GXHttpUtil {
      * AJAX 设置 response 返回状态
      * </p>
      *
-     * @param response
+     * @param response http响应对象
      * @param status   HTTP 状态码
-     * @param tip
+     * @param tip      提示信息
      */
     public static void ajaxStatus(HttpServletResponse response, int status, String tip) {
         try {
@@ -62,10 +65,9 @@ public class GXHttpUtil {
      * 获取当前 URL 包含查询条件
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @param encode  URLEncoder编码格式
-     * @return
-     * @throws IOException
+     * @return queryString
      */
     public static String getQueryString(HttpServletRequest request, String encode) throws IOException {
         String url = request.getRequestURL().toString();
@@ -82,17 +84,17 @@ public class GXHttpUtil {
      * getRequestURL是否包含在URL之内
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @param url     参数为以';'分割的URL字符串
-     * @return
+     * @return boolean
      */
     public static boolean inContainURL(HttpServletRequest request, String url) {
         boolean result = false;
         if (url != null && !"".equals(url.trim())) {
             String[] urlArr = url.split(";");
             StringBuffer reqUrl = new StringBuffer(request.getRequestURL());
-            for (int i = 0; i < urlArr.length; i++) {
-                if (reqUrl.indexOf(urlArr[i]) > 1) {
+            for (String s : urlArr) {
+                if (reqUrl.indexOf(s) > 1) {
                     result = true;
                     break;
                 }
@@ -109,7 +111,7 @@ public class GXHttpUtil {
      * @param url      跳转地址
      * @param retParam 返回地址参数名
      * @param retUrl   返回地址
-     * @return
+     * @return 编码之后的URL
      */
     public static String encodeRetURL(String url, String retParam, String retUrl) {
         return encodeRetURL(url, retParam, retUrl, null);
@@ -124,7 +126,7 @@ public class GXHttpUtil {
      * @param retParam 返回地址参数名
      * @param retUrl   返回地址
      * @param data     携带参数
-     * @return
+     * @return 编码之后的字符串
      */
     public static String encodeRetURL(String url, String retParam, String retUrl, Map<String, String> data) {
         if (url == null) {
@@ -156,7 +158,7 @@ public class GXHttpUtil {
      * </p>
      *
      * @param url 解码地址
-     * @return
+     * @return 解码之后的字符串
      */
     public static String decodeURL(String url) {
         if (url == null) {
@@ -178,7 +180,7 @@ public class GXHttpUtil {
      * GET 请求
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @return boolean
      */
     public static boolean isGet(HttpServletRequest request) {
@@ -190,7 +192,7 @@ public class GXHttpUtil {
      * POST 请求
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @return boolean
      */
     public static boolean isPost(HttpServletRequest request) {
@@ -218,33 +220,20 @@ public class GXHttpUtil {
      * 获取Request Playload 内容
      * </p>
      *
-     * @param request
+     * @param request 请求对象
      * @return Request Playload 内容
      */
     public static String requestPlayload(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            } else {
+        try (InputStream inputStream = request.getInputStream();
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            char[] charBuffer = new char[128];
+            int bytesRead = -1;
+            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+                stringBuilder.append(charBuffer, 0, bytesRead);
             }
         } catch (IOException ex) {
             throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
-            }
         }
         return stringBuilder.toString();
     }
@@ -258,7 +247,7 @@ public class GXHttpUtil {
      * @return 请求地址
      */
     public static String getRequestUrl(HttpServletRequest request) {
-        StringBuffer url = new StringBuffer(request.getScheme());
+        StringBuilder url = new StringBuilder(request.getScheme());
         // 请求协议 http,https
         url.append("://");
         // 请求服务器

@@ -62,9 +62,19 @@ public class GXTokenConstant {
     public static final String ADMIN_CACHE_BUCKET_NAME = "admin-cache-bucket";
 
     /**
-     * TOKEN加密的KEY
+     * C端客户TOKEN加密的KEY
      */
-    public static final String TOKEN_SECRET_KEY = "GEO_XUS_SHIRO_TOKEN_KEY";
+    public static final String USER_TOKEN_SECRET_KEY = "6A3EDD4768E3669B5";
+
+    /**
+     * 管理端TOKEN加密的KEY
+     */
+    public static final String ADMIN_TOKEN_SECRET_KEY = "C0180A90D3931D";
+
+    /**
+     * 通用的TOKEN加密的KEY
+     */
+    public static final String TOKEN_SECRET_KEY = "31D0D393D3EAF5";
 
     /**
      * ADMIN端TOKEN即将过期刷新阈值

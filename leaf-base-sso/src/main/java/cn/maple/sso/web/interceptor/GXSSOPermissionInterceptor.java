@@ -6,8 +6,8 @@ import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.enums.GXAction;
 import cn.maple.sso.oauth.GXSSOAuthorization;
 import cn.maple.sso.security.token.GXSSOToken;
-import cn.maple.sso.util.GXHttpUtil;
-import cn.maple.sso.util.GXSSOHelperUtil;
+import cn.maple.sso.utils.GXHttpUtil;
+import cn.maple.sso.utils.GXSSOHelperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -109,7 +109,6 @@ public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
      * @param request  请求对象
      * @param response 响应对象
      * @return boolean
-     * @throws Exception
      */
     protected boolean unauthorizedAccess(HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug(" request 403 url: " + request.getRequestURI());

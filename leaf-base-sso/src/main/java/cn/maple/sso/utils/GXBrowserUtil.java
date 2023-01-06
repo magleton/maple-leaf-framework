@@ -1,4 +1,4 @@
-package cn.maple.sso.util;
+package cn.maple.sso.utils;
 
 import cn.hutool.crypto.SecureUtil;
 
@@ -13,14 +13,17 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2021-09-16
  */
 public class GXBrowserUtil {
+    private GXBrowserUtil() {
+    }
+
     /**
      * <p>
      * 混淆浏览器版本信息，取 MD5 中间部分字符
+     * 获取浏览器客户端信息签名值
      * </p>
      *
-     * @param request
-     * @return
-     * @since 获取浏览器客户端信息签名值
+     * @param request 请求对象
+     * @return 获取浏览器客户端信息签名值
      */
     public static String getUserAgent(HttpServletRequest request) {
         String userAgent = SecureUtil.md5(request.getHeader("user-agent"));
@@ -35,9 +38,9 @@ public class GXBrowserUtil {
      * 请求浏览器是否合法 (只校验客户端信息不校验domain)
      * </p>
      *
-     * @param request
+     * @param request   请求对象
      * @param userAgent 浏览器客户端信息
-     * @return
+     * @return boolean
      */
     public static boolean isLegalUserAgent(HttpServletRequest request, String userAgent) {
         String ua = getUserAgent(request);

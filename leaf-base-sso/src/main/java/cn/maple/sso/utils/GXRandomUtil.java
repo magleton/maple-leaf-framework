@@ -1,6 +1,6 @@
-package cn.maple.sso.util;
+package cn.maple.sso.utils;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.sso.enums.GXRandomType;
 
 import java.awt.*;
@@ -16,7 +16,6 @@ import java.util.UUID;
  * @since 2021-09-16
  */
 public class GXRandomUtil {
-
     /**
      * 常用汉字
      */
@@ -26,6 +25,9 @@ public class GXRandomUtil {
      * 静态随机对象
      */
     public static final Random RANDOM = new Random();
+
+    private GXRandomUtil() {
+    }
 
     /**
      * <p>
@@ -92,7 +94,7 @@ public class GXRandomUtil {
     }
 
     public static char getChinese(String chineseUnicode) {
-        if (StrUtil.isNotEmpty(chineseUnicode)) {
+        if (CharSequenceUtil.isNotEmpty(chineseUnicode)) {
             return chineseUnicode.charAt(RANDOM.nextInt(chineseUnicode.length()));
         }
         return CHINESE.charAt(RANDOM.nextInt(CHINESE.length()));

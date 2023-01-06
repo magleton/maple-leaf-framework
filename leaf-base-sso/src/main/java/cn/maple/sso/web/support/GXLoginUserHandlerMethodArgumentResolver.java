@@ -42,7 +42,7 @@ public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandl
             if (null == header) {
                 return null;
             }
-            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtils.authCodeDecode(header, GXTokenConstant.TOKEN_SECRET_KEY), Dict.class);
+            final Dict tokenData = JSONUtil.toBean(GXAuthCodeUtils.authCodeDecode(header, GXTokenConstant.USER_TOKEN_SECRET_KEY), Dict.class);
             object = tokenData.getObj(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME);
             if (null == object) {
                 return null;

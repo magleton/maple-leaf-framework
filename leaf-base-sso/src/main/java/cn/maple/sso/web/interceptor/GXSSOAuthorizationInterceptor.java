@@ -4,8 +4,8 @@ import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import cn.maple.sso.annotation.GXLoginAnnotation;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.security.token.GXSSOToken;
-import cn.maple.sso.util.GXHttpUtil;
-import cn.maple.sso.util.GXSSOHelperUtil;
+import cn.maple.sso.utils.GXHttpUtil;
+import cn.maple.sso.utils.GXSSOHelperUtil;
 import cn.maple.sso.web.handler.GXSSODefaultHandler;
 import cn.maple.sso.web.handler.GXSSOHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
         }
 
         annotation = ((HandlerMethod) handler).getMethodAnnotation(GXLoginAnnotation.class);
-        if (Objects.isNull(annotation)) {
+        if (Objects.nonNull(annotation)) {
             // 没有标注需要登陆的接口直接放行通过
             return true;
         }
