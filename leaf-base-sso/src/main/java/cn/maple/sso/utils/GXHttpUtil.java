@@ -1,5 +1,9 @@
 package cn.maple.sso.utils;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.http.HttpStatus;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONUtil;
 import cn.maple.sso.properties.GXSSOProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,10 +54,13 @@ public class GXHttpUtil {
      */
     public static void ajaxStatus(HttpServletResponse response, int status, String tip) {
         try {
-            response.setContentType("text/html;charset=" + GXSSOProperties.getSsoEncoding());
+            response.setContentType("text/json;charset=" + GXSSOProperties.getSsoEncoding());
             response.setStatus(status);
             PrintWriter out = response.getWriter();
-            out.print(tip);
+            Dict data = Dict.create().set("code", HttpStatus.HTTP_NOT_AUTHORITATIVE).set("msg", tip).set("data", null);
+            JSONConfig jsonConfig = new JSONConfig();
+            jsonConfig.setIgnoreNullValue(false);
+            out.print(JSONUtil.toJsonStr(data, jsonConfig));
             out.flush();
         } catch (IOException e) {
             log.error(e.getMessage());

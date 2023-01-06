@@ -1,10 +1,12 @@
 package cn.maple.sso.web.interceptor;
 
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXBaseSSOPermissionInterceptor;
 import cn.maple.sso.annotation.GXPermissionAnnotation;
-import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.enums.GXAction;
 import cn.maple.sso.oauth.GXSSOAuthorization;
+import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
@@ -15,6 +17,7 @@ import org.springframework.web.method.HandlerMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * 权限拦截器（必须在 sso 拦截器之后执行）
@@ -25,11 +28,6 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
-    /*
-     * 系统权限授权接口
-     */
-    private GXSSOAuthorization authorization;
-
     /*
      * 非法请求提示 URL
      */
@@ -127,11 +125,11 @@ public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
     }
 
     public GXSSOAuthorization getAuthorization() {
+        GXSSOAuthorization authorization = GXSpringContextUtils.getBean(GXSSOAuthorization.class);
+        if (Objects.isNull(authorization)) {
+            throw new GXBusinessException("请实现GXSSOAuthorization接口,并将其放入Soring容器中");
+        }
         return authorization;
-    }
-
-    public void setAuthorization(GXSSOAuthorization authorization) {
-        this.authorization = authorization;
     }
 
     public String getIllegalUrl() {

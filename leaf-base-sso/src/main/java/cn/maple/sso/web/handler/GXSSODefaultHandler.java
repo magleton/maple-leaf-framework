@@ -2,6 +2,7 @@ package cn.maple.sso.web.handler;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,9 @@ public class GXSSODefaultHandler implements GXSSOHandler {
                     .set("code", HttpStatus.HTTP_NOT_AUTHORITATIVE)
                     .set("msg", "Have logout")
                     .set("data", null);
-            response.getWriter().write(JSONUtil.toJsonStr(data));
+            JSONConfig jsonConfig = new JSONConfig();
+            jsonConfig.setIgnoreNullValue(false);
+            response.getWriter().write(JSONUtil.toJsonStr(data, jsonConfig));
             // response.getWriter().write("{code:\"logout\", msg:\"Have logout\"}");
         } catch (IOException e) {
             // to do nothing
