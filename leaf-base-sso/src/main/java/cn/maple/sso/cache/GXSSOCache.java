@@ -4,13 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBaseCacheService;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.properties.GXSSOConfigProperties;
-import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.service.GXTokenConfigService;
 
@@ -54,15 +54,15 @@ public interface GXSSOCache {
         String tokenSecret = tokenConfigService.getTokenSecret();
         GXSSOConfigProperties ssoProperties = GXSpringContextUtils.getBean(GXSSOConfigProperties.class);
         assert ssoProperties != null;
-        String tokenName = ssoProperties.getConfig().getAccessTokenName();
+        String tokenName = ssoProperties.getConfig().getTokenName();
         Dict tokenData = GXCurrentRequestContextUtils.getLoginCredentials(tokenName, tokenSecret);
         if (CollUtil.isEmpty(tokenData)) {
-            throw new GXBusinessException("token已经失效,重新登录");
+            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
         }
         // 2、调用用户服务的验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
-            throw new GXBusinessException("登录状态已经失效,重新登录");
+            throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
         }
         GXSSOToken ssoToken = Convert.convert(GXSSOToken.class, tokenData);
         ssoToken.setTime(cookieSSOToken.getTime());

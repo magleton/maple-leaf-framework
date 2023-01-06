@@ -67,7 +67,7 @@ public class GXSSOProperties {
     /**
      * 访问票据名
      */
-    private String accessTokenName = "accessToken";
+    private String tokenName = "token";
 
     /**
      * cookie 名称

@@ -6,6 +6,7 @@ import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.properties.GXSSOConfigProperties;
 import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
+import cn.maple.sso.service.GXAbstractSSOService;
 import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class GXSSOHelperUtil {
     /**
      * SSO 服务处理
      */
-    protected static GXConfigurableAbstractSSOServiceImpl ssoService;
+    protected static GXAbstractSSOService ssoService;
 
     /**
      * 私有构造函数
@@ -86,10 +87,10 @@ public class GXSSOHelperUtil {
     /**
      * Sso 服务初始化
      */
-    public static GXConfigurableAbstractSSOServiceImpl getSSOService() {
+    public static GXAbstractSSOService getSSOService() {
         if (Objects.isNull(ssoService)) {
-            if (Objects.nonNull(GXSpringContextUtils.getBean(GXConfigurableAbstractSSOServiceImpl.class))) {
-                ssoService = GXSpringContextUtils.getBean(GXConfigurableAbstractSSOServiceImpl.class);
+            if (Objects.nonNull(GXSpringContextUtils.getBean(GXAbstractSSOService.class))) {
+                ssoService = GXSpringContextUtils.getBean(GXAbstractSSOService.class);
             } else {
                 ssoService = new GXConfigurableAbstractSSOServiceImpl();
             }

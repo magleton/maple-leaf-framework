@@ -107,7 +107,7 @@ public abstract class GXSSOSupportService {
      * @return GXSsoToken
      */
     protected GXSSOToken getSSOToken(HttpServletRequest request, String cookieName) {
-        String accessToken = request.getHeader(getConfig().getAccessTokenName());
+        String accessToken = request.getHeader(getConfig().getTokenName());
         if (null == accessToken || "".equals(accessToken)) {
             Cookie cookie = GXCookieHelperUtil.findCookieByName(request, cookieName);
             if (null == cookie) {

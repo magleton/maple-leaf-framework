@@ -179,7 +179,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
         // redirect logout page
         String logoutUrl = getConfig().getLogoutUrl();
         if ("".equals(logoutUrl)) {
-            response.getWriter().write("sso.properties Must include: sso.logout.url");
+            response.getWriter().write("sso.yml Must include: sso.config.logout.url");
         } else {
             response.sendRedirect(logoutUrl);
         }

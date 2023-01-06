@@ -1,6 +1,7 @@
 package cn.maple.sso.service.impl;
 
 import cn.maple.sso.service.GXAbstractSSOService;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -10,5 +11,6 @@ import cn.maple.sso.service.GXAbstractSSOService;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
+@Component
 public class GXConfigurableAbstractSSOServiceImpl extends GXAbstractSSOService {
 }
