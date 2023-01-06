@@ -6,12 +6,13 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXAuthCodeUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.enums.GXTokenOrigin;
 import cn.maple.sso.properties.GXSSOProperties;
-import cn.maple.sso.service.GXTokenSecretService;
+import cn.maple.sso.service.GXTokenConfigService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,12 +93,14 @@ public class GXSSOToken extends GXAccessToken {
     }
 
     public static GXSSOToken parser(String token, boolean header) {
-        GXTokenSecretService tokenSecretService = GXSpringContextUtils.getBean(GXTokenSecretService.class);
+        GXTokenConfigService tokenSecretService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         if (Objects.isNull(tokenSecretService)) {
             throw new GXBusinessException("请实现GXTokenSecretService类,并将其加入到spring容器中");
         }
         String s = GXAuthCodeUtils.authCodeDecode(token, tokenSecretService.getTokenSecret());
-        return JSONUtil.toBean(s, GXSSOToken.class);
+        GXSSOToken ssoToken = JSONUtil.toBean(s, GXSSOToken.class);
+        ssoToken.setIp(GXCurrentRequestContextUtils.getHttpServletRequest());
+        return ssoToken;
     }
 
     @Override
@@ -126,7 +129,7 @@ public class GXSSOToken extends GXAccessToken {
         }
         param.set("time", time);
         param.set("issuedAt", new Date(time));
-        GXTokenSecretService tokenSecretService = GXSpringContextUtils.getBean(GXTokenSecretService.class);
+        GXTokenConfigService tokenSecretService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         if (Objects.isNull(tokenSecretService)) {
             throw new GXBusinessException("请实现GXTokenSecretService,并将其放入spring容器中");
         }

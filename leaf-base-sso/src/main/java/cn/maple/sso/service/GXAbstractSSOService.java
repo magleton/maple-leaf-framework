@@ -7,7 +7,6 @@ import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
-import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXHttpUtil;
@@ -69,7 +68,8 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
     public boolean kickLogin(Object userId) {
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            return cache.delete(GXSSOProperties.toCacheKey(userId));
+            GXSSOToken ssoToken = getSSOToken(GXCurrentRequestContextUtils.getHttpServletRequest());
+            return cache.delete(ssoToken);
         } else {
             log.debug(" kickLogin! please implements GXSsoCache class.");
         }
@@ -96,7 +96,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
             GXSSOToken cookieSSOToken = getSSOTokenFromCookie(GXCurrentRequestContextUtils.getHttpServletRequest());
-            boolean rlt = cache.set(ssoToken.toCacheKey(), ssoToken, getConfig().getCacheExpires(), cookieSSOToken);
+            boolean rlt = cache.set(ssoToken, getConfig().getCacheExpires(), cookieSSOToken);
             if (!rlt) {
                 ssoToken.setFlag(GXTokenFlag.CACHE_SHUT);
             }

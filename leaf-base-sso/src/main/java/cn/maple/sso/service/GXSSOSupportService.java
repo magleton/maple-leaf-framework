@@ -70,7 +70,7 @@ public abstract class GXSSOSupportService {
                 return null;
             }
 
-            GXSSOToken cacheSSOToken = cache.get(cookieSSOToken.toCacheKey(), getConfig().getCacheExpires(), cookieSSOToken);
+            GXSSOToken cacheSSOToken = cache.get(getConfig().getCacheExpires(), cookieSSOToken);
             if (Objects.isNull(cacheSSOToken)) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.debug("cacheSSOToken GXSsoToken is null.");
@@ -220,9 +220,9 @@ public abstract class GXSSOSupportService {
         if (cache != null && !GXSSOConstant.SSO_KICK_USER.equals(request.getAttribute(GXSSOConstant.SSO_KICK_FLAG))) {
             GXSSOToken token = getSSOTokenFromCookie(request);
             if (token != null) {
-                boolean rlt = cache.delete(token.toCacheKey());
+                boolean rlt = cache.delete(token);
                 if (!rlt) {
-                    cache.delete(token.toCacheKey());
+                    cache.delete(token);
                 }
             }
         }
