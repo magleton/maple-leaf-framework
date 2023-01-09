@@ -1,8 +1,10 @@
 package cn.maple.sso.web.interceptor;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import cn.maple.sso.annotation.GXLoginAnnotation;
 import cn.maple.sso.constant.GXSSOConstant;
+import cn.maple.sso.properties.GXUrlWhiteListsConfigProperties;
 import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -28,10 +31,19 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
      */
     private GXSSOHandler handler;
 
+    @Resource
+    private GXUrlWhiteListsConfigProperties urlWhiteListsConfigProperties;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         GXLoginAnnotation annotation;
         if (request.getMethod().equalsIgnoreCase("OPTIONS") || !(handler instanceof HandlerMethod)) {
+            return true;
+        }
+
+        String requestURI = request.getRequestURI();
+        if (CollUtil.contains(urlWhiteListsConfigProperties.getWhiteLists(), requestURI)) {
+            // 白名单直接放行
             return true;
         }
 

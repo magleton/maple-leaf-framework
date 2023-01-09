@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public interface GXSSOPlugin {
+public interface GXSSOPlugin<T extends GXSSOToken> {
     /**
      * 登录时调用该方法
      *
@@ -30,7 +30,7 @@ public interface GXSSOPlugin {
      * @param ssoToken 登录票据
      * @return boolean
      */
-    default <T extends GXSSOToken> boolean validateToken(T ssoToken) {
+    default boolean validateToken(T ssoToken) {
         return true;
     }
 

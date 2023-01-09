@@ -249,4 +249,12 @@ public class GXSSOToken extends GXAccessToken {
     public String toCacheKey() {
         return GXSSOProperties.toCacheKey(this.getUserId());
     }
+
+    public void setLoginAt(Long loginAt) {
+        this.loginAt = loginAt;
+    }
+
+    public Long getLoginAt() {
+        return loginAt;
+    }
 }
