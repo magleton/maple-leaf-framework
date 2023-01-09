@@ -30,7 +30,7 @@ public interface GXSSOPlugin {
      * @param ssoToken 登录票据
      * @return boolean
      */
-    default boolean validateToken(GXSSOToken ssoToken) {
+    default <T extends GXSSOToken> boolean validateToken(T ssoToken) {
         return true;
     }
 

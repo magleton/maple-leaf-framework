@@ -80,6 +80,11 @@ public class GXSSOToken extends GXAccessToken {
      */
     private transient Object data;
 
+    /**
+     * 自定义的登录时间
+     */
+    private Long loginAt;
+
     public GXSSOToken() {
         // TO DO NOTHING
     }
