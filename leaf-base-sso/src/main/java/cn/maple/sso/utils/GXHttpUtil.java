@@ -54,10 +54,10 @@ public class GXHttpUtil {
      */
     public static void ajaxStatus(HttpServletResponse response, int status, String tip) {
         try {
-            response.setContentType("text/json;charset=" + GXSSOProperties.getSsoEncoding());
+            response.setContentType("application/json;charset=" + GXSSOProperties.getSsoEncoding());
             response.setStatus(status);
             PrintWriter out = response.getWriter();
-            Dict data = Dict.create().set("code", HttpStatus.HTTP_NOT_AUTHORITATIVE).set("msg", tip).set("data", null);
+            Dict data = Dict.create().set("code", HttpStatus.HTTP_UNAUTHORIZED).set("msg", tip).set("data", null);
             JSONConfig jsonConfig = new JSONConfig();
             jsonConfig.setIgnoreNullValue(false);
             out.print(JSONUtil.toJsonStr(data, jsonConfig));

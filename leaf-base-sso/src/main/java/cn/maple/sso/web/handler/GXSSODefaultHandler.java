@@ -39,13 +39,13 @@ public class GXSSODefaultHandler implements GXSSOHandler {
     public boolean preTokenIsNullAjax(HttpServletRequest request, HttpServletResponse response) {
         try {
             Dict data = Dict.create()
-                    .set("code", HttpStatus.HTTP_NOT_AUTHORITATIVE)
-                    .set("msg", "Have logout")
+                    .set("code", HttpStatus.HTTP_UNAUTHORIZED)
+                    .set("msg", "已经登出,请重新登录!")
                     .set("data", null);
             JSONConfig jsonConfig = new JSONConfig();
             jsonConfig.setIgnoreNullValue(false);
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(JSONUtil.toJsonStr(data, jsonConfig));
-            // response.getWriter().write("{code:\"logout\", msg:\"Have logout\"}");
         } catch (IOException e) {
             // to do nothing
         }
