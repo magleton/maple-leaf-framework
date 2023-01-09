@@ -6,14 +6,17 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBaseCacheService;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.properties.GXSSOConfigProperties;
 import cn.maple.sso.service.GXTokenConfigService;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,10 +47,15 @@ public interface GXSSOCache {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = tokenConfigService.getTokenCacheKey(ssoToken.getLong("userId"));
+        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        String cacheKey = tokenConfigService.getTokenCacheKey(id);
         Object o = cacheService.getCache(tokenConfigService.getCacheBucketName(), cacheKey);
         if (Objects.nonNull(o)) {
-            return Convert.convert(Dict.class, o);
+            String s = GXAuthCodeUtils.authCodeDecode(o.toString(), tokenConfigService.getTokenSecret());
+            if ("{}".equals(s)) {
+                throw new GXBusinessException("token不正确,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
+            }
+            return JSONUtil.toBean(s, Dict.class);
         }
         // 1、解码本地token
         String tokenSecret = tokenConfigService.getTokenSecret();
