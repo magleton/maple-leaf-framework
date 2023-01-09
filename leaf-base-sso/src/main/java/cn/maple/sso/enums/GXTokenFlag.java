@@ -9,21 +9,21 @@ package cn.maple.sso.enums;
  * @since 2021-09-16
  */
 public enum GXTokenFlag {
-    NORMAL("0", "正常"),
+    NORMAL(0, "正常"),
 
-    CACHE_SHUT("1", "缓存宕机");
+    CACHE_SHUT(1, "缓存宕机");
 
     /**
      * 主键
      */
-    private final String value;
+    private final Integer value;
 
     /**
      * 描述
      */
     private final String desc;
 
-    GXTokenFlag(final String value, final String desc) {
+    GXTokenFlag(final Integer value, final String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -38,7 +38,7 @@ public enum GXTokenFlag {
         return NORMAL;
     }
 
-    public String value() {
+    public Integer value() {
         return this.value;
     }
 

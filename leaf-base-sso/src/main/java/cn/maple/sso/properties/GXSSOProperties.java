@@ -5,7 +5,6 @@ import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.oauth.GXSSOAuthorization;
 import cn.maple.sso.plugins.GXSSOPlugin;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
 import lombok.Data;
@@ -128,11 +127,6 @@ public class GXSSOProperties {
      * 缓存有效期设置
      */
     private int cacheExpires = GXCookieHelperUtil.CLEAR_BROWSER_IS_CLOSED;
-
-    /**
-     * 访问票据
-     */
-    private GXSSOToken ssoToken;
 
     /**
      * 权限认证（默认 false）

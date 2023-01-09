@@ -7,7 +7,6 @@ import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXRandomUtil;
@@ -32,18 +31,18 @@ import java.util.Objects;
 public abstract class GXAbstractSSOService extends GXSSOSupportService implements GXSSOService {
     /**
      * 获取当前请求 GXSsoToken
-     * 从 Cookie 解密 GXSsoToken 使用场景, 拦截器
+     * 从 Cookie 解密 GXSSOToken 使用场景, 拦截器
      * 非拦截器建议使用 attrSSOToken 减少二次解密
      *
      * @param request 请求对象
-     * @return GXSsoToken {@link GXSSOToken}
+     * @return Dict
      */
     @Override
-    public GXSSOToken getSSOToken(HttpServletRequest request) {
-        GXSSOToken cacheSSOToken = cacheSSOToken(request, getConfig().getCache());
-        GXSSOToken token = checkIpBrowser(request, cacheSSOToken);
+    public Dict getSSOToken(HttpServletRequest request) {
+        Dict cacheSSOToken = cacheSSOToken(request, getConfig().getCache());
+        Dict token = checkIpBrowser(request, cacheSSOToken);
         if (Objects.isNull(token)) {
-            return null;
+            return Dict.create();
         }
         // 执行插件逻辑
         List<GXSSOPlugin> pluginList = getConfig().getPluginList();
@@ -51,7 +50,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
             for (GXSSOPlugin plugin : pluginList) {
                 boolean valid = plugin.validateToken(token);
                 if (!valid) {
-                    return null;
+                    return Dict.create();
                 }
             }
         }
@@ -68,7 +67,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
     public boolean kickLogin(Object userId) {
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            GXSSOToken ssoToken = getSSOToken(GXCurrentRequestContextUtils.getHttpServletRequest());
+            Dict ssoToken = getSSOToken(GXCurrentRequestContextUtils.getHttpServletRequest());
             return cache.delete(ssoToken);
         } else {
             log.debug(" kickLogin! please implements GXSsoCache class.");
@@ -87,7 +86,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
      * @param response 响应对象
      */
     @Override
-    public void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
+    public void setCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken) {
         // 设置加密 Cookie
         Cookie ck = this.generateCookie(request, ssoToken);
 
@@ -95,10 +94,10 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
         // cache 缓存宕机，flag 设置为失效
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
-            GXSSOToken cookieSSOToken = getSSOTokenFromCookie(GXCurrentRequestContextUtils.getHttpServletRequest());
+            Dict cookieSSOToken = getSSOTokenFromCookie(GXCurrentRequestContextUtils.getHttpServletRequest());
             boolean rlt = cache.set(ssoToken, getConfig().getCacheExpires(), cookieSSOToken);
             if (!rlt) {
-                ssoToken.setFlag(GXTokenFlag.CACHE_SHUT);
+                ssoToken.put("flag", GXTokenFlag.CACHE_SHUT.value());
             }
         }
 
@@ -127,7 +126,7 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
      * @param request  请求对象
      * @param response 响应对象
      */
-    public void authCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
+    public void authCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken) {
         GXCookieHelperUtil.authJSESSIONID(request, GXRandomUtil.getCharacterAndNumber(8));
         this.setCookie(request, response, ssoToken);
     }

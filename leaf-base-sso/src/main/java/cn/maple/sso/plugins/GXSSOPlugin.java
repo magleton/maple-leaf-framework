@@ -1,6 +1,6 @@
 package cn.maple.sso.plugins;
 
-import cn.maple.sso.security.token.GXSSOToken;
+import cn.hutool.core.lang.Dict;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author britton britton@126.com
  * @since 2021-09-16
  */
-public interface GXSSOPlugin<T extends GXSSOToken> {
+public interface GXSSOPlugin {
     /**
      * 登录时调用该方法
      *
@@ -30,7 +30,7 @@ public interface GXSSOPlugin<T extends GXSSOToken> {
      * @param ssoToken 登录票据
      * @return boolean
      */
-    default boolean validateToken(T ssoToken) {
+    default boolean validateToken(Dict ssoToken) {
         return true;
     }
 

@@ -1,6 +1,6 @@
 package cn.maple.sso.oauth;
 
-import cn.maple.sso.security.token.GXSSOToken;
+import cn.hutool.core.lang.Dict;
 
 /**
  * <p>
@@ -11,5 +11,5 @@ import cn.maple.sso.security.token.GXSSOToken;
  * @since 2021-09-16
  */
 public interface GXSSOAuthorization {
-    boolean isPermitted(GXSSOToken token, String permission);
+    boolean isPermitted(Dict token, String permission);
 }

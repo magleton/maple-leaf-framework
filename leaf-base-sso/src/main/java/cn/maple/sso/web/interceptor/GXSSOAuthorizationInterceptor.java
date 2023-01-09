@@ -1,11 +1,11 @@
 package cn.maple.sso.web.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import cn.maple.sso.annotation.GXLoginAnnotation;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.properties.GXUrlWhiteListsConfigProperties;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
 import cn.maple.sso.web.handler.GXSSODefaultHandler;
@@ -54,10 +54,10 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
         }
 
         // 获取SsoToken对象
-        GXSSOToken ssoToken = GXSSOHelperUtil.getSSOToken(request);
+        Dict ssoToken = GXSSOHelperUtil.getSSOToken(request);
 
         // 判断Token
-        if (Objects.isNull(ssoToken)) {
+        if (CollUtil.isEmpty(ssoToken)) {
             if (GXHttpUtil.isAjax(request)) {
                 // Handler 处理 AJAX 请求
                 getHandler().preTokenIsNullAjax(request, response);

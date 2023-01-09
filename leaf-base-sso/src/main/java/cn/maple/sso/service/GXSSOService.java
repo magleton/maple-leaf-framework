@@ -1,6 +1,6 @@
 package cn.maple.sso.service;
 
-import cn.maple.sso.security.token.GXSSOToken;
+import cn.hutool.core.lang.Dict;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public interface GXSSOService {
      * 获取登录 SSOToken
      * </p>
      */
-    GXSSOToken getSSOToken(HttpServletRequest request);
+    Dict getSSOToken(HttpServletRequest request);
 
     /**
      * 踢出 指定用户 ID 的登录用户，退出当前系统。
@@ -31,7 +31,7 @@ public interface GXSSOService {
     /**
      * 设置登录 Cookie
      */
-    void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken);
+    void setCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken);
 
     /**
      * 清理登录状态

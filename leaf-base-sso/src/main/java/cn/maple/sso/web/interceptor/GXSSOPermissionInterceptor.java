@@ -1,5 +1,7 @@
 package cn.maple.sso.web.interceptor;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXBaseSSOPermissionInterceptor;
@@ -7,7 +9,6 @@ import cn.maple.sso.annotation.GXPermissionAnnotation;
 import cn.maple.sso.enums.GXAction;
 import cn.maple.sso.oauth.GXSSOAuthorization;
 import cn.maple.sso.properties.GXSSOProperties;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +46,13 @@ public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
-            GXSSOToken token = GXSSOHelperUtil.attrToken(request);
-            if (token == null) {
+            Dict tokenDict = GXSSOHelperUtil.attrToken(request);
+            if (CollUtil.isEmpty(tokenDict)) {
                 return true;
             }
 
             // 权限验证合法
-            if (isVerification(request, handler, token)) {
+            if (isVerification(request, handler, tokenDict)) {
                 return true;
             }
 
@@ -72,7 +73,7 @@ public class GXSSOPermissionInterceptor extends GXBaseSSOPermissionInterceptor {
      * @param token   token
      * @return boolean
      */
-    protected boolean isVerification(HttpServletRequest request, Object handler, GXSSOToken token) {
+    protected boolean isVerification(HttpServletRequest request, Object handler, Dict token) {
         // URL 权限认证
         if (GXSSOProperties.getInstance().isPermissionUri()) {
             String uri = request.getRequestURI();

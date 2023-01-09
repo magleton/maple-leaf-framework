@@ -1,12 +1,17 @@
 package cn.maple.sso.utils;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.properties.GXSSOConfigProperties;
 import cn.maple.sso.properties.GXSSOProperties;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.service.GXAbstractSSOService;
+import cn.maple.sso.service.GXTokenConfigService;
 import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,7 +120,7 @@ public class GXSSOHelperUtil {
      * @param ssoToken   SSO 票据
      * @param invalidate 销毁当前 JSESSIONID
      */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken, boolean invalidate) {
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken, boolean invalidate) {
         if (invalidate) {
             getSSOService().authCookie(request, response, ssoToken);
         } else {
@@ -123,7 +128,7 @@ public class GXSSOHelperUtil {
         }
     }
 
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, GXSSOToken ssoToken) {
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken) {
         setCookie(request, response, ssoToken, false);
     }
 
@@ -139,11 +144,10 @@ public class GXSSOHelperUtil {
      * </p>
      *
      * @param request 请求对象
-     * @return T
+     * @return Dict
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends GXSSOToken> T getSSOToken(HttpServletRequest request) {
-        return (T) getSSOService().getSSOToken(request);
+    public static Dict getSSOToken(HttpServletRequest request) {
+        return getSSOService().getSSOToken(request);
     }
 
     /**
@@ -153,9 +157,9 @@ public class GXSSOHelperUtil {
      * </p>
      *
      * @param request 访问请求
-     * @return T
+     * @return Dict
      */
-    public static <T extends GXSSOToken> T attrToken(HttpServletRequest request) {
+    public static Dict attrToken(HttpServletRequest request) {
         return getSSOService().attrSSOToken(request);
     }
 
@@ -200,7 +204,9 @@ public class GXSSOHelperUtil {
      * @return String
      */
     public static String getTokenCacheKey(HttpServletRequest request) {
-        return getSSOToken(request).toCacheKey();
+        GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
+        assert tokenConfigService != null;
+        return tokenConfigService.getTokenCacheKey(0L);
     }
 
     /**
@@ -221,5 +227,33 @@ public class GXSSOHelperUtil {
      */
     public static boolean kickLogin(Object userId) {
         return getSSOService().kickLogin(userId);
+    }
+
+
+    /**
+     * 解析浏览器端的token
+     *
+     * @param token token字符串
+     * @return 解码之后的token
+     */
+    public static Dict parser(String token) {
+        return parser(token, false);
+    }
+
+    /**
+     * 解析浏览器端的token
+     *
+     * @param token token字符串
+     * @return 解码之后的token
+     */
+    public static Dict parser(String token, boolean header) {
+        GXTokenConfigService tokenSecretService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
+        if (Objects.isNull(tokenSecretService)) {
+            throw new GXBusinessException("请实现GXTokenSecretService类,并将其加入到spring容器中");
+        }
+        String s = GXAuthCodeUtils.authCodeDecode(token, tokenSecretService.getTokenSecret());
+        Dict ssoToken = JSONUtil.toBean(s, Dict.class);
+        ssoToken.put("ip", GXCurrentRequestContextUtils.getClientIP());
+        return ssoToken;
     }
 }

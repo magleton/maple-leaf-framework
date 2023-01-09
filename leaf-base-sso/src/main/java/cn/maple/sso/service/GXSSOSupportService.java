@@ -1,16 +1,17 @@
 package cn.maple.sso.service;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
 import cn.maple.sso.properties.GXSSOProperties;
-import cn.maple.sso.security.token.GXSSOToken;
-import cn.maple.sso.security.token.GXToken;
 import cn.maple.sso.utils.GXBrowserUtil;
 import cn.maple.sso.utils.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXIpHelperUtil;
+import cn.maple.sso.utils.GXSSOHelperUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * <p>
@@ -45,11 +47,11 @@ public abstract class GXSSOSupportService {
      * </p>
      *
      * @param request 请求对象
-     * @return SSOToken {@link GXSSOToken}
+     * @return Dict
      */
-    @SuppressWarnings("unchecked")
-    public <T extends GXSSOToken> T attrSSOToken(HttpServletRequest request) {
-        return (T) request.getAttribute(GXSSOConstant.SSO_TOKEN_ATTR);
+    public Dict attrSSOToken(HttpServletRequest request) {
+        Object attribute = request.getAttribute(GXSSOConstant.SSO_TOKEN_ATTR);
+        return Convert.convert(Dict.class, attribute);
     }
 
     /**
@@ -58,36 +60,38 @@ public abstract class GXSSOSupportService {
      * 判断 SSOToken 是否缓存 ， 如果缓存不存退出登录
      *
      * @param request 请求对象
-     * @return SSOToken {@link GXSSOToken}
+     * @return Dict
      */
-    protected GXSSOToken cacheSSOToken(HttpServletRequest request, GXSSOCache cache) {
+    protected Dict cacheSSOToken(HttpServletRequest request, GXSSOCache cache) {
         // 如果缓存不存退出登录
         if (cache != null) {
-            GXSSOToken cookieSSOToken = getSSOTokenFromCookie(request);
-            if (cookieSSOToken == null) {
+            Dict ssoToken = getSSOTokenFromCookie(request);
+            if (ssoToken == null) {
                 // 未登录
                 log.debug("用户未登录....");
-                return null;
+                return Dict.create();
             }
 
-            GXSSOToken cacheSSOToken = cache.get(getConfig().getCacheExpires(), cookieSSOToken);
-            if (Objects.isNull(cacheSSOToken)) {
+            Dict cacheSSOToken = cache.get(getConfig().getCacheExpires(), ssoToken);
+            if (cacheSSOToken.isEmpty()) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.debug("cacheSSOToken GXSsoToken is null.");
-                return null;
+                return Dict.create();
             } else {
                 // 开启缓存，判断是否宕机：
                 // 1、缓存正常，返回 tk
                 // 2、缓存宕机，执行读取 Cookie 逻辑
-                if (cacheSSOToken.getFlag() != GXTokenFlag.CACHE_SHUT) {
+                if (!Objects.equals(cacheSSOToken.getInt("flag"), GXTokenFlag.CACHE_SHUT.value())) {
                     // 验证 cookie 与 cache 中 SSOToken 登录时间是否
                     // 不一致返回 null
-                    if (cookieSSOToken.getTime() / GXSSOConstant.TOKEN_TIMESTAMP_CUT == cacheSSOToken.getTime() / GXSSOConstant.TOKEN_TIMESTAMP_CUT) {
+                    Long cookieSSOTime = Optional.ofNullable(ssoToken.getLong("loginAt")).orElse(0L);
+                    Long cacheSSOTime = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
+                    if (cookieSSOTime.equals(cacheSSOTime)) {
                         return cacheSSOToken;
                     } else {
                         log.debug("Login time is not consistent or kicked out.");
                         request.setAttribute(GXSSOConstant.SSO_KICK_FLAG, GXSSOConstant.SSO_KICK_USER);
-                        return null;
+                        return Dict.create();
                     }
                 }
             }
@@ -100,23 +104,25 @@ public abstract class GXSSOSupportService {
     /**
      * <p>
      * 获取当前请求 SSOToken
+     * 1、 先从header中获取
+     * 2、 再从cookie中获取
      * </p>
      *
      * @param request    请求对象
      * @param cookieName Cookie名称
      * @return GXSsoToken
      */
-    protected GXSSOToken getSSOToken(HttpServletRequest request, String cookieName) {
-        String accessToken = request.getHeader(getConfig().getTokenName());
-        if (null == accessToken || "".equals(accessToken)) {
+    protected Dict getSSOToken(HttpServletRequest request, String cookieName) {
+        String token = request.getHeader(getConfig().getTokenName());
+        if (null == token || "".equals(token)) {
             Cookie cookie = GXCookieHelperUtil.findCookieByName(request, cookieName);
             if (null == cookie) {
                 log.debug("Unauthorized login request, ip=" + GXIpHelperUtil.getIpAddr(request));
-                return null;
+                return Dict.create();
             }
-            return GXSSOToken.parser(cookie.getValue(), false);
+            return GXSSOHelperUtil.parser(cookie.getValue(), false);
         }
-        return GXSSOToken.parser(accessToken, true);
+        return GXSSOHelperUtil.parser(token, true);
     }
 
     /**
@@ -124,25 +130,25 @@ public abstract class GXSSOSupportService {
      * 校验SSOToken IP 浏览器 与登录一致
      * </p>
      *
-     * @param request
+     * @param request  请求对象
      * @param ssoToken 登录票据
-     * @return SSOToken {@link GXSSOToken}
+     * @return Dict
      */
-    protected GXSSOToken checkIpBrowser(HttpServletRequest request, GXSSOToken ssoToken) {
+    protected Dict checkIpBrowser(HttpServletRequest request, Dict ssoToken) {
         if (null == ssoToken) {
-            return null;
+            return Dict.create();
         }
         // 判断请求浏览器是否合法
-        if (getConfig().isCookieBrowser() && !GXBrowserUtil.isLegalUserAgent(request, ssoToken.getUserAgent())) {
+        if (getConfig().isCookieBrowser() && !GXBrowserUtil.isLegalUserAgent(request, ssoToken.getStr("userAgent"))) {
             log.debug("The request browser is inconsistent.");
-            return null;
+            return Dict.create();
         }
         // 判断请求 IP 是否合法
         if (getConfig().isCookieCheckIp()) {
             String ip = GXIpHelperUtil.getIpAddr(request);
-            if (ip != null && !ip.equals(ssoToken.getIp())) {
-                log.debug(String.format("ip inconsistent! return SSOToken null, SSOToken userIp:%s, reqIp:%s", ssoToken.getIp(), ip));
-                return null;
+            if (ip != null && !ip.equals(ssoToken.getStr("ip"))) {
+                log.debug(String.format("ip inconsistent! return SSOToken null, SSOToken userIp:%s, reqIp:%s", ssoToken.getStr("ip"), ip));
+                return Dict.create();
             }
         }
         return ssoToken;
@@ -159,8 +165,8 @@ public abstract class GXSSOSupportService {
      * @param request HTTP 请求
      * @return GXSsoToken
      */
-    public GXSSOToken getSSOTokenFromCookie(HttpServletRequest request) {
-        GXSSOToken token = attrSSOToken(request);
+    public Dict getSSOTokenFromCookie(HttpServletRequest request) {
+        Dict token = attrSSOToken(request);
         if (token == null) {
             token = getSSOToken(request, getConfig().getCookieName());
         }
@@ -176,9 +182,9 @@ public abstract class GXSSOSupportService {
      * @param token   SSO 登录信息票据
      * @return Cookie 登录信息Cookie {@link Cookie}
      */
-    protected Cookie generateCookie(HttpServletRequest request, GXToken token) {
+    protected Cookie generateCookie(HttpServletRequest request, Dict token) {
         try {
-            Cookie cookie = new Cookie(getConfig().getCookieName(), token.getToken());
+            Cookie cookie = new Cookie(getConfig().getCookieName(), token.getStr("token"));
             cookie.setPath(getConfig().getCookiePath());
             cookie.setSecure(getConfig().isCookieSecure());
             // domain 提示
@@ -218,7 +224,7 @@ public abstract class GXSSOSupportService {
     protected boolean logout(HttpServletRequest request, HttpServletResponse response, GXSSOCache cache) {
         // SSOToken 如果开启了缓存，删除缓存记录
         if (cache != null && !GXSSOConstant.SSO_KICK_USER.equals(request.getAttribute(GXSSOConstant.SSO_KICK_FLAG))) {
-            GXSSOToken token = getSSOTokenFromCookie(request);
+            Dict token = getSSOTokenFromCookie(request);
             if (token != null) {
                 boolean rlt = cache.delete(token);
                 if (!rlt) {

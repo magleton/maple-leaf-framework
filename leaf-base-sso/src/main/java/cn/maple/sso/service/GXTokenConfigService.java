@@ -1,6 +1,8 @@
 package cn.maple.sso.service;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 
 /**
  * 用户可以实现该接口
@@ -60,5 +62,14 @@ public interface GXTokenConfigService {
      */
     default String getTokenCachePrefix() {
         return "ssoTokenKey_";
+    }
+
+    /**
+     * 获取token的缓存
+     *
+     * @return token的cache缓存
+     */
+    default String getTokenCacheKey(Long userId) {
+        throw new GXBusinessException("请实现缓存的cache键方法!");
     }
 }

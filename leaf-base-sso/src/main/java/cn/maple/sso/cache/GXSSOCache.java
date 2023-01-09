@@ -11,7 +11,6 @@ import cn.maple.core.framework.service.GXBaseCacheService;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.properties.GXSSOConfigProperties;
-import cn.maple.sso.security.token.GXSSOToken;
 import cn.maple.sso.service.GXTokenConfigService;
 
 import java.util.Objects;
@@ -34,21 +33,21 @@ public interface GXSSOCache {
      * 如果缓存服务宕机，返回 token 设置 flag 为 Token.FLAG_CACHE_SHUT
      * </p>
      *
-     * @param key            关键词
-     * @param expires        过期时间（延时心跳时间）
-     * @param cookieSSOToken cookie中存储的ssoToken
+     * @param key      关键词
+     * @param expires  过期时间（延时心跳时间）
+     * @param ssoToken cookie中存储的ssoToken
      * @return SSO票据
      */
     @SuppressWarnings("all")
-    default GXSSOToken get(int expires, GXSSOToken cookieSSOToken) {
+    default Dict get(int expires, Dict ssoToken) {
         GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), cookieSSOToken.getUserId());
+        String cacheKey = tokenConfigService.getTokenCacheKey(ssoToken.getLong("userId"));
         Object o = cacheService.getCache(tokenConfigService.getCacheBucketName(), cacheKey);
         if (Objects.nonNull(o)) {
-            return Convert.convert(GXSSOToken.class, o);
+            return Convert.convert(Dict.class, o);
         }
         // 1、解码本地token
         String tokenSecret = tokenConfigService.getTokenSecret();
@@ -64,9 +63,7 @@ public interface GXSSOCache {
         if (!b) {
             throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
         }
-        GXSSOToken ssoToken = Convert.convert(GXSSOToken.class, tokenData);
-        ssoToken.setTime(cookieSSOToken.getTime());
-        return ssoToken;
+        return Convert.convert(Dict.class, tokenData);
     }
 
     /**
@@ -78,12 +75,12 @@ public interface GXSSOCache {
      * @param cookieSSOToken cookie中存储的ssoToken
      */
     @SuppressWarnings("all")
-    default boolean set(GXSSOToken ssoToken, int expires, GXSSOToken cookieSSOToken) {
+    default boolean set(Dict ssoToken, int expires, Dict cookieSSOToken) {
         GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getUserId());
+        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getLong("userId"));
         String cacheBucketName = tokenConfigService.getCacheBucketName();
         cacheService.setCache(cacheBucketName, cacheKey, JSONUtil.toJsonStr(ssoToken), expires, TimeUnit.SECONDS);
         return true;
@@ -96,12 +93,12 @@ public interface GXSSOCache {
      * @param key 关键词
      */
     @SuppressWarnings("all")
-    default boolean delete(GXSSOToken ssoToken) {
+    default boolean delete(Dict ssoToken) {
         GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getUserId());
+        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getLong("userId"));
         String cacheBucketName = tokenConfigService.getCacheBucketName();
         Object o = cacheService.deleteCache(cacheBucketName, cacheKey);
         return Objects.nonNull(o);
