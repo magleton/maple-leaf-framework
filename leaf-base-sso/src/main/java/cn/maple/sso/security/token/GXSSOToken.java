@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
@@ -110,6 +111,10 @@ public class GXSSOToken extends GXAccessToken {
 
     @Override
     public String getToken() {
+        String token = GXCurrentRequestContextUtils.getHeader(GXTokenConstant.TOKEN_NAME);
+        if (Objects.nonNull(token)) {
+            return token;
+        }
         Dict param = Dict.create();
         if (null != this.getUserId()) {
             param.set("userId", this.getUserId());
@@ -250,11 +255,11 @@ public class GXSSOToken extends GXAccessToken {
         return GXSSOProperties.toCacheKey(this.getUserId());
     }
 
-    public void setLoginAt(Long loginAt) {
-        this.loginAt = loginAt;
-    }
-
     public Long getLoginAt() {
         return loginAt;
+    }
+
+    public void setLoginAt(Long loginAt) {
+        this.loginAt = loginAt;
     }
 }
