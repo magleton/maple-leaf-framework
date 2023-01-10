@@ -67,9 +67,11 @@ public interface GXTokenConfigService {
     /**
      * 获取token的缓存
      *
+     * @param userId    用户id
+     * @param extraData 额外参数 根据业务需要自信传递
      * @return token的cache缓存
      */
-    default String getTokenCacheKey(Long userId) {
+    default String getTokenCacheKey(Long userId, Dict extraData) {
         throw new GXBusinessException("请实现缓存的cache键方法!");
     }
 }

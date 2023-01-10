@@ -47,8 +47,8 @@ public interface GXSSOCache {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
-        String cacheKey = tokenConfigService.getTokenCacheKey(id);
+        Long userId = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        String cacheKey = tokenConfigService.getTokenCacheKey(userId, ssoToken);
         Object o = cacheService.getCache(tokenConfigService.getCacheBucketName(), cacheKey);
         if (Objects.nonNull(o)) {
             String s = GXAuthCodeUtils.authCodeDecode(o.toString(), tokenConfigService.getTokenSecret());

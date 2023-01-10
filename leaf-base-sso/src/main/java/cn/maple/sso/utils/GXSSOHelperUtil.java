@@ -2,6 +2,7 @@ package cn.maple.sso.utils;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * <p>
@@ -206,7 +208,11 @@ public class GXSSOHelperUtil {
     public static String getTokenCacheKey(HttpServletRequest request) {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
-        return tokenConfigService.getTokenCacheKey(0L);
+        String platform = Optional.ofNullable(request.getHeader(GXTokenConstant.PLATFORM)).orElse("");
+        Dict data = Dict.create().set(GXTokenConstant.PLATFORM, platform);
+        Dict loginCredentials = GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenConfigService.getTokenSecret());
+        Long userId = Optional.ofNullable(loginCredentials.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(loginCredentials.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        return tokenConfigService.getTokenCacheKey(userId, data);
     }
 
     /**
