@@ -3,13 +3,11 @@ package cn.maple.sso.cache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBaseCacheService;
-import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.properties.GXSSOConfigProperties;
@@ -49,13 +47,10 @@ public interface GXSSOCache {
         assert cacheService != null;
         Long userId = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
         String cacheKey = tokenConfigService.getTokenCacheKey(userId, ssoToken);
-        Object o = cacheService.getCache(tokenConfigService.getCacheBucketName(), cacheKey);
-        if (Objects.nonNull(o)) {
-            String s = GXAuthCodeUtils.authCodeDecode(o.toString(), tokenConfigService.getTokenSecret());
-            if ("{}".equals(s)) {
-                throw new GXBusinessException("token不正确,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
-            }
-            return JSONUtil.toBean(s, Dict.class);
+        String cacheBucketName = tokenConfigService.getCacheBucketName();
+        Object o = cacheService.getCache(cacheBucketName, cacheKey);
+        if (Objects.nonNull(o) && JSONUtil.isTypeJSON(o.toString())) {
+            return JSONUtil.toBean(o.toString(), Dict.class);
         }
         // 1、解码本地token
         String tokenSecret = tokenConfigService.getTokenSecret();
@@ -66,7 +61,9 @@ public interface GXSSOCache {
         if (CollUtil.isEmpty(tokenData)) {
             throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
         }
-        // 2、调用用户服务的验证用户是否有效
+        // 2、将解码出来的token放入缓存
+        set(ssoToken, expires);
+        // 3、调用用户服务的验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
             throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
@@ -77,20 +74,23 @@ public interface GXSSOCache {
     /**
      * 设置SSO票据
      *
-     * @param key            关键词
-     * @param ssoToken       SSO票据
-     * @param expires        过期时间
-     * @param cookieSSOToken cookie中存储的ssoToken
+     * @param key      关键词
+     * @param ssoToken SSO票据
+     * @param expires  过期时间
      */
     @SuppressWarnings("all")
-    default boolean set(Dict ssoToken, int expires, Dict cookieSSOToken) {
+    default boolean set(Dict ssoToken, int expires) {
         GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getLong("userId"));
+        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        if (Objects.isNull(id)) {
+            throw new GXBusinessException("token中未包含有效的id标识");
+        }
+        String tokenCacheKey = tokenConfigService.getTokenCacheKey(id, ssoToken);
         String cacheBucketName = tokenConfigService.getCacheBucketName();
-        cacheService.setCache(cacheBucketName, cacheKey, JSONUtil.toJsonStr(ssoToken), expires, TimeUnit.SECONDS);
+        cacheService.setCache(cacheBucketName, tokenCacheKey, JSONUtil.toJsonStr(ssoToken), expires, TimeUnit.SECONDS);
         return true;
     }
 
@@ -106,9 +106,13 @@ public interface GXSSOCache {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        String cacheKey = CharSequenceUtil.format("{}{}", tokenConfigService.getTokenCachePrefix(), ssoToken.getLong("userId"));
+        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        if (Objects.isNull(id)) {
+            throw new GXBusinessException("token中未包含有效的id标识");
+        }
+        String tokenCacheKey = tokenConfigService.getTokenCacheKey(id, ssoToken);
         String cacheBucketName = tokenConfigService.getCacheBucketName();
-        Object o = cacheService.deleteCache(cacheBucketName, cacheKey);
+        Object o = cacheService.deleteCache(cacheBucketName, tokenCacheKey);
         return Objects.nonNull(o);
     }
 }

@@ -10,24 +10,6 @@ import cn.maple.core.framework.exception.GXBusinessException;
  */
 public interface GXTokenConfigService {
     /**
-     * 获取C端客户token的加解密key
-     *
-     * @return token加解密key
-     */
-    default String getUserTokenSecret() {
-        return GXTokenConstant.USER_TOKEN_SECRET_KEY;
-    }
-
-    /**
-     * 获取管理端token的加解密key
-     *
-     * @return token加解密key
-     */
-    default String getAdminTokenSecret() {
-        return GXTokenConstant.ADMIN_TOKEN_SECRET_KEY;
-    }
-
-    /**
      * 获取通用token的加解密key
      *
      * @return token加解密key

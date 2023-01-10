@@ -84,9 +84,9 @@ public abstract class GXSSOSupportService {
                 if (!Objects.equals(cacheSSOToken.getInt("flag"), GXTokenFlag.CACHE_SHUT.value())) {
                     // 验证 cookie 与 cache 中 SSOToken 登录时间是否
                     // 不一致返回 null
-                    Long cookieSSOTime = Optional.ofNullable(ssoToken.getLong("loginAt")).orElse(0L);
-                    Long cacheSSOTime = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
-                    if (cookieSSOTime.equals(cacheSSOTime)) {
+                    Long cookieLoginAT = Optional.ofNullable(ssoToken.getLong("loginAt")).orElse(0L);
+                    Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
+                    if (cookieLoginAT.equals(cacheLoginAt)) {
                         return cacheSSOToken;
                     } else {
                         log.debug("Login time is not consistent or kicked out.");

@@ -87,19 +87,20 @@ public abstract class GXAbstractSSOService extends GXSSOSupportService implement
      */
     @Override
     public void setCookie(HttpServletRequest request, HttpServletResponse response, Dict ssoToken) {
-        // 设置加密 Cookie
-        Cookie ck = this.generateCookie(request, ssoToken);
-
-        // 判断 GXSsoCache 是否缓存处理失效
+        // 判断 GXSSOCache 是否缓存处理失效
         // cache 缓存宕机，flag 设置为失效
         GXSSOCache cache = getConfig().getCache();
         if (cache != null) {
             Dict cookieSSOToken = getSSOTokenFromCookie(GXCurrentRequestContextUtils.getHttpServletRequest());
-            boolean rlt = cache.set(ssoToken, getConfig().getCacheExpires(), cookieSSOToken);
+            ssoToken.putAll(cookieSSOToken);
+            boolean rlt = cache.set(ssoToken, getConfig().getCacheExpires());
             if (!rlt) {
                 ssoToken.put("flag", GXTokenFlag.CACHE_SHUT.value());
             }
         }
+
+        // 设置加密 Cookie
+        Cookie ck = this.generateCookie(request, ssoToken);
 
         //执行插件逻辑
         List<GXSSOPlugin> pluginList = getConfig().getPluginList();
