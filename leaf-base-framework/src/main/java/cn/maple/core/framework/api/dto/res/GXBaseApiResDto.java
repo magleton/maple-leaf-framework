@@ -1,4 +1,4 @@
-package cn.maple.core.framework.api.dto;
+package cn.maple.core.framework.api.dto.res;
 
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import lombok.Data;
