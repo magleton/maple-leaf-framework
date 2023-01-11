@@ -3,11 +3,13 @@ package cn.maple.sso.cache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBaseCacheService;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.sso.properties.GXSSOConfigProperties;
@@ -121,16 +123,18 @@ public interface GXSSOCache {
     }
 
     /**
-     * 自定义验证逻辑 该验证逻辑会被拦截器自动调用
+     * 自定义验证缓存中的token与header或者Cookie中的token是否一致
+     * 该验证逻辑会被拦截器自动调用
      *
      * @param cacheSSOToken  缓存中存储的token数据
      * @param cookieSSOToken 从header或者cookie中获取的token数据
      * @return boolean
      */
-    default boolean customerBusiness(Dict cacheSSOToken, Dict cookieSSOToken) {
-        // 验证 cookie 与 cache 中 SSOToken 登录时间是否 不一致返回 null
+    default boolean verifyTokenConsistency(Dict cacheSSOToken, Dict cookieSSOToken) {
+        // 验证 cookieSSOToken 与 cacheSSOToken 中的登录时间是否 不一致返回 false
         Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
         Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
-        return cookieLoginAt.equals(cacheLoginAt);
+        String activeProfile = GXCommonUtils.getActiveProfile();
+        return CharSequenceUtil.equalsIgnoreCase(activeProfile, "local") || cookieLoginAt.equals(cacheLoginAt);
     }
 }

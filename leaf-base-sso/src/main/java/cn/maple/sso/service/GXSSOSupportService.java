@@ -85,7 +85,7 @@ public abstract class GXSSOSupportService {
                     // Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
                     // Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
                     // if (cookieLoginAt.equals(cacheLoginAt)) {
-                    if (cache.customerBusiness(cacheSSOToken, cookieSSOToken)) {
+                    if (cache.verifyTokenConsistency(cacheSSOToken, cookieSSOToken)) {
                         return cacheSSOToken;
                     } else {
                         log.debug("Login time is not consistent or kicked out.");
