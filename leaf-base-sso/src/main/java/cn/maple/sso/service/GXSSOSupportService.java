@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * <p>
@@ -65,14 +64,14 @@ public abstract class GXSSOSupportService {
     protected Dict cacheSSOToken(HttpServletRequest request, GXSSOCache cache) {
         // 如果缓存不存退出登录
         if (cache != null) {
-            Dict ssoToken = getSSOTokenFromCookie(request);
-            if (ssoToken == null) {
+            Dict cookieSSOToken = getSSOTokenFromCookie(request);
+            if (cookieSSOToken == null) {
                 // 未登录
                 log.debug("用户未登录....");
                 return Dict.create();
             }
 
-            Dict cacheSSOToken = cache.get(getConfig().getCacheExpires(), ssoToken);
+            Dict cacheSSOToken = cache.get(getConfig().getCacheExpires(), cookieSSOToken);
             if (cacheSSOToken.isEmpty()) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.debug("cacheSSOToken GXSsoToken is null.");
@@ -82,11 +81,11 @@ public abstract class GXSSOSupportService {
                 // 1、缓存正常，返回 tk
                 // 2、缓存宕机，执行读取 Cookie 逻辑
                 if (!Objects.equals(cacheSSOToken.getInt("flag"), GXTokenFlag.CACHE_SHUT.value())) {
-                    // 验证 cookie 与 cache 中 SSOToken 登录时间是否
-                    // 不一致返回 null
-                    Long cookieLoginAT = Optional.ofNullable(ssoToken.getLong("loginAt")).orElse(0L);
-                    Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
-                    if (cookieLoginAT.equals(cacheLoginAt)) {
+                    // 验证 cookie 与 cache 中 SSOToken 登录时间是否 不一致返回 null
+                    // Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
+                    // Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
+                    // if (cookieLoginAt.equals(cacheLoginAt)) {
+                    if (cache.customerBusiness(cacheSSOToken, cookieSSOToken)) {
                         return cacheSSOToken;
                     } else {
                         log.debug("Login time is not consistent or kicked out.");

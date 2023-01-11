@@ -2,8 +2,10 @@ package cn.maple.sso.web.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import cn.maple.sso.annotation.GXLoginAnnotation;
+import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.properties.GXUrlWhiteListsConfigProperties;
 import cn.maple.sso.utils.GXHttpUtil;
@@ -61,6 +63,11 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
             if (GXHttpUtil.isAjax(request)) {
                 // Handler 处理 AJAX 请求
                 getHandler().preTokenIsNullAjax(request, response);
+                // 如果启用了GXSSOCache 则调用Cache的删除方法 删除缓存中的数据
+                GXSSOCache ssoCache = GXSpringContextUtils.getBean(GXSSOCache.class);
+                if (Objects.nonNull(ssoCache)) {
+                    ssoCache.delete(Dict.create());
+                }
                 return false;
             } else {
                 // token 为空, 调用 Handler 处理

@@ -106,6 +106,10 @@ public interface GXSSOCache {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
+        if (CollUtil.isEmpty(ssoToken)) {
+            String tokenSecret = tokenConfigService.getTokenSecret();
+            ssoToken = GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
+        }
         Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
         if (Objects.isNull(id)) {
             throw new GXBusinessException("token中未包含有效的id标识");
@@ -114,5 +118,19 @@ public interface GXSSOCache {
         String cacheBucketName = tokenConfigService.getCacheBucketName();
         Object o = cacheService.deleteCache(cacheBucketName, tokenCacheKey);
         return Objects.nonNull(o);
+    }
+
+    /**
+     * 自定义验证逻辑 该验证逻辑会被拦截器自动调用
+     *
+     * @param cacheSSOToken  缓存中存储的token数据
+     * @param cookieSSOToken 从header或者cookie中获取的token数据
+     * @return boolean
+     */
+    default boolean customerBusiness(Dict cacheSSOToken, Dict cookieSSOToken) {
+        // 验证 cookie 与 cache 中 SSOToken 登录时间是否 不一致返回 null
+        Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
+        Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
+        return cookieLoginAt.equals(cacheLoginAt);
     }
 }
