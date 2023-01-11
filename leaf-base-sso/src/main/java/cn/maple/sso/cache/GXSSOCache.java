@@ -53,7 +53,7 @@ public interface GXSSOCache {
         Object o = cacheService.getCache(cacheBucketName, cacheKey);
         if (Objects.nonNull(o) && JSONUtil.isTypeJSON(o.toString())) {
             // 如果缓存中的SSOToken不为null
-            // 则调用用户服务的验证用户是否有效
+            // 则调用用户自己的逻辑验证用户是否有效
             boolean b = tokenConfigService.checkLoginStatus();
             if (!b) {
                 throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
@@ -71,7 +71,7 @@ public interface GXSSOCache {
         }
         // 2、将解码出来的token放入缓存
         set(ssoToken, expires);
-        // 3、如果http中携带的的SSOToken不为null 则调用用户服务的验证用户是否有效
+        // 3、如果http中携带的的SSOToken不为null 则调用用户自己的逻辑验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
             throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
