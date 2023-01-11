@@ -52,6 +52,12 @@ public interface GXSSOCache {
         String cacheBucketName = tokenConfigService.getCacheBucketName();
         Object o = cacheService.getCache(cacheBucketName, cacheKey);
         if (Objects.nonNull(o) && JSONUtil.isTypeJSON(o.toString())) {
+            // 如果缓存中的SSOToken不为null
+            // 则调用用户服务的验证用户是否有效
+            boolean b = tokenConfigService.checkLoginStatus();
+            if (!b) {
+                throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
+            }
             return JSONUtil.toBean(o.toString(), Dict.class);
         }
         // 1、解码本地token
@@ -65,11 +71,6 @@ public interface GXSSOCache {
         }
         // 2、将解码出来的token放入缓存
         set(ssoToken, expires);
-        // 3、调用用户服务的验证用户是否有效
-        boolean b = tokenConfigService.checkLoginStatus();
-        if (!b) {
-            throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
-        }
         return Convert.convert(Dict.class, tokenData);
     }
 
