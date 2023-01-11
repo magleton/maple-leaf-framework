@@ -74,6 +74,10 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
                 // 返回 true 继续执行, 清理登录状态并重定向至登录界面
                 if (getHandler().preTokenIsNull(request, response)) {
                     log.debug("logout. request url:" + request.getRequestURL());
+                    GXSSOCache ssoCache = GXSpringContextUtils.getBean(GXSSOCache.class);
+                    if (Objects.nonNull(ssoCache)) {
+                        ssoCache.delete(Dict.create());
+                    }
                     GXSSOHelperUtil.clearRedirectLogin(request, response);
                 }
                 return false;
