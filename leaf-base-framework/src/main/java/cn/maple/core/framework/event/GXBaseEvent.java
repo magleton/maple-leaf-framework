@@ -57,7 +57,7 @@ public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypePr
 
     @Override
     public ResolvableType getResolvableType() {
-        return ResolvableType.forInstance(getSource());
+        return ResolvableType.forClass(getClass());
     }
 
     @Override
