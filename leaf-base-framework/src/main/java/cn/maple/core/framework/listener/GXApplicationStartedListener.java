@@ -45,18 +45,14 @@ public class GXApplicationStartedListener implements ApplicationListener<Applica
                     if (CharSequenceUtil.isEmpty(permissionModuleName)) {
                         permissionModuleName = moduleName;
                     }
-                    GXBasePermissionInnerDto permissionDto = GXBasePermissionInnerDto.builder()
-                            .permissionCode(permissionAction.permissionCode())
-                            .permissionName(permissionAction.permissionName())
-                            .moduleName(permissionModuleName)
-                            .moduleCode(permissionModuleCode)
-                            .build();
+                    GXBasePermissionInnerDto permissionDto = GXBasePermissionInnerDto.builder().permissionCode(permissionAction.permissionCode()).permissionName(permissionAction.permissionName()).moduleName(permissionModuleName).moduleCode(permissionModuleCode).build();
                     permissionDtoList.add(permissionDto);
                 }
             }
             concurrentHashMap.putIfAbsent(k, permissionDtoList);
         });
-        GXPermissionEvent<Map<String, List<GXBasePermissionInnerDto>>> permissionEvent = new GXPermissionEvent<>(concurrentHashMap, Dict.create());
+        //GXPermissionEvent<Map<String, List<GXBasePermissionInnerDto>>> permissionEvent = new GXPermissionEvent<>(concurrentHashMap, Dict.create());
+        GXPermissionEvent permissionEvent = new GXPermissionEvent(concurrentHashMap, Dict.create());
         GXEventPublisherUtils.publishEvent(permissionEvent);
     }
 }
