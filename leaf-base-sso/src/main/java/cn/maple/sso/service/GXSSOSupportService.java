@@ -67,14 +67,14 @@ public abstract class GXSSOSupportService {
             Dict cookieSSOToken = getSSOTokenFromCookie(request);
             if (cookieSSOToken == null) {
                 // 未登录
-                log.debug("用户未登录....");
+                log.info("SSO 用户未登录....");
                 return Dict.create();
             }
 
             Dict cacheSSOToken = cache.get(getConfig().getCacheExpires(), cookieSSOToken);
             if (cacheSSOToken.isEmpty()) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
-                log.debug("cacheSSOToken GXSsoToken is null.");
+                log.info("cacheSSOToken GXSsoToken is null.");
                 return Dict.create();
             } else {
                 // 开启缓存，判断是否宕机：
@@ -88,7 +88,7 @@ public abstract class GXSSOSupportService {
                     if (cache.verifyTokenConsistency(cacheSSOToken, cookieSSOToken)) {
                         return cacheSSOToken;
                     } else {
-                        log.debug("Login time is not consistent or kicked out.");
+                        log.info("Login time is not consistent or kicked out.");
                         request.setAttribute(GXSSOConstant.SSO_KICK_FLAG, GXSSOConstant.SSO_KICK_USER);
                         return Dict.create();
                     }
@@ -113,10 +113,11 @@ public abstract class GXSSOSupportService {
      */
     protected Dict getSSOToken(HttpServletRequest request, String cookieName) {
         String token = request.getHeader(getConfig().getTokenName());
+        log.info("SSO从header中获取token : {}", token);
         if (null == token || "".equals(token)) {
             Cookie cookie = GXCookieHelperUtil.findCookieByName(request, cookieName);
             if (null == cookie) {
-                log.debug("Unauthorized login request, ip=" + GXIpHelperUtil.getIpAddr(request));
+                log.info("Unauthorized login request, ip=" + GXIpHelperUtil.getIpAddr(request));
                 return Dict.create();
             }
             return GXSSOHelperUtil.parser(cookie.getValue(), false);
@@ -167,8 +168,10 @@ public abstract class GXSSOSupportService {
     public Dict getSSOTokenFromCookie(HttpServletRequest request) {
         Dict token = attrSSOToken(request);
         if (token == null) {
+            log.info("SSO组件从request的属性中未获取到");
             token = getSSOToken(request, getConfig().getCookieName());
         }
+        log.info("SSO组件最终解码出来的token: {}", token);
         return token;
     }
 

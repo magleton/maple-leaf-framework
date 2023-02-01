@@ -14,6 +14,8 @@ import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.service.GXAbstractSSOService;
 import cn.maple.sso.service.GXTokenConfigService;
 import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,10 +35,13 @@ import java.util.Optional;
  */
 public class GXSSOHelperUtil {
     /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(GXSSOHelperUtil.class);
+    /**
      * SSO配置
      */
     protected static GXSSOProperties ssoConfig;
-
     /**
      * SSO 服务处理
      */
@@ -260,6 +265,7 @@ public class GXSSOHelperUtil {
         String s = GXAuthCodeUtils.authCodeDecode(token, tokenSecretService.getTokenSecret());
         Dict ssoToken = JSONUtil.toBean(s, Dict.class);
         ssoToken.put("ip", GXCurrentRequestContextUtils.getClientIP());
+        LOGGER.info("SSO组件解析出来的Token信息 : {}", ssoToken);
         return ssoToken;
     }
 }

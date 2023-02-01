@@ -138,9 +138,10 @@ public interface GXSSOCache {
      */
     default boolean verifyTokenConsistency(Dict cacheSSOToken, Dict cookieSSOToken) {
         // 验证 cookieSSOToken 与 cacheSSOToken 中的登录时间是否 不一致返回 false
-        Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
-        Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
         String activeProfile = GXCommonUtils.getActiveProfile();
-        return CharSequenceUtil.equalsIgnoreCase(activeProfile, "local") || cookieLoginAt.equals(cacheLoginAt);
+        if (CharSequenceUtil.equalsIgnoreCase(activeProfile, "local")) {
+            return true;
+        }
+        throw new GXBusinessException("请自行实现cookieToken与cacheToken中登录时间的验证规则");
     }
 }
