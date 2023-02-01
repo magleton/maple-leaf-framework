@@ -1,7 +1,6 @@
 package cn.maple.sso.cache;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
@@ -12,7 +11,6 @@ import cn.maple.core.framework.service.GXBaseCacheService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
-import cn.maple.sso.properties.GXSSOConfigProperties;
 import cn.maple.sso.service.GXTokenConfigService;
 
 import java.util.Objects;
@@ -36,47 +34,19 @@ public interface GXSSOCache {
      * 如果缓存服务宕机，返回 token 设置 flag 为 Token.FLAG_CACHE_SHUT
      * </p>
      *
-     * @param key      关键词
-     * @param expires  过期时间（延时心跳时间）
-     * @param ssoToken cookie中存储的ssoToken
+     * @param expires        过期时间（延时心跳时间）
+     * @param requestToken cookie中存储的ssoToken
      * @return SSO票据
      */
-    @SuppressWarnings("all")
-    default Dict get(int expires, Dict ssoToken) {
-        GXBaseCacheService cacheService = GXSpringContextUtils.getBean(GXBaseCacheService.class);
+    default Dict get(int expires, Dict requestToken) {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
-        assert cacheService != null;
-        Long userId = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
-        String cacheKey = tokenConfigService.getTokenCacheKey(userId, ssoToken);
-        String cacheBucketName = tokenConfigService.getCacheBucketName();
-        Object o = cacheService.getCache(cacheBucketName, cacheKey);
-        if (Objects.nonNull(o) && JSONUtil.isTypeJSON(o.toString())) {
-            // 如果缓存中的SSOToken不为null
-            // 则调用用户自己的逻辑验证用户是否有效
-            boolean b = tokenConfigService.checkLoginStatus();
-            if (!b) {
-                throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
-            }
-            return JSONUtil.toBean(o.toString(), Dict.class);
-        }
-        // 1、解码本地token
-        String tokenSecret = tokenConfigService.getTokenSecret();
-        GXSSOConfigProperties ssoProperties = GXSpringContextUtils.getBean(GXSSOConfigProperties.class);
-        assert ssoProperties != null;
-        String tokenName = ssoProperties.getConfig().getTokenName();
-        Dict tokenData = GXCurrentRequestContextUtils.getLoginCredentials(tokenName, tokenSecret);
-        if (CollUtil.isEmpty(tokenData)) {
-            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
-        }
-        // 2、将解码出来的token放入缓存
-        set(ssoToken, expires);
-        // 3、如果http中携带的的SSOToken不为null 则调用用户自己的逻辑验证用户是否有效
+        // 调用业务端的逻辑验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
-            throw new GXBusinessException("登录状态已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
+            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
         }
-        return Convert.convert(Dict.class, tokenData);
+        return tokenConfigService.getEfficaciousToken(requestToken);
     }
 
     /**
@@ -138,10 +108,12 @@ public interface GXSSOCache {
      */
     default boolean verifyTokenConsistency(Dict cacheSSOToken, Dict cookieSSOToken) {
         // 验证 cookieSSOToken 与 cacheSSOToken 中的登录时间是否 不一致返回 false
+        Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
+        Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
         String activeProfile = GXCommonUtils.getActiveProfile();
         if (CharSequenceUtil.equalsIgnoreCase(activeProfile, "local")) {
             return true;
         }
-        throw new GXBusinessException("请自行实现cookieToken与cacheToken中登录时间的验证规则");
+        return cookieLoginAt.equals(cacheLoginAt);
     }
 }

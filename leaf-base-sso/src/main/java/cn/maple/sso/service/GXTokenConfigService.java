@@ -56,4 +56,16 @@ public interface GXTokenConfigService {
     default String getTokenCacheKey(Long userId, Dict extraData) {
         throw new GXBusinessException("请实现缓存的cache键方法!");
     }
+
+    /**
+     * 获取业务有效的token
+     * 该token可以来自于缓存或者别的服务
+     * 默认为当前请求中的token解码之后的数据
+     *
+     * @param requestToken 当前请求中token字符串解码之后的数据
+     * @return Dict
+     */
+    default Dict getEfficaciousToken(Dict requestToken) {
+        return requestToken;
+    }
 }

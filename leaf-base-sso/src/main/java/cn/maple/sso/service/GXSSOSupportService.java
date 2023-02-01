@@ -2,6 +2,7 @@ package cn.maple.sso.service;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
@@ -62,17 +63,17 @@ public abstract class GXSSOSupportService {
      * @return Dict
      */
     protected Dict cacheSSOToken(HttpServletRequest request, GXSSOCache cache) {
-        // 如果缓存不存退出登录
+        // 如果缓存组件存在则使用缓存中存储的token
         if (cache != null) {
-            Dict cookieSSOToken = getSSOTokenFromCookie(request);
-            if (cookieSSOToken == null) {
+            Dict requestToken = getSSOTokenFromCookie(request);
+            if (requestToken == null) {
                 // 未登录
                 log.info("SSO 用户未登录....");
                 return Dict.create();
             }
 
-            Dict cacheSSOToken = cache.get(getConfig().getCacheExpires(), cookieSSOToken);
-            if (cacheSSOToken.isEmpty()) {
+            Dict cacheToken = cache.get(getConfig().getCacheExpires(), requestToken);
+            if (cacheToken.isEmpty()) {
                 // 开启缓存且失效，清除 Cookie 退出 , 返回 null
                 log.info("cacheSSOToken GXSsoToken is null.");
                 return Dict.create();
@@ -80,13 +81,9 @@ public abstract class GXSSOSupportService {
                 // 开启缓存，判断是否宕机：
                 // 1、缓存正常，返回 tk
                 // 2、缓存宕机，执行读取 Cookie 逻辑
-                if (!Objects.equals(cacheSSOToken.getInt("flag"), GXTokenFlag.CACHE_SHUT.value())) {
-                    // 验证 cookie 与 cache 中 SSOToken 登录时间是否 不一致返回 null
-                    // Long cookieLoginAt = Optional.ofNullable(cookieSSOToken.getLong("loginAt")).orElse(0L);
-                    // Long cacheLoginAt = Optional.ofNullable(cacheSSOToken.getLong("loginAt")).orElse(1L);
-                    // if (cookieLoginAt.equals(cacheLoginAt)) {
-                    if (cache.verifyTokenConsistency(cacheSSOToken, cookieSSOToken)) {
-                        return cacheSSOToken;
+                if (!Objects.equals(cacheToken.getInt("flag"), GXTokenFlag.CACHE_SHUT.value())) {
+                    if (cache.verifyTokenConsistency(cacheToken, requestToken)) {
+                        return cacheToken;
                     } else {
                         log.info("Login time is not consistent or kicked out.");
                         request.setAttribute(GXSSOConstant.SSO_KICK_FLAG, GXSSOConstant.SSO_KICK_USER);
@@ -114,7 +111,7 @@ public abstract class GXSSOSupportService {
     protected Dict getSSOToken(HttpServletRequest request, String cookieName) {
         String token = request.getHeader(getConfig().getTokenName());
         log.info("SSO从header中获取token : {}", token);
-        if (null == token || "".equals(token)) {
+        if (CharSequenceUtil.isBlank(token)) {
             Cookie cookie = GXCookieHelperUtil.findCookieByName(request, cookieName);
             if (null == cookie) {
                 log.info("Unauthorized login request, ip=" + GXIpHelperUtil.getIpAddr(request));

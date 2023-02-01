@@ -1,6 +1,7 @@
 package cn.maple.sso.utils;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -254,18 +255,22 @@ public class GXSSOHelperUtil {
     /**
      * 解析浏览器端的token
      *
-     * @param token token字符串
+     * @param token  token字符串
+     * @param header token字符串是否从header中获取的
      * @return 解码之后的token
      */
     public static Dict parser(String token, boolean header) {
+        if (CharSequenceUtil.isNotBlank(token) && header) {
+            LOGGER.info("token字符串来自于header");
+        }
         GXTokenConfigService tokenSecretService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         if (Objects.isNull(tokenSecretService)) {
             throw new GXBusinessException("请实现GXTokenSecretService类,并将其加入到spring容器中");
         }
         String s = GXAuthCodeUtils.authCodeDecode(token, tokenSecretService.getTokenSecret());
-        Dict ssoToken = JSONUtil.toBean(s, Dict.class);
-        ssoToken.put("ip", GXCurrentRequestContextUtils.getClientIP());
-        LOGGER.info("SSO组件解析出来的Token信息 : {}", ssoToken);
-        return ssoToken;
+        Dict requestToken = JSONUtil.toBean(s, Dict.class);
+        requestToken.put("ip", GXCurrentRequestContextUtils.getClientIP());
+        LOGGER.info("SSO组件解析出来的token信息 : {}", requestToken);
+        return requestToken;
     }
 }
