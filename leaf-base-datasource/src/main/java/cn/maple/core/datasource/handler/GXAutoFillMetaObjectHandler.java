@@ -1,6 +1,7 @@
 package cn.maple.core.datasource.handler;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXAppStartFillData;
 import cn.maple.core.datasource.service.GXMyBatisAutoFillMetaObjectService;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -21,35 +22,41 @@ import java.util.Objects;
 public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        String createdBy = "unknown";
-        GXAppStartFillData appStartFillData = metaObject.getOriginalObject().getClass().getAnnotation(GXAppStartFillData.class);
-        if (Objects.isNull(appStartFillData)) {
-            GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
-            if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
-                createdBy = myBatisAutoFillMetaObjectService.getCreatedBy();
+        String createdBy = (String) metaObject.getValue("createdBy");
+        if (CharSequenceUtil.isBlank(createdBy)) {
+            createdBy = "unknown";
+            GXAppStartFillData appStartFillData = metaObject.getOriginalObject().getClass().getAnnotation(GXAppStartFillData.class);
+            if (Objects.isNull(appStartFillData)) {
+                GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
+                if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
+                    createdBy = myBatisAutoFillMetaObjectService.getCreatedBy();
+                }
+            } else {
+                createdBy = appStartFillData.value();
             }
-        } else {
-            createdBy = appStartFillData.value();
+            this.setFieldValByName("createdBy", createdBy, metaObject);
         }
         final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("createdAt", timestamp, metaObject);
-        this.setFieldValByName("createdBy", createdBy, metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        String updatedBy = "unknown";
-        GXAppStartFillData appStartFillData = metaObject.getOriginalObject().getClass().getAnnotation(GXAppStartFillData.class);
-        if (Objects.isNull(appStartFillData)) {
-            GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
-            if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
-                updatedBy = myBatisAutoFillMetaObjectService.getUpdatedBy();
+        String updatedBy = (String) metaObject.getValue("updatedBy");
+        if (CharSequenceUtil.isBlank(updatedBy)) {
+            updatedBy = "unknown";
+            GXAppStartFillData appStartFillData = metaObject.getOriginalObject().getClass().getAnnotation(GXAppStartFillData.class);
+            if (Objects.isNull(appStartFillData)) {
+                GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
+                if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
+                    updatedBy = myBatisAutoFillMetaObjectService.getUpdatedBy();
+                }
+            } else {
+                updatedBy = appStartFillData.value();
             }
-        } else {
-            updatedBy = appStartFillData.value();
+            this.setFieldValByName("updatedBy", updatedBy, metaObject);
         }
         final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
         this.setFieldValByName("updatedAt", timestamp, metaObject);
-        this.setFieldValByName("updatedBy", updatedBy, metaObject);
     }
 }
