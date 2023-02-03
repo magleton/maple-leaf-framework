@@ -345,14 +345,13 @@ public class GXCommonUtils {
             retVal = ReflectUtil.invoke(object, method, params);
         } catch (UtilException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof InvocationTargetException) {
-                Throwable targetException = ((InvocationTargetException) cause).getTargetException();
-                if (targetException instanceof GXBeanValidateException) {
-                    throw (GXBeanValidateException) targetException;
-                }
+            Throwable targetException = ((InvocationTargetException) cause).getTargetException();
+            if (targetException instanceof GXBeanValidateException) {
+                throw (GXBeanValidateException) targetException;
             }
-            LOG.error("反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
-            throw new GXBusinessException("系统内部错误", cause);
+            String exceptionMessage = CharSequenceUtil.isEmpty(targetException.getMessage()) ? "系统反射调用失败" : targetException.getMessage();
+            LOG.error("系统反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
+            throw new GXBusinessException(exceptionMessage, targetException);
         }
         return retVal;
     }
