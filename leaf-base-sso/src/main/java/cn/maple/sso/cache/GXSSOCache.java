@@ -34,7 +34,7 @@ public interface GXSSOCache {
      * 如果缓存服务宕机，返回 token 设置 flag 为 Token.FLAG_CACHE_SHUT
      * </p>
      *
-     * @param expires        过期时间（延时心跳时间）
+     * @param expires      过期时间（延时心跳时间）
      * @param requestToken cookie中存储的ssoToken
      * @return SSO票据
      */
@@ -44,7 +44,7 @@ public interface GXSSOCache {
         // 调用业务端的逻辑验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
-            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_NOT_AUTHORITATIVE);
+            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_UNAUTHORIZED);
         }
         return tokenConfigService.getEfficaciousToken(requestToken);
     }
