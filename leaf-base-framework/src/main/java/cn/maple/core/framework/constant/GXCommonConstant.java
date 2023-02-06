@@ -88,7 +88,7 @@ public class GXCommonConstant {
      * Windows : 在环境变量里面设置
      * }
      */
-    public static final String DATA_SOURCE_SECRET_KEY_ENV = "JAVA_BIZ_SECRET_KEY";
+    public static final String DATA_SOURCE_SECRET_KEY_ENV = "DS_SECRET_KEY";
 
     /**
      * 默认的自定义处理函数名字
