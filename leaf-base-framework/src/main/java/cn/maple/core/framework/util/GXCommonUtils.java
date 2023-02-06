@@ -2,6 +2,7 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
@@ -457,7 +458,10 @@ public class GXCommonUtils {
             secretKey = System.getenv(GXCommonConstant.DATA_SOURCE_SECRET_KEY_ENV);
         }
         if (CharSequenceUtil.isEmpty(secretKey)) {
-            GXLoggerUtils.logDebug(LOG, "解密密钥为空, 链接信息不进行解密操作");
+            GXLoggerUtils.logDebug(LOG, "解密密钥为空, 连接信息不进行解密操作");
+            return Convert.convert(targetClazz, connectEncodeStr);
+        }
+        if (!Base64.isBase64(connectEncodeStr)) {
             return Convert.convert(targetClazz, connectEncodeStr);
         }
         String s = GXAuthCodeUtils.authCodeDecode(connectEncodeStr, secretKey);
