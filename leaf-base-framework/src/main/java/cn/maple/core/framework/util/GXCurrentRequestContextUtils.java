@@ -105,6 +105,18 @@ public class GXCurrentRequestContextUtils {
     }
 
     /**
+     * 获取Http头中的header
+     *
+     * @param headerName  header头的名字
+     * @param targetClass 返回的数据类型
+     * @return 指定的目标类型
+     */
+    public static <T> T getHeader(String headerName, Class<T> targetClass) {
+        String headerValue = getHeader(headerName);
+        return Convert.convert(targetClass, headerValue);
+    }
+
+    /**
      * 从token中获取登录用户的指定字段的值
      * <p>
      * {@code
