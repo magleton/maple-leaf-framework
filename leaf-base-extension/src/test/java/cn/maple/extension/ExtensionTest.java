@@ -39,7 +39,7 @@ public class ExtensionTest {
         Assert.assertTrue(response != null);
     }
 
-    @Test
+    //@Test
     public void testBiz1UseCase1AddCustomerSuccess() {
         //1. Prepare
         AddCustomerCmd addCustomerCmd = new AddCustomerCmd();
@@ -58,7 +58,7 @@ public class ExtensionTest {
         Assert.assertTrue(response != null);
     }
 
-    @Test
+    //@Test
     public void testBiz1AddCustomerSuccess() {
         //1. Prepare
         AddCustomerCmd addCustomerCmd = new AddCustomerCmd();

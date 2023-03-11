@@ -1,10 +1,10 @@
 package cn.maple.statemachine;
 
+import cn.hutool.core.lang.Assert;
 import cn.maple.statemachine.builder.GXStateMachineBuilder;
 import cn.maple.statemachine.builder.GXStateMachineBuilderFactory;
 import cn.maple.statemachine.impl.GXDebugger;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GXStateMachineChoiceTest {
     /**
@@ -36,11 +36,11 @@ public class GXStateMachineChoiceTest {
 
         GXStateMachine<GXStateMachineTest.States, GXStateMachineTest.Events, Context> stateMachine = builder.build("ChoiceConditionMachine");
         GXStateMachineTest.States target1 = stateMachine.fireEvent(GXStateMachineTest.States.STATE1, GXStateMachineTest.Events.EVENT1, new Context("1"));
-        Assert.assertEquals(GXStateMachineTest.States.STATE1, target1);
+        Assert.equals(GXStateMachineTest.States.STATE1, target1);
         GXStateMachineTest.States target2 = stateMachine.fireEvent(GXStateMachineTest.States.STATE1, GXStateMachineTest.Events.EVENT1, new Context("2"));
-        Assert.assertEquals(GXStateMachineTest.States.STATE2, target2);
+        Assert.equals(GXStateMachineTest.States.STATE2, target2);
         GXStateMachineTest.States target3 = stateMachine.fireEvent(GXStateMachineTest.States.STATE1, GXStateMachineTest.Events.EVENT1, new Context("3"));
-        Assert.assertEquals(GXStateMachineTest.States.STATE3, target3);
+        Assert.equals(GXStateMachineTest.States.STATE3, target3);
     }
 
     private GXCondition<Context> checkCondition1() {
