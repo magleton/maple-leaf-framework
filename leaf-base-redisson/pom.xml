@@ -12,8 +12,9 @@
     <artifactId>leaf-base-redisson</artifactId>
 
     <properties>
-        <redisson.version>3.19.0</redisson.version>
+        <redisson.version>3.20.0</redisson.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>cn.maple.framework</groupId>
