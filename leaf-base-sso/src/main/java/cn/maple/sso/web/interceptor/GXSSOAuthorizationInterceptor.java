@@ -8,6 +8,7 @@ import cn.maple.sso.annotation.GXLoginAnnotation;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.properties.GXUrlWhiteListsConfigProperties;
+import cn.maple.sso.service.GXAuthorizationInterceptorService;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
 import cn.maple.sso.web.handler.GXSSODefaultHandler;
@@ -53,6 +54,15 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
         if (Objects.nonNull(annotation)) {
             // 没有标注需要登陆的接口直接放行通过
             return true;
+        }
+
+        // 调用业务端自定义的拦截规则
+        GXAuthorizationInterceptorService authorizationInterceptorService = GXSpringContextUtils.getBean(GXAuthorizationInterceptorService.class);
+        if (!Objects.isNull(authorizationInterceptorService)) {
+            boolean interceptor = authorizationInterceptorService.interceptor(request, response, annotation);
+            if (interceptor) {
+                return interceptor;
+            }
         }
 
         // 获取SsoToken对象
