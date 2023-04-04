@@ -34,12 +34,12 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <lombok.version>1.18.26</lombok.version>
-        <hutool.version>5.8.15</hutool.version>
+        <hutool.version>5.8.16</hutool.version>
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
         <guava.version>31.1-jre</guava.version>
         <caffeine.version>3.1.2</caffeine.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <spring-boot.version>2.7.9</spring-boot.version>
+        <spring-boot.version>2.7.10</spring-boot.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <objenesis.version>3.3</objenesis.version>
     </properties>
@@ -69,6 +69,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
