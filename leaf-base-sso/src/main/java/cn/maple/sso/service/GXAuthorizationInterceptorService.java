@@ -11,6 +11,7 @@ public interface GXAuthorizationInterceptorService {
      * <p>
      * 返回 true 放行
      * 返回 false 继续走后面的逻辑
+     * 如果满足业务条件  直接抛出异常即可
      *
      * @param request    请求对象
      * @param response   响应对象
