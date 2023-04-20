@@ -17,6 +17,6 @@ public class GXUpdateJsonSetMapField<T extends Map<String, Object>> extends GXUp
     public String getFieldValue() {
         String value = JSONUtil.toJsonStr(this.value);
         value = CharSequenceUtil.format("CAST(\"{}\" as JSON)", value);
-        return CharSequenceUtil.format("JSON_SET({} , '$.{}' , {})", fieldName, path, value);
+        return CharSequenceUtil.format("JSON_SET({} , \"$.{}\" , {})", fieldName, path, value);
     }
 }
