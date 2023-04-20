@@ -132,7 +132,7 @@ public class GXBuilderConstant {
     /**
      * 数据库JSON查询字符串模板表达式
      */
-    public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->'{}' , CAST('[{}]' as JSON)";
+    public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->\"$.{}\" , CAST(\"[{}]\" as JSON)";
 
     /**
      * SQL AND操作
