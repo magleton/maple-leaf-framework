@@ -12,6 +12,6 @@ public class GXUpdateJsonRemoveField extends GXUpdateField<String> {
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("JSON_REMOVE({} , \"$.{}\")", fieldName, path);
+        return CharSequenceUtil.format("JSON_REMOVE({} , '$.{}')", fieldName, path);
     }
 }

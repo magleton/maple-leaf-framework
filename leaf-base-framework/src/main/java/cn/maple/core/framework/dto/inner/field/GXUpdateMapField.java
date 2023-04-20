@@ -14,6 +14,6 @@ public class GXUpdateMapField<T extends Map<String, Object>> extends GXUpdateFie
     public String getFieldValue() {
         String jsonStr = JSONUtil.toJsonStr(value);
         String quoteStr = JSONUtil.quote(jsonStr, false);
-        return CharSequenceUtil.format("\"{}\"", quoteStr);
+        return CharSequenceUtil.format("'{}'", quoteStr);
     }
 }

@@ -49,27 +49,27 @@ public class GXBuilderConstant {
     /**
      * 左糊查询条件
      */
-    public static final String LEFT_LIKE = " like \"%{}\"";
+    public static final String LEFT_LIKE = " like '%{}'";
 
     /**
      * 后模糊查询条件
      */
-    public static final String RIGHT_LIKE = " like \"{}%\"";
+    public static final String RIGHT_LIKE = " like '{}%'";
 
     /**
      * 全模糊查询
      */
-    public static final String LIKE = " like \"%{}%\"";
+    public static final String LIKE = " like '%{}%'";
 
     /**
      * 字符串相等
      */
-    public static final String STR_EQ = "STR_ = \"{}\"";
+    public static final String STR_EQ = "STR_ = '{}'";
 
     /**
      * 字符串相等
      */
-    public static final String STR_NOT_EQ = "STR_ != \"{}\"";
+    public static final String STR_NOT_EQ = "STR_ != '{}'";
 
     /**
      * IN条件
@@ -132,7 +132,7 @@ public class GXBuilderConstant {
     /**
      * 数据库JSON查询字符串模板表达式
      */
-    public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->\"$.{}\" , CAST(\"[{}]\" as JSON)";
+    public static final String JSON_SEARCH_EXPRESSION_TEMPLATE = "{}->'{}' , CAST('[{}]' as JSON)";
 
     /**
      * SQL AND操作
