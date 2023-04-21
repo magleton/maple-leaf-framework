@@ -14,6 +14,7 @@ public class GXUpdateStrField extends GXUpdateField<String> {
         if (JSONUtil.isTypeJSON(strValue)) {
             strValue = JSONUtil.quote(strValue, false);
         }
+        strValue = CharSequenceUtil.replace(strValue, "'", "\\'");
         return CharSequenceUtil.format("'{}'", strValue);
     }
 }
