@@ -2,6 +2,7 @@ package cn.maple.sso.web.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.annotation.GXIgnoreLoginIntercept;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
 import cn.maple.sso.annotation.GXLoginAnnotation;
@@ -40,6 +41,7 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         GXLoginAnnotation annotation;
+        GXIgnoreLoginIntercept ignoreLoginIntercept;
         if (request.getMethod().equalsIgnoreCase("OPTIONS") || !(handler instanceof HandlerMethod)) {
             return true;
         }
@@ -51,7 +53,8 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
         }
 
         annotation = ((HandlerMethod) handler).getMethodAnnotation(GXLoginAnnotation.class);
-        if (Objects.nonNull(annotation)) {
+        ignoreLoginIntercept = ((HandlerMethod) handler).getMethodAnnotation(GXIgnoreLoginIntercept.class);
+        if (Objects.nonNull(annotation) || Objects.nonNull(ignoreLoginIntercept)) {
             // 没有标注需要登陆的接口直接放行通过
             return true;
         }
