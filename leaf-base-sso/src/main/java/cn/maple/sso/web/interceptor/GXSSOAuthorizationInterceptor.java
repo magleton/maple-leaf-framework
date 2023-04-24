@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.annotation.GXIgnoreLoginIntercept;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.web.interceptor.GXAuthorizationInterceptor;
-import cn.maple.sso.annotation.GXLoginAnnotation;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.properties.GXUrlWhiteListsConfigProperties;
@@ -40,7 +39,6 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        GXLoginAnnotation annotation;
         GXIgnoreLoginIntercept ignoreLoginIntercept;
         if (request.getMethod().equalsIgnoreCase("OPTIONS") || !(handler instanceof HandlerMethod)) {
             return true;
@@ -52,9 +50,8 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
             return true;
         }
 
-        annotation = ((HandlerMethod) handler).getMethodAnnotation(GXLoginAnnotation.class);
         ignoreLoginIntercept = ((HandlerMethod) handler).getMethodAnnotation(GXIgnoreLoginIntercept.class);
-        if (Objects.nonNull(annotation) || Objects.nonNull(ignoreLoginIntercept)) {
+        if (Objects.nonNull(ignoreLoginIntercept)) {
             // 没有标注需要登陆的接口直接放行通过
             return true;
         }
@@ -62,7 +59,7 @@ public class GXSSOAuthorizationInterceptor extends GXAuthorizationInterceptor {
         // 调用业务端自定义的拦截规则
         GXAuthorizationInterceptorService authorizationInterceptorService = GXSpringContextUtils.getBean(GXAuthorizationInterceptorService.class);
         if (!Objects.isNull(authorizationInterceptorService)) {
-            boolean interceptor = authorizationInterceptorService.interceptor(request, response, annotation);
+            boolean interceptor = authorizationInterceptorService.interceptor(request, response);
             if (interceptor) {
                 return interceptor;
             }

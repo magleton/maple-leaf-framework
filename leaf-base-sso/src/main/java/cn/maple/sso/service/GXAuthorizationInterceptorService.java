@@ -1,7 +1,5 @@
 package cn.maple.sso.service;
 
-import cn.maple.sso.annotation.GXLoginAnnotation;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,8 +13,7 @@ public interface GXAuthorizationInterceptorService {
      *
      * @param request    请求对象
      * @param response   响应对象
-     * @param annotation 自定义注解
      * @return true / false
      */
-    boolean interceptor(HttpServletRequest request, HttpServletResponse response, GXLoginAnnotation annotation);
+    boolean interceptor(HttpServletRequest request, HttpServletResponse response);
 }
