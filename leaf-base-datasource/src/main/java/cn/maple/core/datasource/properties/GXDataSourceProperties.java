@@ -33,7 +33,7 @@ public class GXDataSourceProperties {
 
     private int maxActive = 10;
 
-    private int minIdle = -1;
+    private int minIdle = 2;
 
     private long maxWait = 60 * 1000L;
 
