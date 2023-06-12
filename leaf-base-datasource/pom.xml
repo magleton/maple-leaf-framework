@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.maple.framework</groupId>
         <artifactId>maple-leaf-framework</artifactId>
-        <version>3.1.1-SNAPSHOT</version>
+        <version>3.1.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +18,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <mybatis-plus-boot.version>3.5.3.1</mybatis-plus-boot.version>
         <mysql.version>8.0.32</mysql.version>
-        <druid-spring-boot.version>1.2.16</druid-spring-boot.version>
+        <druid-spring-boot.version>1.2.18</druid-spring-boot.version>
         <p6spy.version>3.9.1</p6spy.version>
     </properties>
 
