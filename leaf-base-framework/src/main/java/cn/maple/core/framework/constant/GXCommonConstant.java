@@ -95,6 +95,18 @@ public class GXCommonConstant {
      */
     public static final String DEFAULT_CUSTOMER_PROCESS_METHOD_NAME = "customizeProcess";
 
+    /**
+     * 部署环境的环境变量标识头名字
+     * 该字段头主要是为了限制部署环境的一致性
+     */
+    public static final String DEPLOY_ENV_HEADER_NAME = "DEPLOY-ENV";
+
+    /**
+     * 部署环境的代理标识头名字 ，eg : NGINX  proxy_set_header  DEPLOY-REQUEST-ENV  "prod";
+     * 该字段头主要是为了限制部署环境的一致性
+     */
+    public static final String DEPLOY_REQUEST_ENV_HEADER_NAME = "DEPLOY-REQUEST-ENV";
+
     private GXCommonConstant() {
     }
 }
