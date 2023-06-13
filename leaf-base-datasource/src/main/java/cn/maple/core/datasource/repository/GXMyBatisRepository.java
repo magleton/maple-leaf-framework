@@ -184,7 +184,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
         GXCondition<?> condition;
         String pkFieldName = getPrimaryKeyName();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, id.toString())) {
-            condition = new GXConditionEQ(tableName, pkFieldName, (Long) id);
+            condition = new GXConditionEQ(tableName, pkFieldName, (Number) id);
         } else {
             condition = new GXConditionStrEQ(tableName, pkFieldName, id.toString());
         }

@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.model.GXBaseModel;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,4 +26,7 @@ public class GXMyBatisModel extends GXBaseModel {
 
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Dict ext;
+
+    @TableLogic(delval = "id")
+    private Number is_deleted;
 }
