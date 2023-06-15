@@ -78,4 +78,6 @@ mybatis-plus:
     call-setters-on-nulls: true
     aggressive-lazy-loading: false
     lazy-loading-enabled: false
+    # 如果不配置此项 p6spy不会打印sql语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 debug: false
