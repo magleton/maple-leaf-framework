@@ -37,8 +37,8 @@
         <hutool.version>5.8.19</hutool.version>
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
         <guava.version>32.0.0-jre</guava.version>
-        <caffeine.version>3.1.2</caffeine.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <caffeine.version>3.1.6</caffeine.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <spring-boot.version>2.7.12</spring-boot.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <objenesis.version>3.3</objenesis.version>
@@ -207,7 +207,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -221,7 +221,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <!-- 绑定source插件到Maven的生命周期 -->
