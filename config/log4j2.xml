@@ -142,7 +142,7 @@
 
     <Loggers>
         <!-- 根日志设置 -->
-        <Root level="debug">
+        <Root level="error">
             <AppenderRef ref="allFileAppender" level="all"/>
             <AppenderRef ref="consoleAppender" level="debug"/>
             <AppenderRef ref="debugFileAppender" level="debug"/>
