@@ -13,20 +13,22 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GXMyBatisModel extends GXBaseModel {
     @TableField(fill = FieldFill.INSERT)
-    private Integer createdAt;
+    protected Integer createdAt;
 
     @TableField(fill = FieldFill.UPDATE)
-    private Integer updatedAt;
+    protected Integer updatedAt;
 
     @TableField(fill = FieldFill.INSERT)
-    private String createdBy;
+    protected String createdBy;
 
     @TableField(fill = FieldFill.UPDATE)
-    private String updatedBy;
+    protected String updatedBy;
 
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private Dict ext;
+    protected Dict ext;
 
     @TableLogic(delval = "id")
-    private Number is_deleted;
+    protected Number isDeleted;
+
+    protected Number deletedAt;
 }
