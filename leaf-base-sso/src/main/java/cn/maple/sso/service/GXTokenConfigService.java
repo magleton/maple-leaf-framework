@@ -68,4 +68,17 @@ public interface GXTokenConfigService {
     default Dict getEfficaciousToken(Dict requestToken) {
         return requestToken;
     }
+
+    /**
+     * 验证token的有效性
+     * 验证规则可以调用别的服务
+     * 亦可以自己验证
+     * 自身验证可以通过redis的token缓存key+tokenSecret来进行验证解密 并验证是否有效
+     * 减少服务间的通信
+     *
+     * @return true 有效 ; false 无效
+     */
+    default boolean verifyTokenEffectiveness() {
+        return Boolean.TRUE;
+    }
 }

@@ -3,11 +3,14 @@ package cn.maple.core.framework.util;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXTokenInvalidException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ClassUtils;
 
 @Slf4j
 public class GXTokenManagerUtils {
@@ -96,6 +99,28 @@ public class GXTokenManagerUtils {
             return JSONUtil.toBean(s, Dict.class);
         } catch (Exception e) {
             return Dict.create();
+        }
+    }
+
+    /**
+     * 验证token的有效性
+     * 验证规则可以调用别的服务
+     * 亦可以自身验证
+     * 自身验证可以通过redis的token缓存key+tokenSecret来进行验证解密 并验证是否有效
+     * 减少服务间的通信
+     *
+     * @return true 有效 ; false 无效
+     */
+    public static boolean verifyTokenEffectiveness() {
+        try {
+            Object bean = GXSpringContextUtils.getBean(ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", GXTokenManagerUtils.class.getClassLoader()));
+            Object verifyTokenEffectiveness = GXCommonUtils.reflectCallObjectMethod(bean, "verifyTokenEffectiveness");
+            if (ObjectUtil.isNull(verifyTokenEffectiveness) && Boolean.FALSE.equals(verifyTokenEffectiveness)) {
+                throw new GXTokenInvalidException("无效的用户身份!");
+            }
+            return Boolean.TRUE;
+        } catch (ClassNotFoundException e) {
+            throw new GXBusinessException(e.getMessage(), e);
         }
     }
 }
