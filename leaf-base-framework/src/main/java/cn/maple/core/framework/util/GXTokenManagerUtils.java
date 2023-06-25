@@ -113,12 +113,12 @@ public class GXTokenManagerUtils {
      */
     public static boolean verifyTokenEffectiveness() {
         try {
-            Object bean = GXSpringContextUtils.getBean(ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", GXTokenManagerUtils.class.getClassLoader()));
-            Object verifyTokenEffectiveness = GXCommonUtils.reflectCallObjectMethod(bean, "verifyTokenEffectiveness");
-            if (ObjectUtil.isNull(verifyTokenEffectiveness) && Boolean.FALSE.equals(verifyTokenEffectiveness)) {
-                throw new GXTokenInvalidException("无效的用户身份!");
+            Object service = GXSpringContextUtils.getBean(ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", GXTokenManagerUtils.class.getClassLoader()));
+            if (ObjectUtil.isNull(service)) {
+                return Boolean.TRUE;
             }
-            return Boolean.TRUE;
+            Object result = GXCommonUtils.reflectCallObjectMethod(service, "verifyTokenEffectiveness");
+            return Boolean.TRUE.equals(result);
         } catch (ClassNotFoundException e) {
             throw new GXBusinessException(e.getMessage(), e);
         }
