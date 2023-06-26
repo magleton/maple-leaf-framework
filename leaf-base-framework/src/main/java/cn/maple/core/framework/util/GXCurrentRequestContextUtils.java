@@ -225,4 +225,26 @@ public class GXCurrentRequestContextUtils {
         }
         return Convert.convert(clazz, attributeValue);
     }
+
+    /**
+     * 判断是否是RPC调用
+     * 如果是RPC调用 则不会存在HttpServletRequest对象
+     *
+     * @return true 是 ; false 不是
+     */
+    public static boolean isRPC() {
+        HttpServletRequest request = getHttpServletRequest();
+        return Objects.isNull(request);
+    }
+
+    /**
+     * 判断是否是HTTP调用
+     * 如果是HTTP调用 则会存在HttpServletRequest对象
+     *
+     * @return true 是 ; false 不是
+     */
+    public static boolean isHTTP() {
+        HttpServletRequest request = getHttpServletRequest();
+        return Objects.nonNull(request);
+    }
 }
