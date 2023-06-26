@@ -7,13 +7,12 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.interceptor.GXDataFilterInterceptor;
 import cn.maple.core.datasource.service.GXTenantIdService;
 import cn.maple.core.framework.config.aware.GXApplicationContextSingleton;
-import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.handlers.MybatisMapWrapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
@@ -33,7 +32,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -55,15 +53,7 @@ public class GXMyBatisPlusConfig {
             public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
                 final Map<String, Object> map = Convert.convert(new TypeReference<>() {
                 }, object);
-                return new MybatisMapWrapper(metaObject, map) {
-                    @Override
-                    public String findProperty(String name, boolean useCamelCaseMapping) {
-                        if (useCamelCaseMapping && !StringUtils.isCamel(name)) {
-                            return StringUtils.underlineToCamel(name);
-                        }
-                        return name;
-                    }
-                };
+                return new MybatisMapWrapper(metaObject, map);
             }
         });
     }
@@ -76,19 +66,28 @@ public class GXMyBatisPlusConfig {
         }
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new GXDataFilterInterceptor());
-        // 分页插件
+        // 开启分页插件
         PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
         paginationInnerInterceptor.setOptimizeJoin(true);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        // 防止全表更新与删除插件
+        // 开启防止全表更新与删除插件
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
-        // 乐观锁插件
+        // 开启乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
-        // sql性能规范插件
-        List<String> activeProfiles = Convert.toList(String.class, applicationContext.getEnvironment().getActiveProfiles());
-        // 除去正式环境,其他环境都开启sql性能规范插件
-        if (!CollUtil.contains(activeProfiles, GXCommonConstant.RUN_ENV_PROD)) {
-            //interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        // 正式环境暂时不开启,开启sql性能规范插件,其他环境都开启sql性能规范插件
+        Boolean enableSqlIllegal = GXCommonUtils.getEnvironmentValue("maple.framework.enable.sql-illegal", Boolean.class, Boolean.FALSE);
+        if (Boolean.TRUE.equals(enableSqlIllegal)) {
+            interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        }
+        // 数据变更记录插件
+        Boolean enableDataChangeRecorder = GXCommonUtils.getEnvironmentValue("maple.framework.enable.data-change-recorder", Boolean.class, Boolean.FALSE);
+        if (Boolean.TRUE.equals(enableDataChangeRecorder)) {
+            interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor());
+        }
+        // 开启数据权限处理
+        Boolean enableDataPermission = GXCommonUtils.getEnvironmentValue("maple.framework.enable.data-permission", Boolean.class, Boolean.FALSE);
+        if (Boolean.TRUE.equals(enableDataPermission)) {
+            interceptor.addInnerInterceptor(new DataPermissionInterceptor());
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
         interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
