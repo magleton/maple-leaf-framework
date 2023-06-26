@@ -68,7 +68,7 @@ mybatis-plus:
       capital-mode: true
       #逻辑删除配置
       logic-delete-field: is_deleted
-      logic-delete-value: 1
+      logic-delete-value: id
       logic-not-delete-value: 0
       column-format: "%s"
   # 原生配置
