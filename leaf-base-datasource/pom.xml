@@ -17,7 +17,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <mybatis-plus-boot.version>3.5.3.1</mybatis-plus-boot.version>
-        <mysql.version>8.0.32</mysql.version>
+        <mysql.version>8.0.33</mysql.version>
         <druid-spring-boot.version>1.2.18</druid-spring-boot.version>
         <p6spy.version>3.9.1</p6spy.version>
     </properties>
