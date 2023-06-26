@@ -7,13 +7,19 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXTokenInvalidException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
 @Slf4j
 public class GXTokenManagerUtils {
+    /**
+     * 日志对象
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GXTokenManagerUtils.class);
+
     private GXTokenManagerUtils() {
     }
 
@@ -113,14 +119,15 @@ public class GXTokenManagerUtils {
      */
     public static boolean verifyTokenEffectiveness() {
         try {
-            Object service = GXSpringContextUtils.getBean(ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", GXTokenManagerUtils.class.getClassLoader()));
-            if (ObjectUtil.isNull(service)) {
+            Object tokenConfigService = GXSpringContextUtils.getBean(ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", GXTokenManagerUtils.class.getClassLoader()));
+            if (ObjectUtil.isNull(tokenConfigService)) {
                 return Boolean.TRUE;
             }
-            Object result = GXCommonUtils.reflectCallObjectMethod(service, "verifyTokenEffectiveness");
+            Object result = GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "verifyTokenEffectiveness");
             return Boolean.TRUE.equals(result);
         } catch (ClassNotFoundException e) {
-            throw new GXBusinessException(e.getMessage(), e);
+            LOG.error("请导入leaf-base-sso模块!");
         }
+        return Boolean.TRUE;
     }
 }
