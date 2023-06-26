@@ -102,7 +102,7 @@ public class GXCurrentRequestContextUtils {
     public static String getHeader(String headerName) {
         HttpServletRequest request = getHttpServletRequest();
         if (Objects.isNull(request)) {
-            LOG.info("该次请求不是HTTP请求,是RPC调用");
+            LOG.info("本次请求是RPC调用,没有HttpServletRequest对象");
             return null;
         }
         return ServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
