@@ -7,6 +7,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,6 +159,17 @@ public class GXCurrentRequestContextUtils {
      * @return Dict
      */
     public static Dict getLoginCredentials(String tokenName, String secretKey) {
+        // 减少token的二次解密操作 在GXSSOAuthorizationInterceptor拦截器中已经解密过一次并且已经将解密之后的token放入了当前请求对象中
+        HttpServletRequest request = getHttpServletRequest();
+        assert request != null;
+        Object attribute = request.getAttribute(GXCommonConstant.SSO_TOKEN_ATTR);
+        if (Objects.nonNull(attribute)) {
+            Dict tokenDict = GXCommonUtils.convertSourceToDict(request.getAttribute(GXCommonConstant.SSO_TOKEN_ATTR));
+            if (!tokenDict.isEmpty()) {
+                return tokenDict;
+            }
+        }
+        // 从请求对象中获取token并且解密
         String token = getHeader(tokenName);
         if (CharSequenceUtil.isBlank(token)) {
             LOG.error("{}不存在", tokenName);

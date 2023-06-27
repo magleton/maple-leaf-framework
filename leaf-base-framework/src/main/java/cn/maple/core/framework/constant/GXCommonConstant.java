@@ -107,6 +107,15 @@ public class GXCommonConstant {
      */
     public static final String DEPLOY_REQUEST_ENV_HEADER_NAME = "DEPLOY-REQUEST-ENV";
 
+    /**
+     * 拦截器判断后设置 Token至当前请求<br>
+     * 减少Token解密次数： request.setAttribute("sso_token_attr", token)
+     * <p>
+     * 使用获取方式： GXSsoHelper.attrToken(request)
+     * </p>
+     */
+    public static final String SSO_TOKEN_ATTR = "sso_token_attr";
+
     private GXCommonConstant() {
     }
 }

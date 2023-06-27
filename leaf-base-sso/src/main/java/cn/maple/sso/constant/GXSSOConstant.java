@@ -1,5 +1,7 @@
 package cn.maple.sso.constant;
 
+import cn.maple.core.framework.constant.GXCommonConstant;
+
 import java.nio.charset.Charset;
 
 /**
@@ -52,7 +54,7 @@ public class GXSSOConstant {
      * 使用获取方式： GXSsoHelper.attrToken(request)
      * </p>
      */
-    public static final String SSO_TOKEN_ATTR = "sso_token_attr";
+    public static final String SSO_TOKEN_ATTR = GXCommonConstant.SSO_TOKEN_ATTR;
 
     /**
      * 踢出用户逻辑标记
@@ -73,8 +75,6 @@ public class GXSSOConstant {
      * Charset 类型编码格式
      */
     public static final Charset CHARSET_ENCODING = Charset.forName(ENCODING);
-
-
 
     /**
      * 分隔符
