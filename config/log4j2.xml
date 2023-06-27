@@ -81,7 +81,7 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <!--<DefaultRolloverStrategy max="100"/>-->
+            <!--DefaultRolloverStrategy max="100"/-->
         </RollingFile>
 
         <!--warn级别日志-->
