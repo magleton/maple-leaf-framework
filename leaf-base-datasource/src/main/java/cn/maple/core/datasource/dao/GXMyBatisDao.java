@@ -8,6 +8,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.event.GXModelCreatedEvent;
 import cn.maple.core.datasource.event.GXModelCreatingEvent;
 import cn.maple.core.datasource.event.GXModelUpdatedEvent;
+import cn.maple.core.datasource.event.GXModelUpdatingEvent;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dao.GXBaseDao;
@@ -126,7 +127,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
             }
         }
         if (!condition.isEmpty() && checkRecordIsExists(getTableName(), condition)) {
-            GXEventPublisherUtils.publishEvent(new GXModelUpdatedEvent<T>(entity, "updating", Dict.create()));
+            GXEventPublisherUtils.publishEvent(new GXModelUpdatingEvent<T>(entity, "updating", Dict.create()));
             UpdateWrapper<T> updateWrapper = GXDBCommonUtils.assemblyUpdateWrapper(condition);
             update(entity, updateWrapper);
             GXEventPublisherUtils.publishEvent(new GXModelUpdatedEvent<T>(entity, "updated", Dict.create()));
