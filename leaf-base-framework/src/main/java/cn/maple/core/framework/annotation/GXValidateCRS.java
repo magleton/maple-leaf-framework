@@ -1,6 +1,6 @@
 package cn.maple.core.framework.annotation;
 
-import cn.maple.core.framework.service.GXValidateCallRemoteService;
+import cn.maple.core.framework.service.GXCallRemoteValidateService;
 import cn.maple.core.framework.validator.GXValidateCallRemoteServiceValidator;
 
 import javax.validation.Constraint;
@@ -24,5 +24,5 @@ public @interface GXValidateCRS {
      *
      * @return Class
      */
-    Class<? extends GXValidateCallRemoteService> service();
+    Class<? extends GXCallRemoteValidateService> service();
 }
