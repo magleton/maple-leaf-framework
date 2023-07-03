@@ -1,3 +1,8 @@
+server:
+  port: 59999
+  servlet:
+    context-path: /
+  shutdown: graceful
 spring:
   servlet:
     multipart:
@@ -78,7 +83,7 @@ mybatis-plus:
     aggressive-lazy-loading: false
     lazy-loading-enabled: false
     # 如果不配置此项 p6spy不会打印sql语句
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
 # 是否开启MyBatis-Plus的默认插件
 maple:
   framework:
