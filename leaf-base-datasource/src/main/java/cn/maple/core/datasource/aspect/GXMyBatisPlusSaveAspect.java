@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class GXMyBatisPlusSaveAspect {
-    @Around("execution(* com.baomidou.mybatisplus.extension.service.IService.save(..))")
+    @Around("execution(* cn.maple.core.datasource.mapper.GXBaseMapper.insert(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         log.info("发布新增前的事件,服务可以通过监听该事件对目标对象进行新增前的最后处理");
         Object proceed = point.proceed();
