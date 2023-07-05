@@ -23,6 +23,21 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+/**
+ * RPC基础调用类
+ * 封装了常用的一些方法
+ * {@code
+ * public class TestServiceApiImpl extends GXBaseServeApiImpl<TestReqDto, TestApiResDto, Integer> implements TestServiceApi {
+ * public TestServiceApiImpl() {
+ *  staticBindServeServiceClass(OrdersService.class);
+ * }
+ * }
+ * }
+ *
+ * @param <Q>  请求对象
+ * @param <R>  返回数据
+ * @param <ID> 数据库字段常量
+ */
 public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> implements GXBaseServeApi<Q, R, ID> {
     /**
      * 服务类的Class 对象
@@ -41,6 +56,11 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
 
     /**
      * 根据条件获取数据
+     * {@code
+     * HashBasedTable<String, String, Object> hashBasedTable = HashBasedTable.create();
+     * hashBasedTable.put("name", GXBuilderConstant.STR_EQ, "jack");
+     * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable);
+     * }
      *
      * @param condition 查询条件
      * @return List
@@ -54,6 +74,13 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
 
     /**
      * 通过条件查询列表信息
+     * {@code
+     * HashBasedTable<String, String, Object> hashBasedTable = HashBasedTable.create();
+     * hashBasedTable.put("name", GXBuilderConstant.STR_EQ, "jack");
+     * Map<String , String> orderField = new HashMap<>;
+     * orderField.put("name" , "DESC");
+     * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable,orderField);
+     * }
      *
      * @param condition  搜索条件
      * @param orderField 排序字段
@@ -285,7 +312,7 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param targetClass 目标对象类型
      * @param methodName  转换方法名字
      * @param copyOptions 转换的自定义项
-     * @return
+     * @return T
      */
     @Override
     public <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
@@ -297,7 +324,7 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      *
      * @param reqDto      请求参数
      * @param targetClass 目标对象类型
-     * @return
+     * @return T
      */
     @Override
     public <T> T sourceToTarget(Q reqDto, Class<T> targetClass) {
@@ -317,7 +344,7 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 子类可以动态指定目标服务类型
      *
-     * @return
+     * @return GXBaseServeApi
      */
     @Override
     public GXBaseServeApi<Q, R, ID> callBindTargetServeSericeClass(Class<?> targetServeServiceClass) {

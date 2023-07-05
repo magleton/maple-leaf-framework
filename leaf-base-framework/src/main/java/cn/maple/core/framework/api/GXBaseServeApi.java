@@ -186,6 +186,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
 
     /**
      * 设置服务类的Class对象
+     * 在子类的构造函数中调用
      *
      * @param serveServiceClass 服务类Class对象
      */
@@ -193,10 +194,11 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
 
     /**
      * 子类可以动态指定目标服务类型
+     * 方法调用的时候自己调用
      *
-     * @return
+     * @return GXBaseServeApi
      */
-    GXBaseServeApi callBindTargetServeSericeClass(Class<?> targetServeServiceClass);
+    GXBaseServeApi<Q, R, ID> callBindTargetServeSericeClass(Class<?> targetServeServiceClass);
 
     /**
      * 调用指定类中的指定方法
