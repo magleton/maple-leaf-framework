@@ -467,6 +467,22 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     R findOneByCallMapperMethod(String mapperMethodName, Object... params);
 
     /**
+     * 根据条件统计数量
+     *
+     * @param conditions 查询条件
+     * @return 查询到的数量
+     */
+    Long countByCondition(List<GXCondition<?>> conditions);
+
+    /**
+     * 根据条件统计数量
+     *
+     * @param queryParamInnerDto 查询条件
+     * @return 查询到的数量
+     */
+    Long countByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
+
+    /**
      * 获取 Primary Key
      *
      * @return String

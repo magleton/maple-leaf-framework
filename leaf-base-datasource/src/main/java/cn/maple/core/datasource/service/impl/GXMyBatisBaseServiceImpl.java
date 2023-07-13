@@ -709,6 +709,37 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
+     * 根据条件统计数量
+     *
+     * @param conditions 查询条件
+     * @return 查询到的数量
+     */
+    @Override
+    public Long countByCondition(List<GXCondition<?>> conditions) {
+        HashSet<String> columns = CollUtil.newHashSet("count(id) as cnt");
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(getTableName()).columns(columns).condition(conditions).build();
+        return countByCondition(queryParamInnerDto);
+    }
+
+    /**
+     * 根据条件统计数量
+     *
+     * @param queryParamInnerDto 查询条件
+     * @return 查询到的数量
+     */
+    @Override
+    public Long countByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        if (CollUtil.isEmpty(queryParamInnerDto.getColumns())) {
+            HashSet<String> columns = CollUtil.newHashSet(CharSequenceUtil.format("count({}.id) as cnt", queryParamInnerDto.getTableNameAlias()));
+            queryParamInnerDto.setColumns(columns);
+        }
+        if (CharSequenceUtil.isBlank(queryParamInnerDto.getTableName())) {
+            queryParamInnerDto.setTableName(getTableName());
+        }
+        return findOneByCondition(queryParamInnerDto, data -> data.getLong("cnt"));
+    }
+
+    /**
      * 动态调用指定的指定Class中的方法
      *
      * @param mapperMethodName  需要调用的方法
