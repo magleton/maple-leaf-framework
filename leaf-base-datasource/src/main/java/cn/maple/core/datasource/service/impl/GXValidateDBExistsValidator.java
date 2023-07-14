@@ -19,16 +19,37 @@ import java.util.Objects;
  */
 @Slf4j
 public class GXValidateDBExistsValidator implements ConstraintValidator<GXValidateDBExists, Object> {
+    /**
+     * 执行验证的服务
+     */
     private GXValidateDBExistsService service;
 
+    /**
+     * 需要验证的字段名字
+     */
     private String fieldName;
 
+    /**
+     * 验证分组
+     */
     private Class<?>[] groups;
 
+    /**
+     * 表名字
+     */
     private String tableName;
 
+    /**
+     * 附加的查询条件
+     * eg:
+     * type=news,phone=13800138000
+     */
     private String condition;
 
+    /**
+     * 附加条件 SpEL表达式
+     * 用于计算结果是否满足预期
+     */
     private String spEL;
 
     @Override
