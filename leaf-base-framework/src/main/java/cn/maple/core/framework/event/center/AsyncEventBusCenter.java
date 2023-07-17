@@ -1,11 +1,10 @@
-package cn.maple.core.framework.event.event;
+package cn.maple.core.framework.event.center;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
 
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;

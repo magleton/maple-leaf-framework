@@ -2,8 +2,8 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.event.GXBaseEvent;
-import cn.maple.core.framework.event.event.AsyncEventBusCenter;
-import cn.maple.core.framework.event.event.SyncEventBusCenter;
+import cn.maple.core.framework.event.center.AsyncEventBusCenter;
+import cn.maple.core.framework.event.center.SyncEventBusCenter;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

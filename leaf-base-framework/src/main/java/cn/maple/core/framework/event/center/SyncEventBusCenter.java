@@ -1,4 +1,4 @@
-package cn.maple.core.framework.event.event;
+package cn.maple.core.framework.event.center;
 
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.eventbus.EventBus;
