@@ -38,6 +38,7 @@ public class GuavaSyncEventBusBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        log.info("注册Guava EventBus的同步PostProcess");
         // for each method in the bean
         Method[] methods = ReflectUtil.getMethods(bean.getClass());
         for (Method method : methods) {
