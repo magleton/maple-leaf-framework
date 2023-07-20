@@ -1,7 +1,9 @@
 package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
@@ -29,7 +31,7 @@ import java.util.function.Function;
  * {@code
  * public class TestServiceApiImpl extends GXBaseServeApiImpl<TestReqDto, TestApiResDto, Integer> implements TestServiceApi {
  * public TestServiceApiImpl() {
- *  staticBindServeServiceClass(OrdersService.class);
+ * staticBindServeServiceClass(OrdersService.class);
  * }
  * }
  * }
@@ -123,8 +125,10 @@ public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      */
     @Override
     public <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
-        List<E> rList = (List<E>) callMethod("findFieldByCondition", convertTableConditionToConditionExp(condition), columns, targetClazz);
-        return rList;
+        List<GXCondition<?>> conditions = convertTableConditionToConditionExp(condition);
+        Object o = callMethod("findMultiFieldByCondition", conditions, columns, targetClazz);
+        return Convert.convert(new TypeReference<List<E>>() {
+        }, o);
     }
 
     /**
