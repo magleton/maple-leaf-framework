@@ -498,6 +498,9 @@ public class GXCommonUtils {
      */
     @SuppressWarnings("all")
     public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
+        if (clazz.getGenericSuperclass().equals(Object.class)) {
+            return null;
+        }
         return (Class<R>) TypeUtil.getClass(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[index]);
     }
 }

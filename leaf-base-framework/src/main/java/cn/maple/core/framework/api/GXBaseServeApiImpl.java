@@ -15,6 +15,7 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -40,7 +41,7 @@ import java.util.function.Function;
  * @param <R>  返回数据
  * @param <ID> 数据库字段常量
  */
-public class GXBaseServeApiImpl<Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> implements GXBaseServeApi<Q, R, ID> {
+public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> implements GXBaseServeApi<Q, R, ID> {
     /**
      * 服务类的Class 对象
      * 静态目标服务的类型

@@ -7,3 +7,4 @@ target
 config/local
 config/application-local.yml
 spy.log
+.fastRequest
