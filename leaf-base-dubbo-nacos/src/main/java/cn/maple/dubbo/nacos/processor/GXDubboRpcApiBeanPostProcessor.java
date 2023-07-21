@@ -10,9 +10,18 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
+/**
+ * 处理标注了DubboService的bean
+ * 标注了DubboService的bean是Dubbo框架提的RPC API
+ * 为了统一通用接口的名字 框架提供一些统一的接口
+ * 当时这些接口需要有基础的服务来处理具体的业务逻辑
+ * 所以产生了这个BeanPostProcessor类
+ * 该BeanPostProcessor会将泛型中指定的具体业务服务类绑定
+ * 当调用接口时会自动调用绑定的服务类来提供具体的功能
+ */
 @Component
 @Log4j2
-public class GXRpcApiBeanPostProcessor implements BeanPostProcessor {
+public class GXDubboRpcApiBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
