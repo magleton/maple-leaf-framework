@@ -1,8 +1,10 @@
 package cn.maple.sso.service;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 /**
  * 用户可以实现该接口
@@ -24,6 +26,10 @@ public interface GXTokenConfigService {
      * @return 存储桶的名字
      */
     default String getCacheBucketName() {
+        String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class, "");
+        if (CharSequenceUtil.isNotBlank(appName)) {
+            return CharSequenceUtil.format("token_bucket:{}", appName);
+        }
         return "token_bucket";
     }
 
