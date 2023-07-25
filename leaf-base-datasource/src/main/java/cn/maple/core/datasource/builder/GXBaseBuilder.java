@@ -187,7 +187,9 @@ public interface GXBaseBuilder {
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
                 String str = c.whereString();
-                lastWheres.add(str);
+                if (CharSequenceUtil.isNotEmpty(str)) {
+                    lastWheres.add(str);
+                }
             }
         });
         if (!lastWheres.isEmpty()) {

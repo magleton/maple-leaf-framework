@@ -106,4 +106,10 @@ public class GXBaseQueryParamInnerDto extends GXBaseDto {
      * 则框架不会在自动处理其他的SQL处理拼接
      */
     private String rawSQL;
+
+    /**
+     * 忽略数据权限
+     * 设置为TRUE的话 就忽略掉数据权限处理
+     */
+    private boolean ignoreDataFilter = Boolean.FALSE;
 }

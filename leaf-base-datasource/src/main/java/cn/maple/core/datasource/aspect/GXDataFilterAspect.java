@@ -55,6 +55,9 @@ public class GXDataFilterAspect {
         // 否则进行数据过滤
         try {
             String sqlFilter = getSqlFilter(point);
+            if (CharSequenceUtil.isEmpty(sqlFilter)) {
+                return;
+            }
             GXDataFilterInnerDto dataScope = new GXDataFilterInnerDto(sqlFilter);
             GXDataFilterThreadLocalUtils.setDataFilterInnerDto(dataScope);
         } catch (Exception e) {
@@ -71,6 +74,6 @@ public class GXDataFilterAspect {
         GXDataFilter dataFilter = method.getAnnotation(GXDataFilter.class);
         GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
         assert dataScopeService != null;
-        return dataScopeService.getSqlFilter(dataFilter);
+        return dataScopeService.getSqlFilter(dataFilter, point);
     }
 }
