@@ -3,6 +3,7 @@ package cn.maple.redisson.config;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.properties.GXRedissonCacheManagerProperties;
+import cn.maple.redisson.properties.GXRedissonMQProperties;
 import cn.maple.redisson.properties.GXRedissonProperties;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -25,6 +26,9 @@ public class GXRedissonSpringDataConfig {
     private GXRedissonProperties redissonConfig;
 
     @Resource
+    private GXRedissonMQProperties redissonMQConfig;
+
+    @Resource
     private GXRedissonCacheManagerProperties redissonCacheManagerConfig;
 
     @Bean(destroyMethod = "shutdown")
@@ -32,6 +36,13 @@ public class GXRedissonSpringDataConfig {
         Codec jsonJacksonCodec = new JsonJacksonCodec();
         config.setCodec(jsonJacksonCodec);
         return Redisson.create(config);
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    public RedissonClient redissonMQClient(Config mqConfig) {
+        Codec jsonJacksonCodec = new JsonJacksonCodec();
+        mqConfig.setCodec(jsonJacksonCodec);
+        return Redisson.create(mqConfig);
     }
 
     @Bean("redissonSpringCacheManager")
@@ -51,5 +62,15 @@ public class GXRedissonSpringDataConfig {
             v.setUsername(GXCommonUtils.decodeConnectStr(v.getUsername(), String.class));
         });
         return JSONUtil.toBean(JSONUtil.toJsonStr(redissonConfig.getConfig()), Config.class);
+    }
+
+    @Bean("mqConfig")
+    public Config mqConfig() {
+        redissonMQConfig.getConfig().forEach((k, v) -> {
+            v.setAddress(GXCommonUtils.decodeConnectStr(v.getAddress(), String.class));
+            v.setPassword(GXCommonUtils.decodeConnectStr(v.getPassword(), String.class));
+            v.setUsername(GXCommonUtils.decodeConnectStr(v.getUsername(), String.class));
+        });
+        return JSONUtil.toBean(JSONUtil.toJsonStr(redissonMQConfig.getConfig()), Config.class);
     }
 }
