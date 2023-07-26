@@ -15,6 +15,7 @@
         <module>leaf-base-datasource-mongodb</module>
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
+        <module>leaf-base-rocketmq</module>
         <module>leaf-base-data-sync</module>
         <module>leaf-base-sso</module>
         <module>leaf-base-redisson</module>
@@ -38,6 +39,7 @@
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
         <guava.version>32.1.1-jre</guava.version>
         <caffeine.version>3.1.6</caffeine.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <spring-boot.version>2.7.14</spring-boot.version>
         <snakeyaml.version>1.33</snakeyaml.version>

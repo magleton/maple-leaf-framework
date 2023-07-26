@@ -1,0 +1,12 @@
+rocketmq:
+  nameServer: 1.1.1.1:9876
+  producer:
+    group: groupA
+    topic: topicA
+    accessKey: 1111
+    secretKey: 11111
+  consumer:
+    group: groupA
+    topic: topicA
+    accessKey: 1111
+    secretKey: 1111
