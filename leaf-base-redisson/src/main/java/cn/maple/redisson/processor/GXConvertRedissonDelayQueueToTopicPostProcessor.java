@@ -16,12 +16,14 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 处理实现了GXRedisDelayedQueueListener这个监听器接口的bean
+ * 处理标注了GXConvertRedissonDelayQueueToTopic注解的bean
+ * 标注了该注解的bean可以将delayQueue中到期了的数据重新放入
+ * Stream数据结构中 实现可靠的消息队列
  */
 @Component
 @Log4j2
 @Lazy
-public class GXRedissonDelayQueueListenerPostProcessor implements BeanPostProcessor {
+public class GXConvertRedissonDelayQueueToTopicPostProcessor implements BeanPostProcessor {
     @Resource
     private RedissonClient redissonMQClient;
 
