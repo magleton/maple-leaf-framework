@@ -55,7 +55,7 @@ public class GXRedissonQueueUtils {
      *
      * @param queueName 队列名字
      */
-    private static RDelayedQueue<String> getDelayedQueue(String queueName) {
+    public static RDelayedQueue<String> getDelayedQueue(String queueName) {
         RedissonClient redissonMQClient = GXSpringContextUtils.getBean("redissonMQClient", RedissonClient.class);
         if (Objects.isNull(redissonMQClient)) {
             throw new GXBusinessException("请配置redissonMQClient对象");

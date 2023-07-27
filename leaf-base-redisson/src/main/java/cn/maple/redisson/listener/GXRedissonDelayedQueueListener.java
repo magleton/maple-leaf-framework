@@ -12,4 +12,9 @@ public interface GXRedissonDelayedQueueListener {
      * 获取队列的名字
      */
     String getDelayQueueName();
+
+    /**
+     * 配置topic的名字
+     */
+    String getTopicName();
 }
