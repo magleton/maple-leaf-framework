@@ -5,6 +5,7 @@ import cn.maple.redisson.listener.GXRedissonMQListener;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -17,6 +18,7 @@ import org.springframework.util.ClassUtils;
  */
 @Component
 @Log4j2
+@Lazy
 public class GXRedissonMQListenerServicePostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

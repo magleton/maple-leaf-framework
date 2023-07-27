@@ -10,6 +10,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
  */
 @Component
 @Log4j2
+@Lazy
 public class GXRedissonDelayQueueListenerPostProcessor implements BeanPostProcessor {
     @Resource
     private RedissonClient redissonMQClient;
