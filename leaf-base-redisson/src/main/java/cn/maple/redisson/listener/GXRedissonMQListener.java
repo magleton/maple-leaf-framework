@@ -1,6 +1,6 @@
-package cn.maple.redisson.services;
+package cn.maple.redisson.listener;
 
-public interface GXRedissonMQListenerService {
+public interface GXRedissonMQListener {
     /**
      * 在这个方法这中添加监听redis发布的主题
      * 进行自己的业务逻辑处理

@@ -1,7 +1,7 @@
 package cn.maple.redisson.processor;
 
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.redisson.services.GXRedissonMQListenerService;
+import cn.maple.redisson.listener.GXRedissonMQListener;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -25,7 +25,7 @@ public class GXRedissonMQListenerServicePostProcessor implements BeanPostProcess
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        String targetSimpleName = GXRedissonMQListenerService.class.getSimpleName();
+        String targetSimpleName = GXRedissonMQListener.class.getSimpleName();
         Class<?>[] allInterfacesForClass = ClassUtils.getAllInterfacesForClass(bean.getClass());
         for (Class<?> interfacesForClass : allInterfacesForClass) {
             if (interfacesForClass.getSimpleName().equals(targetSimpleName)) {
