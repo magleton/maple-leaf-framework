@@ -21,4 +21,9 @@ public @interface GXConvertRedissonDelayQueueToTopic {
      * 防止业务逻辑出错导致消息丢失
      */
     String topicName();
+
+    /**
+     * 从消息队列中取消息等待的超时时间
+     */
+    int timeout() default 1800;
 }
