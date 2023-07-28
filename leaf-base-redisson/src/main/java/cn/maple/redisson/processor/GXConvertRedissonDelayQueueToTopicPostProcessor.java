@@ -1,5 +1,6 @@
 package cn.maple.redisson.processor;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -52,16 +53,13 @@ public class GXConvertRedissonDelayQueueToTopicPostProcessor implements BeanPost
             Thread thread = new Thread(() -> {
                 while (true) {
                     try {
-                        log.info("线程【{}】执行获取【{}】延迟队列中的数据", Thread.currentThread().getName(), delayQueueName);
+                        log.info("【{}】线程在【{}】监听Redisson延迟队列【{}】开始", Thread.currentThread().getName(), DateUtil.now(), delayQueueName);
                         String message = destinationQueue.pollFromAny(timeout, TimeUnit.SECONDS);
                         // 可以将到期的数据存入持久化介质中 保证持久化介质的可靠性 可以提高该方案的可靠性
+                        log.info("【{}】线程在【{}】监听Redisson延迟队列【{}】结束,监听到的数据【{}】", threadName, DateUtil.now(), delayQueueName, message);
                         if (CharSequenceUtil.isNotEmpty(message)) {
                             GXCommonUtils.reflectCallObjectMethod(listenerBean, "execute", topicName, message);
                         }
-                        if (CharSequenceUtil.isEmpty(message)) {
-                            message = "！！！No message was received！！！";
-                        }
-                        log.info("Redisson监听到的延迟队列【{}】中的数据【{}】被投递到【{}】Stream流中", delayQueueName, message, topicName);
                     } catch (InterruptedException e) {
                         log.error("获取Redisson的延迟队列【{}】数据发生中断 : {} , {}", delayQueueName, e.getMessage(), e);
                         Thread.currentThread().interrupt();
