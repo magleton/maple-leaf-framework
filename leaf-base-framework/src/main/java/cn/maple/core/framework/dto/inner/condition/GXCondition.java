@@ -1,6 +1,7 @@
 package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.constant.GXDataSourceConstant;
 
 import java.io.Serializable;
 
@@ -31,7 +32,7 @@ public abstract class GXCondition<T> implements Serializable {
 
     public String whereString() {
         String opStr = getOp();
-        if (CharSequenceUtil.isEmpty(opStr)) {
+        if (CharSequenceUtil.isEmpty(opStr) && CharSequenceUtil.equals(opStr, GXDataSourceConstant.IGNORE_DATA_FILTER_CONDITION_OP_VALUE)) {
             return "";
         }
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {

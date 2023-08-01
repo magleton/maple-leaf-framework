@@ -1,5 +1,7 @@
 package cn.maple.core.framework.dto.inner.condition;
 
+import cn.maple.core.framework.constant.GXDataSourceConstant;
+
 /**
  * 标记类
  * 用于处理不需要数据权限验证的情况
@@ -15,9 +17,9 @@ public class GXIgnoreDataFilterCondition extends GXCondition<String> {
 
     @Override
     public String getOp() {
-        return "";
+        return GXDataSourceConstant.IGNORE_DATA_FILTER_CONDITION_OP_VALUE;
     }
-    
+
     @Override
     public String getFieldValue() {
         return "";

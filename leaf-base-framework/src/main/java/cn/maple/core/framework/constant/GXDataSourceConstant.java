@@ -10,7 +10,15 @@ import java.util.function.Function;
 
 @SuppressWarnings("all")
 public class GXDataSourceConstant {
+    /**
+     * 处理自定义条件的函数列表
+     */
     public static final Map<String, Function<Dict, GXCondition<?>>> CONDITION_FUNCTION = new HashMap<>();
+
+    /**
+     * 忽略不需要数据过滤的条件的OP值
+     */
+    public static final String IGNORE_DATA_FILTER_CONDITION_OP_VALUE = "IGNORE_DATA_FILTER_CONDITION_OP_VALUE";
 
     static {
         CONDITION_FUNCTION.put(GXBuilderConstant.EQ, data -> new GXConditionEQ(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
