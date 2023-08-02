@@ -1,12 +1,14 @@
 package cn.maple.core.framework.dto.inner.field;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import lombok.Getter;
 
 import java.io.Serializable;
 
 public abstract class GXUpdateField<T> implements Serializable {
     protected String tableNameAlias;
 
+    @Getter
     protected String fieldName;
 
     @SuppressWarnings("all")

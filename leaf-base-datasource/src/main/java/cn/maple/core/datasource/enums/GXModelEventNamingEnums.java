@@ -1,25 +1,19 @@
 package cn.maple.core.datasource.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum GXModelEventNamingEnums {
-    RETRIEVED("retrieved", ""),
-    CREATING("creating", ""),
-    CREATED("created", ""),
-    UPDATING("updating", ""),
-    UPDATED("updated", ""),
-    SAVING("saving", ""),
-    SAVED("saved", ""),
-    DELETING("deleting", ""),
-    TRASHED("trashed", ""),
-    FORCE_DELETING("forceDeleting", ""),
-    FORCE_DELETED("forceDeleted", ""),
-    RESTORING("restoring", ""),
-    RESTORED("restored", ""),
-    REPLICATING("replicating", "");
+    SAVE_ENTITY("save_entity", "保存实体对象"),
+    UPDATE_ENTITY("update_entity", "更新实体对象"),
+    UPDATE_FIELD("update_field", "更新指定字段"),
+    DELETE_SOFT("delete_soft", "通过条件软删除");
 
     /**
      * 事件名字
      */
     private final String eventName;
+
     /**
      * 事件描述
      */
@@ -30,11 +24,4 @@ public enum GXModelEventNamingEnums {
         this.desc = desc;
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
 }

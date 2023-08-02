@@ -2,6 +2,7 @@ package cn.maple.core.framework.event;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
@@ -12,6 +13,7 @@ public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypePr
     /**
      * 附加参数
      */
+    @Getter
     private final Dict param;
 
     /**
@@ -22,6 +24,7 @@ public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypePr
     /**
      * 事件名字
      */
+    @Getter
     private final String eventName;
 
     public GXBaseEvent(T source) {
@@ -30,6 +33,10 @@ public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypePr
 
     public GXBaseEvent(T source, String eventName) {
         this(source, eventName, Dict.create(), "");
+    }
+
+    public GXBaseEvent(T source, String eventName, String scene) {
+        this(source, eventName, Dict.create(), scene);
     }
 
     public GXBaseEvent(T source, String eventName, Dict param) {
@@ -43,16 +50,8 @@ public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypePr
         this.eventName = eventName;
     }
 
-    public Dict getParam() {
-        return param;
-    }
-
     public Object getScene() {
         return scene;
-    }
-
-    public String getEventName() {
-        return eventName;
     }
 
     @Override
