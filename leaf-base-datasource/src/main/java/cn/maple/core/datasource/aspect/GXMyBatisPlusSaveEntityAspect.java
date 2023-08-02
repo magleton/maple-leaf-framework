@@ -21,22 +21,21 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 
 /**
- * 更新实体(Entity)切面类
+ * 保存实体(Entity)切面类
  */
 @Aspect
 @Component
 @Slf4j
 @SuppressWarnings("all")
-public class GXMyBatisPlusUpdateEntityAspect {
-    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.update(..))")
+public class GXMyBatisPlusSaveEntityAspect {
+    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.save(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布更新前的事件开始");
+        log.info("发布创建数据库事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布更新后的事件结束");
+        log.info("发布创建数据库事件结束");
         return proceed;
     }
-
 
     /**
      * 处理切点的参数
