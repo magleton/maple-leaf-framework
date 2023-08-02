@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
- * 数据过滤，切面处理类
+ * 数据权限过滤，切面处理类
  *
  * @author 塵渊 britton@126.com
  */

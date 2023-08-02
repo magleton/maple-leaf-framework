@@ -6,15 +6,18 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+/**
+ * 软删除数据切面类
+ */
 @Aspect
 @Component
 @Slf4j
-public class GXMyBatisPlusUpdateAspect {
-    @Around("execution(* cn.maple.core.datasource.mapper.GXBaseMapper.update(..))")
+public class GXMyBatisPlusDeleteSoftAspect {
+    @Around("execution(* cn.maple.core.datasource.dao.GXMyBatisDao.deleteSoftCondition(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布更新前的事件,服务可以通过监听该事件对目标对象进行更新前的最后处理");
+        log.info("发布软删除事件开始");
         Object proceed = point.proceed();
-        log.info("发布更新后的事件,服务可以通过监听该事件对目标对象进行更新后的最后处理");
+        log.info("发布软删除事件结束");
         return proceed;
     }
 }
