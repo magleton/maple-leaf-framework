@@ -7,6 +7,7 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.annotation.GXMyBatisListener;
+import cn.maple.core.datasource.constant.GXMyBatisEventConstant;
 import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
 import cn.maple.core.datasource.event.GXMyBatisModelUpdateFieldEvent;
 import cn.maple.core.datasource.service.GXMybatisListenerService;
@@ -88,8 +89,13 @@ public class GXMyBatisPlusUpdateFieldAspect {
                 Dict source = handlePointArgs(type, point);
                 GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
                 Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
-                String eventType = GXModelEventNamingEnums.UPDATE_FIELD.getEventType();
-                String eventName = GXModelEventNamingEnums.UPDATE_FIELD.getEventName();
+                String eventType = GXModelEventNamingEnums.SYNC_UPDATE_FIELD.getEventType();
+                String eventName = GXModelEventNamingEnums.SYNC_UPDATE_FIELD.getEventName();
+                String runType = myBatisListener.runType();
+                if (runType.equals(GXMyBatisEventConstant.MYBATIS_ASYNC_EVENT)) {
+                    eventType = GXModelEventNamingEnums.ASYNC_UPDATE_FIELD.getEventType();
+                    eventName = GXModelEventNamingEnums.ASYNC_UPDATE_FIELD.getEventName();
+                }
                 Dict eventParam = Dict.create().set("listenerClazzName", aClass.getSimpleName()).set("listenerClazz", aClass);
                 GXMyBatisModelUpdateFieldEvent<Dict> updateFieldEvent = new GXMyBatisModelUpdateFieldEvent<>(source, eventType, eventParam, eventName);
                 GXEventPublisherUtils.publishEvent(updateFieldEvent);

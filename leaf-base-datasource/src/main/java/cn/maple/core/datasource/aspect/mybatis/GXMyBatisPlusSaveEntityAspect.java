@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.annotation.GXMyBatisListener;
+import cn.maple.core.datasource.constant.GXMyBatisEventConstant;
 import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
 import cn.maple.core.datasource.event.GXMyBatisModelSaveEntityEvent;
 import cn.maple.core.datasource.service.GXMybatisListenerService;
@@ -66,8 +67,13 @@ public class GXMyBatisPlusSaveEntityAspect {
                 Dict source = handlePointArgs(type, point);
                 GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
                 Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
-                String eventType = GXModelEventNamingEnums.SAVE_ENTITY.getEventType();
-                String eventName = GXModelEventNamingEnums.SAVE_ENTITY.getEventName();
+                String eventType = GXModelEventNamingEnums.SYNC_SAVE_ENTITY.getEventType();
+                String eventName = GXModelEventNamingEnums.SYNC_SAVE_ENTITY.getEventName();
+                String runType = myBatisListener.runType();
+                if (runType.equals(GXMyBatisEventConstant.MYBATIS_ASYNC_EVENT)) {
+                    eventType = GXModelEventNamingEnums.ASYNC_SAVE_ENTITY.getEventType();
+                    eventName = GXModelEventNamingEnums.ASYNC_SAVE_ENTITY.getEventName();
+                }
                 Dict eventParam = Dict.create().set("listenerClazzName", aClass.getSimpleName()).set("listenerClazz", aClass);
                 GXMyBatisModelSaveEntityEvent<Dict> saveEntityEvent = new GXMyBatisModelSaveEntityEvent<>(source, eventType, eventParam, eventName);
                 GXEventPublisherUtils.publishEvent(saveEntityEvent);

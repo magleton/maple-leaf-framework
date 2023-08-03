@@ -1,5 +1,6 @@
 package cn.maple.core.datasource.annotation;
 
+import cn.maple.core.datasource.constant.GXMyBatisEventConstant;
 import cn.maple.core.datasource.service.GXMybatisListenerService;
 
 import java.lang.annotation.*;
@@ -9,5 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface GXMyBatisListener {
-    Class<? extends GXMybatisListenerService> listenerClazz();
+    Class<? extends GXMybatisListenerService<?>> listenerClazz();
+
+    String runType() default GXMyBatisEventConstant.MYBATIS_SYNC_EVENT;
 }

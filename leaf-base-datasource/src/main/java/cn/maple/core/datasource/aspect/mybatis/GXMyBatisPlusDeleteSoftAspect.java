@@ -7,6 +7,7 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.annotation.GXMyBatisListener;
+import cn.maple.core.datasource.constant.GXMyBatisEventConstant;
 import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
 import cn.maple.core.datasource.event.GXMyBatisModelDeleteSoftEvent;
 import cn.maple.core.datasource.service.GXMybatisListenerService;
@@ -76,8 +77,13 @@ public class GXMyBatisPlusDeleteSoftAspect {
                 Dict source = handlePointArgs(type, point);
                 GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
                 Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
-                String eventType = GXModelEventNamingEnums.DELETE_SOFT.getEventType();
-                String eventName = GXModelEventNamingEnums.DELETE_SOFT.getEventName();
+                String eventType = GXModelEventNamingEnums.SYNC_DELETE_SOFT.getEventType();
+                String eventName = GXModelEventNamingEnums.SYNC_DELETE_SOFT.getEventName();
+                String runType = myBatisListener.runType();
+                if (runType.equals(GXMyBatisEventConstant.MYBATIS_ASYNC_EVENT)) {
+                    eventType = GXModelEventNamingEnums.ASYNC_DELETE_SOFT.getEventType();
+                    eventName = GXModelEventNamingEnums.ASYNC_DELETE_SOFT.getEventName();
+                }
                 Dict eventParam = Dict.create().set("listenerClazzName", aClass.getSimpleName()).set("listenerClazz", aClass);
                 GXMyBatisModelDeleteSoftEvent<Dict> deleteSoftEvent = new GXMyBatisModelDeleteSoftEvent<>(source, eventType, eventParam, eventName);
                 GXEventPublisherUtils.publishEvent(deleteSoftEvent);
