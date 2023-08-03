@@ -9,49 +9,48 @@ import org.springframework.core.ResolvableTypeProvider;
 
 import java.lang.reflect.Type;
 
+@Getter
 public class GXBaseEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
     /**
      * 附加参数
      */
-    @Getter
     private final Dict param;
-
-    /**
-     * 场景值,用于区分同一个事件的不同使用场景
-     */
-    private final String scene;
 
     /**
      * 事件名字
      */
-    @Getter
     private final String eventName;
+
+    /**
+     * 事件类型,用于区分同一个事件的不同使用场景
+     */
+    private final String eventType;
 
     public GXBaseEvent(T source) {
         this(source, "", Dict.create(), "");
     }
 
-    public GXBaseEvent(T source, String eventName) {
-        this(source, eventName, Dict.create(), "");
+    public GXBaseEvent(T source, String eventType) {
+        this(source, eventType, Dict.create(), "");
     }
 
-    public GXBaseEvent(T source, String eventName, String scene) {
-        this(source, eventName, Dict.create(), scene);
+    public GXBaseEvent(T source, String eventType, String eventName) {
+        this(source, eventType, Dict.create(), eventName);
     }
 
-    public GXBaseEvent(T source, String eventName, Dict param) {
-        this(source, eventName, param, "");
+    public GXBaseEvent(T source, String eventType, Dict param) {
+        this(source, eventType, param, "");
     }
 
-    public GXBaseEvent(T source, String eventName, Dict param, String scene) {
+    public GXBaseEvent(T source, String eventType, Dict param, String eventName) {
         super(source);
         this.param = param;
-        this.scene = scene;
         this.eventName = eventName;
+        this.eventType = eventType;
     }
 
-    public Object getScene() {
-        return scene;
+    public Object getEventName() {
+        return eventName;
     }
 
     @Override

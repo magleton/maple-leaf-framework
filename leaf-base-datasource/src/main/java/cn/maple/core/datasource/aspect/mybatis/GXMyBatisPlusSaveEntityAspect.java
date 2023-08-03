@@ -1,14 +1,14 @@
-package cn.maple.core.datasource.aspect;
+package cn.maple.core.datasource.aspect.mybatis;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.maple.core.datasource.annotation.GXMyBatisEvent;
+import cn.maple.core.datasource.annotation.GXMyBatisListener;
 import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
-import cn.maple.core.framework.event.GXBaseEvent;
+import cn.maple.core.datasource.event.GXMyBatisModelSaveEntityEvent;
+import cn.maple.core.datasource.service.GXMybatisListenerService;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,22 +21,21 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 
 /**
- * 更新实体(Entity)切面类
+ * 保存实体(Entity)切面类
  */
 @Aspect
 @Component
 @Slf4j
 @SuppressWarnings("all")
-public class GXMyBatisPlusUpdateEntityAspect {
-    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.update(..))")
+public class GXMyBatisPlusSaveEntityAspect {
+    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.insert(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布更新前的事件开始");
+        log.info("发布创建数据库事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布更新后的事件结束");
+        log.info("发布创建数据库事件结束");
         return proceed;
     }
-
 
     /**
      * 处理切点的参数
@@ -65,13 +64,13 @@ public class GXMyBatisPlusUpdateEntityAspect {
             Class<Mapper> mapper = convertTypeToMapper(type);
             if (ObjectUtil.isNotNull(mapper)) {
                 Dict source = handlePointArgs(type, point);
-                GXMyBatisEvent myBatisEvent = AnnotationUtil.getAnnotation(mapper, GXMyBatisEvent.class);
-                Class<? extends GXBaseEvent<?>> aClass = myBatisEvent.eventClass();
-                String scene = mapper.getSimpleName();
+                GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
+                Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
+                String eventType = GXModelEventNamingEnums.SAVE_ENTITY.getEventType();
                 String eventName = GXModelEventNamingEnums.SAVE_ENTITY.getEventName();
-                // 使用 GXBaseEvent(T source, String eventName, String scene) 构造函数
-                GXBaseEvent<?> updateFieldEvent = ReflectUtil.newInstance(aClass, source, eventName, scene);
-                GXEventPublisherUtils.publishEvent(updateFieldEvent);
+                Dict eventParam = Dict.create().set("listenerClazzName", aClass.getSimpleName()).set("listenerClazz", aClass);
+                GXMyBatisModelSaveEntityEvent<Dict> saveEntityEvent = new GXMyBatisModelSaveEntityEvent<>(source, eventType, eventParam, eventName);
+                GXEventPublisherUtils.publishEvent(saveEntityEvent);
             }
         }
     }

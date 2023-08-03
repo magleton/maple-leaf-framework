@@ -9,15 +9,15 @@ public class GXMyBatisModelUpdatingEntityEvent<M extends GXBaseModel> extends GX
         super(source);
     }
 
-    public GXMyBatisModelUpdatingEntityEvent(M source, String eventName) {
-        super(source, eventName);
+    public GXMyBatisModelUpdatingEntityEvent(M source, String eventType) {
+        super(source, eventType);
     }
 
-    public GXMyBatisModelUpdatingEntityEvent(M source, String eventName, Dict param) {
-        super(source, eventName, param);
+    public GXMyBatisModelUpdatingEntityEvent(M source, String eventType, Dict param) {
+        super(source, eventType, param);
     }
 
-    public GXMyBatisModelUpdatingEntityEvent(M source, String eventName, Dict param, String scene) {
-        super(source, eventName, param, scene);
+    public GXMyBatisModelUpdatingEntityEvent(M source, String eventType, Dict param, String eventName) {
+        super(source, eventType, param, eventName);
     }
 }

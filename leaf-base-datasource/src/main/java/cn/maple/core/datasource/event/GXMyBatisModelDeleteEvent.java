@@ -9,15 +9,15 @@ public class GXMyBatisModelDeleteEvent<M extends GXDict> extends GXBaseEvent<M> 
         super(source);
     }
 
-    public GXMyBatisModelDeleteEvent(M source, String eventName) {
-        super(source, eventName);
+    public GXMyBatisModelDeleteEvent(M source, String eventType) {
+        super(source, eventType);
     }
 
-    public GXMyBatisModelDeleteEvent(M source, String eventName, Dict param) {
-        super(source, eventName, param);
+    public GXMyBatisModelDeleteEvent(M source, String eventType, Dict param) {
+        super(source, eventType, param);
     }
 
-    public GXMyBatisModelDeleteEvent(M source, String eventName, Dict param, String scene) {
-        super(source, eventName, param, scene);
+    public GXMyBatisModelDeleteEvent(M source, String eventType, Dict param, String eventName) {
+        super(source, eventType, param, eventName);
     }
 }

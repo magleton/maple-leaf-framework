@@ -1,6 +1,6 @@
 package cn.maple.core.datasource.annotation;
 
-import cn.maple.core.framework.event.GXBaseEvent;
+import cn.maple.core.datasource.service.GXMybatisListenerService;
 
 import java.lang.annotation.*;
 
@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface GXMyBatisEvent {
-    Class<? extends GXBaseEvent<?>> eventClass();
+public @interface GXMyBatisListener {
+    Class<? extends GXMybatisListenerService> listenerClazz();
 }

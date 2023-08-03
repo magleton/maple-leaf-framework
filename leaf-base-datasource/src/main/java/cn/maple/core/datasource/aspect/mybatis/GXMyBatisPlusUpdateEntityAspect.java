@@ -1,16 +1,14 @@
-package cn.maple.core.datasource.aspect;
+package cn.maple.core.datasource.aspect.mybatis;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.maple.core.datasource.annotation.GXMyBatisEvent;
+import cn.maple.core.datasource.annotation.GXMyBatisListener;
 import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
-import cn.maple.core.framework.dto.inner.condition.GXCondition;
-import cn.maple.core.framework.event.GXBaseEvent;
+import cn.maple.core.datasource.event.GXMyBatisModelUpdateEntityEvent;
+import cn.maple.core.datasource.service.GXMybatisListenerService;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,22 +19,21 @@ import org.springframework.aop.support.AopUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
- * 软删除数据切面类
+ * 更新实体(Entity)切面类
  */
 @Aspect
 @Component
 @Slf4j
 @SuppressWarnings("all")
-public class GXMyBatisPlusDeleteSoftAspect {
-    @Around("execution(* cn.maple.core.datasource.mapper.GXBaseMapper.deleteSoftCondition(..))")
+public class GXMyBatisPlusUpdateEntityAspect {
+    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.update(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布软删除事件开始");
+        log.info("发布更新前的事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布软删除事件结束");
+        log.info("发布更新后的事件结束");
         return proceed;
     }
 
@@ -52,13 +49,7 @@ public class GXMyBatisPlusDeleteSoftAspect {
         Class<Mapper> mapper = convertTypeToMapper(type);
         if (ObjectUtil.isNotNull(mapper)) {
             Object[] args = point.getArgs();
-            List<GXCondition<?>> conditionList = Convert.convert(new TypeReference<>() {
-            }, args[1]);
-            conditionList.forEach(condition -> {
-                Object fieldValue = condition.getFieldValue();
-                String fieldName = condition.getFieldExpression();
-                retDict.set(CharSequenceUtil.toCamelCase(fieldName), fieldValue);
-            });
+            retDict = Convert.convert(Dict.class, args[0]);
         }
         return retDict;
     }
@@ -74,13 +65,13 @@ public class GXMyBatisPlusDeleteSoftAspect {
             Class<Mapper> mapper = convertTypeToMapper(type);
             if (ObjectUtil.isNotNull(mapper)) {
                 Dict source = handlePointArgs(type, point);
-                GXMyBatisEvent myBatisEvent = AnnotationUtil.getAnnotation(mapper, GXMyBatisEvent.class);
-                Class<? extends GXBaseEvent<?>> aClass = myBatisEvent.eventClass();
-                String scene = CharSequenceUtil.lowerFirst(mapper.getSimpleName());
-                String eventName = GXModelEventNamingEnums.DELETE_SOFT.getEventName();
-                // 使用 GXBaseEvent(T source, String eventName, String scene) 构造函数
-                GXBaseEvent<?> deleteSoftEvent = ReflectUtil.newInstance(aClass, source, eventName, scene);
-                GXEventPublisherUtils.publishEvent(deleteSoftEvent);
+                GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
+                Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
+                String eventType = GXModelEventNamingEnums.UPDATE_ENTITY.getEventType();
+                String eventName = GXModelEventNamingEnums.UPDATE_ENTITY.getEventName();
+                Dict eventParam = Dict.create().set("listenerClazzName", aClass.getSimpleName()).set("listenerClazz", aClass);
+                GXMyBatisModelUpdateEntityEvent<Dict> updateEntityEvent = new GXMyBatisModelUpdateEntityEvent<>(source, eventType, eventParam, eventName);
+                GXEventPublisherUtils.publishEvent(updateEntityEvent);
             }
         }
     }
