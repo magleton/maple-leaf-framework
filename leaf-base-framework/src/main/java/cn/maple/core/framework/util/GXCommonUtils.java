@@ -6,6 +6,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Validator;
@@ -349,6 +350,9 @@ public class GXCommonUtils {
             Throwable targetException = ((InvocationTargetException) cause).getTargetException();
             if (targetException instanceof GXBeanValidateException) {
                 throw (GXBeanValidateException) targetException;
+            }
+            if (InvocationTargetRuntimeException.class.isAssignableFrom(e.getClass())) {
+                throw new GXBusinessException(targetException.getMessage(), targetException);
             }
             String exceptionMessage = CharSequenceUtil.isEmpty(targetException.getMessage()) ? "系统反射调用失败" : targetException.getMessage();
             LOG.error("系统反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
