@@ -28,7 +28,7 @@ import java.lang.reflect.Type;
 @Slf4j
 @SuppressWarnings("all")
 public class GXMyBatisPlusUpdateEntityAspect {
-    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.update(..))")
+    @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* update(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         log.info("发布更新前的事件开始");
         Object proceed = point.proceed();

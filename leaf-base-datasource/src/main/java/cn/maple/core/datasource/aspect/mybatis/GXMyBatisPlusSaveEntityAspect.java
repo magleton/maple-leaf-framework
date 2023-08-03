@@ -28,7 +28,7 @@ import java.lang.reflect.Type;
 @Slf4j
 @SuppressWarnings("all")
 public class GXMyBatisPlusSaveEntityAspect {
-    @Around("execution(* com.baomidou.mybatisplus.core.mapper.BaseMapper.insert(..))")
+    @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* insert(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         log.info("发布创建数据库事件开始");
         Object proceed = point.proceed();

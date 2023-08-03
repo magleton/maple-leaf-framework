@@ -32,7 +32,7 @@ import java.util.List;
 @Slf4j
 @SuppressWarnings("all")
 public class GXMyBatisPlusUpdateFieldAspect {
-    @Around("execution(* cn.maple.core.datasource.mapper.GXBaseMapper.updateFieldByCondition(..))")
+    @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* updateFieldByCondition(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         log.info("发布更新数据库指定字段事件开始");
         Object proceed = point.proceed();
