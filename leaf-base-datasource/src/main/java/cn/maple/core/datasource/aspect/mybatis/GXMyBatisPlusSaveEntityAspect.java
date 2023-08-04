@@ -64,8 +64,11 @@ public class GXMyBatisPlusSaveEntityAspect {
         for (Type type : myBatisMapper) {
             Class<Mapper> mapper = convertTypeToMapper(type);
             if (ObjectUtil.isNotNull(mapper)) {
-                Dict source = handlePointArgs(type, point);
                 GXMyBatisListener myBatisListener = AnnotationUtil.getAnnotation(mapper, GXMyBatisListener.class);
+                if (ObjectUtil.isNull(myBatisListener)) {
+                    return;
+                }
+                Dict source = handlePointArgs(type, point);
                 Class<? extends GXMybatisListenerService> aClass = myBatisListener.listenerClazz();
                 String eventType = GXModelEventNamingEnums.SYNC_SAVE_ENTITY.getEventType();
                 String eventName = GXModelEventNamingEnums.SYNC_SAVE_ENTITY.getEventName();
