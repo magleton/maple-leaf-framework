@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.handlers.MybatisMapWrapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.*;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +88,8 @@ public class GXMyBatisPlusConfig {
         // 开启数据权限处理
         Boolean enableDataPermission = GXCommonUtils.getEnvironmentValue("maple.framework.enable.data-permission", Boolean.class, Boolean.FALSE);
         if (Boolean.TRUE.equals(enableDataPermission)) {
-            interceptor.addInnerInterceptor(new DataPermissionInterceptor());
+            DataPermissionHandler dataPermissionHandler = GXSpringContextUtils.getBean(DataPermissionHandler.class);
+            interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataPermissionHandler));
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
         interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
