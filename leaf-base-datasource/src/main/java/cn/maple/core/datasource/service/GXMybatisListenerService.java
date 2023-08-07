@@ -11,7 +11,7 @@ public interface GXMybatisListenerService<T> {
         LOG.info("请自定义实现saveEntityListener监听逻辑");
     }
 
-    default void updateEntityListener(T data) {
+    default void updateEntityListener(T data, Dict keyValuePairs, Dict keyOperatorPairs) {
         LOG.info("请自定义实现updateEntityListener监听逻辑");
     }
 

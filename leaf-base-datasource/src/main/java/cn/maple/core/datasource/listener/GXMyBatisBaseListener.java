@@ -45,9 +45,11 @@ interface GXMyBatisBaseListener {
         Class<?> listenerClazz = Convert.convert(new TypeReference<>() {
         }, param.getObj("listenerClazz"));
         Type targetParamType = TypeUtil.getTypeArgument(listenerClazz.getGenericInterfaces()[0]);
-        Object targetParamObject = Convert.convert(targetParamType, source);
+        Object targetParamObject = Convert.convert(targetParamType, source.get("entityData"));
+        Object keyOperatorPairs = source.get("keyOperatorPairs");
+        Object keyValuePairs = source.get("keyValuePairs");
         Object bean = GXSpringContextUtils.getBean(listenerClazzName, listenerClazz);
-        GXCommonUtils.reflectCallObjectMethod(bean, "updateEntityListener", targetParamObject);
+        GXCommonUtils.reflectCallObjectMethod(bean, "updateEntityListener", targetParamObject, keyValuePairs, keyOperatorPairs);
     }
 
     /**
