@@ -503,7 +503,7 @@ public class GXCommonUtils {
      * @return Class
      */
     @SuppressWarnings("all")
-    public static <R> Class<R> getGenericClassType(Class<R> clazz, Integer index) {
+    public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
         return (Class<R>) ClassUtil.getTypeArgument(clazz, index);
     }
 }
