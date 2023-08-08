@@ -9,6 +9,7 @@ import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -502,9 +504,15 @@ public class GXCommonUtils {
      */
     @SuppressWarnings("all")
     public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
-        if (clazz.getGenericSuperclass().equals(Object.class)) {
+        Type genericSuperType = clazz.getGenericSuperclass();
+        Class genericSuperclass = Convert.convert(new TypeReference<Class>() {
+        }, genericSuperType);
+        if (genericSuperclass.equals(Object.class)) {
             return null;
         }
-        return (Class<R>) TypeUtil.getClass(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[index]);
+        if (!genericSuperclass.isAssignableFrom(ParameterizedType.class)) {
+            genericSuperType = genericSuperclass.getGenericSuperclass();
+        }
+        return (Class<R>) TypeUtil.getClass(((ParameterizedType) genericSuperType).getActualTypeArguments()[index]);
     }
 }
