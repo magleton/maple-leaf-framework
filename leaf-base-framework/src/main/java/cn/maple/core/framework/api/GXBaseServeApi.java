@@ -52,7 +52,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取数据
      *
-     * @param condition   查询条件
+     * @param condition   查询条件 中间表达式请使用 SqlKeyword枚举
      * @param columns     需要查询的列
      * @param targetClazz 目标类型
      * @return List
@@ -62,7 +62,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件
+     * @param condition 查询条件 中间表达式请使用 SqlKeyword枚举
      * @return R
      */
     R findOneByCondition(Table<String, String, Object> condition);
