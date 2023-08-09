@@ -65,8 +65,8 @@ interface GXMyBatisBaseListener {
         }, param.getObj("listenerClazz"));
         Object bean = GXSpringContextUtils.getBean(listenerClazzName, listenerClazz);
         Dict updateFieldData = Convert.convert(Dict.class, source.getObj("updateFieldData"));
-        Dict conditionField = Convert.convert(Dict.class, source.get("conditionField"));
-        GXCommonUtils.reflectCallObjectMethod(bean, "updateFieldListener", updateFieldData, conditionField);
+        Dict conditionFieldData = Convert.convert(Dict.class, source.get("conditionFieldData"));
+        GXCommonUtils.reflectCallObjectMethod(bean, "updateFieldListener", updateFieldData, conditionFieldData);
     }
 
     /**

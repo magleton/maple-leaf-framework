@@ -71,7 +71,7 @@ public class GXMyBatisPlusUpdateFieldAspect {
                 String fieldName = condition.getFieldExpression();
                 conditionFieldData.set(CharSequenceUtil.toCamelCase(fieldName), fieldValue);
             });
-            retDict.set("updateFieldData", updateFieldData).set("conditionField", conditionFieldData);
+            retDict.set("updateFieldData", updateFieldData).set("conditionFieldData", conditionFieldData);
         }
         return retDict;
     }

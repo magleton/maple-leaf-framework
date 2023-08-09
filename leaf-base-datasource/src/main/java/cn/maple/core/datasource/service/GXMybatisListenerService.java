@@ -31,9 +31,9 @@ public interface GXMybatisListenerService<T> {
      * 更新字段的监听器
      *
      * @param updateFieldData 更新的字段信息
-     * @param conditionField  更新条件
+     * @param conditionFieldData  更新条件
      */
-    default void updateFieldListener(Dict updateFieldData, Dict conditionField) {
+    default void updateFieldListener(Dict updateFieldData, Dict conditionFieldData) {
         LOG.info("请自定义实现updateFieldListener监听逻辑");
     }
 
