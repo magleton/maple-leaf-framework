@@ -35,7 +35,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 通过条件查询列表信息
      *
-     * @param condition  搜索条件
+     * @param condition  搜索条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @param orderField 排序字段
      * @return List
      */
@@ -44,7 +44,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取数据
      *
-     * @param condition 查询条件
+     * @param condition 查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @return List
      */
     List<R> findByCondition(Table<String, String, Object> condition, Object extraData);
@@ -52,7 +52,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取数据
      *
-     * @param condition   查询条件 中间表达式请使用 SqlKeyword枚举
+     * @param condition   查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @param columns     需要查询的列
      * @param targetClazz 目标类型
      * @return List
@@ -62,7 +62,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件 中间表达式请使用 SqlKeyword枚举
+     * @param condition 查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @return R
      */
     R findOneByCondition(Table<String, String, Object> condition);
@@ -70,7 +70,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件
+     * @param condition 查询条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @return R
      */
     R findOneByCondition(Table<String, String, Object> condition, Object extraData);
@@ -79,7 +79,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * 创建或者更新数据
      *
      * @param reqDto      请求参数
-     * @param condition   更新条件
+     * @param condition   更新条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
      * @param copyOptions 复制可选项
      * @return ID
      */
