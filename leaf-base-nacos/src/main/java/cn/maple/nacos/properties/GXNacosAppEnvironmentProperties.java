@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @SuppressWarnings("all")
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@NacosPropertySource(dataId = "app-customer.yml",
+@NacosPropertySource(dataId = "app-environment.yml",
         groupId = "${spring.cloud.nacos.config.group:${nacos.config.group:}}",
         properties = @NacosProperties(
                 serverAddr = "${spring.cloud.nacos.config.server-addr:${nacos.config.server-addr:}}",
@@ -24,5 +24,5 @@ import org.springframework.stereotype.Component;
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
 @ConfigurationProperties(prefix = "")
-public class GXNacosAppCustomerProperties {
+public class GXNacosAppEnvironmentProperties {
 }

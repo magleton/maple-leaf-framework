@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @SuppressWarnings("all")
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@PropertySource(value = {"classpath:/${spring.profiles.active}/app-customer.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
+@PropertySource(value = {"classpath:/${spring.profiles.active}/app-environment.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "")
-public class GXLocalAppCustomerProperties {
+public class GXLocalAppEnvironmentProperties {
 }
