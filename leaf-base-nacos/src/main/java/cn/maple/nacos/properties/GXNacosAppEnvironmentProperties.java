@@ -22,7 +22,8 @@ import org.springframework.stereotype.Component;
                 serverAddr = "${spring.cloud.nacos.config.server-addr:${nacos.config.server-addr:}}",
                 namespace = "${spring.cloud.nacos.config.namespace:${nacos.config.namespace:}}",
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
-                password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
+                password = "${spring.cloud.nacos.password:${nacos.config.password:}}"),
+        autoRefreshed = true)
 @ConfigurationProperties(prefix = "")
 public class GXNacosAppEnvironmentProperties {
 }
