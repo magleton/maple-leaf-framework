@@ -120,7 +120,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * 根据条件获取数据
      *
      * @param condition   查询条件
-     * @param columns     需要查询的列
+     * @param columns     需要查询的列 必须是能够被序列化的Set结构  EG: HaseSet
      * @param targetClazz 目标类型
      * @return List
      */
