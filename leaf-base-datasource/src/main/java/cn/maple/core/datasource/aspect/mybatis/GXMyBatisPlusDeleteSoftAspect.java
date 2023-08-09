@@ -40,8 +40,7 @@ public class GXMyBatisPlusDeleteSoftAspect {
         log.info("发布软删除事件结束");
         return proceed;
     }
-
-
+    
     /**
      * 处理切点的参数
      *

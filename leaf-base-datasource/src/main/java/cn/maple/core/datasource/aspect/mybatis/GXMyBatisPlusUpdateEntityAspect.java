@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 更新实体(Entity)切面类
@@ -133,7 +132,7 @@ public class GXMyBatisPlusUpdateEntityAspect {
      * @param updateWrapper 更新的Wrapper
      */
     private <T> Dict parseWhereSQL(UpdateWrapper<T> updateWrapper) {
-        final AtomicInteger paramNameSeq = new AtomicInteger(0);
+        final Integer[] paramNameSeq = new Integer[]{0};
         String whereSQL = updateWrapper.getTargetSql();
         Dict keyValuePairs = Dict.create();
         Dict keyOperatorPairs = Dict.create();
@@ -155,7 +154,7 @@ public class GXMyBatisPlusUpdateEntityAspect {
 
                 @Override
                 public void visit(EqualsTo equalsTo) {
-                    final String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
+                    final String genParamName = Constants.WRAPPER_PARAM + (++paramNameSeq[0]);
                     String leftExpressionStr = CharSequenceUtil.toCamelCase(equalsTo.getLeftExpression().toString());
                     keyOperatorPairs.set(leftExpressionStr, equalsTo.getStringExpression());
                     keyValuePairs.set(leftExpressionStr, paramNameValuePairs.get(genParamName));
@@ -163,7 +162,7 @@ public class GXMyBatisPlusUpdateEntityAspect {
 
                 @Override
                 public void visit(GreaterThanEquals greaterThanEquals) {
-                    final String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
+                    final String genParamName = Constants.WRAPPER_PARAM + (++paramNameSeq[0]);
                     String leftExpressionStr = CharSequenceUtil.toCamelCase(greaterThanEquals.getLeftExpression().toString());
                     keyOperatorPairs.set(leftExpressionStr, greaterThanEquals.getStringExpression());
                     keyValuePairs.set(leftExpressionStr, paramNameValuePairs.get(genParamName));
@@ -171,7 +170,7 @@ public class GXMyBatisPlusUpdateEntityAspect {
 
                 @Override
                 public void visit(LikeExpression likeExpression) {
-                    final String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
+                    final String genParamName = Constants.WRAPPER_PARAM + (++paramNameSeq[0]);
                     String leftExpressionStr = CharSequenceUtil.toCamelCase(likeExpression.getLeftExpression().toString());
                     keyOperatorPairs.set(leftExpressionStr, likeExpression.getStringExpression());
                     keyValuePairs.set(leftExpressionStr, paramNameValuePairs.get(genParamName));
@@ -179,7 +178,7 @@ public class GXMyBatisPlusUpdateEntityAspect {
 
                 @Override
                 public void visit(MinorThanEquals minorThanEquals) {
-                    final String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
+                    final String genParamName = Constants.WRAPPER_PARAM + (++paramNameSeq[0]);
                     String leftExpressionStr = CharSequenceUtil.toCamelCase(minorThanEquals.getLeftExpression().toString());
                     keyOperatorPairs.set(leftExpressionStr, minorThanEquals.getStringExpression());
                     keyValuePairs.set(leftExpressionStr, paramNameValuePairs.get(genParamName));
