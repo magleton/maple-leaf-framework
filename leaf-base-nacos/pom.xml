@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>cn.maple.framework</groupId>
+            <artifactId>leaf-base-framework</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba.boot</groupId>
             <artifactId>nacos-config-spring-boot-starter</artifactId>
             <version>${nacos-config-spring-boot.version}</version>

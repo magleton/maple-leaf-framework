@@ -1,0 +1,5 @@
+customer:
+  property1:
+    name: jack
+  property2:
+    age: 18
