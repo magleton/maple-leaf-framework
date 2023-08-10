@@ -12,8 +12,11 @@ import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,8 +209,15 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
+        String keyProperty = tableInfo.getKeyProperty();
+        if (CharSequenceUtil.isEmpty(keyProperty)) {
+            throw new GXBusinessException(CharSequenceUtil.format("请指定数据表{}的主键字段", tableName));
+        }
+        keyProperty = CharSequenceUtil.toUnderlineCase(keyProperty);
+        LOGGER.info("deleteSoftCondition方法中的{}表的主键名字{}", tableName, keyProperty);
         SQL sql = new SQL().UPDATE(tableName);
-        sql.SET("is_deleted = id", CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
+        sql.SET(CharSequenceUtil.format("is_deleted = {}", keyProperty), CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
