@@ -15,6 +15,14 @@ import java.util.Arrays;
  */
 @Configuration
 public class GXCORSConfig {
+    /**
+     * 注意:
+     * 如果 corsConfiguration.setAllowCredentials(true);
+     * 则需要将corsConfiguration.addAllowedOrigin("*");
+     * 改成 corsConfiguration.addAllowedOriginPattern("*");
+     *
+     * @return CorsConfiguration
+     */
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(false);
