@@ -15,9 +15,9 @@ public class GXMessageDto extends GXBaseDto {
      * 客户端id
      */
     private String clientId;
-    
+
     /**
      * 传输数据体(json)
      */
-    private String data;
+    private String message;
 }
