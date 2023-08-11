@@ -18,6 +18,7 @@
         <module>leaf-base-rocketmq</module>
         <module>leaf-base-data-sync</module>
         <module>leaf-base-sso</module>
+        <module>leaf-base-sse</module>
         <module>leaf-base-redisson</module>
         <module>leaf-base-dubbo-nacos</module>
         <module>leaf-base-dubbo-zk</module>
