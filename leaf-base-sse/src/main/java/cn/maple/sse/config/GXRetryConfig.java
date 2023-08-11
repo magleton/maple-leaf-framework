@@ -19,7 +19,7 @@ public class GXRetryConfig {
         retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
         // Retry only 3 times
         SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-        retryPolicy.setMaxAttempts(3);
+        retryPolicy.setMaxAttempts(5);
         retryTemplate.setRetryPolicy(retryPolicy);
         return retryTemplate;
     }
