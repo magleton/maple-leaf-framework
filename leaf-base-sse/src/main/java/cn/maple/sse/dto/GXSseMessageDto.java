@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class GXMessageDto extends GXBaseDto {
+public class GXSseMessageDto extends GXBaseDto {
     /**
      * 客户端id
      */

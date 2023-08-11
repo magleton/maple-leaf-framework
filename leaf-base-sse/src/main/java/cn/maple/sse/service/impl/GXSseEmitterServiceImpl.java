@@ -3,15 +3,13 @@ package cn.maple.sse.service.impl;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
-import cn.maple.sse.dto.GXMessageDto;
+import cn.maple.sse.dto.GXSseMessageDto;
 import cn.maple.sse.service.GXSseEmitterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -78,7 +76,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         }
         // 判断发送的消息是否为空
         for (Map.Entry<String, SseEmitter> entry : SSE_CLIENT_CACHE.entrySet()) {
-            GXMessageDto messageDto = new GXMessageDto();
+            GXSseMessageDto messageDto = new GXSseMessageDto();
             messageDto.setClientId(entry.getKey());
             messageDto.setMessage(msg);
             sendMsgToClientByClientId(entry.getKey(), messageDto, entry.getValue());
@@ -93,7 +91,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      */
     @Override
     public void sendMessageToOneClient(String clientId, String msg) {
-        GXMessageDto messageVo = new GXMessageDto(clientId, msg);
+        GXSseMessageDto messageVo = new GXSseMessageDto(clientId, msg);
         sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
     }
 
@@ -105,7 +103,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     @Override
     public void closeConnect(String clientId) {
         SseEmitter sseEmitter = SSE_CLIENT_CACHE.get(clientId);
-        if (sseEmitter != null) {
+        if (ObjectUtil.isNotNull(sseEmitter)) {
             sseEmitter.complete();
             removeUser(clientId);
         }
@@ -118,8 +116,8 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      * @param clientId   客户端ID
      * @param messageDto 推送信息，此处结合具体业务，定义自己的返回值即可
      **/
-    private void sendMsgToClientByClientId(String clientId, GXMessageDto messageDto, SseEmitter sseEmitter) {
-        if (sseEmitter == null) {
+    private void sendMsgToClientByClientId(String clientId, GXSseMessageDto messageDto, SseEmitter sseEmitter) {
+        if (ObjectUtil.isNull(sseEmitter)) {
             log.error("推送消息失败：客户端{}未创建长链接,失败消息:{}", clientId, messageDto.toString());
             return;
         }
@@ -160,11 +158,11 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         return throwable -> {
             log.error("GXSseEmitterServiceImpl[errorCallBack]：连接异常,客户端ID:{}", clientId);
             SseEmitter sseEmitter = SSE_CLIENT_CACHE.get(clientId);
-            if (sseEmitter == null) {
+            if (ObjectUtil.isNull(sseEmitter)) {
                 log.error("客户端{}不存在长连接。", clientId);
                 return;
             }
-            GXMessageDto messageDto = new GXMessageDto(clientId, "失败后重新推送");
+            GXSseMessageDto messageDto = new GXSseMessageDto(clientId, "失败后重新推送");
             SseEmitter.SseEventBuilder sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK)).data(messageDto, MediaType.APPLICATION_JSON);
             send(clientId, sseEmitter, sendData);
         };
@@ -181,32 +179,19 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     }
 
     /**
-     * Spring retry框架
+     * 统一发送消息
      *
      * @param clientId        客户端ID
      * @param sseEmitter      sseEmitter对象
      * @param sseEventBuilder 事件参数构造构造器
      */
     @Override
-    @Retryable(value = IOException.class, maxAttempts = 5, backoff = @Backoff(delay = 10000))
     public void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder) {
         try {
             sseEmitter.send(sseEventBuilder);
         } catch (IOException e) {
+            // TODO 可以将发送失败的客户端放入MQ中  等待下一次发送 也可以直接将其移除
             log.error("SSE客户端链接异常，客户端ID:{},异常信息:{}", clientId, e.getMessage());
         }
-    }
-
-    /**
-     * 恢复逻辑
-     *
-     * @param ex              异常信息
-     * @param clientId        客户端ID
-     * @param sseEventBuilder 消息builder
-     */
-    @Override
-    @Recover
-    public void recover(Exception ex, String clientId, SseEmitter.SseEventBuilder sseEventBuilder) {
-        log.error("重试5次向{}发送消息失败。消息:{}", clientId, sseEventBuilder);
     }
 }

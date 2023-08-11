@@ -1,7 +1,6 @@
 package cn.maple.sse.service;
 
 import cn.maple.core.framework.service.GXBusinessService;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
@@ -45,21 +44,11 @@ public interface GXSseEmitterService extends GXBusinessService {
     void closeConnect(String clientId);
 
     /**
-     * Spring retry框架
+     * 统一发送消息
      *
      * @param clientId        客户端ID
      * @param sseEmitter      sseEmitter对象
      * @param sseEventBuilder 事件参数构造构造器
      */
     void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder);
-
-    /**
-     * 恢复逻辑
-     *
-     * @param ex              异常信息
-     * @param clientId        客户端ID
-     * @param sseEventBuilder 消息builder
-     */
-    @Recover
-    void recover(Exception ex, String clientId, SseEmitter.SseEventBuilder sseEventBuilder);
 }
