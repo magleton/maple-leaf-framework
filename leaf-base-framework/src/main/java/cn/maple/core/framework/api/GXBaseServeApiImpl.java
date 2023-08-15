@@ -11,6 +11,7 @@ import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
+import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
@@ -62,7 +63,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
         List<R> rs = findByCondition(condition, targetClazz, Dict.create());
         return GXCommonUtils.convertSourceListToTargetList(rs, targetClazz, null, null);
     }
@@ -83,7 +84,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
@@ -101,7 +102,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
@@ -133,7 +134,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
         return findOneByCondition(condition, targetClazz, Dict.create());
     }
 
@@ -146,7 +147,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());

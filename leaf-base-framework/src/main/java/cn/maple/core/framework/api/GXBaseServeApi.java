@@ -6,6 +6,7 @@ import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
+import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.google.common.collect.Table;
 
@@ -25,7 +26,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的数据类型
      * @return List
      */
-    <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 通过条件查询列表信息
@@ -35,7 +36,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回数据类型
      * @return List
      */
-    <R> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
 
     /**
      * 根据条件获取数据
@@ -45,7 +46,7 @@ public interface GXBaseServeApi {
      * @param extraData   额外的参数 用于数据转换时数据自动填充
      * @return List
      */
-    <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 根据条件获取数据
@@ -64,7 +65,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 数据返回类型
      * @return R
      */
-    <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 根据条件获取一条数据
@@ -74,7 +75,7 @@ public interface GXBaseServeApi {
      * @param extraData   数据转换时 自动填充的数据
      * @return R
      */
-    <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 创建或者更新数据
