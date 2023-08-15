@@ -2,6 +2,7 @@ package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
@@ -14,10 +15,6 @@ import java.util.Set;
 
 /**
  * 暴露服务的基础API接口
- *
- * @param <Q>  请求参数的类型
- * @param <R>  响应对象的类型
- * @param <ID> 唯一标识的类型  一般是一个实体对象的ID类型
  */
 @SuppressWarnings("all")
 public interface GXBaseServeApi {
@@ -87,7 +84,7 @@ public interface GXBaseServeApi {
      * @param copyOptions 复制可选项
      * @return ID
      */
-    <ID, Q> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions);
+    <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions);
 
     /**
      * 创建或者更新数据
@@ -96,7 +93,7 @@ public interface GXBaseServeApi {
      * @param copyOptions 复制可选项
      * @return ID
      */
-    <ID, Q> ID updateOrCreate(Q reqDto, CopyOptions copyOptions);
+    <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, CopyOptions copyOptions);
 
     /**
      * 创建或者更新数据
@@ -104,7 +101,7 @@ public interface GXBaseServeApi {
      * @param reqDto 请求参数
      * @return ID
      */
-    <ID, Q> ID updateOrCreate(Q reqDto);
+    <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto);
 
     /**
      * 分页数据
@@ -168,7 +165,7 @@ public interface GXBaseServeApi {
      * @param extraData   额外数据
      * @return
      */
-    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData);
+    <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData);
 
     /**
      * 转指定的对象到指定的目标类型对象
@@ -179,7 +176,7 @@ public interface GXBaseServeApi {
      * @param copyOptions 转换的自定义项
      * @return
      */
-    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions);
+    <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions);
 
     /**
      * 转指定的对象到指定的目标类型对象
@@ -188,7 +185,7 @@ public interface GXBaseServeApi {
      * @param targetClass 目标对象类型
      * @return
      */
-    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass);
+    <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass);
 
     /**
      * 设置服务类的Class对象

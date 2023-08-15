@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
@@ -162,7 +163,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return ID
      */
     @Override
-    public <ID, Q> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
+    public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
         Object id = callMethod("updateOrCreate", reqDto, convertTableConditionToConditionExp(condition), copyOptions);
         if (Objects.nonNull(id)) {
             return (ID) id;
@@ -178,7 +179,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return ID
      */
     @Override
-    public <ID, Q> ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
+    public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
         return updateOrCreate(reqDto, HashBasedTable.create(), copyOptions);
     }
 
@@ -189,7 +190,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return ID
      */
     @Override
-    public <ID, Q> ID updateOrCreate(Q reqDto) {
+    public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto) {
         return updateOrCreate(reqDto, CopyOptions.create());
     }
 
@@ -300,7 +301,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return
      */
     @Override
-    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData) {
+    public <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData) {
         return GXCommonUtils.convertSourceToTarget(reqDto, targetClass, methodName, copyOptions, extraData);
     }
 
@@ -314,7 +315,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return T
      */
     @Override
-    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
+    public <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
         return sourceToTarget(reqDto, targetClass, methodName, copyOptions, Dict.create());
     }
 
@@ -326,7 +327,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return T
      */
     @Override
-    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass) {
+    public <T, Q extends GXBaseApiReqDto> T sourceToTarget(Q reqDto, Class<T> targetClass) {
         return sourceToTarget(reqDto, targetClass, null, CopyOptions.create());
     }
 
