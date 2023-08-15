@@ -5,14 +5,11 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
-import cn.maple.core.framework.dto.req.GXBaseReqDto;
-import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
@@ -20,8 +17,6 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -30,18 +25,14 @@ import java.util.function.Function;
  * RPC基础调用类
  * 封装了常用的一些方法
  * {@code
- * public class TestServiceApiImpl extends GXBaseServeApiImpl<TestReqDto, TestApiResDto, Integer> implements TestServiceApi {
+ * public class TestServiceApiImpl extends GXBaseServeApiImpl implements TestServiceApi {
  * public TestServiceApiImpl() {
  * staticBindServeServiceClass(OrdersService.class);
  * }
  * }
  * }
- *
- * @param <Q>  请求对象
- * @param <R>  返回数据
- * @param <ID> 数据库字段常量
  */
-public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> implements GXBaseServeApi<Q, R, ID> {
+public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseServeApi {
     /**
      * 服务类的Class 对象
      * 静态目标服务的类型
@@ -65,14 +56,14 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable);
      * }
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param targetClazz 返回的数据类型
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition) {
-        List<R> rs = findByCondition(condition, Dict.create());
-        Class<R> retClazz = getGenericClassType();
-        return GXCommonUtils.convertSourceListToTargetList(rs, retClazz, null, null);
+    public <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+        List<R> rs = findByCondition(condition, targetClazz, Dict.create());
+        return GXCommonUtils.convertSourceListToTargetList(rs, targetClazz, null, null);
     }
 
     /**
@@ -85,17 +76,17 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable,orderField);
      * }
      *
-     * @param condition  搜索条件
-     * @param orderField 排序字段
+     * @param condition   搜索条件
+     * @param orderField  排序字段
+     * @param targetClazz 返回的数据类型
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField) {
-        Class<R> retClazz = getGenericClassType();
+    public <R> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
-            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
+            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
         }
         return Collections.emptyList();
     }
@@ -103,15 +94,16 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
     /**
      * 根据条件获取数据
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param targetClazz 返回的数据类型
+     * @param extraData   数据类型转换时 自动填充的数据
      * @return List
      */
     @Override
-    public List<R> findByCondition(Table<String, String, Object> condition, Object extraData) {
-        Class<R> retClazz = getGenericClassType();
+    public <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
-            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, retClazz, null, null);
+            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
         }
         return Collections.emptyList();
     }
@@ -135,26 +127,28 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param targetClazz 返回的数据类型
      * @return R
      */
     @Override
-    public R findOneByCondition(Table<String, String, Object> condition) {
-        return findOneByCondition(condition, Dict.create());
+    public <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+        return findOneByCondition(condition, targetClazz, Dict.create());
     }
 
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param targetClazz 返回的数据类型
+     * @param extraData   数据类型转换时 自动填充的数据
      * @return R
      */
     @Override
-    public R findOneByCondition(Table<String, String, Object> condition, Object extraData) {
-        Class<R> retClazz = getGenericClassType();
+    public <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(r)) {
-            return GXCommonUtils.convertSourceToTarget(r, retClazz, null, CopyOptions.create());
+            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
         }
         return null;
     }
@@ -168,7 +162,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return ID
      */
     @Override
-    public ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
+    public <ID, Q> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
         Object id = callMethod("updateOrCreate", reqDto, convertTableConditionToConditionExp(condition), copyOptions);
         if (Objects.nonNull(id)) {
             return (ID) id;
@@ -184,7 +178,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return ID
      */
     @Override
-    public ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
+    public <ID, Q> ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
         return updateOrCreate(reqDto, HashBasedTable.create(), copyOptions);
     }
 
@@ -195,7 +189,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return ID
      */
     @Override
-    public ID updateOrCreate(Q reqDto) {
+    public <ID, Q> ID updateOrCreate(Q reqDto) {
         return updateOrCreate(reqDto, CopyOptions.create());
     }
 
@@ -207,7 +201,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, CopyOptions copyOptions) {
+    public <R> GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, Class<R> targetClazz, CopyOptions copyOptions) {
         GXBaseQueryParamInnerDto baseQueryParamInnerDto = GXCommonUtils.convertSourceToTarget(reqProtocol, GXBaseQueryParamInnerDto.class, null, copyOptions);
         if (CharSequenceUtil.isEmpty(baseQueryParamInnerDto.getTableName())) {
             baseQueryParamInnerDto.setTableName(getTableName());
@@ -217,8 +211,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
             // XXXDBResDto
             List<?> records = retPaginate.getRecords();
-            Class<R> retClazz = getGenericClassType();
-            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, retClazz, null, copyOptions);
+            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, targetClazz, null, copyOptions);
             retPaginate.setRecords(rs);
             return retPaginate;
         }
@@ -229,11 +222,12 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * 分页数据
      *
      * @param reqProtocol 查询条件
+     * @param targetClazz 返回的数据类型
      * @return 分页对象
      */
     @Override
-    public GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol) {
-        return paginate(reqProtocol, CopyOptions.create());
+    public <R> GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, Class<R> targetClazz) {
+        return paginate(reqProtocol, targetClazz, CopyOptions.create());
     }
 
     /**
@@ -306,7 +300,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return
      */
     @Override
-    public <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData) {
+    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData) {
         return GXCommonUtils.convertSourceToTarget(reqDto, targetClass, methodName, copyOptions, extraData);
     }
 
@@ -320,7 +314,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return T
      */
     @Override
-    public <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
+    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions) {
         return sourceToTarget(reqDto, targetClass, methodName, copyOptions, Dict.create());
     }
 
@@ -332,7 +326,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return T
      */
     @Override
-    public <T> T sourceToTarget(Q reqDto, Class<T> targetClass) {
+    public <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass) {
         return sourceToTarget(reqDto, targetClass, null, CopyOptions.create());
     }
 
@@ -352,7 +346,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
      * @return GXBaseServeApi
      */
     @Override
-    public GXBaseServeApi<Q, R, ID> callBindTargetServeSericeClass(Class<?> targetServeServiceClass) {
+    public GXBaseServeApi callBindTargetServeSericeClass(Class<?> targetServeServiceClass) {
         DYNAMIC_SERVE_SERVICE_CLASS_THREAD_LOCAL.set(targetServeServiceClass);
         return this;
     }
@@ -388,16 +382,6 @@ public class GXBaseServeApiImpl<S extends GXBusinessService, Q extends GXBaseReq
             serveServiceClass = STATIC_SERVE_SERVICE_CLASS_MAP.get(getClass().getSimpleName());
         }
         return serveServiceClass;
-    }
-
-    /**
-     * 获取返回的Class
-     *
-     * @return Class 返回数据的类型
-     */
-    @Override
-    public Class<R> getGenericClassType() {
-        return (Class<R>) TypeUtil.getClass(((ParameterizedType) getClass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[1]);
     }
 
     /**

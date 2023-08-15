@@ -5,12 +5,9 @@ import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
-import cn.maple.core.framework.dto.req.GXBaseReqDto;
-import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.google.common.collect.Table;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,31 +20,35 @@ import java.util.Set;
  * @param <ID> 唯一标识的类型  一般是一个实体对象的ID类型
  */
 @SuppressWarnings("all")
-public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDto, ID extends Serializable> {
+public interface GXBaseServeApi {
     /**
      * 根据条件获取数据
      *
-     * @param condition 查询条件
+     * @param condition   查询条件
+     * @param targetClazz 返回的数据类型
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition);
+    <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 通过条件查询列表信息
      *
-     * @param condition  搜索条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
-     * @param orderField 排序字段
+     * @param condition   搜索条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param orderField  排序字段
+     * @param targetClazz 返回数据类型
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField);
+    <R> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
 
     /**
      * 根据条件获取数据
      *
-     * @param condition 查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param condition   查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param targetClazz 返回数据类型
+     * @param extraData   额外的参数 用于数据转换时数据自动填充
      * @return List
      */
-    List<R> findByCondition(Table<String, String, Object> condition, Object extraData);
+    <R> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 根据条件获取数据
@@ -62,18 +63,21 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param condition   查询条件 中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param targetClazz 数据返回类型
      * @return R
      */
-    R findOneByCondition(Table<String, String, Object> condition);
+    <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 根据条件获取一条数据
      *
-     * @param condition 查询条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param condition   查询条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param targetClazz 数据返回类型
+     * @param extraData   数据转换时 自动填充的数据
      * @return R
      */
-    R findOneByCondition(Table<String, String, Object> condition, Object extraData);
+    <R> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 创建或者更新数据
@@ -83,7 +87,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param copyOptions 复制可选项
      * @return ID
      */
-    ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions);
+    <ID, Q> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions);
 
     /**
      * 创建或者更新数据
@@ -92,7 +96,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param copyOptions 复制可选项
      * @return ID
      */
-    ID updateOrCreate(Q reqDto, CopyOptions copyOptions);
+    <ID, Q> ID updateOrCreate(Q reqDto, CopyOptions copyOptions);
 
     /**
      * 创建或者更新数据
@@ -100,24 +104,26 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param reqDto 请求参数
      * @return ID
      */
-    ID updateOrCreate(Q reqDto);
+    <ID, Q> ID updateOrCreate(Q reqDto);
 
     /**
      * 分页数据
      *
      * @param reqProtocol 查询条件
+     * @param targetClazz 返回的数据类型
      * @param copyOptions 复制可选项
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, CopyOptions copyOptions);
+    <R> GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, Class<R> targetClazz, CopyOptions copyOptions);
 
     /**
      * 分页数据
      *
      * @param reqProtocol 查询条件
+     * @param targetClazz 返回的数据类型
      * @return 分页对象
      */
-    GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol);
+    <R> GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, Class<R> targetClazz);
 
     /**
      * 物理删除
@@ -162,7 +168,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param extraData   额外数据
      * @return
      */
-    <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData);
+    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions, Dict extraData);
 
     /**
      * 转指定的对象到指定的目标类型对象
@@ -173,7 +179,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param copyOptions 转换的自定义项
      * @return
      */
-    <T> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions);
+    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass, String methodName, CopyOptions copyOptions);
 
     /**
      * 转指定的对象到指定的目标类型对象
@@ -182,7 +188,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @param targetClass 目标对象类型
      * @return
      */
-    <T> T sourceToTarget(Q reqDto, Class<T> targetClass);
+    <T, Q> T sourceToTarget(Q reqDto, Class<T> targetClass);
 
     /**
      * 设置服务类的Class对象
@@ -198,7 +204,7 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      *
      * @return GXBaseServeApi
      */
-    GXBaseServeApi<Q, R, ID> callBindTargetServeSericeClass(Class<?> targetServeServiceClass);
+    GXBaseServeApi callBindTargetServeSericeClass(Class<?> targetServeServiceClass);
 
     /**
      * 调用指定类中的指定方法
@@ -215,13 +221,6 @@ public interface GXBaseServeApi<Q extends GXBaseReqDto, R extends GXBaseApiResDt
      * @return
      */
     Class<?> getServeServiceClass();
-
-    /**
-     * 获取返回的Class
-     *
-     * @return
-     */
-    Class<R> getGenericClassType();
 
     /**
      * 通过条件查询列表信息
