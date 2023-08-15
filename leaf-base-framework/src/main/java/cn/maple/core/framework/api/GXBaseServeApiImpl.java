@@ -423,8 +423,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      *
      * @return String 表名字
      */
-    @Override
-    public String getTableName() {
+    private String getTableName() {
         return (String) callMethod("getTableName");
     }
 }

@@ -237,11 +237,4 @@ public interface GXBaseServeApi {
      * @return 转换后的条件
      */
     List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition);
-
-    /**
-     * 获取表的名字
-     *
-     * @return
-     */
-    String getTableName();
 }
