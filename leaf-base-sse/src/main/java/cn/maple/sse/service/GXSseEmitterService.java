@@ -12,7 +12,7 @@ public interface GXSseEmitterService extends GXBusinessService {
      *
      * @param clientId 客户端ID
      */
-    SseEmitter createConnect(String clientId);
+    SseEmitter createSseConnect(String clientId);
 
     /**
      * 根据客户端id获取SseEmitter对象

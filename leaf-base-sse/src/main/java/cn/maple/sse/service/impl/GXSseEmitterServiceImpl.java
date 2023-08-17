@@ -40,22 +40,21 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     /**
      * 创建连接
      *
-     * @param clientId 客户端ID
+     * @param clientId 客户端ID 前端在请求改接口时可以指定 如果没有指定 则方法自己生成
      */
     @Override
-    public SseEmitter createConnect(String clientId) {
+    public SseEmitter createSseConnect(String clientId) {
         // 设置超时时间，0表示不过期。默认30秒，超过时间未完成会抛出异常：AsyncRequestTimeoutException
         SseEmitter sseEmitter = new SseEmitter(0L);
         // 是否需要给客户端推送ID
         if (CharSequenceUtil.isBlank(clientId)) {
-            clientId = IdUtil.simpleUUID();
+            clientId = IdUtil.fastSimpleUUID();
         }
-        // 注册回调
-        // 1. 长链接完成后回调接口(即关闭连接时调用)
+        // 1. 注册回调->长链接完成断开后回调接口(即关闭连接时调用)
         sseEmitter.onCompletion(onCompletionCallBack(clientId));
-        // 2. 连接超时回调
+        // 2. 注册回调->连接超时回调
         sseEmitter.onTimeout(onTimeoutCallBack(clientId));
-        // 3. 推送消息异常时，回调方法
+        // 3. 注册回调->推送消息异常时回调
         sseEmitter.onError(onErrorCallBack(clientId));
         SSE_CLIENT_CACHE.put(clientId, sseEmitter);
         log.info("创建新的sse连接，当前用户：{}    累计用户:{}", clientId, SSE_CLIENT_CACHE.size());
@@ -130,7 +129,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     }
 
     /**
-     * 长链接完成后回调接口(即关闭连接时调用)
+     * 长链接断开完成后回调接口(即关闭连接时调用)
      *
      * @param clientId 客户端ID
      **/
