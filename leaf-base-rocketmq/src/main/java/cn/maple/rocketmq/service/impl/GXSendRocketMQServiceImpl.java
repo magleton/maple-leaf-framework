@@ -35,7 +35,7 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
             messageBuilder.setHeader(RocketMQHeaders.KEYS, messageKey);
         }
         Message<String> message = messageBuilder.build();
-        rocketMQTemplate.send(messageReqDto.getDestination(), message);
+        rocketMQTemplate.send(getDestination(messageReqDto), message);
         log.info("普通消息 msg = {}", message);
     }
 
@@ -55,8 +55,8 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
             messageBuilder.setHeader(RocketMQHeaders.KEYS, messageKey);
         }
         Message<String> message = messageBuilder.build();
-        SendResult sendResult = rocketMQTemplate.syncSendDeliverTimeMills(messageReqDto.getDestination(), message, lastTimeOut);
-        log.info("延迟消息发送完毕");
+        SendResult sendResult = rocketMQTemplate.syncSendDeliverTimeMills(getDestination(messageReqDto), message, lastTimeOut);
+        log.info("延迟消息发送完毕,消息返回结果 : {}", sendResult);
         return sendResult.getMsgId();
     }
 
@@ -67,15 +67,15 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
      */
     public boolean syncSend(GXRocketMQMessageReqDto messageReqDto) {
         //执行发送
-        String destination = CharSequenceUtil.format("{}:{}", messageReqDto.toString(), messageReqDto.getTag());
+        String destination = getDestination(messageReqDto);
         MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(messageReqDto.getBody());
         String messageKey = messageReqDto.getMessageKey();
         if (CharSequenceUtil.isNotEmpty(messageKey)) {
             messageBuilder.setHeader(RocketMQHeaders.KEYS, messageKey);
         }
         Message<String> message = messageBuilder.build();
-        rocketMQTemplate.syncSend(destination, message);
-        log.info("列发送消息成功 ");
+        SendResult sendResult = rocketMQTemplate.syncSend(destination, message);
+        log.info("同步发送送消息成功 ,消息返回结果 : {}", sendResult);
         return true;
     }
 
@@ -91,15 +91,15 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
             messageBuilder.setHeader(RocketMQHeaders.KEYS, messageKey);
         }
         Message<String> message = messageBuilder.build();
-        rocketMQTemplate.asyncSend(messageReqDto.getDestination(), message, new SendCallback() {
+        rocketMQTemplate.asyncSend(getDestination(messageReqDto), message, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
-                log.info("发送信息成功" + sendResult);
+                log.info("异步消息发送成功,消息返回结果 : {}", sendResult);
             }
 
             @Override
             public void onException(Throwable throwable) {
-                log.info("发送信息失败" + throwable);
+                log.error("异步消息发送失败,消息返回结果 : {}", throwable);
             }
         });
         log.info("消息队列发送消息成功");
@@ -118,8 +118,20 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
             messageBuilder.setHeader(RocketMQHeaders.KEYS, messageKey);
         }
         Message<String> message = messageBuilder.build();
-        rocketMQTemplate.sendOneWay(messageReqDto.getDestination(), message);
-        log.info("列发送消息成功");
+        rocketMQTemplate.sendOneWay(getDestination(messageReqDto), message);
+        log.info("发送快速消息成功,消息返回结果");
         return true;
+    }
+
+    /**
+     * 组装消息发送的目标地址
+     *
+     * @param messageReqDto 消息信息
+     */
+    private String getDestination(GXRocketMQMessageReqDto messageReqDto) {
+        if (CharSequenceUtil.isEmpty(messageReqDto.getTag())) {
+            return messageReqDto.getTopic();
+        }
+        return CharSequenceUtil.format("{}:{}", messageReqDto.getTopic(), messageReqDto.getTag());
     }
 }

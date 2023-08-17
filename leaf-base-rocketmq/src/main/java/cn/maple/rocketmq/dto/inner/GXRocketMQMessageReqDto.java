@@ -1,6 +1,5 @@
 package cn.maple.rocketmq.dto.inner;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import lombok.Data;
@@ -57,12 +56,5 @@ public class GXRocketMQMessageReqDto extends GXBaseReqDto {
         this.deliverTime = deliverTime;
         this.messageKey = messageKey;
         this.body = JSONUtil.toJsonStr(body);
-    }
-
-    public String getDestination() {
-        if (CharSequenceUtil.isEmpty(tag)) {
-            return topic;
-        }
-        return CharSequenceUtil.format("{}:{}", topic, tag);
     }
 }
