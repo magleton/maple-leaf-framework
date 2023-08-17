@@ -52,11 +52,11 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         }
         // 注册回调
         // 1. 长链接完成后回调接口(即关闭连接时调用)
-        sseEmitter.onCompletion(completionCallBack(clientId));
+        sseEmitter.onCompletion(onCompletionCallBack(clientId));
         // 2. 连接超时回调
-        sseEmitter.onTimeout(timeoutCallBack(clientId));
+        sseEmitter.onTimeout(onTimeoutCallBack(clientId));
         // 3. 推送消息异常时，回调方法
-        sseEmitter.onError(errorCallBack(clientId));
+        sseEmitter.onError(onErrorCallBack(clientId));
         SSE_CLIENT_CACHE.put(clientId, sseEmitter);
         log.info("创建新的sse连接，当前用户：{}    累计用户:{}", clientId, SSE_CLIENT_CACHE.size());
         // 注册成功返回用户信息
@@ -134,7 +134,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      *
      * @param clientId 客户端ID
      **/
-    private Runnable completionCallBack(String clientId) {
+    private Runnable onCompletionCallBack(String clientId) {
         return () -> {
             log.info("结束连接：{}", clientId);
             removeUser(clientId);
@@ -146,7 +146,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      *
      * @param clientId 客户端ID
      **/
-    private Runnable timeoutCallBack(String clientId) {
+    private Runnable onTimeoutCallBack(String clientId) {
         return () -> {
             log.info("连接超时：{}", clientId);
             removeUser(clientId);
@@ -158,7 +158,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      *
      * @param clientId 客户端ID
      **/
-    private Consumer<Throwable> errorCallBack(String clientId) {
+    private Consumer<Throwable> onErrorCallBack(String clientId) {
         return throwable -> {
             log.error("GXSseEmitterServiceImpl[errorCallBack]：连接异常,客户端ID:{}", clientId);
             SseEmitter sseEmitter = SSE_CLIENT_CACHE.get(clientId);
@@ -189,8 +189,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      * @param sseEmitter      sseEmitter对象
      * @param sseEventBuilder 事件参数构造构造器
      */
-    @Override
-    public void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder) {
+    private void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder) {
         try {
             sseEmitter.send(sseEventBuilder);
             closeConnect(clientId);

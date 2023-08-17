@@ -42,13 +42,4 @@ public interface GXSseEmitterService extends GXBusinessService {
      * @param clientId 客户端ID
      */
     void closeConnect(String clientId);
-
-    /**
-     * 统一发送消息
-     *
-     * @param clientId        客户端ID
-     * @param sseEmitter      sseEmitter对象
-     * @param sseEventBuilder 事件参数构造构造器
-     */
-    void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder);
 }
