@@ -193,6 +193,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     public void send(String clientId, SseEmitter sseEmitter, SseEmitter.SseEventBuilder sseEventBuilder) {
         try {
             sseEmitter.send(sseEventBuilder);
+            closeConnect(clientId);
         } catch (IOException e) {
             // TODO 可以将发送失败的客户端放入MQ中  等待下一次发送 也可以直接将其移除
             log.error("SSE客户端链接异常，客户端ID:{},异常信息:{}", clientId, e.getMessage());
