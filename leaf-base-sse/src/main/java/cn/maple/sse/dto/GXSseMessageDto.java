@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @Builder
 public class GXSseMessageDto extends GXBaseDto {
     /**
-     * 客户端id
+     * 客户端表示ID
      */
     private String clientId;
 
@@ -22,12 +22,12 @@ public class GXSseMessageDto extends GXBaseDto {
     private String msgId = IdUtil.fastUUID();
 
     /**
-     * 传输数据
+     * 传输数据,事件数据
      */
     private Dict data;
 
     /**
-     * 事件名字
+     * 事件标识符,事件名字
      */
     private String eventName;
 
@@ -38,7 +38,7 @@ public class GXSseMessageDto extends GXBaseDto {
     private long reconnectTimeMillis = 2_000L;
 
     /**
-     * 注释
+     * 事件注释
      */
     private String comment = "";
 }
