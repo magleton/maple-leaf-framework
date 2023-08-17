@@ -4,7 +4,7 @@ package cn.maple.rocketmq.service;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.rocketmq.dto.inner.GXRocketMQMessageReqDto;
 
-public interface GXSendMQService extends GXBusinessService {
+public interface GXSendRocketMQService extends GXBusinessService {
     /**
      * 发送常规消息的ACT消息
      *
@@ -38,5 +38,5 @@ public interface GXSendMQService extends GXBusinessService {
      *
      * @param messageReqDto 待发送的消息对象
      */
-    boolean send(GXRocketMQMessageReqDto messageReqDto);
+    boolean syncSend(GXRocketMQMessageReqDto messageReqDto);
 }

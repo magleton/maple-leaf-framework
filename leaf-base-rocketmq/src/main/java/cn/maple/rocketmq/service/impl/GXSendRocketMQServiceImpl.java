@@ -3,7 +3,7 @@ package cn.maple.rocketmq.service.impl;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.rocketmq.dto.inner.GXRocketMQMessageReqDto;
-import cn.maple.rocketmq.service.GXSendMQService;
+import cn.maple.rocketmq.service.GXSendRocketMQService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 
 @Log4j2
 @Service
-public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements GXSendMQService {
+public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements GXSendRocketMQService {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
@@ -65,7 +65,7 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
      *
      * @param messageReqDto 待发送的消息对象
      */
-    public boolean send(GXRocketMQMessageReqDto messageReqDto) {
+    public boolean syncSend(GXRocketMQMessageReqDto messageReqDto) {
         //执行发送
         String destination = CharSequenceUtil.format("{}:{}", messageReqDto.toString(), messageReqDto.getTag());
         MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(messageReqDto.getBody());

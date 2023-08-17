@@ -1,15 +1,15 @@
 package cn.maple.sse.dto;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.IdUtil;
 import cn.maple.core.framework.dto.GXBaseDto;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class GXSseMessageDto extends GXBaseDto {
     /**
      * 客户端id
@@ -17,7 +17,28 @@ public class GXSseMessageDto extends GXBaseDto {
     private String clientId;
 
     /**
-     * 传输数据体(json)
+     * 消息ID
      */
-    private String message;
+    private String msgId = IdUtil.fastUUID();
+
+    /**
+     * 传输数据
+     */
+    private Dict data;
+
+    /**
+     * 事件名字
+     */
+    private String eventName;
+
+    /**
+     * 从新连接时间
+     * 默认 2秒
+     */
+    private long reconnectTimeMillis = 2_000L;
+
+    /**
+     * 注释
+     */
+    private String comment = "";
 }

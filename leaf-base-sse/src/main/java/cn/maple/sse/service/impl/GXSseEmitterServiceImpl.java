@@ -1,5 +1,6 @@
 package cn.maple.sse.service.impl;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
@@ -76,9 +77,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         }
         // 判断发送的消息是否为空
         for (Map.Entry<String, SseEmitter> entry : SSE_CLIENT_CACHE.entrySet()) {
-            GXSseMessageDto messageDto = new GXSseMessageDto();
-            messageDto.setClientId(entry.getKey());
-            messageDto.setMessage(msg);
+            GXSseMessageDto messageDto = GXSseMessageDto.builder().clientId(entry.getKey()).data(Dict.create().set("message", msg)).build();
             sendMsgToClientByClientId(entry.getKey(), messageDto, entry.getValue());
         }
     }
@@ -91,7 +90,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      */
     @Override
     public void sendMessageToOneClient(String clientId, String msg) {
-        GXSseMessageDto messageVo = new GXSseMessageDto(clientId, msg);
+        GXSseMessageDto messageVo = GXSseMessageDto.builder().clientId(clientId).data(Dict.create().set("message", msg)).build();
         sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
     }
 
@@ -121,7 +120,12 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
             log.error("推送消息失败：客户端{}未创建长链接,失败消息:{}", clientId, messageDto.toString());
             return;
         }
-        SseEmitter.SseEventBuilder sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK)).data(messageDto, MediaType.APPLICATION_JSON);
+        SseEmitter.SseEventBuilder sendData = SseEmitter.event()
+                .data(messageDto.getData(), MediaType.APPLICATION_JSON)
+                .id(messageDto.getMsgId())
+                .comment(messageDto.getComment() + ":" + clientId)
+                .reconnectTime(messageDto.getReconnectTimeMillis())
+                .name(messageDto.getEventName());
         send(clientId, sseEmitter, sendData);
     }
 
@@ -162,7 +166,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
                 log.error("客户端{}不存在长连接。", clientId);
                 return;
             }
-            GXSseMessageDto messageDto = new GXSseMessageDto(clientId, "失败后重新推送");
+            GXSseMessageDto messageDto = GXSseMessageDto.builder().clientId(clientId).data(Dict.create().set("message", "失败后重新推送")).build();
             SseEmitter.SseEventBuilder sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK)).data(messageDto, MediaType.APPLICATION_JSON);
             send(clientId, sseEmitter, sendData);
         };
