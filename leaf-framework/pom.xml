@@ -24,6 +24,11 @@
         </dependency>
         <dependency>
             <groupId>cn.maple.framework</groupId>
+            <artifactId>leaf-base-seata</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.maple.framework</groupId>
             <artifactId>leaf-base-redisson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

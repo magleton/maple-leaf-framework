@@ -12,6 +12,7 @@
     <modules>
         <module>leaf-base-framework</module>
         <module>leaf-base-datasource</module>
+        <module>leaf-base-seata</module>
         <module>leaf-base-datasource-mongodb</module>
         <module>leaf-framework</module>
         <module>leaf-base-rabbitmq</module>
