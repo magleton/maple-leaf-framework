@@ -1,5 +1,7 @@
-package cn.maple.core.datasource.config;
+package cn.maple.seata.config;
 
+import cn.maple.core.datasource.config.GXDynamicDataSource;
+import cn.maple.core.datasource.config.GXDynamicDataSourceConfig;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
