@@ -102,12 +102,13 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
             //throw new GXBusinessException("待更新的数据不存在!");
             log.error("待更新的数据不存在!");
-            return -1;
+            return GXCommonConstant.DB_RECORD_NOT_FOUND;
         }
         return repository.updateFieldByCondition(tableName, updateFields, condition);
     }
@@ -120,6 +121,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         return updateFieldByCondition(repository.getTableName(), updateFields, condition);
     }
@@ -524,6 +526,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         return repository.deleteSoftCondition(tableName, condition);
     }
@@ -535,6 +538,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(List<GXCondition<?>> condition) {
         return deleteSoftCondition(repository.getTableName(), condition);
     }
@@ -547,6 +551,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return repository.deleteCondition(tableName, condition);
     }
@@ -558,6 +563,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(List<GXCondition<?>> condition) {
         return deleteCondition(repository.getTableName(), condition);
     }

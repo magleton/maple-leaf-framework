@@ -116,6 +116,11 @@ public class GXCommonConstant {
      */
     public static final String SSO_TOKEN_ATTR = "sso_token_attr";
 
+    /**
+     * 根据条件在数据库查询出来的记录不存在
+     */
+    public static final int DB_RECORD_NOT_FOUND = -1;
+
     private GXCommonConstant() {
     }
 }
