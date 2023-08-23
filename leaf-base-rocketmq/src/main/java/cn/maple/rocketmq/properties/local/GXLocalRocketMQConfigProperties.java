@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @SuppressWarnings("all")
-@EqualsAndHashCode(callSuper = true)
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
 @PropertySource(value = {"classpath:/${spring.profiles.active}/rocket-mq.yml"}, factory = GXYamlPropertySourceFactory.class, encoding = "utf-8", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "rocketmq")
