@@ -7,7 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
-import cn.maple.sse.dto.GXSseMessageDto;
+import cn.maple.sse.dto.GXSseMessageInnerReqDto;
 import cn.maple.sse.service.GXSseEmitterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -76,7 +76,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         }
         // 判断发送的消息是否为空
         for (Map.Entry<String, SseEmitter> entry : SSE_CLIENT_CACHE.entrySet()) {
-            GXSseMessageDto messageDto = GXSseMessageDto.builder().clientId(entry.getKey()).data(Dict.create().set("message", msg)).build();
+            GXSseMessageInnerReqDto messageDto = GXSseMessageInnerReqDto.builder().clientId(entry.getKey()).data(Dict.create().set("message", msg)).build();
             sendMsgToClientByClientId(entry.getKey(), messageDto, entry.getValue());
         }
     }
@@ -89,7 +89,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      */
     @Override
     public void sendMessageToOneClient(String clientId, String msg) {
-        GXSseMessageDto messageVo = GXSseMessageDto.builder().clientId(clientId).data(Dict.create().set("message", msg)).build();
+        GXSseMessageInnerReqDto messageVo = GXSseMessageInnerReqDto.builder().clientId(clientId).data(Dict.create().set("message", msg)).build();
         sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
     }
 
@@ -114,7 +114,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      * @param clientId   客户端ID
      * @param messageDto 推送信息，此处结合具体业务，定义自己的返回值即可
      **/
-    private void sendMsgToClientByClientId(String clientId, GXSseMessageDto messageDto, SseEmitter sseEmitter) {
+    private void sendMsgToClientByClientId(String clientId, GXSseMessageInnerReqDto messageDto, SseEmitter sseEmitter) {
         if (ObjectUtil.isNull(sseEmitter)) {
             log.error("推送消息失败：客户端{}未创建长链接,失败消息:{}", clientId, messageDto.toString());
             return;
@@ -165,7 +165,7 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
                 log.error("客户端{}不存在长连接。", clientId);
                 return;
             }
-            GXSseMessageDto messageDto = GXSseMessageDto.builder().clientId(clientId).data(Dict.create().set("message", "失败后重新推送")).build();
+            GXSseMessageInnerReqDto messageDto = GXSseMessageInnerReqDto.builder().clientId(clientId).data(Dict.create().set("message", "失败后重新推送")).build();
             SseEmitter.SseEventBuilder sendData = SseEmitter.event().id(String.valueOf(HttpStatus.HTTP_OK)).data(messageDto, MediaType.APPLICATION_JSON);
             send(clientId, sseEmitter, sendData);
         };

@@ -2,7 +2,7 @@ package cn.maple.sse.dto;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
-import cn.maple.core.framework.dto.GXBaseDto;
+import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
-public class GXSseMessageDto extends GXBaseDto {
+public class GXSseMessageInnerReqDto extends GXBaseReqDto {
     /**
      * 客户端表示ID
      */
