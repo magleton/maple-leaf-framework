@@ -1,6 +1,7 @@
 package cn.maple.rocketmq.service.impl;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.rocketmq.dto.inner.GXRocketMQMessageReqDto;
 import cn.maple.rocketmq.service.GXSendRocketMQService;
@@ -129,6 +130,9 @@ public class GXSendRocketMQServiceImpl extends GXBusinessServiceImpl implements 
      * @param messageReqDto 消息信息
      */
     private String getDestination(GXRocketMQMessageReqDto messageReqDto) {
+        if (CharSequenceUtil.isEmpty(messageReqDto.getTopic())) {
+            throw new GXBusinessException("请设置Topic");
+        }
         if (CharSequenceUtil.isEmpty(messageReqDto.getTag())) {
             return messageReqDto.getTopic();
         }
