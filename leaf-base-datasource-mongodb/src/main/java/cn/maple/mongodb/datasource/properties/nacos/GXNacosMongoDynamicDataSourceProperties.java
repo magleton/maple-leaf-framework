@@ -32,8 +32,9 @@ import java.util.Map;
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
 //@ConfigurationProperties(prefix = "mongodb")
+//@ConfigurationProperties(prefix = "spring.data.mongodb")  可以直接使用MongoTemplate对象  不需要在GXMongoConfig中进行配置
 @NacosConfigurationProperties(groupId = "${nacos.config.group:DEFAULT_GROUP}", prefix = "mongodb", dataId = "mongodb.yml", autoRefreshed = true, type = ConfigType.YAML)
-public class GXNacosMongoDynamicDataSourceProperties extends GXMongoDynamicDataSourceProperties {
+public class GXNacosMongoDynamicDataSourceProperties extends GXMongoDynamicDataSourceProperties/*MongoProperties*/ {
     private Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 
     public GXNacosMongoDynamicDataSourceProperties() {

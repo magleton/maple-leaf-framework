@@ -25,7 +25,8 @@ import java.util.Map;
 @ConditionalOnMissingClass({"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
 @PropertySource(value = {"classpath:/${spring.profiles.active}/mongodb.yml"}, factory = GXYamlPropertySourceFactory.class, ignoreResourceNotFound = false)
 @ConfigurationProperties(prefix = "mongodb")
-public class GXLocalMongoDynamicDataSourceProperties extends GXMongoDynamicDataSourceProperties {
+//@ConfigurationProperties(prefix = "spring.data.mongodb") 可以直接使用MongoTemplate对象  不需要在GXMongoConfig中进行配置
+public class GXLocalMongoDynamicDataSourceProperties extends GXMongoDynamicDataSourceProperties /*MongoProperties*/ {
     private Map<String, GXMongoDataSourceProperties> datasource = new LinkedHashMap<>();
 
     public GXLocalMongoDynamicDataSourceProperties() {
