@@ -84,15 +84,16 @@ public class GXBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegi
 
             // 创建MongoTemplate的BeanDefinition构建对象
             BeanDefinitionBuilder mongoTemplateBeanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(MongoTemplate.class);
-            if (Boolean.TRUE.equals(primary)) {
-                mongoTemplateBeanDefinitionBuilder.setPrimary(true);
-            }
             SimpleMongoClientDatabaseFactory factory = applicationContext.getBean(factoryBeanName, SimpleMongoClientDatabaseFactory.class);
             mongoTemplateBeanDefinitionBuilder.addConstructorArgValue(factory);
             mongoTemplateBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
             String beanName = dataSourceProperties.getBeanName();
             if (CharSequenceUtil.isEmpty(beanName)) {
                 beanName = key + "MongoTemplate";
+            }
+            if (Boolean.TRUE.equals(primary)) {
+                mongoTemplateBeanDefinitionBuilder.setPrimary(true);
+                beanDefinitionRegistry.registerAlias(beanName, "mongoTemplate");
             }
             beanDefinitionRegistry.registerBeanDefinition(beanName, mongoTemplateBeanDefinitionBuilder.getBeanDefinition());
         });
