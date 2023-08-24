@@ -164,6 +164,11 @@ public class GXBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegi
         }
     }
 
+    /**
+     * 解析配置文件中的连接信息
+     *
+     * @return GXMongoDynamicDataSourceProperties 数据源配置信息
+     */
     private GXMongoDynamicDataSourceProperties getMongoDynamicDataSourceProperties() {
         BindResult<Dict> bind = Binder.get(this.environment).bind("mongodb.datasource", Dict.class);
         Map<String, GXMongoDataSourceProperties> datasource = Convert.convert(new TypeReference<>() {
