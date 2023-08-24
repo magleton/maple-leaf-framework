@@ -19,7 +19,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -74,7 +73,7 @@ public class GXBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegi
             BeanDefinitionBuilder mongoDatabaseFactoryBeanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(SimpleMongoClientDatabaseFactory.class);
             mongoDatabaseFactoryBeanDefinitionBuilder.addConstructorArgValue(MongoClients.create(mongoClientSettings));
             mongoDatabaseFactoryBeanDefinitionBuilder.addConstructorArgValue(database);
-            mongoDatabaseFactoryBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
+            //mongoDatabaseFactoryBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
             Boolean primary = dataSourceProperties.getPrimary();
             if (Boolean.TRUE.equals(primary)) {
                 mongoDatabaseFactoryBeanDefinitionBuilder.setPrimary(true);
@@ -86,7 +85,7 @@ public class GXBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegi
             BeanDefinitionBuilder mongoTemplateBeanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(MongoTemplate.class);
             SimpleMongoClientDatabaseFactory factory = applicationContext.getBean(factoryBeanName, SimpleMongoClientDatabaseFactory.class);
             mongoTemplateBeanDefinitionBuilder.addConstructorArgValue(factory);
-            mongoTemplateBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
+            //mongoTemplateBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
             String beanName = dataSourceProperties.getBeanName();
             if (CharSequenceUtil.isEmpty(beanName)) {
                 beanName = key + "MongoTemplate";
