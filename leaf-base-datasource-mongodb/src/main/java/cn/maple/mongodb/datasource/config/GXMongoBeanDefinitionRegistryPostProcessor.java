@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Component
 @Log4j2
-public class GXBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ApplicationContextAware {
+public class GXMongoBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ApplicationContextAware {
     private Environment environment;
 
     private ApplicationContext applicationContext;
