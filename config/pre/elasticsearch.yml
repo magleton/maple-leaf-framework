@@ -1,0 +1,18 @@
+elasticsearch:
+  datasource:
+    framework:
+      uris:
+        - 192.168.7.213:9200
+      username:
+      password:
+      primary: true
+    secondary:
+      uris:
+        - 192.168.7.213:9200
+      username:
+      password:
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
