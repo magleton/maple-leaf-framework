@@ -12,7 +12,7 @@
     <artifactId>leaf-base-elasticsearch</artifactId>
 
     <properties>
-        <spring.data.elasticsearch.version>4.4.14</spring.data.elasticsearch.version>
+        <spring.data.elasticsearch.version>4.4.15</spring.data.elasticsearch.version>
     </properties>
 
     <dependencies>
