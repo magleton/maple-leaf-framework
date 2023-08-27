@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @Component
+@Primary
 @SuppressWarnings("all")
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})

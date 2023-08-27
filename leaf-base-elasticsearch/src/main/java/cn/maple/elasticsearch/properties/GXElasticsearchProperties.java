@@ -1,26 +1,12 @@
 package cn.maple.elasticsearch.properties;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
 
-import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class GXElasticsearchProperties {
-    /**
-     * 连接地址
-     */
-    private List<String> uris;
-
-    /**
-     * 用户名
-     */
-    private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
-
+public class GXElasticsearchProperties extends ElasticsearchProperties {
     /**
      * 是否为主要的连接
      */

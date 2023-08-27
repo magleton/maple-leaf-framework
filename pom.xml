@@ -44,7 +44,7 @@
         <caffeine.version>3.1.8</caffeine.version>
         <fastjson.version>1.2.83</fastjson.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-boot.version>2.7.15</spring-boot.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <objenesis.version>3.3</objenesis.version>
         <jakarta.json-api.version>2.1.2</jakarta.json-api.version>
