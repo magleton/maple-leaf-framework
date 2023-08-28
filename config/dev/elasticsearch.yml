@@ -1,3 +1,7 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
 elasticsearch:
   datasource:
     framework:
@@ -11,8 +15,3 @@ elasticsearch:
         - 192.168.7.213:9200
       username:
       password:
-
-management:
-  health:
-    elasticsearch:
-      enabled: false

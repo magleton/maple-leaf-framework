@@ -27,9 +27,11 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.*;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchClients;
@@ -40,10 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * mongo DB的多数据源配置
@@ -74,8 +73,7 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
             // 创建ElasticsearchTemplate的BeanDefinition构建对象
             BeanDefinitionBuilder elasticsearchTemplateBeanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(ElasticsearchTemplate.class);
             elasticsearchTemplateBeanDefinitionBuilder.addConstructorArgValue(elasticsearchClient);
-            MappingElasticsearchConverter mappingElasticsearchConverter = new MappingElasticsearchConverter(
-                    new SimpleElasticsearchMappingContext());
+            MappingElasticsearchConverter mappingElasticsearchConverter = new MappingElasticsearchConverter(new SimpleElasticsearchMappingContext());
             mappingElasticsearchConverter.afterPropertiesSet();
             elasticsearchTemplateBeanDefinitionBuilder.addConstructorArgValue(mappingElasticsearchConverter);
             elasticsearchTemplateBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
@@ -85,7 +83,11 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
             }
             String beanName = key + "ElasticsearchTemplate";
             if (Boolean.TRUE.equals(primary)) {
-                beanDefinitionRegistry.registerAlias(beanName, "elasticsearchTemplate");
+                ElasticsearchProperties elasticsearchProperties = GXSpringContextUtils.getBean(ElasticsearchProperties.class);
+                assert elasticsearchProperties != null;
+                elasticsearchProperties.setUsername(dataSourceProperties.getUsername());
+                elasticsearchProperties.setPassword(dataSourceProperties.getPassword());
+                elasticsearchProperties.setUris(stringToLst(dataSourceProperties.getUris().get(0)));
                 elasticsearchTemplateBeanDefinitionBuilder.setPrimary(true);
             }
             beanDefinitionRegistry.registerBeanDefinition(beanName, elasticsearchTemplateBeanDefinitionBuilder.getBeanDefinition());
@@ -103,7 +105,6 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-
     }
 
     /**
@@ -170,12 +171,13 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         String username = elasticsearchSourceProperties.getUsername();
         String password = elasticsearchSourceProperties.getPassword();
         String uriStr = elasticsearchSourceProperties.getUris().get(0);
-        List<String> lstUris = new ArrayList<>();
-        GXCommonUtils.convertStrToMap(uriStr).forEach((k, value) -> lstUris.add(value.toString()));
-        String[] uris = lstUris.toArray(new String[0]);
+        String[] uris = stringToLst(uriStr).toArray(new String[0]);
         ClientConfiguration.MaybeSecureClientConfigurationBuilder configurationBuilder = ClientConfiguration.builder().connectedTo(uris);
         if (CharSequenceUtil.isAllNotEmpty(username, password)) {
             configurationBuilder.withBasicAuth(username, password);
+        }
+        if (CharSequenceUtil.isNotEmpty(elasticsearchSourceProperties.getPathPrefix())) {
+            configurationBuilder.withPathPrefix(elasticsearchSourceProperties.getPathPrefix());
         }
         HttpHeaders compatibilityHeaders = new HttpHeaders();
         compatibilityHeaders.add("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
@@ -195,5 +197,16 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         }));
         configurationBuilder.withConnectTimeout(Duration.ofSeconds(5)).withSocketTimeout(Duration.ofSeconds(3));
         return ElasticsearchClients.createImperative(configurationBuilder.build());
+    }
+
+    /**
+     * 将字符串转换为字符串数组
+     *
+     * @param uriStr 待转换的字符串 eg "{0=192.168.7.213:9200, 1=192.168.7.213:9200}"
+     */
+    private List<String> stringToLst(String uriStr) {
+        List<String> lstUris = new ArrayList<>();
+        GXCommonUtils.convertStrToMap(uriStr).forEach((k, value) -> lstUris.add(value.toString()));
+        return lstUris;
     }
 }
