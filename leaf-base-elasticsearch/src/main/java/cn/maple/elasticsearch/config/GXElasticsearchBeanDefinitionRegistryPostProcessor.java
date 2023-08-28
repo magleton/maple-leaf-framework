@@ -195,7 +195,9 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
             clientBuilder.addInterceptorLast((HttpResponseInterceptor) (response, context) -> response.addHeader("X-Elastic-Product", "Elasticsearch"));
             return clientBuilder/*.setDefaultCredentialsProvider(credentialsProvider)*/;
         }));
-        configurationBuilder.withConnectTimeout(Duration.ofSeconds(5)).withSocketTimeout(Duration.ofSeconds(3));
+        Duration connectionTimeout = elasticsearchSourceProperties.getConnectionTimeout();
+        Duration socketTimeout = elasticsearchSourceProperties.getSocketTimeout();
+        configurationBuilder.withConnectTimeout(connectionTimeout).withSocketTimeout(socketTimeout);
         return ElasticsearchClients.createImperative(configurationBuilder.build());
     }
 
