@@ -31,6 +31,9 @@ import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchPropert
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.*;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchClients;
@@ -38,7 +41,6 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -52,9 +54,9 @@ import java.util.Objects;
  * @author britton <britton@126.com>
  * @since 2023-08-24
  */
-@Component
+@Configuration
 @Log4j2
-public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ApplicationContextAware {
+public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ApplicationContextAware, PriorityOrdered {
     private Environment environment;
 
     private ApplicationContext applicationContext;
@@ -180,9 +182,19 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
     /**
      * 通过配置文件构建ElasticsearchTemplate对象
      *
-     * @param elasticsearchSourceProperties 配置数据
+     * @param elasticsearchSourceProperties 配置信息
      */
     private ElasticsearchClient buildElasticsearchClient(GXElasticsearchProperties elasticsearchSourceProperties) {
+        ClientConfiguration.MaybeSecureClientConfigurationBuilder configurationBuilder = buildElasticsearchConfigurationBuilder(elasticsearchSourceProperties);
+        return ElasticsearchClients.createImperative(configurationBuilder.build());
+    }
+
+    /**
+     * 通过配置文件构建客户端配置 ClientConfiguration
+     *
+     * @param elasticsearchSourceProperties 配置信息
+     */
+    private ClientConfiguration.MaybeSecureClientConfigurationBuilder buildElasticsearchConfigurationBuilder(GXElasticsearchProperties elasticsearchSourceProperties) {
         String username = elasticsearchSourceProperties.getUsername();
         String password = elasticsearchSourceProperties.getPassword();
         String uriStr = elasticsearchSourceProperties.getUris().get(0);
@@ -213,7 +225,7 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         Duration connectionTimeout = elasticsearchSourceProperties.getConnectionTimeout();
         Duration socketTimeout = elasticsearchSourceProperties.getSocketTimeout();
         configurationBuilder.withConnectTimeout(connectionTimeout).withSocketTimeout(socketTimeout);
-        return ElasticsearchClients.createImperative(configurationBuilder.build());
+        return configurationBuilder;
     }
 
     /**
@@ -225,5 +237,10 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         List<String> lstUris = new ArrayList<>();
         GXCommonUtils.convertStrToMap(uriStr).forEach((k, value) -> lstUris.add(value.toString()));
         return lstUris;
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;  // within PriorityOrdered
     }
 }
