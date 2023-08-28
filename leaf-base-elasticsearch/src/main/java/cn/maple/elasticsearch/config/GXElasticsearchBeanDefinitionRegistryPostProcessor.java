@@ -31,7 +31,6 @@ import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchPropert
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.*;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchClients;
@@ -42,7 +41,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * mongo DB的多数据源配置
@@ -78,20 +80,33 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
             elasticsearchTemplateBeanDefinitionBuilder.addConstructorArgValue(mappingElasticsearchConverter);
             elasticsearchTemplateBeanDefinitionBuilder.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
             boolean primary = dataSourceProperties.isPrimary();
-            if (Boolean.TRUE.equals(primary)) {
-                elasticsearchTemplateBeanDefinitionBuilder.setPrimary(true);
-            }
             String beanName = key + "ElasticsearchTemplate";
             if (Boolean.TRUE.equals(primary)) {
-                ElasticsearchProperties elasticsearchProperties = GXSpringContextUtils.getBean(ElasticsearchProperties.class);
-                assert elasticsearchProperties != null;
-                elasticsearchProperties.setUsername(dataSourceProperties.getUsername());
-                elasticsearchProperties.setPassword(dataSourceProperties.getPassword());
-                elasticsearchProperties.setUris(stringToLst(dataSourceProperties.getUris().get(0)));
+                settingElasticsearchPropertiesBeanProperties(dataSourceProperties);
                 elasticsearchTemplateBeanDefinitionBuilder.setPrimary(true);
             }
             beanDefinitionRegistry.registerBeanDefinition(beanName, elasticsearchTemplateBeanDefinitionBuilder.getBeanDefinition());
         });
+    }
+
+    /**
+     * 重新将IOC中的ElasticsearchProperties的bean对象填充属性
+     *
+     * @param dataSourceProperties 自定义配置的属性
+     */
+    private void settingElasticsearchPropertiesBeanProperties(GXElasticsearchProperties dataSourceProperties) {
+        ElasticsearchProperties elasticsearchProperties = GXSpringContextUtils.getBean(ElasticsearchProperties.class);
+        assert elasticsearchProperties != null;
+        elasticsearchProperties.setUsername(dataSourceProperties.getUsername());
+        elasticsearchProperties.setPassword(dataSourceProperties.getPassword());
+        elasticsearchProperties.setUris(stringToLst(dataSourceProperties.getUris().get(0)));
+        if (CharSequenceUtil.isNotEmpty(dataSourceProperties.getPathPrefix())) {
+            elasticsearchProperties.setPathPrefix(dataSourceProperties.getPathPrefix());
+        }
+        Duration socketTimeout = dataSourceProperties.getSocketTimeout();
+        Duration connectionTimeout = dataSourceProperties.getConnectionTimeout();
+        elasticsearchProperties.setConnectionTimeout(connectionTimeout);
+        elasticsearchProperties.setSocketTimeout(socketTimeout);
     }
 
     /**
