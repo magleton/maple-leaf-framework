@@ -142,7 +142,7 @@
 
     <Loggers>
         <!-- 根日志设置 -->
-        <Root level="error">
+        <Root level="all"> <!-- 必须设置为比 Logger中配置的级别低 -->
             <AppenderRef ref="allFileAppender" level="all"/>
             <AppenderRef ref="consoleAppender" level="debug"/>
             <AppenderRef ref="debugFileAppender" level="debug"/>
@@ -153,11 +153,12 @@
         </Root>
 
         <!--spring日志-->
-        <Logger name="org.springframework" level="debug"/>
+        <Logger name="org.springframework" level="info"/>
         <!--druid数据源日志-->
-        <Logger name="druid.sql.Statement" level="warn"/>
+        <Logger name="druid.sql" level="info"/>
         <!-- mybatis日志 -->
-        <Logger name="com.mybatis" level="warn"/>
+        <Logger name="com.p6spy" level="info"/>
+        <Logger name="org.apache.ibatis" level="info"/>
         <Logger name="com.baomidou" level="info"/>
         <Logger name="org.hibernate" level="warn"/>
         <!-- maple框架 -->
