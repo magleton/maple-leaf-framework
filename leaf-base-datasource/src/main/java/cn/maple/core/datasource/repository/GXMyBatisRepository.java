@@ -9,7 +9,6 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
-import cn.maple.core.datasource.model.GXMyBatisModel;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
@@ -184,7 +183,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
         GXCondition<?> condition;
         String pkFieldName = getPrimaryKeyName();
         if (ReUtil.isMatch(GXCommonConstant.DIGITAL_REGULAR_EXPRESSION, id.toString())) {
-            condition = new GXConditionEQ(tableName, pkFieldName, (Number) id);
+            condition = new GXConditionEQ(tableName, pkFieldName, Long.valueOf(id.toString()));
         } else {
             condition = new GXConditionStrEQ(tableName, pkFieldName, id.toString());
         }

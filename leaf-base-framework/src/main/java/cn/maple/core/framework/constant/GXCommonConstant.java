@@ -19,7 +19,7 @@ public class GXCommonConstant {
     /**
      * 验证数字的正则表达式
      */
-    public static final String DIGITAL_REGULAR_EXPRESSION = "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
+    public static final String DIGITAL_REGULAR_EXPRESSION = "^(([1-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
 
     /**
      * 手机号码加密的KEY
