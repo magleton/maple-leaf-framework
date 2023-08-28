@@ -4,7 +4,7 @@ spring:
       - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
 elasticsearch:
   datasource:
-    framework:
+    primary:
       uris:
         - 192.168.7.213:9200
       username:
