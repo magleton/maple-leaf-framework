@@ -18,14 +18,18 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.constant.GXDataSourceConstant;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
+import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -505,5 +509,25 @@ public class GXCommonUtils {
     @SuppressWarnings("all")
     public static <R> Class<R> getGenericClassType(Class<?> clazz, Integer index) {
         return (Class<R>) ClassUtil.getTypeArgument(clazz, index);
+    }
+
+    /**
+     * 将Table类型的条件转换为条件表达式
+     *
+     * @param tableNameAlias 表别名
+     * @param condition      原始条件
+     * @return 转换后的条件
+     */
+    public static List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
+        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
+            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
+            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
+            if (Objects.isNull(function)) {
+                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
+            }
+            conditions.add(function.apply(data));
+        }));
+        return conditions;
     }
 }

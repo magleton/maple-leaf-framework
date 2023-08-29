@@ -6,14 +6,12 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
-import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.HashBasedTable;
@@ -21,7 +19,6 @@ import com.google.common.collect.Table;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 /**
  * RPC基础调用类
@@ -406,16 +403,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      */
     @Override
     public List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
-        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
-        condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
-            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
-            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
-            if (Objects.isNull(function)) {
-                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
-            }
-            conditions.add(function.apply(data));
-        }));
-        return conditions;
+        return GXCommonUtils.convertTableConditionToConditionExp(tableNameAlias, condition);
     }
 
     /**
