@@ -1,5 +1,6 @@
 package cn.maple.seata.config;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.config.GXDynamicDataSource;
 import cn.maple.core.datasource.config.GXDynamicDataSourceConfig;
 import cn.maple.core.datasource.handler.GXAutoFillMetaObjectHandler;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -38,15 +40,17 @@ public class GXSeataDynamicDataSourceConfig {
         // 这里用MybatisSqlSessionFactoryBean代替了SqlSessionFactoryBean, 否则MyBatisPlus不会生效
         MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         mybatisSqlSessionFactoryBean.setDataSource(dynamicDataSource);
-        //mybatisSqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
+        mybatisSqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
         //MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 向代理数据源添加分页拦截器
         //interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         mybatisSqlSessionFactoryBean.setPlugins(mybatisPlusInterceptor);
         MybatisConfiguration configuration = mybatisPlusProperties.getConfiguration();
-        if (configuration == null) {
+        if (ObjectUtil.isNull(configuration)) {
             configuration = new MybatisConfiguration();
         }
+        // 设置mapper文件的位置
+        mybatisSqlSessionFactoryBean.setMapperLocations(mybatisPlusProperties.resolveMapperLocations());
         // 代理数据源添加id生成器,字段自动填充
         GlobalConfig globalConfig = mybatisPlusProperties.getGlobalConfig();
         GlobalConfig.DbConfig dbConfig = globalConfig.getDbConfig();
