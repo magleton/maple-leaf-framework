@@ -9,5 +9,5 @@ seata:
       basic-pay-local-group: default
     # 分组和 Seata 服务的映射
     grouplist:
-      default: XXXXXX:8091
-  access-key: XXXXXX
+      default: ${SEATA_ADDR:XXXXXX:8091}
+  access-key: ${SEATA_ACCESS_KEY:XXXXXX}
