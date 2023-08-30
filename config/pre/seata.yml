@@ -10,6 +10,7 @@ seata:
   service:
     # 虚拟组和分组的映射
     vgroup-mapping:
+      # 格式是 tx-service-group: xxxx  xxxx一般为default
       ${seata.tx-service-group}: default
     # 分组和 Seata 服务的映射
     grouplist:
