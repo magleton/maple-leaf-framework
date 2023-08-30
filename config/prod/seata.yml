@@ -1,7 +1,11 @@
 # Seata 配置项，对应 SeataProperties 类
 seata:
-  application-id: ${spring.application.name}-${spring.profiles.active} # Seata 应用编号，默认为 ${spring.application.name}
-  tx-service-group: ${spring.application.name}-${spring.profiles.active}-group # Seata 事务组编号，用于 TC 集群名
+  # Seata 应用编号，默认为 ${spring.application.name}
+  application-id: ${spring.application.name}-${spring.profiles.active}
+  # Seata 事务组编号，用于 TC 集群名
+  tx-service-group: ${spring.application.name}-${spring.profiles.active}-group
+  # 参考 https://seata.io/zh-cn/docs/ops/deploy-guide-beginner.html
+  enable-auto-data-source-proxy: false
   # 服务配置项，对应 ServiceProperties 类
   service:
     # 虚拟组和分组的映射
