@@ -12,6 +12,7 @@ import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.datasource.service.GXMyBatisBaseService;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
@@ -130,7 +131,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * 列表或者搜索(分页)
      *
      * @param queryParamReqDto 参数
-     * @return GXPagination
+     * @return GXPaginationResDto
      */
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamReqDto) {
@@ -156,6 +157,37 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
+     * 列表或者搜索(分页)
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return GXPaginationResDto
+     */
+    @Override
+    public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        if (CharSequenceUtil.isBlank(masterQueryParamInnerDto.getRawSQL())) {
+            if (CharSequenceUtil.isEmpty(masterQueryParamInnerDto.getTableName())) {
+                masterQueryParamInnerDto.setTableName(repository.getTableName());
+            }
+            if (Objects.isNull(masterQueryParamInnerDto.getColumns())) {
+                masterQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
+            }
+        }
+        if (Objects.isNull(masterQueryParamInnerDto.getMethodName())) {
+            masterQueryParamInnerDto.setMethodName(GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
+        }
+        CopyOptions copyOptions = getCopyOptions(masterQueryParamInnerDto);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        GXPaginationResDto<Dict> paginate = repository.paginate(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+        List<R> lst = paginate.getRecords().stream().map(dict -> {
+            Object extraData = Optional.ofNullable(masterQueryParamInnerDto.getExtraData()).orElse(Dict.create());
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, masterQueryParamInnerDto.getMethodName(), copyOptions, extraData);
+        }).collect(Collectors.toList());
+        return new GXPaginationResDto<>(lst, paginate.getTotal(), paginate.getPageSize(), paginate.getCurrentPage());
+    }
+
+    /**
      * 通过条件查询列表信息
      *
      * @param queryParamInnerDto 搜索条件
@@ -174,6 +206,30 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
         };
         return findByCondition(queryParamInnerDto, rowMapper);
+    }
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return List
+     */
+    @Override
+    public List<R> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        CopyOptions copyOptions = getCopyOptions(masterQueryParamInnerDto);
+        String[] methodName = new String[]{masterQueryParamInnerDto.getMethodName()};
+        if (CharSequenceUtil.isEmpty(methodName[0])) {
+            methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+        }
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        Function<Dict, R> rowMapper = dict -> {
+            Object extraData = Optional.ofNullable(masterQueryParamInnerDto.getExtraData()).orElse(Dict.create());
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
+        };
+        List<Dict> lst = repository.findByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+        return lst.stream().map(rowMapper).collect(Collectors.toList());
     }
 
     /**
@@ -317,6 +373,33 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
         };
         return findOneByCondition(queryParamInnerDto, rowMapper);
+    }
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return
+     */
+    @Override
+    public R findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        String[] methodName = new String[]{masterQueryParamInnerDto.getMethodName()};
+        if (CharSequenceUtil.isEmpty(methodName[0])) {
+            methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
+        }
+        Object extraData = Optional.ofNullable(masterQueryParamInnerDto.getExtraData()).orElse(Dict.class);
+        CopyOptions copyOptions = getCopyOptions(masterQueryParamInnerDto);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 4);
+        Function<Dict, R> rowMapper = dict -> {
+            return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
+        };
+        Dict dict = repository.findOneByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+        if (Objects.isNull(dict)) {
+            return null;
+        }
+        return rowMapper.apply(dict);
     }
 
     /**

@@ -3,10 +3,12 @@ package cn.maple.core.framework.ddd.repository;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -39,6 +41,17 @@ public interface GXBaseRepository<T, ID extends Serializable> {
      * @return 列表
      */
     List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 根据条件获取所有数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     */
+    default List<Dict> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        throw new GXBusinessException("请实现findByCondition方法");
+    }
 
     /**
      * 根据条件获取所有数据
@@ -86,6 +99,18 @@ public interface GXBaseRepository<T, ID extends Serializable> {
      * @return R 返回数据
      */
     Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return R 返回数据
+     */
+    default Dict findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        throw new GXBusinessException("请实现findOneByCondition方法");
+    }
 
     /**
      * 根据条件获取数据
@@ -143,6 +168,18 @@ public interface GXBaseRepository<T, ID extends Serializable> {
      * @return 分页数据
      */
     GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 根据条件获取分页数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 分页数据
+     */
+    default GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        throw new GXBusinessException("请实现paginate方法");
+    }
 
     /**
      * 根据条件获取分页数据

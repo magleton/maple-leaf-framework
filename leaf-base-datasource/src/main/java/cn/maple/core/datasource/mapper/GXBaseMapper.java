@@ -3,6 +3,7 @@ package cn.maple.core.datasource.mapper;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.datasource.builder.GXBaseBuilder;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.model.GXBaseModel;
@@ -38,4 +39,16 @@ public interface GXBaseMapper<T extends GXBaseModel> extends BaseMapper<T> {
 
     @DeleteProvider(type = GXBaseBuilder.class, method = "deleteCondition")
     Integer deleteCondition(String tableName, List<GXCondition<?>> condition);
+
+    @SelectProvider(type = GXBaseBuilder.class, method = "findUnionOneByCondition")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
+    Dict findUnionOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+
+    @SelectProvider(type = GXBaseBuilder.class, method = "findUnionByCondition")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
+    List<Dict> findUnionByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+
+    @SelectProvider(type = GXBaseBuilder.class, method = "paginateUnion")
+    @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
+    List<Dict> paginateUnion(IPage<Dict> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 }

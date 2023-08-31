@@ -3,6 +3,7 @@ package cn.maple.core.framework.dao;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -48,12 +49,32 @@ public interface GXBaseDao<T extends GXBaseData, ID extends Serializable> {
     Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     /**
+     * 通过条件获取数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 列表
+     */
+    Dict findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+
+    /**
      * 通过条件获取数据列表
      *
      * @param dbQueryParamInnerDto 查询条件
      * @return 列表
      */
     List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 通过条件获取数据列表
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 列表
+     */
+    List<Dict> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
     /**
      * 根据条件软(逻辑)删除
@@ -77,9 +98,19 @@ public interface GXBaseDao<T extends GXBaseData, ID extends Serializable> {
      * 分页
      *
      * @param dbQueryParamInnerDto 查询条件
-     * @return GXPagination
+     * @return GXPaginationResDto
      */
     GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
+
+    /**
+     * 分页
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return GXPaginationResDto
+     */
+    GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
     /**
      * 获取表名字

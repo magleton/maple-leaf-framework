@@ -8,6 +8,7 @@ import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
@@ -252,5 +253,62 @@ public interface GXBaseBuilder {
             return GXCommonConstant.NOT_STR_DELETED_MARK;
         }
         return GXCommonConstant.NOT_INT_DELETED_MARK;
+    }
+
+    /**
+     * 构建Union语句 将组合出来的union语句作为from的表名来处理
+     * eg: select * from (select * from test where name like '子曦%' union select * from test where phone like '520%') tmp where father='塵渊'
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return SQL语句
+     */
+    static String findUnionByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        List<String> unionSqlLst = new ArrayList<>();
+        unionQueryParamInnerDtoLst.forEach(queryParamInnerDto -> {
+            String sql = findByCondition(queryParamInnerDto);
+            unionSqlLst.add("(" + sql + ")");
+        });
+        String unionSql = String.join("\n " + unionTypeEnums.getUnionType() + " \n", unionSqlLst);
+        masterQueryParamInnerDto.setTableName("(" + unionSql + ")");
+        masterQueryParamInnerDto.setTableNameAlias("tmp");
+        return GXBaseBuilder.findByCondition(masterQueryParamInnerDto);
+    }
+
+    /**
+     * 构建Union语句 将组合出来的union语句作为from的表名来处理
+     * eg: select * from (select * from test where name like '子曦%' union select * from test where phone like '520%') tmp where father='塵渊'
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return SQL语句
+     */
+    static String findUnionOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        int limit = Optional.ofNullable(masterQueryParamInnerDto.getLimit()).orElse(1);
+        if (limit <= 0) {
+            limit = 1;
+        }
+        masterQueryParamInnerDto.setLimit(limit);
+        return findUnionByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+    }
+
+    /**
+     * 构建Union语句 将组合出来的union语句作为from的表名来处理
+     * eg: select * from (select * from test where name='子曦' union select * from test where phone like '520%') tmp where father='塵渊'
+     *
+     * @param page                       分页对象
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return SQL语句
+     */
+    @SuppressWarnings("unused")
+    static <R> String paginateUnion(IPage<R> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        if (CharSequenceUtil.isNotBlank(masterQueryParamInnerDto.getRawSQL())) {
+            return masterQueryParamInnerDto.getRawSQL();
+        }
+        return findUnionByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 }

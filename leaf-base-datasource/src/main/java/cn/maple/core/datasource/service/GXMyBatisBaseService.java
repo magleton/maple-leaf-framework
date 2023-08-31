@@ -8,6 +8,7 @@ import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.repository.GXMyBatisRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
@@ -83,12 +84,32 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto searchReqDto);
 
     /**
+     * 列表或者搜索(分页)
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return GXPagination
+     */
+    GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+
+    /**
      * 通过条件查询列表信息
      *
      * @param queryParamInnerDto 搜索条件
      * @return List
      */
     List<R> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
+
+    /**
+     * 通过条件查询列表信息
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return List
+     */
+    List<R> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
     /**
      * 通过条件查询列表信息
@@ -203,6 +224,16 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 一条数据
      */
     R findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto);
+
+    /**
+     * 通过条件获取一条数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 一条数据
+     */
+    R findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
     /**
      * 通过条件获取一条数据

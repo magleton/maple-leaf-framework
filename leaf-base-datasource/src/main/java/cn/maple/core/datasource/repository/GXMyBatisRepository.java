@@ -12,6 +12,7 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
@@ -92,6 +93,19 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     /**
      * 根据条件获取所有数据
      *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return
+     */
+    @Override
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        return baseDao.findByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+    }
+
+    /**
+     * 根据条件获取所有数据
+     *
      * @param tableName 表名字
      * @param condition 条件
      * @return 列表
@@ -128,6 +142,22 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
             dbQueryParamInnerDto.setTableName(getTableName());
         }
         return baseDao.findOneByCondition(dbQueryParamInnerDto);
+    }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return R 返回数据
+     */
+    @Override
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        if (CharSequenceUtil.isEmpty(masterQueryParamInnerDto.getTableName())) {
+            masterQueryParamInnerDto.setTableName(getTableName());
+        }
+        return baseDao.findOneByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 
     /**
@@ -202,6 +232,22 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
         return baseDao.paginate(dbQueryParamInnerDto);
+    }
+
+    /**
+     * 根据条件获取分页数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 分页数据
+     */
+    @Override
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        if (CharSequenceUtil.isBlank(masterQueryParamInnerDto.getRawSQL()) && Objects.isNull(masterQueryParamInnerDto.getColumns())) {
+            masterQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
+        }
+        return baseDao.paginate(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 
     /**

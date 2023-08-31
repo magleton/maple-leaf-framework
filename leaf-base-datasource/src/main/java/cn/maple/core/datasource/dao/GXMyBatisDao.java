@@ -9,6 +9,7 @@ import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dao.GXBaseDao;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
+import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionStrEQ;
@@ -54,6 +55,36 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.nonNull(mapperMethod)) {
             final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            iPage.setRecords(records);
+            return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
+        }
+        Class<?>[] interfaces = baseMapper.getClass().getInterfaces();
+        if (interfaces.length > 0) {
+            String canonicalName = interfaces[0].getCanonicalName();
+            throw new GXBusinessException(CharSequenceUtil.format("请在{}类中申明{}方法", canonicalName, mapperMethodName));
+        }
+        throw new GXBusinessException(CharSequenceUtil.format("请在Mapper类中申明{}方法", mapperMethodName));
+    }
+
+    /**
+     * 分页  返回实体对象
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return GXPagination
+     */
+    @Override
+    public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(masterQueryParamInnerDto.getPage(), masterQueryParamInnerDto.getPageSize());
+        String mapperMethodName = "paginateUnion";
+        Set<String> fieldSet = masterQueryParamInnerDto.getColumns();
+        if (CharSequenceUtil.isBlank(masterQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
+            masterQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
+        }
+        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass());
+        if (Objects.nonNull(mapperMethod)) {
+            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
@@ -143,6 +174,19 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
     }
 
     /**
+     * 通过条件获取数据
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 列表
+     */
+    @Override
+    public Dict findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        return baseMapper.findUnionOneByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+    }
+
+    /**
      * 通过条件获取数据列表
      *
      * @param dbQueryParamInnerDto 查询条件
@@ -151,6 +195,19 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
     @Override
     public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         return baseMapper.findByCondition(dbQueryParamInnerDto);
+    }
+
+    /**
+     * 通过条件获取数据列表
+     *
+     * @param masterQueryParamInnerDto   外层的主查询条件
+     * @param unionQueryParamInnerDtoLst union查询条件
+     * @param unionTypeEnums             union的类型
+     * @return 列表
+     */
+    @Override
+    public List<Dict> findByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+        return baseMapper.findUnionByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 
     /**
