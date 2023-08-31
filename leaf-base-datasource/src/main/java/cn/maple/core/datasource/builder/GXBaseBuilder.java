@@ -267,6 +267,14 @@ public interface GXBaseBuilder {
     static String findUnionByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         List<String> unionSqlLst = new ArrayList<>();
         unionQueryParamInnerDtoLst.forEach(queryParamInnerDto -> {
+            String tableName = queryParamInnerDto.getTableName();
+            if (CharSequenceUtil.isEmpty(tableName)) {
+                queryParamInnerDto.setTableName(masterQueryParamInnerDto.getTableName());
+            }
+            String tableNameAlias = queryParamInnerDto.getTableNameAlias();
+            if (CharSequenceUtil.isEmpty(tableNameAlias)) {
+                queryParamInnerDto.setTableNameAlias(masterQueryParamInnerDto.getTableNameAlias());
+            }
             String sql = findByCondition(queryParamInnerDto);
             unionSqlLst.add("(" + sql + ")");
         });
