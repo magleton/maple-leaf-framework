@@ -1,4 +1,4 @@
-package cn.maple.redisson.topic;
+package cn.maple.redisson.adapter;
 
 import io.netty.util.Timeout;
 import org.redisson.RedissonReliableTopic;
@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
