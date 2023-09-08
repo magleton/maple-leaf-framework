@@ -27,10 +27,10 @@ public @interface GXDataFilter {
     /**
      * 用户ID
      */
-    String userIdFieldName() default "user_id";
+    String[] userIdFieldNames() default {"user_id"};
 
     /**
      * 部门ID
      */
-    String deptIdFieldName() default "dept_id";
+    String[] deptIdFieldNames() default {"dept_id"};
 }

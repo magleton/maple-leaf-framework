@@ -1,29 +1,61 @@
 package cn.maple.core.datasource.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.annotation.GXDataFilter;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
+import cn.maple.core.framework.dto.inner.condition.GXConditionIn;
 import cn.maple.core.framework.dto.inner.condition.GXIgnoreDataFilterCondition;
 import cn.maple.core.framework.util.GXSpringContextUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.aspectj.lang.JoinPoint;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface GXDataScopeService {
     /**
-     * 获取当前登录人的所属部门列表
+     * 获取部门当前登录用户所属的部门ID列表
      *
-     * @return 部门列表
+     * @return List 部门ID列表
      */
-    default List<Long> getDeptIdLst() {
-        return Collections.emptyList();
+    default Set<Number> getDeptIdLst() {
+        return new HashSet<>();
+    }
+
+    /**
+     * 获取当前登录人的部门筛选条件
+     *
+     * @param tableAlias       SQL语句中表名的别名
+     * @param deptIdFieldNames SQL语句中表字段的名字
+     * @return 部门的条件
+     */
+    default GXCondition<?> getDeptCondition(String tableAlias, String[] deptIdFieldNames) {
+        Set<Number> deptIdLst = getDeptIdLst();
+        if (CollUtil.isNotEmpty(deptIdLst)) {
+            return new GXConditionIn(tableAlias, getDeptIdFieldName(deptIdFieldNames), deptIdLst);
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前登录人的用户筛选条件
+     *
+     * @param tableAlias       SQL语句中表名的别名
+     * @param userIdFieldNames SQL语句中表字段的名字
+     * @return 部门的条件
+     */
+    default GXCondition<?> getUserCondition(String tableAlias, String[] userIdFieldNames) {
+        GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
+        if (ObjectUtil.isNull(dataScopeService)) {
+            return null;
+        }
+        Long userId = dataScopeService.getLoginUserId();
+        return new GXConditionEQ(tableAlias, getDeptIdFieldName(userIdFieldNames), userId);
     }
 
     /**
@@ -53,32 +85,32 @@ public interface GXDataScopeService {
      */
     default String getSqlFilter(GXDataFilter dataFilter, JoinPoint point) {
         boolean hasIgnoreDataFilterCondition = checkIgnoreDataFilter(point);
-        if (hasIgnoreDataFilterCondition) {
+        GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
+        if (hasIgnoreDataFilterCondition || ObjectUtil.isNull(dataScopeService)) {
             return "";
         }
         // 获取表的别名
         String tableAlias = dataFilter.tableAlias();
-        if (StringUtils.isNotBlank(tableAlias)) {
-            tableAlias += ".";
-        }
 
+        // 表字段的名字
+        String[] deptIdFieldNames = dataFilter.deptIdFieldNames();
+        String[] userIdFieldNames = dataFilter.userIdFieldNames();
+
+        // 构建sqlFilter对象
         StringBuilder sqlFilter = new StringBuilder();
         sqlFilter.append(" (");
-        GXDataScopeService dataScopeService = GXSpringContextUtils.getBean(GXDataScopeService.class);
-        // 部门ID列表
-        List<Long> deptIdList = Objects.nonNull(dataScopeService) ? dataScopeService.getDeptIdLst() : Collections.emptyList();
-        if (CollUtil.isNotEmpty(deptIdList)) {
-            sqlFilter.append(tableAlias).append(dataFilter.deptIdFieldName());
-            sqlFilter.append(" in(").append(CharSequenceUtil.join(",", deptIdList)).append(")");
-        }
 
         // 查询本人数据
-        if (CollUtil.isNotEmpty(deptIdList)) {
-            sqlFilter.append(" or ");
-        }
-        Long userId = Objects.nonNull(dataScopeService) ? dataScopeService.getLoginUserId() : 0L;
-        sqlFilter.append(tableAlias).append(dataFilter.userIdFieldName()).append("=").append(userId);
+        GXCondition<?> userIdCondition = getUserCondition(tableAlias, userIdFieldNames);
+        sqlFilter.append(userIdCondition.whereString());
 
+        // 部门ID列表
+        GXCondition<?> deptCondition = dataScopeService.getDeptCondition(tableAlias, deptIdFieldNames);
+        if (ObjectUtil.isNotNull(deptCondition)) {
+            String s = deptCondition.whereString();
+            // 添加或条件
+            sqlFilter.append(" or ").append(s);
+        }
         sqlFilter.append(")");
         return sqlFilter.toString();
     }
@@ -118,5 +150,23 @@ public interface GXDataScopeService {
             return CollUtil.isNotEmpty(removeIndexLst);
         }
         return false;
+    }
+
+    /**
+     * 获取"标识"部门字段的数据库表的名字 eg dept_id
+     *
+     * @param deptIdFieldNames 注解上面标识的数据库字段名字
+     */
+    default String getDeptIdFieldName(String[] deptIdFieldNames) {
+        return deptIdFieldNames[0];
+    }
+
+    /**
+     * 获取"标识"用户字段的数据库表的名字 eg user_id
+     *
+     * @param userIdFieldNames 注解上面标识的数据库字段名字
+     */
+    default String getUserIdFieldName(String[] userIdFieldNames) {
+        return userIdFieldNames[0];
     }
 }

@@ -6,7 +6,7 @@
 
     <groupId>cn.maple.framework</groupId>
     <artifactId>maple-leaf-framework</artifactId>
-    <version>3.1.6-SNAPSHOT</version>
+    <version>3.1.7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
