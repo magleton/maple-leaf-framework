@@ -38,13 +38,13 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <lombok.version>1.18.28</lombok.version>
-        <hutool.version>5.8.20</hutool.version>
+        <hutool.version>5.8.22</hutool.version>
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
         <guava.version>32.1.2-jre</guava.version>
         <caffeine.version>3.1.8</caffeine.version>
         <fastjson.version>1.2.83</fastjson.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <spring-boot.version>2.7.15</spring-boot.version>
+        <spring-boot.version>2.7.16</spring-boot.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <objenesis.version>3.3</objenesis.version>
         <jakarta.json-api.version>2.1.2</jakarta.json-api.version>
