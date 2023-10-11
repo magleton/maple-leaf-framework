@@ -153,6 +153,23 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     }
 
     /**
+     * 获取一条记录的指定单字段
+     *
+     * @param condition   条件
+     * @param column      字段名字
+     * @param targetClazz 返回的类型
+     * @return 指定的类型
+     */
+    @Override
+    public <E> E findSingleFieldByCondition(Table<String, String, Object> condition, String column, Class<E> targetClazz) {
+        Object r = callMethod("findSingleFieldByCondition", convertTableConditionToConditionExp(condition), column, targetClazz);
+        if (Objects.nonNull(r)) {
+            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
+        }
+        return null;
+    }
+
+    /**
      * 创建或者更新数据
      *
      * @param reqDto      请求参数
