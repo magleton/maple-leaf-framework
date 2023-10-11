@@ -722,7 +722,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         if (Objects.isNull(dict)) {
             return null;
         }
-        Object o = Optional.ofNullable(dict.get(column)).orElse(dict.get(CharSequenceUtil.toCamelCase(column)));
+        Object o = Optional.ofNullable(dict.get(column)).orElse(dict.get(CharSequenceUtil.toUnderlineCase(column)));
         return Convert.convert(targetClazz, o);
     }
 

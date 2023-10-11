@@ -164,7 +164,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     public <E> E findSingleFieldByCondition(Table<String, String, Object> condition, String column, Class<E> targetClazz) {
         Object r = callMethod("findSingleFieldByCondition", convertTableConditionToConditionExp(condition), column, targetClazz);
         if (Objects.nonNull(r)) {
-            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
+            return Convert.convert(targetClazz, r);
         }
         return null;
     }
