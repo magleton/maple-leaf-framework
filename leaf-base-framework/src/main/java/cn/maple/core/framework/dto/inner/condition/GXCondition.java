@@ -36,9 +36,9 @@ public abstract class GXCondition<T> implements Serializable {
             return "";
         }
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
-            return CharSequenceUtil.format("{} {} {}", fieldExpression, opStr, getFieldValue());
+            return CharSequenceUtil.format("{} {} {}", getFieldExpression(), opStr, getFieldValue());
         }
-        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(fieldExpression), opStr, getFieldValue());
+        return CharSequenceUtil.format("`{}`.{} {} {}", tableNameAlias, CharSequenceUtil.toUnderlineCase(getFieldExpression()), opStr, getFieldValue());
     }
 
     public String getFieldExpression() {
