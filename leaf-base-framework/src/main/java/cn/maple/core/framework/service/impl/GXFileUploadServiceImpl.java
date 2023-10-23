@@ -10,7 +10,6 @@ import cn.maple.core.framework.service.GXFileUploadService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,6 @@ import java.util.Objects;
 
 @Log4j2
 @Service
-@Lazy
 @ConditionalOnExpression("'${file-upload.enable}'.equals('true')")
 public class GXFileUploadServiceImpl implements GXFileUploadService {
     /**
