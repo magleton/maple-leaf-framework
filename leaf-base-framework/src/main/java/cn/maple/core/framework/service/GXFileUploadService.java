@@ -27,4 +27,12 @@ public interface GXFileUploadService {
      * @return 文件上传路径
      */
     String getStoragePath();
+
+    /**
+     * 删除指定文件
+     *
+     * @param filename 待删除的文件名字
+     * @return 删除是否成功
+     */
+    boolean deleteFile(String filename);
 }
