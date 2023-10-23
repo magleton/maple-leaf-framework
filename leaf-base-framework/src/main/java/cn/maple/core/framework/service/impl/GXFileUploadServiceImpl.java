@@ -82,7 +82,7 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
     public String getStoragePath() {
         String envStoragePath = GXCommonUtils.getEnvironmentValue("upload.depositPath", String.class, "./uploads/files");
         Path rootLocation = Paths.get(envStoragePath).normalize();
-        return rootLocation.getFileName().toString();
+        return rootLocation.toAbsolutePath().toString();
     }
 
     /**
