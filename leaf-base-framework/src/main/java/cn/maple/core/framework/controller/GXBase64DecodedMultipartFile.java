@@ -1,4 +1,4 @@
-package cn.maple.core.framework.util;
+package cn.maple.core.framework.controller;
 
 import cn.hutool.core.codec.Base64;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,15 +7,14 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class GXBase64DecodedMultipartFileUtils implements MultipartFile {
-
+public class GXBase64DecodedMultipartFile implements MultipartFile {
     private byte[] imageBytes;
 
     private String base64;
 
     private String contentType;
 
-    public GXBase64DecodedMultipartFileUtils(String file) {
+    public GXBase64DecodedMultipartFile(String file) {
         this.base64 = file;
         this.imageBytes = Base64.decode(base64.substring(base64.indexOf(',') + 1));
         this.contentType = base64.substring(base64.indexOf(':') + 1, base64.indexOf(';'));
