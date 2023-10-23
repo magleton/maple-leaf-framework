@@ -73,6 +73,24 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
         }
     }
 
+    /**
+     * 获取上传文件存储目录
+     *
+     * @return 文件上传路径
+     */
+    @Override
+    public String getStoragePath() {
+        String envStoragePath = GXCommonUtils.getEnvironmentValue("upload.depositPath", String.class, "./uploads/files");
+        Path rootLocation = Paths.get(envStoragePath).normalize();
+        return rootLocation.getFileName().toString();
+    }
+
+    /**
+     * 跟传入的文件名字后缀生成文件存储的完成路径
+     *
+     * @param mediaType 文件类型
+     * @return 完成的文件路径
+     */
     private Path getFileStoragePath(String mediaType) throws IOException {
         String envStoragePath = GXCommonUtils.getEnvironmentValue("upload.depositPath", String.class, "./uploads/files");
         Path rootLocation = Paths.get(envStoragePath).normalize();

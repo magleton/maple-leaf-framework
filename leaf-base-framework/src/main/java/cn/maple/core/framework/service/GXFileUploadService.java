@@ -20,4 +20,11 @@ public interface GXFileUploadService {
      * @return 文件名字
      */
     String upload(GXBase64DecodedMultipartFile file);
+
+    /**
+     * 获取上传文件存储目录
+     *
+     * @return 文件上传路径
+     */
+    String getStoragePath();
 }
