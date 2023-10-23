@@ -14,8 +14,7 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       #- org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       #- org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-  datasource:
-    ## 参考:https://github.com/drtrang/druid-spring-boot
+  datasource: ## 参考:https://github.com/drtrang/druid-spring-boot
     ## schema: classpath:import.sql
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -63,10 +62,8 @@ mybatis-plus:
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: cn.maple.core.datasource.models;cn.maple.modules.*.models
   typeHandlersPackage: cn.maple.core.datasource.handler
-  global-config:
-    # 数据库相关配置
-    db-config:
-      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+  global-config: # 数据库相关配置
+    db-config: #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
       id-type: AUTO
       #数据库大写下划线转换
       capital-mode: true
@@ -88,6 +85,7 @@ mybatis-plus:
 maple:
   framework:
     enable:
+      file-upload: true #  启用文件删除服务
       sql-illegal: true  # 开启sql性能规范插件
       data-change-recorder: true  # 数据变更记录插件
       data-permission: true  # 开启数据权限处理 需要实现DataPermissionHandler接口

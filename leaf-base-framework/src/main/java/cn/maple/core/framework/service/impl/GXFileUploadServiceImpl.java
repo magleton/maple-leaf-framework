@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Log4j2
 @Service
-@ConditionalOnExpression("'${file-upload.enable}'.equals('true')")
+@ConditionalOnExpression("'${maple.framework.enable.file-upload}'.equals('true')")
 public class GXFileUploadServiceImpl implements GXFileUploadService {
     /**
      * 上传文件的存储路径
