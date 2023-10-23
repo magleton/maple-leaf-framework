@@ -46,7 +46,7 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
             if (file.isEmpty()) {
                 throw new GXBusinessException("文件不能为空");
             }
-            Path targetLocation = getFileStoragePath(getFileExtension(file.getName()));
+            Path targetLocation = getFileStoragePath(getFileExtension(file.getOriginalFilename()));
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return targetLocation.getFileName().toString();
         } catch (IOException ex) {
