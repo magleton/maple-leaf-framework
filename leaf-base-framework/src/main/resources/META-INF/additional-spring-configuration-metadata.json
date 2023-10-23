@@ -50,19 +50,19 @@
       "defaultValue": false,
       "name": "maple.framework.enable.sql-illegal",
       "type": "java.lang.Boolean",
-      "deprecation": "Enable Mybatis Plus IllegalSQLInnerInterceptor"
+      "description": "Enable Mybatis Plus IllegalSQLInnerInterceptor."
     },
     {
       "defaultValue": false,
       "name": "maple.framework.enable.data-change-recorder",
       "type": "java.lang.Boolean",
-      "deprecation": "Enable Mybatis Plus DataChangeRecorderInnerInterceptor"
+      "description": "Enable Mybatis Plus DataChangeRecorderInnerInterceptor."
     },
     {
       "defaultValue": false,
       "name": "maple.framework.enable.data-permission",
       "type": "java.lang.Boolean",
-      "deprecation": "Enable Mybatis Plus DataPermissionHandler"
+      "description": "Enable Mybatis Plus DataPermissionHandler."
     }
   ]
 }
