@@ -494,11 +494,11 @@ public class GXCommonUtils {
         CopyOptions copyOptions = CopyOptions.create();
         copyOptions.setConverter((type, value) -> {
             if (Objects.nonNull(value) && value.getClass().isAssignableFrom(String.class) && JSONUtil.isTypeJSON(value.toString())) {
-                String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
-                if (Pattern.matches(regex, value.toString())) {
-                    return GXCommonUtils.convertStrToMap(value.toString());
-                }
                 try {
+                    String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
+                    if (Pattern.matches(regex, value.toString())) {
+                        return GXCommonUtils.convertStrToMap(value.toString());
+                    }
                     return JSONUtil.parse(value);
                 } catch (JSONException ex) {
                     LOG.error("CopyOptions解析的字符串是 {} , 继续使用Map格式转换", value);
