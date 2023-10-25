@@ -62,7 +62,8 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     @Override
     public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
         List<R> rs = findByCondition(condition, targetClazz, Dict.create());
-        return GXCommonUtils.convertSourceListToTargetList(rs, targetClazz, null, null);
+        return Convert.convert(new TypeReference<>() {
+        }, rs);
     }
 
     /**
@@ -85,7 +86,8 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
-            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
+            return Convert.convert(new TypeReference<>() {
+            }, rLst);
         }
         return Collections.emptyList();
     }
@@ -102,7 +104,8 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
-            return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
+            return Convert.convert(new TypeReference<>() {
+            }, rLst);
         }
         return Collections.emptyList();
     }
@@ -119,7 +122,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     public <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
         List<GXCondition<?>> conditions = convertTableConditionToConditionExp(condition);
         Object o = callMethod("findMultiFieldByCondition", conditions, columns, targetClazz);
-        return Convert.convert(new TypeReference<List<E>>() {
+        return Convert.convert(new TypeReference<>() {
         }, o);
     }
 
@@ -147,7 +150,8 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(r)) {
-            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
+            return Convert.convert(new TypeReference<>() {
+            }, r);
         }
         return null;
     }
@@ -227,7 +231,8 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
             GXPaginationResDto<R> retPaginate = (GXPaginationResDto<R>) paginate;
             // XXXDBResDto
             List<?> records = retPaginate.getRecords();
-            List<R> rs = GXCommonUtils.convertSourceListToTargetList(records, targetClazz, null, copyOptions);
+            List<R> rs = Convert.convert(new TypeReference<>() {
+            }, records);
             retPaginate.setRecords(rs);
             return retPaginate;
         }
