@@ -16,6 +16,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
@@ -30,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -492,7 +494,16 @@ public class GXCommonUtils {
         CopyOptions copyOptions = CopyOptions.create();
         copyOptions.setConverter((type, value) -> {
             if (Objects.nonNull(value) && value.getClass().isAssignableFrom(String.class) && JSONUtil.isTypeJSON(value.toString())) {
-                return JSONUtil.parse(value);
+                String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
+                if (Pattern.matches(regex, value.toString())) {
+                    return GXCommonUtils.convertStrToMap(value.toString());
+                }
+                try {
+                    return JSONUtil.parse(value);
+                } catch (JSONException ex) {
+                    LOG.error("CopyOptions解析的字符串是 {} , 继续使用Map格式转换", value);
+                    throw new GXBusinessException("数据转换出错", ex);
+                }
             }
             return Convert.convertWithCheck(type, value, null, false);
         });
