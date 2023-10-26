@@ -235,7 +235,7 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
      */
     private List<String> stringToLst(String uriStr) {
         List<String> lstUris = new ArrayList<>();
-        GXCommonUtils.convertStrToMap(uriStr).forEach((k, value) -> lstUris.add(value.toString()));
+        Objects.requireNonNull(GXCommonUtils.convertStrToTarget(uriStr, Dict.class)).forEach((k, value) -> lstUris.add(value.toString()));
         return lstUris;
     }
 

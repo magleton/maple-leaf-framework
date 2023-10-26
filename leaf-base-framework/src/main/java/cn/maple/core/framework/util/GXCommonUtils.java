@@ -167,37 +167,6 @@ public class GXCommonUtils {
     }
 
     /**
-     * 转换Map.toString()到Map
-     *
-     * @param mapString map的String表示
-     * @return Map
-     */
-    public static Map<String, Object> convertStrToMap(String mapString) {
-        return Arrays.stream(mapString.replace("{", "").replace("}", "").split(",")).map(arrayData -> arrayData.split("=")).collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
-    }
-
-    /**
-     * 将字符串转化为一个Dict
-     * eg:
-     * convertStrToDict("type='news',phone='13800138000'")
-     * OR
-     * convertStrToDict("{\"type\":\"news\" , \"phone\":\"13800138000\"}")
-     *
-     * @param str 字符串
-     * @return Dict
-     */
-    public static Dict convertStrToDict(String str) {
-        if (CharSequenceUtil.isBlank(str)) {
-            return Dict.create();
-        }
-        if (JSONUtil.isTypeJSON(str)) {
-            return JSONUtil.toBean(str, Dict.class);
-        }
-        return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
-        }, convertStrToMap(str));
-    }
-
-    /**
      * 将任意对象转换为指定类型的对象
      * <p>
      * {@code}
@@ -494,22 +463,6 @@ public class GXCommonUtils {
      * @return CopyOptions
      */
     public static CopyOptions getDefaultCopyOptions() {
-       /* CopyOptions copyOptions = CopyOptions.create();
-        copyOptions.setConverter((type, value) -> {
-            if (Objects.nonNull(value) && value.getClass().isAssignableFrom(String.class) && JSONUtil.isTypeJSON(value.toString())) {
-                try {
-                    String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
-                    if (Pattern.matches(regex, value.toString())) {
-                        return GXCommonUtils.convertStrToMap(value.toString());
-                    }
-                    return JSONUtil.parse(value);
-                } catch (JSONException ex) {
-                    LOG.error("CopyOptions解析的字符串是 {} , 继续使用Map格式转换", value);
-                    throw new GXBusinessException("数据转换出错", ex);
-                }
-            }
-            return Convert.convertWithCheck(type, value, null, false);
-        });*/
         return defaultCopyOptions;
     }
 
@@ -543,5 +496,26 @@ public class GXCommonUtils {
             conditions.add(function.apply(data));
         }));
         return conditions;
+    }
+
+    /**
+     * 转换String到指定对象
+     *
+     * @param str         待转换的字符串 JSON表示 : {"name":"jack"} OR Map表示 : {name=jack}
+     * @param targetClazz 目标类类型
+     * @return T 转出的目标对象
+     */
+    public static <T> T convertStrToTarget(String str, Class<T> targetClazz) {
+        if (!JSONUtil.isTypeJSON(str)) {
+            return null;
+        }
+        String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
+        if (ReUtil.isMatch(regex, str)) {
+            Map<String, Object> tmpObj = Arrays.stream(str.replace("{", "").replace("}", "").split(","))
+                    .map(arrayData -> arrayData.split("="))
+                    .collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
+            return convertSourceToTarget(tmpObj, targetClazz, "", null);
+        }
+        return JSONUtil.toBean(str, targetClazz);
     }
 }
