@@ -16,7 +16,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HtmlUtil;
-import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
@@ -31,7 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -39,6 +37,11 @@ public class GXCommonUtils {
      * 日志对象
      */
     private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
+
+    /**
+     * 数据转换器的拷贝选项
+     */
+    private static final CopyOptions defaultCopyOptions = CopyOptions.create();
 
     private GXCommonUtils() {
     }
@@ -491,7 +494,7 @@ public class GXCommonUtils {
      * @return CopyOptions
      */
     public static CopyOptions getDefaultCopyOptions() {
-        CopyOptions copyOptions = CopyOptions.create();
+       /* CopyOptions copyOptions = CopyOptions.create();
         copyOptions.setConverter((type, value) -> {
             if (Objects.nonNull(value) && value.getClass().isAssignableFrom(String.class) && JSONUtil.isTypeJSON(value.toString())) {
                 try {
@@ -506,8 +509,8 @@ public class GXCommonUtils {
                 }
             }
             return Convert.convertWithCheck(type, value, null, false);
-        });
-        return copyOptions;
+        });*/
+        return defaultCopyOptions;
     }
 
     /**
