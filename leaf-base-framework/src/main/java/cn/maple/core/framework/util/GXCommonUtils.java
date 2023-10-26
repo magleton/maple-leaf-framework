@@ -23,6 +23,7 @@ import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,13 @@ public class GXCommonUtils {
 
     /**
      * 数据转换器的拷贝选项
+     * -- GETTER --
+     *  获取默认的CopyOptions
+     *
+     * @return CopyOptions
+
      */
+    @Getter
     private static final CopyOptions defaultCopyOptions = CopyOptions.create();
 
     private GXCommonUtils() {
@@ -455,15 +462,6 @@ public class GXCommonUtils {
         }
         s = HtmlUtil.unescape(s);
         return Convert.convert(targetClazz, s);
-    }
-
-    /**
-     * 获取默认的CopyOptions
-     *
-     * @return CopyOptions
-     */
-    public static CopyOptions getDefaultCopyOptions() {
-        return defaultCopyOptions;
     }
 
     /**
