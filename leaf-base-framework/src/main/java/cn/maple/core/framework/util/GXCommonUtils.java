@@ -511,10 +511,10 @@ public class GXCommonUtils {
         }
         String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
         if (ReUtil.isMatch(regex, str)) {
-            Map<String, Object> tmpObj = Arrays.stream(str.replace("{", "").replace("}", "").split(","))
+            Map<String, Object> tmpMap = Arrays.stream(str.replace("{", "").replace("}", "").split(","))
                     .map(arrayData -> arrayData.split("="))
-                    .collect(Collectors.toMap(d -> d[0].trim(), d -> d[1]));
-            return convertSourceToTarget(tmpObj, targetClazz, "", null);
+                    .collect(Collectors.toMap(d -> d[0].trim(), d -> d[1].trim()));
+            return Convert.convert(targetClazz, tmpMap);
         }
         return JSONUtil.toBean(str, targetClazz);
     }
