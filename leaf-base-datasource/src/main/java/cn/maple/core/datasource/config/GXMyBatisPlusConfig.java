@@ -69,7 +69,7 @@ public class GXMyBatisPlusConfig {
         interceptor.addInnerInterceptor(new GXDataFilterInterceptor());
         // 开启分页插件
         PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
-        paginationInnerInterceptor.setOptimizeJoin(true);
+        paginationInnerInterceptor.setOptimizeJoin(false);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);
         // 开启防止全表更新与删除插件
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
