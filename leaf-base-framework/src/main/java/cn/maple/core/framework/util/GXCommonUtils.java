@@ -2,6 +2,7 @@ package cn.maple.core.framework.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.bean.copier.IJSONTypeConverter;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -11,10 +12,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -40,15 +38,34 @@ public class GXCommonUtils {
     private static final Logger LOG = LoggerFactory.getLogger(GXCommonUtils.class);
 
     /**
+     * Map对象的字符串表示 eg: {name=子曦}
+     */
+    private static final String MAP_STR_FORMAT_REGULAR = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
+
+    /**
      * 数据转换器的拷贝选项
      * -- GETTER --
-     *  获取默认的CopyOptions
+     * 获取默认的CopyOptions
      *
      * @return CopyOptions
-
      */
     @Getter
-    private static final CopyOptions defaultCopyOptions = CopyOptions.create();
+    private static final CopyOptions defaultCopyOptions = CopyOptions.create().setConverter((type, value) -> {
+        if (null == value) {
+            return null;
+        }
+
+        Object o = convertStrToTarget(value.toString(), TypeUtil.getClass(type));
+        if (Objects.nonNull(o)) {
+            return o;
+        }
+
+        if (value instanceof IJSONTypeConverter) {
+            return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
+        }
+
+        return Convert.convertWithCheck(type, value, null, true);
+    });
 
     private GXCommonUtils() {
     }
@@ -507,13 +524,15 @@ public class GXCommonUtils {
         if (!JSONUtil.isTypeJSON(str)) {
             return null;
         }
-        String regex = "\\{(.+?)=(.+?)(, (.+?)=(.+?))*\\}";
-        if (ReUtil.isMatch(regex, str)) {
-            Map<String, Object> tmpMap = Arrays.stream(str.replace("{", "").replace("}", "").split(","))
-                    .map(arrayData -> arrayData.split("="))
-                    .collect(Collectors.toMap(d -> d[0].trim(), d -> d[1].trim()));
+        if (ReUtil.isMatch(MAP_STR_FORMAT_REGULAR, str)) {
+            Map<String, Object> tmpMap = Arrays.stream(str.replace("{", "").replace("}", "").split(",")).map(arrayData -> arrayData.split("=")).collect(Collectors.toMap(d -> d[0].trim(), d -> d[1].trim()));
             return Convert.convert(targetClazz, tmpMap);
         }
-        return JSONUtil.toBean(str, targetClazz);
+        try {
+            return JSONUtil.toBean(str, targetClazz);
+        } catch (ConvertException ex) {
+            LOG.error("数据转换失败!错误信息 : {}", ex.getMessage());
+            return null;
+        }
     }
 }
