@@ -55,16 +55,16 @@ public class GXCommonUtils {
             return null;
         }
 
-        Object o = convertStrToTarget(value.toString(), TypeUtil.getClass(type));
-        if (Objects.nonNull(o)) {
-            return o;
-        }
-
         if (value instanceof IJSONTypeConverter) {
             return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
         }
 
-        return Convert.convertWithCheck(type, value, null, true);
+        Object o = Convert.convertWithCheck(type, value, null, true);
+        if (Objects.nonNull(o)) {
+            return o;
+        }
+
+        return convertStrToTarget(value.toString(), TypeUtil.getClass(type));
     });
 
     private GXCommonUtils() {
