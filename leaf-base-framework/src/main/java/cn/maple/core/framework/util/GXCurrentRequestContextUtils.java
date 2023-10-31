@@ -117,7 +117,22 @@ public class GXCurrentRequestContextUtils {
      * @return 指定的目标类型
      */
     public static <T> T getHeader(String headerName, Class<T> targetClass) {
+        return getHeader(headerName, targetClass, null);
+    }
+
+    /**
+     * 获取Http头中的header
+     *
+     * @param headerName   header头的名字
+     * @param targetClass  返回的数据类型
+     * @param defaultValue 默认值
+     * @return 指定的目标类型
+     */
+    public static <T> T getHeader(String headerName, Class<T> targetClass, T defaultValue) {
         String headerValue = getHeader(headerName);
+        if (Objects.isNull(headerValue)) {
+            return defaultValue;
+        }
         return Convert.convert(targetClass, headerValue);
     }
 
