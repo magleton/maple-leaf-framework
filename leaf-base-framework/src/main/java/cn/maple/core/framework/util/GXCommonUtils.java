@@ -46,6 +46,9 @@ public class GXCommonUtils {
      * 数据转换器的拷贝选项
      * -- GETTER --
      * 获取默认的CopyOptions
+     * <p>
+     * 复杂的JSON字符串请使用cn.hutool.json.JSONObject来作为type
+     * eg: private JSONObject ext
      *
      * @return CopyOptions
      */
@@ -238,9 +241,11 @@ public class GXCommonUtils {
 
     /**
      * 将任意对象转换为指定类型的对象
+     * 复杂的JSON字符串请使用cn.hutool.json.JSONObject来作为type
      * <p>
      * {@code}
      * eg:
+     * private JSONObject ext;
      * Dict source = Dict.create().set("username","britton").set("realName","枫叶思源");
      * convertSourceToTarget( source , PersonResDto.class, "customerProcess" , null);
      * OR
@@ -385,22 +390,6 @@ public class GXCommonUtils {
     public static boolean checkTelephone(String telephone) {
         String regex = "^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$";
         return !ReUtil.isMatch(regex, telephone);
-    }
-
-    /**
-     * 将任意对象转换成Dict
-     *
-     * @param source 需要转换的源对象
-     * @return Dict
-     */
-    public static Dict convertSourceToDict(Object source) {
-        try {
-            return Convert.convert(new cn.hutool.core.lang.TypeReference<>() {
-            }, source);
-        } catch (ConvertException e) {
-            LOG.error("转换出错了", e);
-        }
-        return Dict.create();
     }
 
     /**

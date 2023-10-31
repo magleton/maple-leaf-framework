@@ -164,7 +164,7 @@ public class GXCurrentRequestContextUtils {
         assert request != null;
         Object attribute = request.getAttribute(GXCommonConstant.SSO_TOKEN_ATTR);
         if (Objects.nonNull(attribute)) {
-            Dict tokenDict = GXCommonUtils.convertSourceToDict(request.getAttribute(GXCommonConstant.SSO_TOKEN_ATTR));
+            Dict tokenDict = (Dict) attribute;
             if (!tokenDict.isEmpty()) {
                 return tokenDict;
             }
