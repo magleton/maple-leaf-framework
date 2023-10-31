@@ -1,10 +1,12 @@
 package cn.maple.sse.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -101,8 +105,11 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     @Override
     public void sendMessageToOneClient(String clientId, String msg) {
         // TODO 如果消息过长 可以将消息拆分成小段分别发送给前端
-        GXSseMessageInnerReqDto messageVo = GXSseMessageInnerReqDto.builder().clientId(clientId).data(Dict.create().set("message", msg)).build();
-        sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
+        List<String> msgLst = splitMessage(msg, RandomUtil.randomInt(1, 8));
+        for (String message : msgLst) {
+            GXSseMessageInnerReqDto messageVo = GXSseMessageInnerReqDto.builder().clientId(clientId).data(Dict.create().set("message", message)).build();
+            sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
+        }
     }
 
     /**
@@ -212,5 +219,30 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      */
     public void setSseConnectTimeOut(long sseConnectTimeOut) {
         this.sseConnectTimeOut = sseConnectTimeOut;
+    }
+
+    /**
+     * 消息拆分
+     * 将长的消息拆分成小的消息
+     *
+     * @param msg 待拆分的消息
+     * @return 拆分之后的消息
+     */
+    @Override
+    public List<String> splitMessage(String msg, int length) {
+        if (CharSequenceUtil.isEmpty(msg)) {
+            return Collections.emptyList();
+        }
+        int currentIndex = 0;
+        int nextIndex = RandomUtil.randomInt(1, length);
+        List<String> msgLst = CollUtil.newArrayList();
+        while (currentIndex <= msg.length()) {
+            String subStr = msg.substring(currentIndex, Math.min(nextIndex, msg.length()));
+            LOG.info("SSE服务拆分消息日志信息 ->>>> currentIndex : {} , nextIndex : {} , 消息 : {}", currentIndex, nextIndex, subStr);
+            msgLst.add(subStr);
+            currentIndex = nextIndex;
+            nextIndex += RandomUtil.randomInt(1, length);
+        }
+        return msgLst;
     }
 }
