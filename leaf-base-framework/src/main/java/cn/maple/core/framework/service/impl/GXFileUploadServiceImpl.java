@@ -13,14 +13,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+import java.nio.file.*;
 import java.util.Date;
-import java.util.Objects;
 
 @Log4j2
 @Service
@@ -30,20 +27,6 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
      * 上传文件的存储路径
      */
     private Path fileStoragePath;
-
-    /**
-     * 检测文件路径是否存在
-     * 不存在则创建 存在则忽略
-     */
-    @PostConstruct
-    public void initStorageDirectories() throws IOException {
-        log.info("初始化上传文件存储路径");
-        String envStoragePath = GXCommonUtils.getEnvironmentValue("upload.depositPath", String.class, "./uploads/files");
-        fileStoragePath = Paths.get(envStoragePath).normalize();
-        if (Files.notExists(fileStoragePath)) {
-            Files.createDirectories(fileStoragePath);
-        }
-    }
 
     /**
      * 获取文件扩展名字
@@ -65,13 +48,15 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
      * @return 文件名字
      */
     @Override
-    public String upload(MultipartFile file) {
+    public String upload(String relativePath, MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 throw new GXBusinessException("文件不能为空");
             }
-            Path fileStorageFileName = getFileStoragePath(getFileExtension(file.getOriginalFilename()));
-            Files.copy(file.getInputStream(), fileStorageFileName, StandardCopyOption.REPLACE_EXISTING);
+            Path fileStorageFileName = getFileStoragePath(relativePath, getFileExtension(file.getOriginalFilename()));
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, fileStorageFileName, StandardCopyOption.REPLACE_EXISTING);
+            }
             return fileStorageFileName.getFileName().toString();
         } catch (IOException ex) {
             throw new GXBusinessException("不能保存文件.请重试!", ex);
@@ -86,10 +71,10 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
      * @return 文件名字
      */
     @Override
-    public String upload(GXBase64DecodedMultipartFile file) {
+    public String upload(String relativePath, GXBase64DecodedMultipartFile file) {
         try {
             String type = getFileExtension(file.getOriginalFilename());
-            Path fileStorageFilename = getFileStoragePath(type);
+            Path fileStorageFilename = getFileStoragePath(relativePath, type);
             file.transferTo(fileStorageFilename);
             return fileStorageFilename.getFileName().toString();
         } catch (IOException ex) {
@@ -136,13 +121,24 @@ public class GXFileUploadServiceImpl implements GXFileUploadService {
      * @param mediaType 文件类型
      * @return 完成的文件路径
      */
-    private Path getFileStoragePath(String mediaType) {
-        if (Objects.isNull(fileStoragePath)) {
-            throw new GXBusinessException("请检查上传文件存储路径是否存在!");
-        }
+    private Path getFileStoragePath(String relativePath, String mediaType) {
         String newFileName = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + RandomUtil.getRandom().nextInt(0, 999) + "." + mediaType;
         if (newFileName.contains("..")) {
             throw new GXBusinessException("对不起!文件包含无效的路径符号" + newFileName);
+        }
+        String envStoragePath = GXCommonUtils.getEnvironmentValue("upload.depositPath", String.class, "./uploads/files");
+        String storagePath = CharSequenceUtil.format("{}{}{}", envStoragePath, File.separator, relativePath);
+        fileStoragePath = Paths.get(storagePath).normalize();
+        if (Files.notExists(fileStoragePath)) {
+            synchronized (GXFileUploadServiceImpl.class) {
+                try {
+                    Files.createDirectories(fileStoragePath);
+                } catch (FileAlreadyExistsException e) {
+                    log.info("文件夹{}已经存在", fileStoragePath);
+                } catch (IOException e) {
+                    throw new GXBusinessException(CharSequenceUtil.format("上传文件,创建目录{}失败", fileStoragePath), e);
+                }
+            }
         }
         Path destinationFile = fileStoragePath.resolve(Paths.get(newFileName)).toAbsolutePath();
         if (!destinationFile.getParent().equals(fileStoragePath.toAbsolutePath())) {

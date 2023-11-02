@@ -7,19 +7,21 @@ public interface GXFileUploadService {
     /**
      * 上传文件
      *
-     * @param file 上传的文件对象
+     * @param relativePath 存储的相对路径
+     * @param file         上传的文件对象
      * @return 文件存储路径
      */
-    String upload(MultipartFile file);
+    String upload(String relativePath, MultipartFile file);
 
     /**
      * 上传Base64文件
      * Controller可以直接使用GXBase64DecodedMultipartFile类来接收前端传递的Base64字符串
      *
-     * @param file Base64编码的文件
+     * @param relativePath 存储的相对路径
+     * @param file         Base64编码的文件
      * @return 文件名字
      */
-    String upload(GXBase64DecodedMultipartFile file);
+    String upload(String relativePath, GXBase64DecodedMultipartFile file);
 
     /**
      * 获取上传文件存储目录
