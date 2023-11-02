@@ -50,5 +50,5 @@ public interface GXBaseMapper<T extends GXBaseModel> extends BaseMapper<T> {
 
     @SelectProvider(type = GXBaseBuilder.class, method = "paginateUnion")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    List<Dict> paginateUnion(IPage<Dict> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+    List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 }
