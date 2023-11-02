@@ -40,15 +40,15 @@ public interface GXBaseMapper<T extends GXBaseModel> extends BaseMapper<T> {
     @DeleteProvider(type = GXBaseBuilder.class, method = "deleteCondition")
     Integer deleteCondition(String tableName, List<GXCondition<?>> condition);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "findUnionOneByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "unionFindOneByCondition")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    Dict findUnionOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+    Dict unionFindOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "findUnionByCondition")
+    @SelectProvider(type = GXBaseBuilder.class, method = "unionFindByCondition")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    List<Dict> findUnionByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+    List<Dict> unionFindByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 
-    @SelectProvider(type = GXBaseBuilder.class, method = "paginateUnion")
+    @SelectProvider(type = GXBaseBuilder.class, method = "unionPaginate")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
+    List<Dict> unionPaginate(IPage<Dict> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums);
 }

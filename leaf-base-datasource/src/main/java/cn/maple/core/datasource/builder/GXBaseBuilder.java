@@ -264,7 +264,7 @@ public interface GXBaseBuilder {
      * @param unionTypeEnums             union的类型
      * @return SQL语句
      */
-    static String findUnionByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+    static String unionFindByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         List<String> unionSqlLst = new ArrayList<>();
         unionQueryParamInnerDtoLst.forEach(queryParamInnerDto -> {
             String tableName = queryParamInnerDto.getTableName();
@@ -273,7 +273,7 @@ public interface GXBaseBuilder {
             }
             String tableNameAlias = queryParamInnerDto.getTableNameAlias();
             if (CharSequenceUtil.isEmpty(tableNameAlias)) {
-                queryParamInnerDto.setTableNameAlias(masterQueryParamInnerDto.getTableNameAlias());
+                queryParamInnerDto.setTableNameAlias(queryParamInnerDto.getTableName());
             }
             String sql = findByCondition(queryParamInnerDto);
             unionSqlLst.add("(" + sql + ")");
@@ -293,13 +293,19 @@ public interface GXBaseBuilder {
      * @param unionTypeEnums             union的类型
      * @return SQL语句
      */
-    static String findUnionOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+    static String unionFindOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         int limit = Optional.ofNullable(masterQueryParamInnerDto.getLimit()).orElse(1);
         if (limit <= 0) {
             limit = 1;
         }
         masterQueryParamInnerDto.setLimit(limit);
-        return findUnionByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+        unionQueryParamInnerDtoLst.forEach(queryParamInnerDto -> {
+            String tableNameAlias = queryParamInnerDto.getTableNameAlias();
+            if (CharSequenceUtil.isEmpty(tableNameAlias)) {
+                queryParamInnerDto.setTableNameAlias(queryParamInnerDto.getTableName());
+            }
+        });
+        return unionFindByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 
     /**
@@ -313,10 +319,10 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     @SuppressWarnings("unused")
-    static <R> String paginateUnion(IPage<R> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
+    static <R> String unionPaginate(IPage<R> page, GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         if (CharSequenceUtil.isNotBlank(masterQueryParamInnerDto.getRawSQL())) {
             return masterQueryParamInnerDto.getRawSQL();
         }
-        return findUnionByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+        return unionFindByCondition(masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
     }
 }
