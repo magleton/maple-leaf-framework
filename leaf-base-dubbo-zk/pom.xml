@@ -12,7 +12,7 @@
     <artifactId>leaf-base-dubbo-zk</artifactId>
 
     <properties>
-        <dubbo.version>3.1.4</dubbo.version>
+        <dubbo.version>3.1.6</dubbo.version>
     </properties>
 
     <dependencies>
