@@ -12,7 +12,7 @@
     <artifactId>leaf-base-dubbo-nacos</artifactId>
 
     <properties>
-        <dubbo.version>3.1.6</dubbo.version>
+        <dubbo.version>3.1.11</dubbo.version>
         <javassist.version>3.29.2-GA</javassist.version>
     </properties>
 
@@ -43,6 +43,10 @@
                 <exclusion>
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson2</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -78,6 +82,10 @@
                 <exclusion>
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                    <artifactId>fastjson2</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.javassist</groupId>
