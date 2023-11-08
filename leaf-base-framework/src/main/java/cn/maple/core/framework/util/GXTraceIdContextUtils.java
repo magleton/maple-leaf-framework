@@ -76,6 +76,8 @@ public class GXTraceIdContextUtils {
     public static String generateTraceId() {
         String threadName = Thread.currentThread().getName();
         String traceId = GXTraceIdGenerator.generateTraceId();
+        String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
+        traceId = CharSequenceUtil.format("{}:{}", appName, traceId);
         LOG.debug("线程 {} 生成的TraceId : {}", threadName, traceId);
         return traceId;
     }
