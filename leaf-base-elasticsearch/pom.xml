@@ -13,6 +13,7 @@
 
     <properties>
         <spring.data.elasticsearch.version>4.4.17</spring.data.elasticsearch.version>
+        <t-digest.version>3.3</t-digest.version>
     </properties>
 
     <dependencies>
@@ -30,6 +31,10 @@
                     <artifactId>HdrHistogram</artifactId>
                     <groupId>org.hdrhistogram</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.tdunning</groupId>
+                    <artifactId>t-digest</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -40,6 +45,12 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
+        </dependency>
+        <!-- 排除与dubbo引入版本冲突问题 -->
+        <dependency>
+            <groupId>com.tdunning</groupId>
+            <artifactId>t-digest</artifactId>
+            <version>${t-digest.version}</version>
         </dependency>
     </dependencies>
 </project>
