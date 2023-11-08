@@ -43,7 +43,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
             traceId = RpcContext.getServerAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
         }
         if (CharSequenceUtil.isEmpty(traceId)) {
-            traceId = "0000-0000";
+            traceId = GXTraceIdContextUtils.generateTraceId(); // "0000-0000"
         }
         return Dict.create().set("author", "塵子曦").set("SPC", "客户端").set(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
     }
