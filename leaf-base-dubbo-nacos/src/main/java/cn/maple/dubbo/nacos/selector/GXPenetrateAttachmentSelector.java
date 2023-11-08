@@ -59,7 +59,15 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
      */
     @Override
     public Map<String, Object> selectReverse(Invocation invocation, RpcContextAttachment clientResponseContext, RpcContextAttachment serverResponseContext) {
+        // TODO 如果服务作为中间服务 则需要将TraceId再次传递
         LOG.info("进入GXPenetrateAttachmentSelector.selectReverse方法");
-        return Dict.create().set("author", "塵子曦").set("SPC", "服务端");
+        String traceId = GXTraceIdContextUtils.getTraceId();
+        if (CharSequenceUtil.isEmpty(traceId)) {
+            traceId = RpcContext.getServerAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+        }
+        if (CharSequenceUtil.isEmpty(traceId)) {
+            traceId = GXTraceIdContextUtils.generateTraceId(); // "0000-0000"
+        }
+        return Dict.create().set("author", "塵子曦").set("SPC", "服务端").set(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
     }
 }
