@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import java.util.Map;
 
 public class GXUpdateJsonSetMapField<T extends Map<String, Object>> extends GXUpdateField<String> {
-    private final String path;
+    private String path;
 
     public GXUpdateJsonSetMapField(String tableNameAlias, String fieldName, String path, T value) {
         super(tableNameAlias, fieldName, value);
@@ -18,6 +18,11 @@ public class GXUpdateJsonSetMapField<T extends Map<String, Object>> extends GXUp
         String value = JSONUtil.toJsonStr(this.value);
         value = CharSequenceUtil.replace(value, "'", "\\'");
         value = CharSequenceUtil.format("CAST('{}' as JSON)", value);
-        return CharSequenceUtil.format("JSON_SET({} , '$.{}' , {})", fieldName, path, value);
+        if (CharSequenceUtil.isEmpty(path)) {
+            path = "$";
+        } else {
+            path = CharSequenceUtil.format("$.{}", path);
+        }
+        return CharSequenceUtil.format("JSON_SET({} , '{}' , {})", fieldName, path, value);
     }
 }
