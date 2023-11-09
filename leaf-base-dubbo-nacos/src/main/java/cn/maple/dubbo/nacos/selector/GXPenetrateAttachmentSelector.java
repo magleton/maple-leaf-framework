@@ -21,7 +21,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
     /**
      * 日志对象
      */
-    private static final Logger LOG = LoggerFactory.getLogger(PenetrateAttachmentSelector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXPenetrateAttachmentSelector.class);
 
     /**
      * Select some attachments to pass to next hop.
