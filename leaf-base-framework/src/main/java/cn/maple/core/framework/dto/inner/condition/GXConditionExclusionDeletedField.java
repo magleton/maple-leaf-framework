@@ -5,6 +5,10 @@ public class GXConditionExclusionDeletedField extends GXCondition<String> {
         super(tableNameAlias, fieldName, value);
     }
 
+    public GXConditionExclusionDeletedField(String tableNameAlias, String fieldName, Long value) {
+        super(tableNameAlias, fieldName, value);
+    }
+
     public GXConditionExclusionDeletedField() {
         this("", "", "");
     }
