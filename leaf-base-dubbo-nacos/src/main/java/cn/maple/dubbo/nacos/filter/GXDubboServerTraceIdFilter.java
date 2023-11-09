@@ -21,16 +21,21 @@ public class GXDubboServerTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try {
-            // TODO 该方法执行完毕之后会调用GXPenetrateAttachmentSelector.selectReverse()方法
             // 通过GXPenetrateAttachmentSelector设置的值可以通过以下方式获取
             // RpcContext.getCurrentServiceContext().getObjectAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)
             String traceId = GXTraceIdContextUtils.getTraceId();
-            String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
             if (CharSequenceUtil.isEmpty(traceId)) {
                 traceId = RpcContext.getServerAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+                if (CharSequenceUtil.isEmpty(traceId)) {
+                    traceId = RpcContext.getClientAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
+                }
             }
-            log.info("【Dubbo Service -->> {} 】获取 TraceId : {}", appName, traceId);
+            String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
+            log.info("【{} --->> Dubbo Service】获取TraceId : {}", appName, traceId);
             GXTraceIdContextUtils.setTraceId(traceId);
+            invocation.setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+            RpcContext.getClientAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
+            RpcContext.getServerAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
             return invoker.invoke(invocation);
         } finally {
             GXTraceIdContextUtils.removeTraceId();
