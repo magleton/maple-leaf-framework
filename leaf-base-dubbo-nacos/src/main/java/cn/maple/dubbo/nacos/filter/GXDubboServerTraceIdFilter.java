@@ -21,6 +21,7 @@ public class GXDubboServerTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try {
+            // TODO 该方法执行完毕之后会调用GXPenetrateAttachmentSelector.selectReverse()方法
             // 通过GXPenetrateAttachmentSelector设置的值可以通过以下方式获取
             // RpcContext.getCurrentServiceContext().getObjectAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)
             String traceId = GXTraceIdContextUtils.getTraceId();

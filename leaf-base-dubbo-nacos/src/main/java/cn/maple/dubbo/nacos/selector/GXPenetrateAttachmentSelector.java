@@ -37,6 +37,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
      */
     @Override
     public Map<String, Object> select(Invocation invocation, RpcContextAttachment clientAttachment, RpcContextAttachment serverAttachment) {
+        // TODO 该方法优先于GXDubboClientTraceIdFilter.invoke()调用
         LOG.info("进入GXPenetrateAttachmentSelector.select方法");
         String traceId = GXTraceIdContextUtils.getTraceId();
         if (CharSequenceUtil.isEmpty(traceId)) {
@@ -59,7 +60,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
      */
     @Override
     public Map<String, Object> selectReverse(Invocation invocation, RpcContextAttachment clientResponseContext, RpcContextAttachment serverResponseContext) {
-        // TODO 如果服务作为中间服务 则需要将TraceId再次传递
+        // TODO 该方法滞后于GXDubboServerTraceIdFilter.invoke()调用 , 如果服务作为中间服务 则需要将TraceId再次传递
         LOG.info("进入GXPenetrateAttachmentSelector.selectReverse方法");
         String traceId = GXTraceIdContextUtils.getTraceId();
         if (CharSequenceUtil.isEmpty(traceId)) {

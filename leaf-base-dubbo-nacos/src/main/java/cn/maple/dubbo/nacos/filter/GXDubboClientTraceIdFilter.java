@@ -22,6 +22,7 @@ public class GXDubboClientTraceIdFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try {
+            // TODO 该方法会在GXPenetrateAttachmentSelector.select()方法之后调用
             // 通过GXPenetrateAttachmentSelector设置的值可以通过以下方式获取
             // RpcContext.getCurrentServiceContext().getObjectAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)
             // 在GXBaseRequestLoggingFilter中会设置该值
