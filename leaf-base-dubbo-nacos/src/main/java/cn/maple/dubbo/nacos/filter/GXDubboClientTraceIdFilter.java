@@ -1,6 +1,7 @@
 package cn.maple.dubbo.nacos.filter;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXTraceIdContextUtils;
 import cn.maple.dubbo.nacos.selector.GXPenetrateAttachmentSelector;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,12 @@ public class GXDubboClientTraceIdFilter implements Filter {
             // RpcContext.getCurrentServiceContext().getObjectAttachment(GXTraceIdContextUtils.TRACE_ID_KEY)
             // 在GXBaseRequestLoggingFilter中会设置该值
             String traceId = GXTraceIdContextUtils.getTraceId();
+            String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
             if (CharSequenceUtil.isEmpty(traceId)) {
                 // 当改服务既是服务方又是消费方时 会在GXDubboServerTraceIdFilter设置该值
                 traceId = RpcContext.getClientAttachment().getAttachment(GXTraceIdContextUtils.TRACE_ID_KEY);
             }
-            log.info("【Dubbo Client】生成 TraceId : {}", traceId);
+            log.info("【Dubbo Client ->> {}】生成 TraceId : {}", appName, traceId);
             GXTraceIdContextUtils.setTraceId(traceId);
             RpcContext.getClientAttachment().setAttachment(GXTraceIdContextUtils.TRACE_ID_KEY, traceId);
             return invoker.invoke(invocation);
