@@ -11,7 +11,7 @@
         <Console name="consoleAppender" target="SYSTEM_OUT">
             <!--设置日志格式及颜色-->
             <PatternLayout
-                    pattern="%style{%d{ISO8601}}{bright,green} %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{}}{bright,yellow}: %msg%n%style{%throwable}{red}"
+                    pattern="%style{%d{ISO8601}}{bright,green} [traceId=%style{%X{X-B3-TraceId}}{red}] [currentThread:%thread] %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{}}{bright,yellow}: TraceId=%style{%X{X-B3-TraceId}}{red}->>%msg%n%style{%throwable}{red}"
                     disableAnsi="false" noConsoleNoAnsi="false"/>
         </Console>
 
