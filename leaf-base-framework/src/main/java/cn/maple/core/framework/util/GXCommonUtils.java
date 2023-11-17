@@ -59,10 +59,6 @@ public class GXCommonUtils {
             return null;
         }
 
-        if (!(TypeUtil.getClass(type).isAssignableFrom(Dict.class) || TypeUtil.getClass(type).isAssignableFrom(JSONObject.class))) {
-            return value;
-        }
-
         if (value instanceof IJSONTypeConverter) {
             return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
         }
@@ -70,6 +66,15 @@ public class GXCommonUtils {
         Object o = Convert.convertWithCheck(type, value, null, true);
         if (Objects.nonNull(o)) {
             return o;
+        }
+
+        if (Objects.nonNull(TypeUtil.getClass(type)) &&
+                !(TypeUtil.getClass(type).isAssignableFrom(Dict.class) ||
+                TypeUtil.getClass(type).isAssignableFrom(JSONObject.class) ||
+                TypeUtil.getClass(type).isAssignableFrom(List.class) ||
+                TypeUtil.getClass(type).isAssignableFrom(Set.class) ||
+                TypeUtil.getClass(type).isAssignableFrom(Map.class))) {
+            return value;
         }
 
         return convertStrToTarget(value.toString(), TypeUtil.getClass(type));
