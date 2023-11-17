@@ -14,6 +14,7 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
@@ -56,6 +57,10 @@ public class GXCommonUtils {
     private static final CopyOptions defaultCopyOptions = CopyOptions.create().setConverter((type, value) -> {
         if (null == value) {
             return null;
+        }
+
+        if (!(TypeUtil.getClass(type).isAssignableFrom(Dict.class) || TypeUtil.getClass(type).isAssignableFrom(JSONObject.class))) {
+            return value;
         }
 
         if (value instanceof IJSONTypeConverter) {
