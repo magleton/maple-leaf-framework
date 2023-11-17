@@ -59,6 +59,12 @@ public class GXCommonUtils {
             return null;
         }
 
+        Class<?> targetClazz = TypeUtil.getClass(type);
+
+        if (JSONUtil.isTypeJSON(value.toString()) && targetClazz.isAssignableFrom(String.class)) {
+            return value;
+        }
+
         if (value instanceof IJSONTypeConverter) {
             return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
         }
@@ -68,16 +74,11 @@ public class GXCommonUtils {
             return o;
         }
 
-        if (Objects.nonNull(TypeUtil.getClass(type)) &&
-                !(TypeUtil.getClass(type).isAssignableFrom(Dict.class) ||
-                TypeUtil.getClass(type).isAssignableFrom(JSONObject.class) ||
-                TypeUtil.getClass(type).isAssignableFrom(List.class) ||
-                TypeUtil.getClass(type).isAssignableFrom(Set.class) ||
-                TypeUtil.getClass(type).isAssignableFrom(Map.class))) {
+        if (Objects.nonNull(targetClazz) && !(targetClazz.isAssignableFrom(Dict.class) || targetClazz.isAssignableFrom(JSONObject.class) || targetClazz.isAssignableFrom(List.class) || targetClazz.isAssignableFrom(Set.class) || targetClazz.isAssignableFrom(Map.class))) {
             return value;
         }
 
-        return convertStrToTarget(value.toString(), TypeUtil.getClass(type));
+        return convertStrToTarget(value.toString(), targetClazz);
     });
 
     private GXCommonUtils() {
@@ -227,6 +228,9 @@ public class GXCommonUtils {
     public static <S, T> T convertSourceToTarget(S source, Class<T> tClass, String methodName, CopyOptions copyOptions, Object extraData) {
         if (Objects.isNull(source)) {
             return null;
+        }
+        if (ClassUtil.isSimpleTypeOrArray(tClass)) {
+            return (T) source;
         }
         if (CharSequenceUtil.isBlank(methodName)) {
             methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
