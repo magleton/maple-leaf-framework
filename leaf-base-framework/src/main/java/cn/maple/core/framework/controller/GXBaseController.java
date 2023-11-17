@@ -182,12 +182,24 @@ public interface GXBaseController {
      * @return GXPaginationResProtocol对象
      */
     default <S extends GXBaseResDto, T extends GXBaseResProtocol> GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination, Class<T> targetClazz) {
+        return convertPaginationResToProtocol(pagination, targetClazz, null);
+    }
+
+    /**
+     * 将GXPaginationResDto转换为GXPaginationResProtocol
+     *
+     * @param pagination  源分页对象
+     * @param targetClazz 目标类型
+     * @param copyOptions 转换器对象
+     * @return GXPaginationResProtocol对象
+     */
+    default <S extends GXBaseResDto, T extends GXBaseResProtocol> GXPaginationResProtocol<T> convertPaginationResToProtocol(GXPaginationResDto<S> pagination, Class<T> targetClazz, CopyOptions copyOptions) {
         List<S> records = pagination.getRecords();
         long total = pagination.getTotal();
         long pages = pagination.getPages();
         long pageSize = pagination.getPageSize();
         long currentPage = pagination.getCurrentPage();
-        List<T> list = convertSourceListToTargetList(records, targetClazz, Dict.create());
+        List<T> list = convertSourceListToTargetList(records, targetClazz, null, copyOptions);
         return new GXPaginationResProtocol<>(list, total, pages, pageSize, currentPage);
     }
 
