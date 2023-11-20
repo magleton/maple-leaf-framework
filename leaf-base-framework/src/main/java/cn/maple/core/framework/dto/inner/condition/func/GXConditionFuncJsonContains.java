@@ -11,7 +11,7 @@ public class GXConditionFuncJsonContains extends GXConditionFunc<String> {
     private String jsonPath;
 
     public GXConditionFuncJsonContains(String tableNameAlias, String jsonField, List<Object> values) {
-        this(tableNameAlias, jsonField, values, "$");
+        this(tableNameAlias, jsonField, values, "");
     }
 
     public GXConditionFuncJsonContains(String tableNameAlias, String jsonField, List<Object> values, String jsonPath) {
