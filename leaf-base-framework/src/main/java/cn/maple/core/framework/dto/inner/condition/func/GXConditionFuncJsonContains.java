@@ -32,6 +32,7 @@ public class GXConditionFuncJsonContains extends GXConditionFunc<String> {
         } else {
             jsonPath = CharSequenceUtil.format("$.{}", jsonPath);
         }
+        // TODO 需要兼容  JSON_CONTAINS(ext, JSON_OBJECT("name", "塵子曦", "father", "塵渊")) 表达式
         String format = "`{}`.`{}`->'" + jsonPath + "', CAST('[{}]' AS JSON)";
         return CharSequenceUtil.format(format, tableNameAlias);
     }
