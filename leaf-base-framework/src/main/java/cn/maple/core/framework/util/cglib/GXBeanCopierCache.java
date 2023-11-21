@@ -27,7 +27,7 @@ public enum GXBeanCopierCache {
      * @param converter   转换器
      * @return Map中对应的BeanCopier
      */
-    public BeanCopier get(Class<?> srcClass, Class<?> targetClass, Converter converter) {
+    public BeanCopier get(final Class<?> srcClass, final Class<?> targetClass, final Converter converter) {
         return get(srcClass, targetClass, null != converter);
     }
 
@@ -39,9 +39,9 @@ public enum GXBeanCopierCache {
      * @param useConverter 是否使用转换器
      * @return Map中对应的BeanCopier
      */
-    public BeanCopier get(Class<?> srcClass, Class<?> targetClass, boolean useConverter) {
+    public BeanCopier get(final Class<?> srcClass, final Class<?> targetClass, final boolean useConverter) {
         final String key = genKey(srcClass, targetClass, useConverter);
-        return cache.computeIfAbsent(key, () -> BeanCopier.create(srcClass, targetClass, useConverter));
+        return cache.computeIfAbsent(key, (k) -> BeanCopier.create(srcClass, targetClass, useConverter));
     }
 
     /**
@@ -53,7 +53,7 @@ public enum GXBeanCopierCache {
      * @param useConverter 是否使用转换器
      * @return 属性名和Map映射的key
      */
-    private String genKey(Class<?> srcClass, Class<?> targetClass, boolean useConverter) {
+    private String genKey(final Class<?> srcClass, final Class<?> targetClass, final boolean useConverter) {
         final StringBuilder key = StrUtil.builder().append(srcClass.getName()).append('#').append(targetClass.getName()).append('#').append(useConverter ? 1 : 0);
         return key.toString();
     }
