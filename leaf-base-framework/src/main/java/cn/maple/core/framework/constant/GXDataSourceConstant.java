@@ -31,6 +31,7 @@ public class GXDataSourceConstant {
         CONDITION_FUNCTION.put(GXBuilderConstant.RIGHT_LIKE, data -> new GXConditionLikeRight(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.LIKE, data -> new GXConditionLikeFull(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.LEFT_LIKE, data -> new GXConditionLikeLeft(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getStr("value")));
+        CONDITION_FUNCTION.put(GXBuilderConstant.GE, data -> new GXConditionGE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.GT, data -> new GXConditionGT(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.LE, data -> new GXConditionLE(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
         CONDITION_FUNCTION.put(GXBuilderConstant.LT, data -> new GXConditionLT(data.getStr("tableNameAlias"), data.getStr("fieldName"), data.getLong("value")));
