@@ -7,6 +7,11 @@ public class GXBuilderConstant {
     public static final String SEARCH_CONDITION_NAME = "searchCondition";
 
     /**
+     * 字段值是NULL
+     */
+    public static final String IS_NULL = "{} IS NULL";
+
+    /**
      * 数字相等
      */
     public static final String EQ = " = {}";
