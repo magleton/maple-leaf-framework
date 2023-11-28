@@ -27,10 +27,10 @@ public class GXRedissonConnectProperties {
     /**
      * 链接最小闲置大小
      */
-    private Integer connectionMinimumIdleSize = 24;
+    private Integer connectionMinimumIdleSize = 2;
 
     /**
      * 集群模式 链接最小闲置大小
      */
-    private Integer slaveConnectionMinimumIdleSize = 24;
+    private Integer slaveConnectionMinimumIdleSize = 2;
 }
