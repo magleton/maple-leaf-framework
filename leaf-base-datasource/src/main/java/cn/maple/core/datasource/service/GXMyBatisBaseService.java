@@ -197,6 +197,18 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     List<R> findByCondition(List<GXCondition<?>> condition, Map<String, String> orderField);
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName  表名字
+     * @param condition  搜索条件
+     * @param columns    需要查询的字段
+     * @param orderField 排序字段
+     * @param groupField 分组字段
+     * @return List
+     */
+    R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField);
+
+    /**
      * 通过条件获取一条数据
      *
      * @param tableName 表名字

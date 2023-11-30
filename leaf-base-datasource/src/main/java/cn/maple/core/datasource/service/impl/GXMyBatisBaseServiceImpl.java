@@ -419,6 +419,22 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
+     * 通过条件查询列表信息
+     *
+     * @param tableName  表名字
+     * @param condition  搜索条件
+     * @param columns    需要查询的字段
+     * @param orderField 排序字段
+     * @param groupField 分组字段
+     * @return List
+     */
+    @Override
+    public R findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns, Map<String, String> orderField, Set<String> groupField) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).columns(columns).condition(condition).orderByField(orderField).groupByField(groupField).build();
+        return findOneByCondition(queryParamInnerDto);
+    }
+
+    /**
      * 通过条件获取一条数据
      *
      * @param tableName 表名字
