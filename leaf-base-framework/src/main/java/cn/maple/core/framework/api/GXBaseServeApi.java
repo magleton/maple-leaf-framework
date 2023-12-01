@@ -2,12 +2,14 @@ package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
+import cn.maple.core.framework.api.dto.inner.GXBaseServeApiConditionDto;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
 import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.util.GXCommonUtils;
 import com.google.common.collect.Table;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的数据类型
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz);
 
     /**
      * 通过条件查询列表信息
@@ -36,7 +38,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回数据类型
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Map<String, String> orderField, Class<R> targetClazz);
 
     /**
      * 根据条件获取数据
@@ -46,7 +48,7 @@ public interface GXBaseServeApi {
      * @param extraData   额外的参数 用于数据转换时数据自动填充
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 根据条件获取数据
@@ -56,7 +58,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 目标类型
      * @return List
      */
-    <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz);
+    <E> List<E> findFieldByCondition(List<GXBaseServeApiConditionDto> condition, Set<String> columns, Class<E> targetClazz);
 
     /**
      * 根据条件获取一条数据
@@ -65,7 +67,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 数据返回类型
      * @return R
      */
-    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseApiResDto> R findOneByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz);
 
     /**
      * 根据条件获取一条数据
@@ -75,7 +77,7 @@ public interface GXBaseServeApi {
      * @param extraData   数据转换时 自动填充的数据
      * @return R
      */
-    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseApiResDto> R findOneByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 获取一条记录的指定单字段
@@ -85,7 +87,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的类型
      * @return 指定的类型
      */
-    <E> E findSingleFieldByCondition(Table<String, String, Object> condition, String column, Class<E> targetClazz);
+    <E> E findSingleFieldByCondition(List<GXBaseServeApiConditionDto> condition, String column, Class<E> targetClazz);
 
     /**
      * 创建或者更新数据
@@ -95,7 +97,7 @@ public interface GXBaseServeApi {
      * @param copyOptions 复制可选项
      * @return ID
      */
-    <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions);
+    <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, List<GXBaseServeApiConditionDto> condition, CopyOptions copyOptions);
 
     /**
      * 创建或者更新数据
@@ -139,7 +141,7 @@ public interface GXBaseServeApi {
      * @param condition 删除条件
      * @return 删除行数
      */
-    Integer deleteCondition(Table<String, String, Object> condition);
+    Integer deleteCondition(List<GXBaseServeApiConditionDto> condition);
 
     /**
      * 软删除
@@ -147,7 +149,7 @@ public interface GXBaseServeApi {
      * @param condition 删除条件
      * @return 删除行数
      */
-    Integer deleteSoftCondition(Table<String, String, Object> condition);
+    Integer deleteSoftCondition(List<GXBaseServeApiConditionDto> condition);
 
     /**
      * 通过SQL更新表中的数据
@@ -156,7 +158,7 @@ public interface GXBaseServeApi {
      * @param condition    更新条件
      * @return Integer
      */
-    Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, Table<String, String, Object> condition);
+    Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXBaseServeApiConditionDto> condition);
 
     /**
      * 检测给定条件的记录是否存在
@@ -164,7 +166,7 @@ public interface GXBaseServeApi {
      * @param condition 条件
      * @return int
      */
-    boolean checkRecordIsExists(Table<String, String, Object> condition);
+    boolean checkRecordIsExists(List<GXBaseServeApiConditionDto> condition);
 
     /**
      * 转指定的对象到指定的目标类型对象
@@ -237,7 +239,7 @@ public interface GXBaseServeApi {
      * @param extraData 额外数据
      * @return List
      */
-    List<GXCondition<?>> convertTableConditionToConditionExp(Table<String, String, Object> condition);
+    List<GXCondition<?>> convertTableConditionToConditionExp(List<GXBaseServeApiConditionDto> condition);
 
     /**
      * 将Table类型的条件转换为条件表达式
@@ -246,5 +248,5 @@ public interface GXBaseServeApi {
      * @param condition      原始条件
      * @return 转换后的条件
      */
-    List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition);
+    List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, List<GXBaseServeApiConditionDto> condition);
 }

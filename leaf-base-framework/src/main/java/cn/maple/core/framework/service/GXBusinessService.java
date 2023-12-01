@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.maple.core.framework.api.dto.inner.GXBaseServeApiConditionDto;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
@@ -12,6 +13,7 @@ import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
+import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -385,5 +387,17 @@ public interface GXBusinessService {
     @SuppressWarnings("all")
     default Lock getCacheLock(String lockName) {
         return Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseCacheLockService.class)).getLock(lockName);
+    }
+
+    /**
+     * 将Guava的Table数据结构转换为指定的DTO
+     * 由于 dubbo 3.2 不能序列化 Guava Table
+     * 所以需要进行转换
+     *
+     * @param tableCondition Table数据
+     * @return RPC API 的条件列表
+     */
+    default List<GXBaseServeApiConditionDto> convertTableToConditionLst(Table<String, String, Object> tableCondition) {
+        return GXCommonUtils.convertTableToConditionLst(tableCondition);
     }
 }

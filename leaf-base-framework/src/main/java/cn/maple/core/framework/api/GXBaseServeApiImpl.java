@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.api.dto.inner.GXBaseServeApiConditionDto;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
@@ -14,8 +15,6 @@ import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +49,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     /**
      * 根据条件获取数据
      * {@code
-     * HashBasedTable<String, String, Object> hashBasedTable = HashBasedTable.create();
+     * HashBasedList<GXBaseServeApiConditionDto> hashBasedTable = HashBasedTable.create();
      * hashBasedTable.put("name", GXBuilderConstant.STR_EQ, "jack");
      * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable);
      * }
@@ -60,7 +59,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz) {
         List<R> rs = findByCondition(condition, targetClazz, Dict.create());
         return GXCommonUtils.convertSourceListToTargetList(rs, targetClazz, null, null);
     }
@@ -72,7 +71,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * hashBasedTable.put("name", GXBuilderConstant.STR_EQ, "jack");
      * Map<String , String> orderField = new HashMap<>;
      * orderField.put("name" , "DESC");
-     * List<TestApiResDto> byCondition = testServiceApi.findByCondition(hashBasedTable,orderField);
+     * List<TestApiResDto> byCondition = testServiceApi.findByCondition(GXBusinessService.convertTableToConditionLst(hashBasedTable),orderField);
      * }
      *
      * @param condition   搜索条件
@@ -81,7 +80,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Map<String, String> orderField, Class<R> targetClazz) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
@@ -99,7 +98,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseApiResDto> List<R> findByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz, Object extraData) {
         Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
@@ -116,7 +115,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <E> List<E> findFieldByCondition(Table<String, String, Object> condition, Set<String> columns, Class<E> targetClazz) {
+    public <E> List<E> findFieldByCondition(List<GXBaseServeApiConditionDto> condition, Set<String> columns, Class<E> targetClazz) {
         List<GXCondition<?>> conditions = convertTableConditionToConditionExp(condition);
         Object o = callMethod("findMultiFieldByCondition", conditions, columns, targetClazz);
         return Convert.convert(new TypeReference<List<E>>() {
@@ -131,7 +130,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseApiResDto> R findOneByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz) {
         return findOneByCondition(condition, targetClazz, Dict.create());
     }
 
@@ -144,7 +143,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseApiResDto> R findOneByCondition(List<GXBaseServeApiConditionDto> condition, Class<R> targetClazz, Object extraData) {
         Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
@@ -161,7 +160,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return 指定的类型
      */
     @Override
-    public <E> E findSingleFieldByCondition(Table<String, String, Object> condition, String column, Class<E> targetClazz) {
+    public <E> E findSingleFieldByCondition(List<GXBaseServeApiConditionDto> condition, String column, Class<E> targetClazz) {
         Object r = callMethod("findSingleFieldByCondition", convertTableConditionToConditionExp(condition), column, targetClazz);
         if (Objects.nonNull(r)) {
             return Convert.convert(targetClazz, r);
@@ -178,7 +177,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return ID
      */
     @Override
-    public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, Table<String, String, Object> condition, CopyOptions copyOptions) {
+    public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, List<GXBaseServeApiConditionDto> condition, CopyOptions copyOptions) {
         Object id = callMethod("updateOrCreate", reqDto, convertTableConditionToConditionExp(condition), copyOptions);
         if (Objects.nonNull(id)) {
             return (ID) id;
@@ -195,7 +194,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      */
     @Override
     public <ID, Q extends GXBaseApiReqDto> ID updateOrCreate(Q reqDto, CopyOptions copyOptions) {
-        return updateOrCreate(reqDto, HashBasedTable.create(), copyOptions);
+        return updateOrCreate(reqDto, Collections.emptyList(), copyOptions);
     }
 
     /**
@@ -253,7 +252,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return 删除行数
      */
     @Override
-    public Integer deleteCondition(Table<String, String, Object> condition) {
+    public Integer deleteCondition(List<GXBaseServeApiConditionDto> condition) {
         Object cnt = callMethod("deleteCondition", convertTableConditionToConditionExp(condition));
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
@@ -268,7 +267,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return 删除行数
      */
     @Override
-    public Integer deleteSoftCondition(Table<String, String, Object> condition) {
+    public Integer deleteSoftCondition(List<GXBaseServeApiConditionDto> condition) {
         Object cnt = callMethod("deleteSoftCondition", convertTableConditionToConditionExp(condition));
         if (Objects.nonNull(cnt)) {
             return (Integer) cnt;
@@ -284,7 +283,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return Integer
      */
     @Override
-    public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, Table<String, String, Object> condition) {
+    public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXBaseServeApiConditionDto> condition) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(condition);
         Object cnt = callMethod("updateFieldByCondition", updateFields, conditionList);
         if (Objects.nonNull(cnt)) {
@@ -300,7 +299,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return int
      */
     @Override
-    public boolean checkRecordIsExists(Table<String, String, Object> condition) {
+    public boolean checkRecordIsExists(List<GXBaseServeApiConditionDto> condition) {
         Object exists = callMethod("checkRecordIsExists", convertTableConditionToConditionExp(condition));
         return (Boolean) exists;
     }
@@ -407,7 +406,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public List<GXCondition<?>> convertTableConditionToConditionExp(Table<String, String, Object> condition) {
+    public List<GXCondition<?>> convertTableConditionToConditionExp(List<GXBaseServeApiConditionDto> condition) {
         return convertTableConditionToConditionExp(getTableName(), condition);
     }
 
@@ -419,7 +418,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return 转换后的条件
      */
     @Override
-    public List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
+    public List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, List<GXBaseServeApiConditionDto> condition) {
         return GXCommonUtils.convertTableConditionToConditionExp(tableNameAlias, condition);
     }
 

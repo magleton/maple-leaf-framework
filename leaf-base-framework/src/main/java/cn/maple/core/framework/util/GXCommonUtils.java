@@ -16,6 +16,7 @@ import cn.hutool.core.util.*;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.api.dto.inner.GXBaseServeApiConditionDto;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
@@ -500,11 +501,24 @@ public class GXCommonUtils {
      * 将Table类型的条件转换为条件表达式
      *
      * @param tableNameAlias 表别名
-     * @param condition      原始条件
+     * @param conditionLst   原始条件
      * @return 转换后的条件
      */
-    public static List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
+    public static List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, List<GXBaseServeApiConditionDto> conditionLst) {
         ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        conditionLst.forEach(condition -> {
+            String columnName = condition.getColumnName();
+            Object value = condition.getValue();
+            String operator = condition.getOperator();
+            Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", columnName).set("value", value);
+            Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(operator);
+            if (Objects.isNull(function)) {
+                throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", operator));
+            }
+            conditions.add(function.apply(data));
+        });
+        /*
+        // 处理 Guava Table结构
         condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
             Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
             Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
@@ -512,8 +526,28 @@ public class GXCommonUtils {
                 throw new GXBusinessException(CharSequenceUtil.format("请完善{}类型数据转换器", op));
             }
             conditions.add(function.apply(data));
-        }));
+        }));*/
         return conditions;
+    }
+
+    /**
+     * 将Guava的Table数据结构转换为指定的DTO
+     * 由于 dubbo 3.2 不能序列化 Guava Table
+     * 所以需要进行转换
+     *
+     * @param condition Table数据
+     * @return RPC API 的条件列表
+     */
+    public static List<GXBaseServeApiConditionDto> convertTableToConditionLst(Table<String, String, Object> condition) {
+        List<GXBaseServeApiConditionDto> conditionLst = new ArrayList<>();
+        condition.rowMap().forEach((columnName, datum) -> datum.forEach((operator, value) -> {
+            GXBaseServeApiConditionDto serveApiConditionDto = new GXBaseServeApiConditionDto();
+            serveApiConditionDto.setColumnName(columnName);
+            serveApiConditionDto.setOperator(operator);
+            serveApiConditionDto.setValue(value);
+            conditionLst.add(serveApiConditionDto);
+        }));
+        return conditionLst;
     }
 
     /**
