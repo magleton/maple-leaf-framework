@@ -41,8 +41,9 @@ spring:
         enabled: true
         allow: 127.0.0.1,localhost
         url-pattern: /druid/*
-        login-username: britton
-        login-password: britton
+        login-username: ${DRUID_USERNAME:britton}
+        login-password: ${DRUID_PASSWORD:britton}
+        reset-enable: false
       filter:
         stat:
           log-slow-sql: true
