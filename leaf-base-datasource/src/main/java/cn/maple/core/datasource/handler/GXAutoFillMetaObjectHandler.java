@@ -10,6 +10,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * MyBatis公共字段自动填充器
@@ -30,8 +31,11 @@ public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
             }
             this.setFieldValByName("createdBy", createdBy, metaObject);
         }
-        final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
-        this.setFieldValByName("createdAt", timestamp, metaObject);
+        Integer createdAt = (Integer) Optional.ofNullable(metaObject.getValue("createdAt")).orElse(0);
+        if (createdAt.equals(0)) {
+            final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
+            this.setFieldValByName("createdAt", timestamp, metaObject);
+        }
     }
 
     @Override
@@ -45,7 +49,10 @@ public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
             }
             this.setFieldValByName("updatedBy", updatedBy, metaObject);
         }
-        final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
-        this.setFieldValByName("updatedAt", timestamp, metaObject);
+        Integer updatedAt = (Integer) Optional.ofNullable(metaObject.getValue("updatedAt")).orElse(0);
+        if (updatedAt.equals(0)) {
+            final Integer timestamp = Math.toIntExact(DateUtil.currentSeconds());
+            this.setFieldValByName("updatedAt", timestamp, metaObject);
+        }
     }
 }
