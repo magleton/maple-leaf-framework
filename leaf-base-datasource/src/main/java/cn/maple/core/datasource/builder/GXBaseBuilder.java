@@ -10,6 +10,7 @@ import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
 import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
@@ -45,7 +46,7 @@ public interface GXBaseBuilder {
         sql.SET(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
         return sql.toString();
     }
@@ -91,7 +92,24 @@ public interface GXBaseBuilder {
         // 处理WHERE
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, getIsNotDeletedValue()));
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableNameAlias, 0));
+        }
+        // 处理JOIN表的Where条件
+        if (Objects.nonNull(joins) && !joins.isEmpty()) {
+            joins.forEach(joinDto -> {
+                List<GXCondition<?>> joinConditions = Optional.ofNullable(joinDto.getConditions()).orElse(new ArrayList<>());
+                if (joinDto.isAutoFillIsDeleteCondition()) {
+                    String masterTableNameAlias = joinDto.getMasterTableNameAlias();
+                    if (!CollUtil.contains(joinConditions, (c -> {
+                        String identity = c.getTableNameAlias() + "." + c.getFieldExpression();
+                        return identity.equalsIgnoreCase(masterTableNameAlias + "." + "is_deleted");
+                    }))) {
+                        GXConditionEQ isDeletedCondition = new GXConditionEQ(masterTableNameAlias, "is_deleted", 0);
+                        joinConditions.add(isDeletedCondition);
+                    }
+                }
+                handleSQLCondition(sql, joinConditions);
+            });
         }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
@@ -222,7 +240,7 @@ public interface GXBaseBuilder {
         sql.SET(CharSequenceUtil.format("is_deleted = {}", keyProperty), CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
         return sql.toString();
     }
@@ -238,7 +256,7 @@ public interface GXBaseBuilder {
         SQL sql = new SQL().DELETE_FROM(tableName);
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
-            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, getIsNotDeletedValue()));
+            sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
         return sql.toString();
     }
@@ -248,6 +266,7 @@ public interface GXBaseBuilder {
      *
      * @return Object
      */
+    @Deprecated
     static Object getIsNotDeletedValue() {
         String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
         if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
