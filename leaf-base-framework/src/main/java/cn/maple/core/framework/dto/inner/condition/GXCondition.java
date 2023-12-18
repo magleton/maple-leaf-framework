@@ -45,5 +45,9 @@ public abstract class GXCondition<T> implements Serializable {
         return CharSequenceUtil.toUnderlineCase(fieldExpression);
     }
 
+    public String getTableNameAlias() {
+        return tableNameAlias;
+    }
+
     public abstract T getFieldValue();
 }

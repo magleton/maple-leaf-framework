@@ -1,6 +1,7 @@
 package cn.maple.core.framework.dto.inner;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +26,6 @@ public class GXJoinDto {
      */
     private String masterTableNameAlias;
 
-
     /**
      * 主表名字
      */
@@ -45,6 +45,17 @@ public class GXJoinDto {
      * 链接的OR条件
      */
     private List<GXDbJoinOp> or;
+
+    /**
+     * 额外的条件
+     */
+    private List<GXCondition<?>> conditions;
+
+    /**
+     * 是否自动填充删除条件
+     * 该删除条件会自动排除掉已经删除了的数据
+     */
+    private boolean autoFillIsDeleteCondition;
 
     public void setAnd(List<GXDbJoinOp> and) {
         and.forEach(op -> {
