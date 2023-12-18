@@ -46,7 +46,7 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
-    public GXResultUtils<Dict> handleBeanValidateException(GXBeanValidateException e) {
+    public GXResultUtils<Dict> handleGXBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
     }
@@ -65,7 +65,7 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public GXResultUtils<String> handlerNoFoundException(NoHandlerFoundException e) {
+    public GXResultUtils<String> handlerNoHandlerFoundException(NoHandlerFoundException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
     }
@@ -128,7 +128,7 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(GXDBNotExistsException.class)
-    public GXResultUtils<String> handleDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
+    public GXResultUtils<String> handleGXDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
@@ -144,14 +144,14 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public GXResultUtils<Dict> handleBusinessException(MissingServletRequestParameterException e) {
+    public GXResultUtils<Dict> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
         String parameterName = e.getParameterName();
         return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), CharSequenceUtil.format("缺失{}参数", parameterName), Dict.create().set(parameterName, CharSequenceUtil.format("参数{}必填", parameterName)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public GXResultUtils<Dict> handleBusinessException(IllegalArgumentException e) {
+    public GXResultUtils<Dict> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
         String message = e.getMessage();
         Dict dict = Dict.create();
@@ -172,19 +172,19 @@ public class GXExceptionHandler {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public GXResultUtils<Dict> handleException(SQLIntegrityConstraintViolationException e) {
+    public GXResultUtils<Dict> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据已经存在");
     }
 
     @ExceptionHandler(UnexpectedTypeException.class)
-    public GXResultUtils<Dict> handleException(UnexpectedTypeException e) {
+    public GXResultUtils<Dict> handleUnexpectedTypeException(UnexpectedTypeException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "使用的数据验证器不能验证请求的参数!");
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public GXResultUtils<Dict> handleException(HttpRequestMethodNotSupportedException e) {
+    public GXResultUtils<Dict> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "不支持HTTP请求方法!");
     }
