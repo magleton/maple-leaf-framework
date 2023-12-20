@@ -40,7 +40,7 @@
         <lombok.version>1.18.30</lombok.version>
         <hutool.version>5.8.23</hutool.version>
         <aspectjweaver.version>1.9.21</aspectjweaver.version>
-        <guava.version>32.1.3-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <caffeine.version>3.1.8</caffeine.version>
         <fastjson.version>2.0.43-SNAPSHOT</fastjson.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
