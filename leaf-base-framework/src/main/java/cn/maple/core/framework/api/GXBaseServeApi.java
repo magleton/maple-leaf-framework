@@ -167,6 +167,14 @@ public interface GXBaseServeApi {
     boolean checkRecordIsExists(Table<String, String, Object> condition);
 
     /**
+     * 统计给定条件的记录条数
+     *
+     * @param condition 条件
+     * @return int
+     */
+    Long count(Table<String, String, Object> condition);
+
+    /**
      * 转指定的对象到指定的目标类型对象
      *
      * @param reqDto      请求参数

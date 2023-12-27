@@ -306,6 +306,18 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     }
 
     /**
+     * 统计给定条件的记录条数
+     *
+     * @param condition 条件
+     * @return int
+     */
+    @Override
+    public Long count(Table<String, String, Object> condition) {
+        Object cnt = callMethod("countByCondition", convertTableConditionToConditionExp(condition));
+        return (Long) cnt;
+    }
+
+    /**
      * 转指定的对象到指定的目标类型对象
      *
      * @param reqDto      请求参数
