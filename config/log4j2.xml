@@ -154,11 +154,18 @@
 
         <!--spring日志-->
         <Logger name="org.springframework" level="info"/>
+        <!--alibaba日志-->
+        <Logger name="com.alibaba" level="info"/>
+        <!--apache日志-->
+        <Logger name="org.apache" level="info"/>
+        <!--redisson日志-->
+        <Logger name="org.redisson" level="info"/>
+        <!--netty-->
+        <Logger name="io.netty" level="info"/>
         <!--druid数据源日志-->
         <Logger name="druid.sql" level="info"/>
         <!-- mybatis日志 -->
         <Logger name="com.p6spy" level="info"/>
-        <Logger name="org.apache.ibatis" level="info"/>
         <Logger name="com.baomidou" level="info"/>
         <Logger name="org.hibernate" level="warn"/>
         <!-- maple框架 -->
