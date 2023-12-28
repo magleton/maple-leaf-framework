@@ -49,7 +49,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
     }
 
     /**
-     * 改方法是在该服务作为服务端使用时会被调用
+     * 该方法是在该服务作为服务端使用时会被调用
      * 该方法会在{@link GXDubboServerTraceIdFilter#invoke(Invoker<?> invoker, Invocation invocation)}被调用之后调用
      *
      * @param invocation            调用者信息
