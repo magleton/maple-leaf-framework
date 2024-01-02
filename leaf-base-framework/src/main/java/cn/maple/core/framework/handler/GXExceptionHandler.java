@@ -13,6 +13,7 @@ import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -49,6 +50,12 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleGXBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
+    }
+
+    @ExceptionHandler(ClientAbortException.class)
+    public GXResultUtils<String> handleClientAbortException(ClientAbortException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "IO异常");
     }
 
     @ExceptionHandler(InvalidFormatException.class)
