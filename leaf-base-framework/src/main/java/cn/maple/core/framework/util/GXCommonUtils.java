@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -537,5 +538,16 @@ public class GXCommonUtils {
             LOG.error("数据转换失败!错误信息 : {}", ex.getMessage());
             return null;
         }
+    }
+
+    /**
+     * 判断是否是正确的Base64字符串
+     *
+     * @param base64Str base64字符串
+     * @return Boolean
+     */
+    public static boolean isBase64(String base64Str) {
+        String base64Pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        return Pattern.matches(base64Pattern, base64Str);
     }
 }

@@ -190,6 +190,11 @@ public class GXCurrentRequestContextUtils {
             LOG.error("{}不存在", tokenName);
             return Dict.create();
         }
+        // 判断token是否是一个正确的base64字符串
+        if (!GXCommonUtils.isBase64(token)) {
+            LOG.error("token不是一个有效的base64字符串!");
+            return Dict.create();
+        }
         String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
         if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
             return Dict.create();
