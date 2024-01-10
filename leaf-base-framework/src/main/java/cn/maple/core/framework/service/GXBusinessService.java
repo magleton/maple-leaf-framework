@@ -396,7 +396,7 @@ public interface GXBusinessService {
      */
     default Dict getLoginCredentials() {
         Object tokenConfigService = GXSpringContextUtils.getBean("cn.maple.sso.service.GXTokenConfigService");
-        if (ObjectUtil.isNotNull(tokenConfigService)) {
+        if (ObjectUtil.isNull(tokenConfigService)) {
             throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
         }
         String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
