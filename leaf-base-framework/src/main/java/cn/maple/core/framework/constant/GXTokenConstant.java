@@ -47,6 +47,11 @@ public class GXTokenConstant {
     public static final String TOKEN_USER_ID_FIELD_NAME = "userId";
 
     /**
+     * 用户登录用的token标签
+     */
+    public static final String TOKEN_USER_NAME_FIELD_NAME = "userName";
+
+    /**
      * Admin登录用的token标签
      */
     public static final String TOKEN_ADMIN_ID_FIELD_NAME = "adminId";

@@ -3,6 +3,7 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -16,6 +17,8 @@ import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateNumberField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -110,6 +113,23 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             //throw new GXBusinessException("待更新的数据不存在!");
             log.error("待更新的数据不存在!");
             return GXCommonConstant.DB_RECORD_NOT_FOUND;
+        }
+        String loginUserName = getLoginUserName();
+        if (CharSequenceUtil.isEmpty(loginUserName)) {
+            throw new GXBusinessException("无法获取登录用户的用户名");
+        }
+        GXUpdateStrField updateCreatedByField = new GXUpdateStrField(tableName, "updated_by", loginUserName);
+        GXUpdateNumberField updateUpdatedAtField = new GXUpdateNumberField(tableName, "updated_at", Math.toIntExact(DateUtil.currentSeconds()));
+        List<String> updateFieldNameLst = new ArrayList<>();
+        updateFields.forEach(field -> {
+            String fieldName = field.getFieldName();
+            updateFieldNameLst.add(fieldName);
+        });
+        if (!CollUtil.contains(updateFieldNameLst, "updated_by")) {
+            updateFields.add(updateCreatedByField);
+        }
+        if (!CollUtil.contains(updateFieldNameLst, "updated_at")) {
+            updateFields.add(updateUpdatedAtField);
         }
         return repository.updateFieldByCondition(tableName, updateFields, condition);
     }

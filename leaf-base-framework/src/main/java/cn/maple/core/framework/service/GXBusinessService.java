@@ -3,11 +3,13 @@ package cn.maple.core.framework.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBeanNotExistsException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
@@ -385,5 +387,39 @@ public interface GXBusinessService {
     @SuppressWarnings("all")
     default Lock getCacheLock(String lockName) {
         return Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseCacheLockService.class)).getLock(lockName);
+    }
+
+    /**
+     * 获取登录用户的信息
+     *
+     * @return 登录用户的token
+     */
+    default Dict getLoginCredentials() {
+        Object tokenConfigService = GXSpringContextUtils.getBean("cn.maple.sso.service.GXTokenConfigService");
+        if (ObjectUtil.isNotNull(tokenConfigService)) {
+            throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+        }
+        String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
+        return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
+    }
+
+    /**
+     * 获取登录用户的ID
+     *
+     * @return 登录的用户ID
+     */
+    default Long getLoginUserId() {
+        Dict dict = getLoginCredentials();
+        return dict.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME);
+    }
+
+    /**
+     * 获取用户登录的用户名名
+     *
+     * @return 登录的用户名
+     */
+    default String getLoginUserName() {
+        Dict dict = getLoginCredentials();
+        return dict.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME);
     }
 }
