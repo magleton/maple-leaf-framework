@@ -1,5 +1,6 @@
 package cn.maple.core.framework.web.config;
 
+import cn.maple.core.framework.web.interceptor.GXRenewalTokenInterceptor;
 import cn.maple.core.framework.web.interceptor.GXTraceIdInterceptor;
 import cn.maple.core.framework.web.interceptor.GXVerifyDeployEnvironmentInterceptor;
 import cn.maple.core.framework.web.support.GXRequestHandlerMethodArgumentResolver;
@@ -23,6 +24,9 @@ public class GXWebMvcConfigurer implements WebMvcConfigurer {
     private GXTraceIdInterceptor traceIdInterceptor;
 
     @Resource
+    private GXRenewalTokenInterceptor renewalTokenInterceptor;
+
+    @Resource
     private GXVerifyDeployEnvironmentInterceptor verifyDeployEnvironmentInterceptor;
 
     @Resource
@@ -30,18 +34,14 @@ public class GXWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowCredentials(false)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("*").allowCredentials(false).allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowedHeaders("*").maxAge(3600);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(verifyDeployEnvironmentInterceptor);
         registry.addInterceptor(traceIdInterceptor);
+        registry.addInterceptor(renewalTokenInterceptor);
         registerCustomerInterceptors(registry);
     }
 
