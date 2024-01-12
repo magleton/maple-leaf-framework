@@ -76,7 +76,8 @@ mybatis-plus:
   # 原生配置
   configuration:
     map-underscore-to-camel-case: true
-    cache-enabled: false
+    cache-enabled: true # 开启二级缓存
+    local-cache-scope: statement
     call-setters-on-nulls: true
     aggressive-lazy-loading: false
     lazy-loading-enabled: false
