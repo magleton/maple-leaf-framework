@@ -1,9 +1,11 @@
 package cn.maple.core.datasource.cache;
 
+import cn.hutool.core.annotation.AnnotationUtil;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.redisson.services.GXRedissonCacheService;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.cache.Cache;
 import org.redisson.api.RedissonClient;
 import org.springframework.util.DigestUtils;
@@ -43,7 +45,6 @@ public class GXMybatisPlusRedissonCache implements Cache {
      * 缓存刷新间隔,单位为毫秒
      * flushInterval参数 note : 自定义cache无法使用默认的flushInterval
      */
-    @Setter
     private Integer flushInterval = 0;
 
     public GXMybatisPlusRedissonCache(final String id) {
@@ -51,7 +52,12 @@ public class GXMybatisPlusRedissonCache implements Cache {
             throw new IllegalArgumentException("Cache instances require an ID");
         }
         log.info("MyBatis Plus二级缓存id : {}", id);
-        this.id = id;
+        try {
+            flushInterval = Math.toIntExact(AnnotationUtil.getAnnotation(Class.forName(id), CacheNamespace.class).flushInterval());
+            this.id = id;
+        } catch (ClassNotFoundException e) {
+            throw new GXBusinessException(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -64,7 +70,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public void putObject(@NotNull Object key, @NotNull Object value) {
-        log.info("MyBatisPlus将数据存入缓存");
+        log.info("MyBatisPlus -->>将【{}】数据存入缓存", id);
         assert redissonCacheService != null;
         String storeKey = md5Encrypt(key);
         if (flushInterval > 0) {
@@ -79,7 +85,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public Object getObject(@NotNull Object key) {
-        log.info("MyBatisPlus获取缓存数据");
+        log.info("MyBatisPlus -->> 从【{}】获取缓存数据", id);
         assert redissonCacheService != null;
         String storeKey = md5Encrypt(key);
         return redissonCacheService.getCache(getId(), storeKey);
@@ -90,7 +96,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public Object removeObject(@NotNull Object key) {
-        log.info("MyBatisPlus删除缓存数据");
+        log.info("MyBatisPlus -->> 从【{}】删除缓存数据", id);
         assert redissonCacheService != null;
         String storeKey = md5Encrypt(key);
         return redissonCacheService.deleteCache(getId(), storeKey);
@@ -101,7 +107,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public void clear() {
-        log.info("MyBatisPlus清空缓存数据");
+        log.info("MyBatisPlus -->> 将【{}】缓存数据清空", id);
         assert redissonCacheService != null;
         redissonCacheService.clear(getId());
     }
@@ -111,7 +117,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public int getSize() {
-        log.info("MyBatisPlus获取缓存数据的数量");
+        log.info("MyBatisPlus -->> 获取【{}】中缓存数据的数量", id);
         assert redissonCacheService != null;
         return redissonCacheService.size(getId());
     }
@@ -119,7 +125,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
     @Override
     public ReadWriteLock getReadWriteLock() {
         assert redissonClient != null;
-        return redissonClient.getReadWriteLock("MyBatis:LOCK");
+        return redissonClient.getReadWriteLock("MyBatis-Plus:LOCK:" + getId());
     }
 
     /**

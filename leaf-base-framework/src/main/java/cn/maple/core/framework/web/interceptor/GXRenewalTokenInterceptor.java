@@ -1,5 +1,6 @@
 package cn.maple.core.framework.web.interceptor;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.service.GXRenewalTokenService;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,11 @@ public class GXRenewalTokenInterceptor extends GXAuthorizationInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         GXRenewalTokenService renewalTokenService = GXSpringContextUtils.getBean(GXRenewalTokenService.class);
-        assert renewalTokenService != null;
-        boolean b = renewalTokenService.renewalToken();
-        if (b) {
-            response.setHeader("Renewal-Token", "renew");
+        if (ObjectUtil.isNotNull(renewalTokenService)) {
+            boolean b = renewalTokenService.renewalToken();
+            if (b) {
+                response.setHeader("Renewal-Token", "renew");
+            }
         }
         return super.preHandle(request, response, handler);
     }
