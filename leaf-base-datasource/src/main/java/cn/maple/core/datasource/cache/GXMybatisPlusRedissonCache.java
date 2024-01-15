@@ -11,6 +11,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.util.DigestUtils;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -51,7 +52,7 @@ public class GXMybatisPlusRedissonCache implements Cache {
         if (id == null) {
             throw new IllegalArgumentException("Cache instances require an ID");
         }
-        log.info("MyBatis Plus二级缓存id : {}", id);
+        log.info("MP二级缓存id : {}", id);
         try {
             flushInterval = Math.toIntExact(AnnotationUtil.getAnnotation(Class.forName(id), CacheNamespace.class).flushInterval());
             this.id = id;
@@ -70,13 +71,15 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public void putObject(@NotNull Object key, @NotNull Object value) {
-        log.info("MyBatisPlus -->>将【{}】数据存入缓存", id);
         assert redissonCacheService != null;
-        String storeKey = md5Encrypt(key);
-        if (flushInterval > 0) {
-            redissonCacheService.setCache(getId(), storeKey, value, flushInterval, TimeUnit.MILLISECONDS);
-        } else {
-            redissonCacheService.setCache(getId(), storeKey, value);
+        if (Objects.nonNull(value)) {
+            String storeKey = md5Encrypt(key);
+            log.info("MP->>向【{}】缓存桶中存入缓存key:{}", id, storeKey);
+            if (flushInterval > 0) {
+                redissonCacheService.setCache(getId(), storeKey, value, flushInterval, TimeUnit.MILLISECONDS);
+            } else {
+                redissonCacheService.setCache(getId(), storeKey, value);
+            }
         }
     }
 
@@ -85,10 +88,14 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public Object getObject(@NotNull Object key) {
-        log.info("MyBatisPlus -->> 从【{}】获取缓存数据", id);
         assert redissonCacheService != null;
         String storeKey = md5Encrypt(key);
-        return redissonCacheService.getCache(getId(), storeKey);
+        log.info("MP->>从缓存桶【{}】中获取缓存key:{}", id, storeKey);
+        Object cache = redissonCacheService.getCache(getId(), storeKey);
+        if (Objects.isNull(cache)) {
+            log.info("MP->>缓存桶【{}】中缓存key:{}不存在", id, storeKey);
+        }
+        return cache;
     }
 
     /**
@@ -96,9 +103,9 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public Object removeObject(@NotNull Object key) {
-        log.info("MyBatisPlus -->> 从【{}】删除缓存数据", id);
         assert redissonCacheService != null;
         String storeKey = md5Encrypt(key);
+        log.info("MP->>从缓存桶【{}】中删除缓存key:{}", id, storeKey);
         return redissonCacheService.deleteCache(getId(), storeKey);
     }
 
@@ -107,8 +114,8 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public void clear() {
-        log.info("MyBatisPlus -->> 将【{}】缓存数据清空", id);
         assert redissonCacheService != null;
+        log.info("MP->>将缓存桶【{}】中的数据清空", id);
         redissonCacheService.clear(getId());
     }
 
@@ -117,15 +124,15 @@ public class GXMybatisPlusRedissonCache implements Cache {
      */
     @Override
     public int getSize() {
-        log.info("MyBatisPlus -->> 获取【{}】中缓存数据的数量", id);
         assert redissonCacheService != null;
+        log.info("MyBatisPlus->>获取缓存桶【{}】中缓存数据的数量", id);
         return redissonCacheService.size(getId());
     }
 
     @Override
     public ReadWriteLock getReadWriteLock() {
         assert redissonClient != null;
-        return redissonClient.getReadWriteLock("MyBatis-Plus:LOCK:" + getId());
+        return redissonClient.getReadWriteLock("MP:LOCK:" + getId());
     }
 
     /**

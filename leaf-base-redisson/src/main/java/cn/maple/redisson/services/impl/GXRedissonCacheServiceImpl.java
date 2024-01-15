@@ -2,6 +2,7 @@ package cn.maple.redisson.services.impl;
 
 import cn.maple.redisson.services.GXRedissonCacheService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
@@ -92,7 +93,12 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Object deleteCache(String bucketName, String key) {
-        return redissonClient.getMapCache(bucketName).remove(key);
+        RMapCache<Object, Object> mapCache = redissonClient.getMapCache(bucketName);
+        if (Objects.nonNull(mapCache.get(key))) {
+            return mapCache.remove(key);
+        }
+        log.info("缓存key【{}】不存在", key);
+        return null;
     }
 
     /**

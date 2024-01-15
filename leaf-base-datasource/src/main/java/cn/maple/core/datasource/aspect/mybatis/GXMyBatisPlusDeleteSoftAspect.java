@@ -34,10 +34,10 @@ import java.util.List;
 public class GXMyBatisPlusDeleteSoftAspect {
     @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* deleteSoftCondition(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布软删除事件开始");
+        log.debug("发布软删除事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布软删除事件结束");
+        log.debug("发布软删除事件结束");
         return proceed;
     }
     
