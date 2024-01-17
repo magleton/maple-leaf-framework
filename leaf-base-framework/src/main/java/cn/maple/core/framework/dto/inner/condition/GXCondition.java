@@ -2,11 +2,15 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 public abstract class GXCondition<T> implements Serializable {
-    protected final String tableNameAlias;
+    @Setter
+    @Getter
+    protected String tableNameAlias;
 
     /**
      * 可以是一个具体的字段名字  goods_name
@@ -43,10 +47,6 @@ public abstract class GXCondition<T> implements Serializable {
 
     public String getFieldExpression() {
         return CharSequenceUtil.toUnderlineCase(fieldExpression);
-    }
-
-    public String getTableNameAlias() {
-        return tableNameAlias;
     }
 
     public abstract T getFieldValue();
