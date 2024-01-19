@@ -16,6 +16,7 @@ import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ClassUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -395,12 +396,17 @@ public interface GXBusinessService {
      * @return 登录用户的token
      */
     default Dict getLoginCredentials() {
-        Object tokenConfigService = GXSpringContextUtils.getBean("cn.maple.sso.service.GXTokenConfigService");
-        if (ObjectUtil.isNull(tokenConfigService)) {
-            throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+        try {
+            Class<?> tokenConfigServiceKlass = ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", ClassUtils.getDefaultClassLoader());
+            Object tokenConfigService = GXSpringContextUtils.getBean(tokenConfigServiceKlass);
+            if (ObjectUtil.isNull(tokenConfigService)) {
+                throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+            }
+            String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
+            return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
+        } catch (ClassNotFoundException e) {
+            throw new GXBusinessException(e.getMessage(), e);
         }
-        String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
-        return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
     }
 
     /**
