@@ -125,13 +125,15 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             String fieldName = field.getFieldName();
             updateFieldNameLst.add(fieldName);
         });
+        // TODO : updateFields字段有可能是一个不可变List 所以需要将其变成一个可变的List
+        ArrayList<GXUpdateField<?>> newUpdateFields = CollUtil.newArrayList(updateFields);
         if (!CollUtil.contains(updateFieldNameLst, "updated_by")) {
-            updateFields.add(updateCreatedByField);
+            newUpdateFields.add(updateCreatedByField);
         }
         if (!CollUtil.contains(updateFieldNameLst, "updated_at")) {
-            updateFields.add(updateUpdatedAtField);
+            newUpdateFields.add(updateUpdatedAtField);
         }
-        return repository.updateFieldByCondition(tableName, updateFields, condition);
+        return repository.updateFieldByCondition(tableName, newUpdateFields, condition);
     }
 
     /**
