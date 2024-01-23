@@ -110,30 +110,29 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
-            //throw new GXBusinessException("待更新的数据不存在!");
             log.error("待更新的数据不存在!");
             return GXCommonConstant.DB_RECORD_NOT_FOUND;
         }
         String loginUserName = getLoginUserName();
-        if (CharSequenceUtil.isEmpty(loginUserName)) {
-            throw new GXBusinessException("无法获取登录用户的用户名");
+        if (CharSequenceUtil.isNotEmpty(loginUserName)) {
+            List<String> updateFieldNameLst = new ArrayList<>();
+            updateFields.forEach(field -> {
+                String fieldName = field.getFieldName();
+                updateFieldNameLst.add(fieldName);
+            });
+            // updateFields字段有可能是一个不可变List 所以需要将其变成一个可变的List
+            ArrayList<GXUpdateField<?>> newUpdateFields = CollUtil.newArrayList(updateFields);
+            if (!CollUtil.contains(updateFieldNameLst, "updated_by")) {
+                GXUpdateStrField updateCreatedByField = new GXUpdateStrField(tableName, "updated_by", loginUserName);
+                newUpdateFields.add(updateCreatedByField);
+            }
+            if (!CollUtil.contains(updateFieldNameLst, "updated_at")) {
+                GXUpdateNumberField updateUpdatedAtField = new GXUpdateNumberField(tableName, "updated_at", Math.toIntExact(DateUtil.currentSeconds()));
+                newUpdateFields.add(updateUpdatedAtField);
+            }
+            return repository.updateFieldByCondition(tableName, newUpdateFields, condition);
         }
-        GXUpdateStrField updateCreatedByField = new GXUpdateStrField(tableName, "updated_by", loginUserName);
-        GXUpdateNumberField updateUpdatedAtField = new GXUpdateNumberField(tableName, "updated_at", Math.toIntExact(DateUtil.currentSeconds()));
-        List<String> updateFieldNameLst = new ArrayList<>();
-        updateFields.forEach(field -> {
-            String fieldName = field.getFieldName();
-            updateFieldNameLst.add(fieldName);
-        });
-        // TODO : updateFields字段有可能是一个不可变List 所以需要将其变成一个可变的List
-        ArrayList<GXUpdateField<?>> newUpdateFields = CollUtil.newArrayList(updateFields);
-        if (!CollUtil.contains(updateFieldNameLst, "updated_by")) {
-            newUpdateFields.add(updateCreatedByField);
-        }
-        if (!CollUtil.contains(updateFieldNameLst, "updated_at")) {
-            newUpdateFields.add(updateUpdatedAtField);
-        }
-        return repository.updateFieldByCondition(tableName, newUpdateFields, condition);
+        return repository.updateFieldByCondition(tableName, updateFields, condition);
     }
 
     /**
