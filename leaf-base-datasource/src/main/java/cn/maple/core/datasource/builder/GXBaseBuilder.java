@@ -301,11 +301,13 @@ public interface GXBaseBuilder {
         String unionSql = String.join("\n " + unionTypeEnums.getUnionType() + " \n", unionSqlLst);
         masterQueryParamInnerDto.setTableName("(" + unionSql + ")");
         masterQueryParamInnerDto.setTableNameAlias("tmp");
-        masterQueryParamInnerDto.getCondition().forEach(condition -> {
-            if (!condition.getTableNameAlias().equalsIgnoreCase("tmp")) {
-                condition.setTableNameAlias("tmp");
-            }
-        });
+        if (CollUtil.isNotEmpty(masterQueryParamInnerDto.getCondition())) {
+            masterQueryParamInnerDto.getCondition().forEach(condition -> {
+                if (!condition.getTableNameAlias().equalsIgnoreCase("tmp")) {
+                    condition.setTableNameAlias("tmp");
+                }
+            });
+        }
         return GXBaseBuilder.findByCondition(masterQueryParamInnerDto);
     }
 
