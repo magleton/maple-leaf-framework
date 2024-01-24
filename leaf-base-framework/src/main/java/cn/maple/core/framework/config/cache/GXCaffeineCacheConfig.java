@@ -40,7 +40,7 @@ public class GXCaffeineCacheConfig {
         });
 
         // 新增默认的缓存
-        CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "BIZ-CACHE").forEach(name -> {
+        CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "UNIVERSAL-CACHE", "BIZ-BACKEND-APP-CACHE", "BIZ-FRONTEND-APP-CACHE").forEach(name -> {
             Caffeine<Object, Object> caffeine = Caffeine.newBuilder().initialCapacity(50).expireAfterAccess(86400, TimeUnit.SECONDS).maximumSize(10000).softValues().recordStats();
             caffeineCacheManager.registerCustomCache(name, caffeine.build());
         });
