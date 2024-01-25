@@ -204,6 +204,16 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
+     * 获取RedissonClient客户端实例
+     *
+     * @return RedissonClient
+     */
+    @Override
+    public RedissonClient getRedissonClient() {
+        return redissonClient;
+    }
+
+    /**
      * 获取指定桶中的所有数据
      *
      * @param bucketName 桶名字

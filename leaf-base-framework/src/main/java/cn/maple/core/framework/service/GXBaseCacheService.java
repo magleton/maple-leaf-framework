@@ -1,6 +1,5 @@
 package cn.maple.core.framework.service;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface GXBaseCacheService {

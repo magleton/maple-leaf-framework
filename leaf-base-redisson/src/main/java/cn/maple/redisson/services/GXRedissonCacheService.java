@@ -1,10 +1,18 @@
 package cn.maple.redisson.services;
 
 import cn.maple.core.framework.service.GXBaseCacheService;
+import org.redisson.api.RedissonClient;
 
 import java.util.Map;
 
 public interface GXRedissonCacheService extends GXBaseCacheService {
+    /**
+     * 获取RedissonClient客户端实例
+     *
+     * @return RedissonClient
+     */
+    RedissonClient getRedissonClient();
+
     /**
      * 获取指定桶中的所有数据
      *
