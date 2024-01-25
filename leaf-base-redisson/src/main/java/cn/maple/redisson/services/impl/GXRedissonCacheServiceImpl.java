@@ -2,6 +2,7 @@ package cn.maple.redisson.services.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.maple.redisson.services.GXRedissonCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
@@ -9,10 +10,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -33,6 +31,12 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Object setCache(String bucketName, String key, Object value, int expired, TimeUnit timeUnit) {
+        if (CharSequenceUtil.length(bucketName) > 64) {
+            log.error("Redis的BucketName:{}太长,建议长度不超过64,请修改!", bucketName);
+        }
+        if (CharSequenceUtil.length(key) > 64) {
+            log.error("Redis的key:{}太长,建议长度不超过64,请修改!", key);
+        }
         return redissonClient.getMapCache(bucketName).put(key, value, expired, timeUnit);
     }
 
@@ -187,9 +191,7 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern) {
-        if (count > 1000 || count < 0) {
-            count = 1000;
-        }
+        count = NumberUtil.min(count, 1000);
         RMapCache<Object, Object> rMapCache = redissonClient.getMapCache(bucketName);
         Set<Object> keys;
         if (CharSequenceUtil.isNotEmpty(pattern)) {
@@ -199,6 +201,10 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
         }
         if (CollUtil.isEmpty(keys)) {
             return Collections.emptyMap();
+        }
+        if (keys.size() > count) {
+            List<Object> sub = CollUtil.sub(keys, 0, count);
+            keys = CollUtil.newHashSet(sub);
         }
         return rMapCache.getAll(keys);
     }
