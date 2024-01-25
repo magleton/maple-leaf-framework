@@ -5,7 +5,6 @@ import cn.maple.core.framework.service.GXBaseCacheService;
 import java.util.Map;
 
 public interface GXRedissonCacheService extends GXBaseCacheService {
-
     /**
      * 获取指定桶中的所有数据
      *
