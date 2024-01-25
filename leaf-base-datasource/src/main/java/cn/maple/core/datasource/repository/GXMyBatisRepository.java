@@ -29,7 +29,6 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -60,7 +59,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         GXValidatorUtils.validateEntity(entity);
@@ -74,7 +72,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, CollUtil.newArrayList());
     }

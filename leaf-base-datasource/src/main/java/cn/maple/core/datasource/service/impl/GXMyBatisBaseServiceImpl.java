@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -106,7 +105,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
@@ -143,7 +141,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         return updateFieldByCondition(repository.getTableName(), updateFields, condition);
     }
@@ -538,7 +535,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, Collections.emptyList());
     }
@@ -551,7 +547,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         return repository.updateOrCreate(entity, condition);
     }
@@ -565,7 +560,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, List<GXCondition<?>> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
         T entity = convertSourceToTarget(req, targetClazz, GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME, copyOptions);
@@ -580,7 +574,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, CopyOptions copyOptions) {
         return updateOrCreate(req, Collections.emptyList(), copyOptions);
     }
@@ -592,7 +585,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req) {
         return updateOrCreate(req, CopyOptions.create());
     }
@@ -606,7 +598,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 新数据ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData, Dict extraData) {
         R oneData = findOneByCondition(repository.getTableName(), conditions);
         if (Objects.isNull(oneData)) {
@@ -633,7 +624,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 新数据ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData) {
         return copyOneData(conditions, replaceData, Dict.create());
     }
@@ -646,7 +636,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
         return repository.deleteSoftCondition(tableName, condition);
     }
@@ -658,7 +647,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(List<GXCondition<?>> condition) {
         return deleteSoftCondition(repository.getTableName(), condition);
     }
@@ -671,7 +659,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return repository.deleteCondition(tableName, condition);
     }
@@ -683,7 +670,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(List<GXCondition<?>> condition) {
         return deleteCondition(repository.getTableName(), condition);
     }
