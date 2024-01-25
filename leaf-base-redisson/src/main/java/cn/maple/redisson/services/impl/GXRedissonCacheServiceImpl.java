@@ -1,6 +1,7 @@
 package cn.maple.redisson.services.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.maple.redisson.services.GXRedissonCacheService;
@@ -191,6 +192,7 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern) {
+        Assert.checkBetween(count, 1, 1000, "count必须在{}到{}之间.", 1, 1000);
         count = NumberUtil.min(count, 1000);
         RMapCache<Object, Object> rMapCache = redissonClient.getMapCache(bucketName);
         Set<Object> keys;
