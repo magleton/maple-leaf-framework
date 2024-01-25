@@ -1,5 +1,6 @@
 package cn.maple.core.framework.service;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface GXBaseCacheService {
@@ -108,4 +109,14 @@ public interface GXBaseCacheService {
      * @return 是否存在
      */
     boolean exists(String bucketName, String key);
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @param count      获取数量
+     * @param pattern    redis key pattern
+     * @return 桶中所有的数据
+     */
+    Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern);
 }

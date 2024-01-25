@@ -1,5 +1,7 @@
 package cn.maple.redisson.services.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.redisson.services.GXRedissonCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
@@ -7,7 +9,10 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -170,5 +175,54 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     @Override
     public boolean exists(String bucketName, String key) {
         return Objects.nonNull(redissonClient.getMapCache(bucketName).get(key));
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @param count      获取数量
+     * @param pattern    redis key pattern
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern) {
+        if (count > 1000 || count < 0) {
+            count = 1000;
+        }
+        RMapCache<Object, Object> rMapCache = redissonClient.getMapCache(bucketName);
+        Set<Object> keys;
+        if (CharSequenceUtil.isNotEmpty(pattern)) {
+            keys = rMapCache.keySet(pattern, count);
+        } else {
+            keys = rMapCache.keySet(count);
+        }
+        if (CollUtil.isEmpty(keys)) {
+            return Collections.emptyMap();
+        }
+        return rMapCache.getAll(keys);
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName) {
+        return getBucketAllData(bucketName, 1000);
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @param count      获取数量
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName, int count) {
+        return getBucketAllData(bucketName, count, null);
     }
 }
