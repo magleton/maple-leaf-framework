@@ -1,6 +1,8 @@
 package cn.maple.redisson.util;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.redisson.api.*;
 import org.slf4j.Logger;
@@ -8,18 +10,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class GXRedisUtils {
+public class GXRedissonUtils {
     /**
      * Logger对象
      */
-    private static final Logger LOG = LoggerFactory.getLogger(GXRedisUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GXRedissonUtils.class);
 
     /**
      * 计数器缓存的名字
      */
     private static final String COUNTER_MAP_CACHE_NAME = "counter_map_cache_name";
 
-    private GXRedisUtils() {
+    private GXRedissonUtils() {
     }
 
     /**
@@ -112,7 +114,18 @@ public class GXRedisUtils {
      * @return RLock
      */
     public static RLock getLock(String lockName) {
-        return getRedissonClient().getLock("lock:" + lockName);
+        return getLock("lock", lockName);
+    }
+
+    /**
+     * 获取Redis锁
+     *
+     * @param lockPrefix 锁前缀
+     * @param lockName   锁的名字
+     * @return RLock
+     */
+    public static RLock getLock(String lockPrefix, String lockName) {
+        return getRedissonClient().getLock(CharSequenceUtil.format("{}:{}", lockPrefix, lockName));
     }
 
     /**
@@ -135,6 +148,10 @@ public class GXRedisUtils {
      * @return RedissonClient
      */
     public static RedissonClient getRedissonClient() {
+        RedissonClient redissonClient = GXSpringContextUtils.getBean("redissonClient", RedissonClient.class);
+        if (ObjectUtil.isNotNull(redissonClient)) {
+            return redissonClient;
+        }
         return GXSpringContextUtils.getBean(RedissonClient.class);
     }
 }
