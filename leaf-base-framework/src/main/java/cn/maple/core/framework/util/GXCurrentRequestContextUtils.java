@@ -15,6 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -278,5 +279,42 @@ public class GXCurrentRequestContextUtils {
     public static boolean isHTTP() {
         HttpServletRequest request = getHttpServletRequest();
         return Objects.nonNull(request);
+    }
+
+    /**
+     * 判断是否是IP　V4内网IP
+     *
+     * @param ip IP地址
+     * @return 是否IPV4内网IP
+     */
+    public static boolean isInternalIP(byte[] ip) {
+        if (ip.length != 4) {
+            throw new RuntimeException("illegal ipv4 bytes");
+        }
+        //10.0.0.0~10.255.255.255
+        //172.16.0.0~172.31.255.255
+        //192.168.0.0~192.168.255.255
+        if (ip[0] == (byte) 10) {
+            return true;
+        } else if (ip[0] == (byte) 172) {
+            return ip[1] >= (byte) 16 && ip[1] <= (byte) 31;
+        } else if (ip[0] == (byte) 192) {
+            return ip[1] == (byte) 168;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否是IP　V6内网IP
+     *
+     * @param inetAddr 网络地址
+     * @return 是否IP　V6内网IP
+     */
+    public static boolean isInternalV6IP(InetAddress inetAddr) {
+        // Site local ipv6 address: fec0:xx:xx...
+        return inetAddr.isAnyLocalAddress() // Wild card ipv6
+                || inetAddr.isLinkLocalAddress() // Single broadcast ipv6 address: fe80:xx:xx...
+                || inetAddr.isLoopbackAddress() //Loopback ipv6 address
+                || inetAddr.isSiteLocalAddress();
     }
 }
