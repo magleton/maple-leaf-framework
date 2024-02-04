@@ -5,10 +5,12 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -289,7 +291,7 @@ public class GXCurrentRequestContextUtils {
      */
     public static boolean isInternalIP(byte[] ip) {
         if (ip.length != 4) {
-            throw new RuntimeException("illegal ipv4 bytes");
+            throw new GXBusinessException("illegal ipv4 bytes", HttpStatus.HTTP_INTERNAL_ERROR);
         }
         //10.0.0.0~10.255.255.255
         //172.16.0.0~172.31.255.255
