@@ -425,7 +425,11 @@ public interface GXBusinessService {
      * @return 登录的用户名
      */
     default String getLoginUserName() {
-        Dict dict = getLoginCredentials();
-        return dict.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME);
+        if (GXCurrentRequestContextUtils.isHTTP()) {
+            Dict dict = getLoginCredentials();
+            return dict.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME);
+        }
+        LOG.info("不是HTTP请求,不能获取登录的用户名!");
+        return "RPC_USER";
     }
 }
