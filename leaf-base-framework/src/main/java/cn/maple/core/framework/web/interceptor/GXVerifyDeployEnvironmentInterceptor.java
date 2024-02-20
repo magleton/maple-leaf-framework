@@ -28,6 +28,11 @@ public class GXVerifyDeployEnvironmentInterceptor extends GXAuthorizationInterce
     }
 
     private boolean verifyDeployEnvironmentConsistency(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 是否需要验证部署环境 默认为不验证
+        boolean verifyDeployEnvironmentValue = GXCommonUtils.getEnvironmentValue("verify.deploy.environment", boolean.class, false);
+        if (!verifyDeployEnvironmentValue) {
+            return true;
+        }
         String requestHeaderValue = request.getHeader(GXCommonConstant.DEPLOY_REQUEST_ENV_HEADER_NAME);
         String proxyHeaderValue = Optional.ofNullable(System.getProperty(GXCommonConstant.DEPLOY_ENV_HEADER_NAME)).orElse(System.getenv(GXCommonConstant.DEPLOY_ENV_HEADER_NAME));
         String currentActiveProfile = GXCommonUtils.getActiveProfile();
