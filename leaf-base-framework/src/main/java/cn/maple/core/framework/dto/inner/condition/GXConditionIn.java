@@ -23,7 +23,7 @@ public class GXConditionIn extends GXCondition<String> {
     @Override
     public String getFieldValue() {
         String activeProfile = GXCommonUtils.getActiveProfile();
-        int limitCnt = 300;
+        int limitCnt = 100000;
         List<String> envLst = CollUtil.newArrayList(GXCommonConstant.RUN_ENV_DEV, GXCommonConstant.RUN_ENV_LOCAL);
         if (CollUtil.contains(envLst, activeProfile)) {
             limitCnt = 50;
