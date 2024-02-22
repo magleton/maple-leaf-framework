@@ -26,7 +26,7 @@ public class GXConditionIn extends GXCondition<String> {
         int limitCnt = 300;
         List<String> envLst = CollUtil.newArrayList(GXCommonConstant.RUN_ENV_DEV, GXCommonConstant.RUN_ENV_LOCAL);
         if (CollUtil.contains(envLst, activeProfile)) {
-            limitCnt = 10;
+            limitCnt = 50;
         }
         if (CollUtil.size(value) > limitCnt) {
             throw new GXBusinessException(CharSequenceUtil.format("IN查询条件不能超过{}条数据!", limitCnt));
