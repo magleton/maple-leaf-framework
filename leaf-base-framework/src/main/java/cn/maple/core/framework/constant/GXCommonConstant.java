@@ -45,7 +45,7 @@ public class GXCommonConstant {
      * 服务运行的环境
      * 个人开发环境
      */
-    public static final String RUN_ENV_LOCAL = "dev";
+    public static final String RUN_ENV_LOCAL = "local";
 
     /**
      * 服务运行的环境
