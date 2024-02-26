@@ -5,7 +5,6 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
-import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class GXConditionIn extends GXCondition<String> {
         String activeProfile = GXCommonUtils.getActiveProfile();
         int limitCnt = 100000;
         List<String> envLst = CollUtil.newArrayList(GXCommonConstant.RUN_ENV_DEV, GXCommonConstant.RUN_ENV_LOCAL);
-        if (CollUtil.contains(envLst, activeProfile) && GXCurrentRequestContextUtils.isHTTP()) {
+        if (CollUtil.contains(envLst, activeProfile)/* && GXCurrentRequestContextUtils.isHTTP()*/) {
             limitCnt = 50;
         }
         if (CollUtil.size(value) > limitCnt) {
