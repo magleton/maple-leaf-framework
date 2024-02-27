@@ -1,6 +1,9 @@
 package cn.maple.core.framework.web.advice;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.maple.core.framework.service.GXResponseBodyAdviceService;
 import cn.maple.core.framework.util.GXResultUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -12,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @Log4j2
 @RestControllerAdvice
-public class GXResponseBodyAdvice implements ResponseBodyAdvice<GXResultUtils<?>> {
+public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* implements ResponseBodyAdvice<GXResultUtils<?>>*/ {
     /**
      * Whether this component supports the given controller method return type
      * and the selected {@code HttpMessageConverter} type.
@@ -24,6 +27,10 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<GXResultUtils<?>
      */
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
+        GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
+        if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
+            return responseBodyAdviceService.supports(returnType, converterType);
+        }
         return returnType.getParameterType().isAssignableFrom(GXResultUtils.class);
     }
 
@@ -40,9 +47,13 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<GXResultUtils<?>
      * @return the body that was passed in or a modified (possibly new) instance
      */
     @Override
-    public GXResultUtils<?> beforeBodyWrite(GXResultUtils<?> body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         log.debug("响应拦截成功!");
         response.getHeaders().add("AUTHOR", "magleton");
+        GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
+        if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
+            return responseBodyAdviceService.beforeBodyWrite(body, returnType, selectedContentType, selectedConverterType, request, response);
+        }
         return body;
     }
 }
