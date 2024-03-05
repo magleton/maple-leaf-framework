@@ -8,10 +8,6 @@ import lombok.Setter;
 import java.io.Serializable;
 
 public abstract class GXCondition<T> implements Serializable {
-    @Setter
-    @Getter
-    protected String tableNameAlias;
-
     /**
      * 可以是一个具体的字段名字  goods_name
      * <p>
@@ -19,6 +15,10 @@ public abstract class GXCondition<T> implements Serializable {
      */
     protected final String fieldExpression;
 
+    @Setter
+    @Getter
+    protected String tableNameAlias;
+    
     @SuppressWarnings("all")
     protected Object value;
 
@@ -42,7 +42,7 @@ public abstract class GXCondition<T> implements Serializable {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
             return CharSequenceUtil.format("{} {} {}", getFieldExpression(), opStr, getFieldValue());
         }
-        return CharSequenceUtil.format("`{}`.{} {} {}", tableNameAlias, getFieldExpression(), opStr, getFieldValue());
+        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, getFieldExpression(), opStr, getFieldValue());
     }
 
     public String getFieldExpression() {
