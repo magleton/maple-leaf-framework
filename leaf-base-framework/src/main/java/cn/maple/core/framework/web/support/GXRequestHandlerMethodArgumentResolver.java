@@ -6,9 +6,9 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXRequestBody;
 import cn.maple.core.framework.code.GXHttpStatusCode;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -38,11 +38,6 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 
     /**
-     * JACKSON数据转换对象
-     */
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    /**
      * 进行参数验证之前对数据进行修复的方法名字
      */
     private static final String BEFORE_REPAIR_METHOD = "beforeRepair";
@@ -60,13 +55,6 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * 日志对象
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
-
-    /**
-     * 给OBJECT_MAPPER设置属性
-     */
-    static {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -172,7 +160,9 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      */
     private <T> T jsonToTarget(String jsonData, Class<T> beanType) throws JsonProcessingException {
         try {
-            return OBJECT_MAPPER.readValue(jsonData, beanType);
+            ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
+            assert objectMapper != null;
+            return objectMapper.readValue(jsonData, beanType);
         } catch (Exception e) {
             LOGGER.error("Servlet请求体参数转换对象失败");
             throw e;
@@ -187,9 +177,11 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @return 列表
      */
     public <T> List<T> jsonToTargetList(String jsonData, Class<T> beanType) throws JsonProcessingException {
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
+        ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
+        assert objectMapper != null;
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, beanType);
         try {
-            return OBJECT_MAPPER.readValue(jsonData, javaType);
+            return objectMapper.readValue(jsonData, javaType);
         } catch (Exception e) {
             LOGGER.error("Servlet请求体参数转换对象失败");
             throw e;

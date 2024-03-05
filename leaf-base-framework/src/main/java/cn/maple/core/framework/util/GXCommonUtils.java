@@ -21,6 +21,8 @@ import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
 import lombok.Getter;
 import org.slf4j.Logger;
