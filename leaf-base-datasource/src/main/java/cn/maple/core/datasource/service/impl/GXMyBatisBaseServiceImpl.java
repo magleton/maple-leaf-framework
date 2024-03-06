@@ -113,7 +113,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
             return GXCommonConstant.DB_RECORD_NOT_FOUND;
         }
         // 判断是HTTP请求还是RPC请求
-        if (GXCurrentRequestContextUtils.isHTTP()) {
+        if (GXCurrentRequestContextUtils.isHTTP() && GXCurrentRequestContextUtils.tokenExists()) {
             String loginUserName = getLoginUserName();
             if (CharSequenceUtil.isNotEmpty(loginUserName)) {
                 List<String> updateFieldNameLst = new ArrayList<>();
@@ -403,7 +403,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @param masterQueryParamInnerDto   外层的主查询条件
      * @param unionQueryParamInnerDtoLst union查询条件
      * @param unionTypeEnums             union的类型
-     * @return
+     * @return 匹配条件的数据
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {

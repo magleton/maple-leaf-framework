@@ -425,7 +425,7 @@ public interface GXBusinessService {
      * @return 登录的用户名
      */
     default String getLoginUserName() {
-        if (GXCurrentRequestContextUtils.isHTTP()) {
+        if (GXCurrentRequestContextUtils.isHTTP() && GXCurrentRequestContextUtils.tokenExists()) {
             Dict dict = getLoginCredentials();
             return dict.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME);
         }

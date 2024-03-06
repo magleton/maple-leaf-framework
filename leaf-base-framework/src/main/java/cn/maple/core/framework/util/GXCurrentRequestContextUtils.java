@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -281,6 +282,23 @@ public class GXCurrentRequestContextUtils {
     public static boolean isHTTP() {
         HttpServletRequest request = getHttpServletRequest();
         return Objects.nonNull(request);
+    }
+
+    /**
+     * 判断token是否存在
+     * 在有些场景下 不需要登录
+     * 所以token是不存在
+     *
+     * @return true 存在 false 不存在
+     */
+    public static boolean tokenExists() {
+        if (isHTTP()) {
+            HttpServletRequest httpServletRequest = getHttpServletRequest();
+            assert httpServletRequest != null;
+            String header = ServletUtil.getHeader(httpServletRequest, GXTokenConstant.TOKEN_NAME, StandardCharsets.UTF_8);
+            return Objects.nonNull(header);
+        }
+        return false;
     }
 
     /**
