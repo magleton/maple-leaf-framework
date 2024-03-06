@@ -13,6 +13,6 @@ public class GXUpdateJsonSetStrField extends GXUpdateField<String> {
     @Override
     public String getFieldValue() {
         value = CharSequenceUtil.replace(value.toString(), "'", "\\'");
-        return CharSequenceUtil.format("JSON_SET(`{}`.`{}` , '$.{}' , {})", tableNameAlias, fieldName, path, CharSequenceUtil.format("'{}'", value));
+        return CharSequenceUtil.format("JSON_SET({}.{} , '$.{}' , {})", tableNameAlias, fieldName, path, CharSequenceUtil.format("'{}'", value));
     }
 }

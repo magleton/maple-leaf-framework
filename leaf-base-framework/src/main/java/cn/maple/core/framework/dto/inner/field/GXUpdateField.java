@@ -22,9 +22,9 @@ public abstract class GXUpdateField<T> implements Serializable {
 
     public String updateString() {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
-            return CharSequenceUtil.format("`{}` = {}", fieldName, getFieldValue());
+            return CharSequenceUtil.format("{} = {}", fieldName, getFieldValue());
         }
-        return CharSequenceUtil.format("`{}`.`{}` = {}", tableNameAlias, fieldName, getFieldValue());
+        return CharSequenceUtil.format("{}.{} = {}", tableNameAlias, fieldName, getFieldValue());
     }
 
     public abstract T getFieldValue();
