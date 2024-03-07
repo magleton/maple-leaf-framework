@@ -177,10 +177,11 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 附加数据
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
         return null;
     }
 

@@ -198,9 +198,10 @@ public interface GXBaseRepository<T, ID extends Serializable> {
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
      * @return 影响行数
      */
-    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData);
 
     /**
      * 根据条件删除

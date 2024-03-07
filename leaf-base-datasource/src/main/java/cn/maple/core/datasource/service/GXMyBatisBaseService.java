@@ -359,6 +359,16 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData);
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
      * @return 影响行数
      */
     Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);

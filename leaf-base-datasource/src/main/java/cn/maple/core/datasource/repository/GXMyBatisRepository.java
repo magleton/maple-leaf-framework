@@ -272,12 +272,13 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
         Assert.notNull(condition, "条件不能为null");
-        return baseDao.deleteSoftCondition(tableName, condition);
+        return baseDao.deleteSoftCondition(tableName, condition, extraData);
     }
 
     /**

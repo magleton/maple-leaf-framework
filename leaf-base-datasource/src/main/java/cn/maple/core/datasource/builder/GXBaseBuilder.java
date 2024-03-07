@@ -2,6 +2,7 @@ package cn.maple.core.datasource.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -17,6 +18,7 @@ import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import org.apache.ibatis.jdbc.SQL;
@@ -226,9 +228,10 @@ public interface GXBaseBuilder {
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
      * @return SQL语句
      */
-    static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+    static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
         String keyProperty = tableInfo.getKeyProperty();
         if (CharSequenceUtil.isEmpty(keyProperty)) {
@@ -238,6 +241,16 @@ public interface GXBaseBuilder {
         LOGGER.info("deleteSoftCondition方法中的{}表的主键名字{}", tableName, keyProperty);
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET(CharSequenceUtil.format("is_deleted = {}", keyProperty), CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
+        if (CharSequenceUtil.isNotBlank(extraData.getStr("deletedBy"))) {
+            List<TableFieldInfo> fieldList = tableInfo.getFieldList();
+            for (TableFieldInfo fieldInfo : fieldList) {
+                String column = fieldInfo.getColumn();
+                if (CharSequenceUtil.equalsIgnoreCase("deleted_by", column)) {
+                    sql.SET(CharSequenceUtil.format("deleted_by = '{}'", extraData.getStr("deletedBy")));
+                    break;
+                }
+            }
+        }
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));

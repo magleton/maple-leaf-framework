@@ -217,11 +217,12 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
-        return baseMapper.deleteSoftCondition(tableName, condition);
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+        return baseMapper.deleteSoftCondition(tableName, condition, extraData);
     }
 
     /**

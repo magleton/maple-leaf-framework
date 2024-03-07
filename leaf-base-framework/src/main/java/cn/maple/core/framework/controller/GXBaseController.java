@@ -249,11 +249,11 @@ public interface GXBaseController {
      * @param targetClass    返回的数据类型
      * @return R
      */
-    default <R> R getBackEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
+    default <R> R getManagerUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
         if (Objects.isNull(tokenSecretKey)) {
             throw new GXBusinessException("请传递token密钥!");
         }
-        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
     }
 
     /**
@@ -263,8 +263,8 @@ public interface GXBaseController {
      * @param targetClass    返回的数据类型
      * @return R
      */
-    default <R> R getBackEndUserId(String tokenSecretKey, Class<R> targetClass) {
-        return getBackEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
+    default <R> R getManagerUserId(String tokenSecretKey, Class<R> targetClass) {
+        return getManagerUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
     }
 
     /**

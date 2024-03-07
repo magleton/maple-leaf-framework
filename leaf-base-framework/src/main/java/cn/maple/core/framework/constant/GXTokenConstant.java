@@ -39,7 +39,7 @@ public class GXTokenConstant {
     /**
      * 用户token的名字
      */
-    public static final String USER_TOKEN_NAME = "user-token";
+    public static final String USER_TOKEN_NAME = "token";
 
     /**
      * 用户登录用的token标签
@@ -52,19 +52,9 @@ public class GXTokenConstant {
     public static final String TOKEN_USER_NAME_FIELD_NAME = "userName";
 
     /**
-     * Admin登录用的token标签
+     * 管理端缓存桶的名字(redisson)
      */
-    public static final String TOKEN_ADMIN_ID_FIELD_NAME = "adminId";
-
-    /**
-     * 管理员token的名字
-     */
-    public static final String ADMIN_TOKEN_NAME = "admin-token";
-
-    /**
-     * ADMIN端缓存桶的名字(redisson)
-     */
-    public static final String ADMIN_CACHE_BUCKET_NAME = "admin-cache-bucket";
+    public static final String MANAGER_CACHE_BUCKET_NAME = "admin-cache-bucket";
 
     /**
      * C端客户TOKEN加密的KEY

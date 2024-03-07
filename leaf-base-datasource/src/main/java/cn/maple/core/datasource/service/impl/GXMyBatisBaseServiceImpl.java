@@ -637,11 +637,30 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      *
      * @param tableName 表名
      * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+        if (GXCurrentRequestContextUtils.isHTTP()
+                && GXCurrentRequestContextUtils.tokenExists()
+                && !extraData.containsKey("deletedBy")) {
+            String loginUserName = getLoginUserName();
+            extraData.set("deletedBy", loginUserName);
+        }
+        return repository.deleteSoftCondition(tableName, condition, extraData);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
      * @return 影响行数
      */
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
-        return repository.deleteSoftCondition(tableName, condition);
+        return deleteSoftCondition(tableName, condition, Dict.create());
     }
 
     /**
