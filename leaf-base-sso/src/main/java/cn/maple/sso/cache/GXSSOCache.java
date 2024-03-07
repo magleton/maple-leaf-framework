@@ -62,7 +62,7 @@ public interface GXSSOCache {
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         assert cacheService != null;
-        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         if (Objects.isNull(id)) {
             throw new GXBusinessException("token中未包含有效的id标识");
         }
@@ -88,7 +88,7 @@ public interface GXSSOCache {
             String tokenSecret = tokenConfigService.getTokenSecret();
             ssoToken = GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
         }
-        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(ssoToken.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         if (Objects.isNull(id)) {
             throw new GXBusinessException("token中未包含有效的id标识");
         }

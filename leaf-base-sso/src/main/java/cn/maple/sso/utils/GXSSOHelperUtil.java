@@ -217,7 +217,7 @@ public class GXSSOHelperUtil {
         String platform = Optional.ofNullable(request.getHeader(GXTokenConstant.PLATFORM)).orElse("");
         Dict data = Dict.create().set(GXTokenConstant.PLATFORM, platform);
         Dict loginCredentials = GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenConfigService.getTokenSecret());
-        Long userId = Optional.ofNullable(loginCredentials.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(loginCredentials.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        Long userId = Optional.ofNullable(loginCredentials.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         return tokenConfigService.getTokenCacheKey(userId, data);
     }
 
