@@ -33,17 +33,17 @@ public class GXTokenManagerUtils {
      *     }
      * </pre>
      *
-     * @param adminId   管理员ID
+     * @param userId    管理员ID
      * @param param     附加信息
      * @param secretKey 加解密key
      * @param expires   过期时间
      * @return String
      */
-    public static String generateManagerToken(Object adminId, Dict param, String secretKey, int expires) {
+    public static String generateManagerToken(Object userId, Dict param, String secretKey, int expires) {
         if (CharSequenceUtil.isEmpty(param.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME))) {
             throw new GXBusinessException("请在param参数中设置userName!!!");
         }
-        param.putIfAbsent(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, adminId);
+        param.putIfAbsent(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, userId);
         param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD_NAME, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
