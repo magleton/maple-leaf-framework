@@ -9,12 +9,10 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXTokenInvalidException;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
-@Slf4j
 public class GXTokenManagerUtils {
     /**
      * 日志对象
@@ -65,7 +63,7 @@ public class GXTokenManagerUtils {
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
-            log.error(exception.getMessage());
+            LOG.error(exception.getMessage());
         }
         return Dict.create();
     }
