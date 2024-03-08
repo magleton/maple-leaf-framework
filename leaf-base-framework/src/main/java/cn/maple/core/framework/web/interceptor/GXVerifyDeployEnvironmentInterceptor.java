@@ -34,9 +34,9 @@ public class GXVerifyDeployEnvironmentInterceptor extends GXAuthorizationInterce
             return true;
         }
         String requestHeaderValue = request.getHeader(GXCommonConstant.DEPLOY_REQUEST_ENV_HEADER_NAME);
-        String proxyHeaderValue = Optional.ofNullable(System.getProperty(GXCommonConstant.DEPLOY_ENV_HEADER_NAME)).orElse(System.getenv(GXCommonConstant.DEPLOY_ENV_HEADER_NAME));
+        String deployHeaderValue = Optional.ofNullable(System.getProperty(GXCommonConstant.DEPLOY_ENV_HEADER_NAME)).orElse(System.getenv(GXCommonConstant.DEPLOY_ENV_HEADER_NAME));
         String currentActiveProfile = GXCommonUtils.getActiveProfile();
-        if (!CharSequenceUtil.equals(requestHeaderValue, proxyHeaderValue) && !CharSequenceUtil.equals(proxyHeaderValue, currentActiveProfile)) {
+        if (!CharSequenceUtil.equals(requestHeaderValue, deployHeaderValue) || !CharSequenceUtil.equals(deployHeaderValue, currentActiveProfile)) {
             Dict data = Dict.create().set("code", HttpStatus.HTTP_FORBIDDEN).set("msg", "请求环境不一致!").set("data", null);
             JSONConfig jsonConfig = new JSONConfig();
             jsonConfig.setIgnoreNullValue(false);
