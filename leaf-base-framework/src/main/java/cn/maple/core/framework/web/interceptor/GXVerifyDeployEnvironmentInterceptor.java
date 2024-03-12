@@ -2,6 +2,7 @@ package cn.maple.core.framework.web.interceptor;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.SystemPropsUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * 验证部署环境是否一致
@@ -34,7 +34,7 @@ public class GXVerifyDeployEnvironmentInterceptor extends GXAuthorizationInterce
             return true;
         }
         String requestEnvValue = request.getHeader(GXCommonConstant.DEPLOY_REQUEST_ENV_HEADER_NAME);
-        String deployEnvValue = Optional.ofNullable(System.getProperty(GXCommonConstant.DEPLOY_ENV_HEADER_NAME)).orElse(System.getenv(GXCommonConstant.DEPLOY_ENV_HEADER_NAME));
+        String deployEnvValue = SystemPropsUtil.get(GXCommonConstant.DEPLOY_ENV_HEADER_NAME);
         String currentActiveProfile = GXCommonUtils.getActiveProfile();
         if (!CharSequenceUtil.equals(requestEnvValue, deployEnvValue) || !CharSequenceUtil.equals(deployEnvValue, currentActiveProfile)) {
             Dict data = Dict.create().set("code", HttpStatus.HTTP_FORBIDDEN).set("msg", "请求环境不一致!").set("data", null);
