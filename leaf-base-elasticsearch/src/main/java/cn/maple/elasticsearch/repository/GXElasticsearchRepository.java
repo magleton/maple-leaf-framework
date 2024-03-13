@@ -1,7 +1,9 @@
 package cn.maple.elasticsearch.repository;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.ddd.repository.GXBaseRepository;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
@@ -16,6 +18,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
@@ -35,7 +38,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
-        return null;
+        return baseDao.updateOrCreate(entity, condition);
     }
 
     /**
@@ -57,7 +60,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        return Collections.emptyList();
+        return baseDao.findByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -93,7 +96,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        return null;
+        return baseDao.findOneByCondition(dbQueryParamInnerDto);
     }
 
     /**
@@ -105,7 +108,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition) {
-        return null;
+        return findOneByCondition(tableName, condition, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -118,7 +121,8 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneByCondition(String tableName, List<GXCondition<?>> condition, Set<String> columns) {
-        return null;
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).tableNameAlias(tableName).columns(columns).condition(condition).build();
+        return findOneByCondition(queryParamInnerDto);
     }
 
     /**
@@ -131,7 +135,8 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneById(String tableName, ID id, Set<String> columns) {
-        return null;
+        Optional<T> data = baseDao.findById(id);
+        return data.map(t -> Convert.convert(Dict.class, t)).orElse(null);
     }
 
     /**
@@ -143,7 +148,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneById(String tableName, ID id) {
-        return null;
+        return findOneById(tableName, id, CollUtil.newHashSet("*"));
     }
 
     /**
@@ -154,7 +159,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
-        return null;
+        return baseDao.paginate(dbQueryParamInnerDto);
     }
 
     /**
@@ -169,7 +174,8 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public GXPaginationResDto<Dict> paginate(String tableName, Integer page, Integer pageSize, List<GXCondition<?>> condition, Set<String> columns) {
-        return null;
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).page(page).pageSize(pageSize).condition(condition).columns(columns).build();
+        return paginate(queryParamInnerDto);
     }
 
     /**
@@ -194,7 +200,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
-        return null;
+        return baseDao.deleteCondition(tableName, condition);
     }
 
     /**
@@ -206,7 +212,8 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
-        return false;
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().tableName(tableName).condition(condition).build();
+        return ObjectUtil.isNotNull(baseDao.findOneByCondition(queryParamInnerDto));
     }
 
     /**

@@ -21,8 +21,6 @@ import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Table;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -551,5 +549,24 @@ public class GXCommonUtils {
     public static boolean isBase64(String base64Str) {
         String base64Pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
         return Pattern.matches(base64Pattern, base64Str);
+    }
+
+    /**
+     * 检测给定Class<?>中是否包含指定的方法
+     *
+     * @param targetClazz 目标类
+     * @param methodName  方法名字
+     * @param params      方法参数
+     * @return true 存在 false 不存在
+     */
+    public static boolean checkMethodExists(Class<?> targetClazz, String methodName, Object... params) {
+        Class<?>[] classes = new Class<?>[params.length];
+        for (int i = 0; i < params.length; i++) {
+            if (Objects.nonNull(params[i])) {
+                classes[i] = params[i].getClass();
+            }
+        }
+        Method method = ReflectUtil.getMethod(targetClazz, methodName, classes);
+        return ObjectUtil.isNotNull(method);
     }
 }
