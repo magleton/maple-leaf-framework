@@ -89,6 +89,37 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
     }
 
     /**
+     * 根据条件创建数据
+     * 如果数据存在 则先将数据删除
+     * 然后再新增
+     *
+     * @param entity    需要新增的数据
+     * @param condition 需要被删除数据的查询条件
+     * @return ID
+     */
+    default <ID extends Serializable> ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
+        T save = save(entity);
+        Class<ID> retIDClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
+        String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst("id"));
+        return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(save, methodName));
+    }
+
+    /**
+     * 删除满足条件的数据
+     *
+     * @param tableName 表的名字
+     * @param condition 删除条件
+     * @return 被成功删除的数量
+     */
+    default Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
+        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).build();
+        Query query = buildQuery(queryParamInnerDto);
+        ElasticsearchTemplate elasticsearchTemplate = getElasticsearchTemplate();
+        ByQueryResponse deleteResponse = elasticsearchTemplate.delete(query, getGenericClassType());
+        return Math.toIntExact(deleteResponse.getDeleted());
+    }
+
+    /**
      * 指定统一查询
      *
      * @param queryParamInnerDto 查询条件
@@ -201,6 +232,15 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
     }
 
     /**
+     * 获取当前类的实体Class
+     *
+     * @return Class<T>
+     */
+    default Class<?> getGenericClassType() {
+        return GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 0);
+    }
+
+    /**
      * 获取Spring容器中的ElasticsearchTemplate对象bean的名字
      *
      * @return bean的名字
@@ -224,54 +264,5 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
             return CharSequenceUtil.format("'{}'", name);
         }).collect(Collectors.joining(",")) + "]");
         return elasticsearchTemplate;
-    }
-
-    /**
-     * 根据条件创建数据
-     * 如果数据存在 则先将数据删除
-     * 然后再新增
-     *
-     * @param entity    需要新增的数据
-     * @param condition 需要被删除数据的查询条件
-     * @return ID
-     */
-    default <ID extends Serializable> ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).build();
-        Query query = buildQuery(queryParamInnerDto);
-        ElasticsearchTemplate elasticsearchTemplate = getElasticsearchTemplate();
-        ByQueryResponse queryResponse = elasticsearchTemplate.delete(query, getGenericClassType());
-        long updated = queryResponse.getUpdated();
-        if (updated > 0) {
-            T save = elasticsearchTemplate.save(entity);
-            Class<ID> retIDClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
-            String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst("id"));
-            return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(save, methodName));
-        }
-        return null;
-    }
-
-
-    /**
-     * 获取当前类的实体Class
-     *
-     * @return Class<T>
-     */
-    default Class<?> getGenericClassType() {
-        return GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 0);
-    }
-
-    /**
-     * 删除满足条件的数据
-     *
-     * @param tableName 表的名字
-     * @param condition 删除条件
-     * @return 删除的数量
-     */
-    default Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
-        GXBaseQueryParamInnerDto queryParamInnerDto = GXBaseQueryParamInnerDto.builder().condition(condition).build();
-        Query query = buildQuery(queryParamInnerDto);
-        ElasticsearchTemplate elasticsearchTemplate = getElasticsearchTemplate();
-        ByQueryResponse delete = elasticsearchTemplate.delete(query, getGenericClassType());
-        return Math.toIntExact(delete.getDeleted());
     }
 }
