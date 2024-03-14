@@ -32,6 +32,13 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 基于ES Repository封装的统一基本操作
+ * {@link <a href="https://docs.spring.io/spring-data/elasticsearch/reference/index.html">帮助文档</a>}
+ *
+ * @param <T>  实体的类型
+ * @param <ID> 实体中的ID序列号
+ */
 public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends Serializable> extends ElasticsearchRepository<T, ID> {
     /**
      * 根据条件查询所有满足条件的数据
