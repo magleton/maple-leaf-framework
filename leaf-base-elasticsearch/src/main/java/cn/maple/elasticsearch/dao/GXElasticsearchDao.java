@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.util.Assert;
@@ -90,7 +91,8 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
         Query query = buildQuery(queryParamInnerDto);
         ElasticsearchTemplate elasticsearchTemplate = getElasticsearchTemplate();
         Class<?> genericClassType = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 0);
-        SearchHits<?> search = elasticsearchTemplate.search(query, genericClassType);
+        String indexName = queryParamInnerDto.getTableName();
+        SearchHits<?> search = CharSequenceUtil.isEmpty(indexName) ? elasticsearchTemplate.search(query, genericClassType) : elasticsearchTemplate.search(query, genericClassType, IndexCoordinates.of(indexName));
         String[] methodName = new String[]{queryParamInnerDto.getMethodName()};
         if (CharSequenceUtil.isEmpty(methodName[0])) {
             methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
@@ -158,7 +160,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
         if (CollUtil.isNotEmpty(conditions)) {
             conditions.forEach(condition -> {
                 String fieldName = condition.getFieldExpression();
-                String value = ObjectUtil.toString(condition.getFieldValue());
+                String value = ObjectUtil.toString(condition.getValue());
                 String op = condition.getOp();
                 String methodName = methodMapping.get(op);
                 if (CharSequenceUtil.isNotEmpty(methodName) && GXCommonUtils.checkMethodExists(Criteria.class, methodName, value)) {

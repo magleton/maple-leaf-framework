@@ -18,8 +18,9 @@ public abstract class GXCondition<T> implements Serializable {
     @Setter
     @Getter
     protected String tableNameAlias;
-    
+
     @SuppressWarnings("all")
+    @Getter
     protected Object value;
 
     protected GXCondition(String fieldExpression, Object value) {
