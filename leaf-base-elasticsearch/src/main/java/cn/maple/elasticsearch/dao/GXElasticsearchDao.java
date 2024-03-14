@@ -47,8 +47,6 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
      * @return 返回查询到数据列表
      */
     default List<Dict> findByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        queryParamInnerDto.setPage(-1);
-        queryParamInnerDto.setPage(-1);
         Dict queryData = executeQuery(queryParamInnerDto);
         List<Dict> lst = Convert.convert(new TypeReference<>() {
         }, queryData.getObj("records"));
@@ -62,7 +60,8 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
      * @return 满足条件的一条数据
      */
     default Dict findOneByCondition(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        queryParamInnerDto.setLimit(1);
+        queryParamInnerDto.setPage(0);
+        queryParamInnerDto.setPageSize(1);
         Dict queryData = executeQuery(queryParamInnerDto);
         List<Dict> lst = Convert.convert(new TypeReference<>() {
         }, queryData.getObj("records"));
@@ -171,17 +170,9 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
             criteriaQuery.addSort(sort);
         }
         // 处理分页
-        int page = Optional.ofNullable(queryParamInnerDto.getPage()).orElse(-1);
-        int pageSize = Optional.ofNullable(queryParamInnerDto.getPageSize()).orElse(-1);
-        // 处理limit
-        int limit = Optional.ofNullable(queryParamInnerDto.getLimit()).orElse(0);
-        if (limit == 1) {
-            page = 0;
-            pageSize = 1;
-        }
-        if (page != -1 || pageSize != -1) {
-            criteriaQuery.setPageable(PageRequest.of(page, pageSize));
-        }
+        int page = Optional.ofNullable(queryParamInnerDto.getPage()).orElse(0);
+        int pageSize = Optional.ofNullable(queryParamInnerDto.getPageSize()).orElse(GXCommonConstant.DEFAULT_MAX_PAGE_SIZE);
+        criteriaQuery.setPageable(PageRequest.of(page, pageSize));
         return criteriaQuery;
     }
 
