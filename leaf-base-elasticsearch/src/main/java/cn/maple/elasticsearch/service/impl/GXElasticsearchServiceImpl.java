@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.query.BaseQuery;
+import org.springframework.data.elasticsearch.core.query.BaseQueryBuilder;
 
 import java.io.Serializable;
 import java.util.*;
@@ -29,7 +31,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D, ID>, T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessServiceImpl implements GXElasticsearchService<P, T, D, R, ID> {
+public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D, Q, B, ID>, T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, Q, B, ID>, Q extends BaseQuery, B extends BaseQueryBuilder<Q, B>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessServiceImpl implements GXElasticsearchService<P, T, D, Q, B, R, ID> {
     /**
      * 日志对象
      */

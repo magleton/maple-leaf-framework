@@ -16,6 +16,8 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.elasticsearch.dao.GXElasticsearchDao;
 import cn.maple.elasticsearch.model.GXElasticsearchModel;
 import cn.maple.elasticsearch.repository.GXElasticsearchRepository;
+import org.springframework.data.elasticsearch.core.query.BaseQuery;
+import org.springframework.data.elasticsearch.core.query.BaseQueryBuilder;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public interface GXElasticsearchService<P extends GXElasticsearchRepository<T, D, ID>, T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, ID>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService {
+public interface GXElasticsearchService<P extends GXElasticsearchRepository<T, D, Q, B, ID>, T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, Q, B, ID>, Q extends BaseQuery, B extends BaseQueryBuilder<Q, B>, R extends GXBaseDBResDto, ID extends Serializable> extends GXBusinessService {
     /**
      * 检测给定条件的记录是否存在
      *

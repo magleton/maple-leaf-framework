@@ -7,10 +7,12 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.elasticsearch.constant.GXEsCriteriaMethodMappingConstant;
@@ -39,7 +41,7 @@ import java.util.stream.Collectors;
  * @param <T>  实体的类型
  * @param <ID> 实体中的ID序列号
  */
-public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends Serializable> extends ElasticsearchRepository<T, ID> {
+public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends BaseQuery, B extends BaseQueryBuilder<Q, B>, ID extends Serializable> extends ElasticsearchRepository<T, ID> {
     /**
      * 根据条件查询所有满足条件的数据
      *
@@ -125,7 +127,9 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
      * @return 查询到的数据
      */
     default Dict executeQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        Query query = buildQuery(queryParamInnerDto);
+        Q query = buildQuery(queryParamInnerDto);
+        query = buildOrderBy(query, queryParamInnerDto);
+        query = buildPageable(query, queryParamInnerDto);
         ElasticsearchTemplate elasticsearchTemplate = getElasticsearchTemplate();
         Class<?> genericClassType = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 0);
         String indexName = queryParamInnerDto.getTableName();
@@ -150,10 +154,60 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
      * @param queryParamInnerDto 查询条件对象
      * @return ES的查询条件
      */
-    default Query buildQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
-        Criteria criteria = conditions2Criteria(queryParamInnerDto);
-        CriteriaQueryBuilder criteriaQueryBuilder = new CriteriaQueryBuilder(criteria);
-        CriteriaQuery criteriaQuery = new CriteriaQuery(criteriaQueryBuilder);
+    @SuppressWarnings("all")
+    default Q buildQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        Class<BaseQuery> queryClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
+        B queryBuilder = buildQueryBuilder(queryParamInnerDto);
+        if (queryClazz.isAssignableFrom(NativeSearchQuery.class)) {
+            throw new GXBusinessException("请自己构建Query对象");
+        }
+        BaseQuery query = ReflectUtil.newInstance(queryClazz, queryBuilder);
+        // CriteriaQueryBuilder criteriaQueryBuilder = new CriteriaQueryBuilder(criteria);
+        //CriteriaQuery criteriaQuery = new CriteriaQuery(criteriaQueryBuilder);
+        return (Q) query;
+    }
+
+    /**
+     * 构造查询Builder
+     *
+     * @param queryParamInnerDto 查询条件
+     * @return 查询Builder
+     */
+    @SuppressWarnings("all")
+    default B buildQueryBuilder(GXBaseQueryParamInnerDto queryParamInnerDto) {
+        Class<BaseQueryBuilder<Q, B>> queryBuilderClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 2);
+        if (queryBuilderClazz.isAssignableFrom(CriteriaQueryBuilder.class)) {
+            Criteria criteria = conditions2Criteria(queryParamInnerDto);
+            BaseQueryBuilder<Q, B> queryBuilder = ReflectUtil.newInstance(queryBuilderClazz, criteria);
+            return (B) queryBuilder;
+        }
+        BaseQueryBuilder<Q, B> queryBuilder = ReflectUtil.newInstance(queryBuilderClazz);
+        return (B) queryBuilder;
+    }
+
+    /**
+     * 构建分页信息
+     *
+     * @param query              查询对象
+     * @param queryParamInnerDto 查询条件
+     * @return 查询对象
+     */
+    default Q buildPageable(Q query, GXBaseQueryParamInnerDto queryParamInnerDto) {
+        // 处理分页
+        int page = Optional.ofNullable(queryParamInnerDto.getPage()).orElse(0);
+        int pageSize = Optional.ofNullable(queryParamInnerDto.getPageSize()).orElse(GXCommonConstant.DEFAULT_MAX_PAGE_SIZE);
+        query.setPageable(PageRequest.of(page, pageSize));
+        return query;
+    }
+
+    /**
+     * 构建排序字段信息
+     *
+     * @param query              查询对象
+     * @param queryParamInnerDto 查询条件
+     * @return 查询对象
+     */
+    default Q buildOrderBy(Q query, GXBaseQueryParamInnerDto queryParamInnerDto) {
         Map<String, String> orderByField = queryParamInnerDto.getOrderByField();
         // 处理字段排序
         if (!CollUtil.isEmpty(orderByField)) {
@@ -167,13 +221,20 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
                 }
             });
             Sort sort = Sort.by(orders);
-            criteriaQuery.addSort(sort);
+            query.addSort(sort);
         }
-        // 处理分页
-        int page = Optional.ofNullable(queryParamInnerDto.getPage()).orElse(0);
-        int pageSize = Optional.ofNullable(queryParamInnerDto.getPageSize()).orElse(GXCommonConstant.DEFAULT_MAX_PAGE_SIZE);
-        criteriaQuery.setPageable(PageRequest.of(page, pageSize));
-        return criteriaQuery;
+        return query;
+    }
+
+    /**
+     * 业务逻辑需要自定义查询条件
+     * 留着扩展使用
+     *
+     * @param criteria 查询条件对象
+     * @return criteria
+     */
+    default Criteria buildCriteria(Criteria criteria) {
+        return criteria;
     }
 
     /**
@@ -199,18 +260,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, ID extends S
                 }
             });
         }
-        return businessCriteria(criteria);
-    }
-
-    /**
-     * 业务逻辑需要自定义查询条件
-     * 留着扩展使用
-     *
-     * @param criteria 查询条件对象
-     * @return criteria
-     */
-    default Criteria businessCriteria(Criteria criteria) {
-        return criteria;
+        return buildCriteria(criteria);
     }
 
     /**

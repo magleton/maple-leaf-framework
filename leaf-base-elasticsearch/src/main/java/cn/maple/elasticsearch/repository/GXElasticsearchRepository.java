@@ -13,6 +13,8 @@ import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.elasticsearch.dao.GXElasticsearchDao;
 import cn.maple.elasticsearch.model.GXElasticsearchModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.query.BaseQuery;
+import org.springframework.data.elasticsearch.core.query.BaseQueryBuilder;
 
 import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, ID>, ID extends Serializable> implements GXBaseRepository<T, ID> {
+public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends GXElasticsearchDao<T, Q, B, ID>, Q extends BaseQuery, B extends BaseQueryBuilder<Q, B>, ID extends Serializable> implements GXBaseRepository<T, ID> {
     /**
      * 基础DAO
      */

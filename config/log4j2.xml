@@ -152,8 +152,10 @@
             <AppenderRef ref="errorJsonAppender" level="error"/>
         </Root>
 
+        <!--Spring data ElasticSearch-->
+        <Logger name="org.springframework.data.elasticsearch" level="debug"/>
         <!--spring日志-->
-        <Logger name="org.springframework" level="info"/>
+        <Logger name="org.springframework" level="debug"/>
         <!--alibaba日志-->
         <Logger name="com.alibaba" level="info"/>
         <!--apache日志-->
