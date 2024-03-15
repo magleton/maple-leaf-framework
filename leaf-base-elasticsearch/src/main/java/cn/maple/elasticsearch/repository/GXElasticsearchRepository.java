@@ -204,6 +204,17 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
     }
 
     /**
+     * 根据ID删除数据
+     *
+     * @param id ID
+     * @return 删除的条数
+     */
+    public Integer deleteById(ID id) {
+        baseDao.deleteById(id);
+        return 1;
+    }
+
+    /**
      * 检测数据是否存在
      *
      * @param tableName 表名字

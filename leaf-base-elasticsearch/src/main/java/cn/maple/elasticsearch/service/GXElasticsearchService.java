@@ -385,6 +385,14 @@ public interface GXElasticsearchService<P extends GXElasticsearchRepository<T, D
     Integer deleteCondition(List<GXCondition<?>> condition);
 
     /**
+     * 根据ID删除数据
+     *
+     * @param id ID
+     * @return 删除的条数
+     */
+    Integer deleteById(ID id);
+
+    /**
      * 查询指定字段的值
      * <pre>
      *     {@code findFieldByCondition("s_admin", condition1, CollUtil.newHashSet("nickname", "username"), Dict.class);}

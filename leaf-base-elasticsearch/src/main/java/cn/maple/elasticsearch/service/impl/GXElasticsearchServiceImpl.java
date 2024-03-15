@@ -554,7 +554,7 @@ public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D
      */
     @Override
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
-        return null;
+        return repository.deleteCondition(tableName, condition);
     }
 
     /**
@@ -565,7 +565,18 @@ public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D
      */
     @Override
     public Integer deleteCondition(List<GXCondition<?>> condition) {
-        return null;
+        return deleteCondition(repository.getTableName(), condition);
+    }
+
+    /**
+     * 根据ID删除数据
+     *
+     * @param id ID
+     * @return 删除的条数
+     */
+    @Override
+    public Integer deleteById(ID id) {
+        return repository.deleteById(id);
     }
 
     /**
