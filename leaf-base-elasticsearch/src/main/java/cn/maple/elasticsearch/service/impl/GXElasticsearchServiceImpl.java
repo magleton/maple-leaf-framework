@@ -102,7 +102,7 @@ public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D
     @Override
     public GXPaginationResDto<R> paginate(GXBaseQueryParamInnerDto queryParamInnerDto) {
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 3);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 5);
         GXPaginationResDto<Dict> paginate = repository.paginate(queryParamInnerDto);
         List<R> lst = paginate.getRecords().stream().map(dict -> {
             Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
@@ -138,7 +138,7 @@ public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D
         if (CharSequenceUtil.isEmpty(methodName[0])) {
             methodName[0] = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
-        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 3);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 5);
         Function<Dict, R> rowMapper = dict -> {
             Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.create());
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
@@ -340,7 +340,7 @@ public class GXElasticsearchServiceImpl<P extends GXElasticsearchRepository<T, D
         }
         Object extraData = Optional.ofNullable(queryParamInnerDto.getExtraData()).orElse(Dict.class);
         CopyOptions copyOptions = getCopyOptions(queryParamInnerDto);
-        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 3);
+        Class<R> genericClassType = GXCommonUtils.getGenericClassType(getClass(), 5);
         Function<Dict, R> rowMapper = dict -> {
             return GXCommonUtils.convertSourceToTarget(dict, genericClassType, methodName[0], copyOptions, extraData);
         };

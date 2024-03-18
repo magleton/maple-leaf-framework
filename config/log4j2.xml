@@ -143,8 +143,8 @@
     <Loggers>
         <!-- 根日志设置 -->
         <Root level="all"> <!-- 必须设置为比 Logger中配置的级别低 -->
-            <AppenderRef ref="allFileAppender" level="all"/>
-            <AppenderRef ref="consoleAppender" level="debug"/>
+            <AppenderRef ref="allFileAppender" level="info"/>
+            <AppenderRef ref="consoleAppender" level="trace"/>
             <AppenderRef ref="debugFileAppender" level="debug"/>
             <AppenderRef ref="infoFileAppender" level="info"/>
             <AppenderRef ref="warnFileAppender" level="warn"/>
@@ -152,8 +152,8 @@
             <AppenderRef ref="errorJsonAppender" level="error"/>
         </Root>
 
-        <!--Spring data ElasticSearch-->
-        <Logger name="org.springframework.data.elasticsearch" level="debug"/>
+        <!--ES 日志信息-->
+        <Logger name="org.elasticsearch" level="trace"/>
         <!--spring日志-->
         <Logger name="org.springframework" level="debug"/>
         <!--alibaba日志-->

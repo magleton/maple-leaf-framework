@@ -160,10 +160,13 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
     @SuppressWarnings("all")
     default Q buildQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
         Class<BaseQuery> queryClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
-        if (queryClazz.isAssignableFrom(NativeSearchQuery.class)) {
-            throw new GXBusinessException("请自己构建Query对象");
-        }
         B queryBuilder = buildQueryBuilder(queryParamInnerDto);
+        if (queryClazz.isAssignableFrom(NativeSearchQuery.class)) {
+            if (ObjectUtil.isNull(queryBuilder)) {
+                throw new GXBusinessException("请自己构建Query对象");
+            }
+            return queryBuilder.build();
+        }
         BaseQuery query = ReflectUtil.newInstance(queryClazz, queryBuilder);
         // CriteriaQueryBuilder criteriaQueryBuilder = new CriteriaQueryBuilder(criteria);
         //CriteriaQuery criteriaQuery = new CriteriaQuery(criteriaQueryBuilder);
@@ -172,6 +175,25 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
 
     /**
      * 构造查询Builder
+     *
+     * <pre>{@code
+     * // 一个输入查询多字段
+     * //nativeSearchQueryBuilder.withQuery(multiMatchQueryBuilder);
+     * NativeQueryBuilder nativeQueryBuilder = new NativeQueryBuilder();
+     * nativeQueryBuilder.withQuery(
+     *         new Query.Builder()
+     *                 .multiMatch(new MultiMatchQuery.Builder().fields("name", "summary")
+     *                         .query("陈子曦/陈茗泽""要问测试")
+     *                         .operator(Operator.And)
+     *                         .build())
+     *                 .build());
+     * // 指定字段查询
+     * Query nameMatchQuery = new MatchQuery.Builder().field("name").query("陈子曦/陈茗泽").operator(Operator.Or).build()._toQuery();
+     * Query summaryMatchQuery = new MatchQuery.Builder().field("summary").query("这个信息很重要").operator(Operator.Or).build()._toQuery();
+     * BoolQuery boolQuery = new BoolQuery.Builder().must(CollUtil.newArrayList(nameMatchQuery, summaryMatchQuery)).build();
+     * nativeQueryBuilder.withQuery(new Query.Builder().bool(boolQuery).build());
+     * return nativeQueryBuilder;
+     * }</pre>
      *
      * @param queryParamInnerDto 查询条件
      * @return 查询Builder
