@@ -124,7 +124,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
     }
 
     /**
-     * 指定统一查询
+     * 执行统一查询
      *
      * @param queryParamInnerDto 查询条件
      * @return 查询到的数据
@@ -160,10 +160,10 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
     @SuppressWarnings("all")
     default Q buildQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
         Class<BaseQuery> queryClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
-        B queryBuilder = buildQueryBuilder(queryParamInnerDto);
         if (queryClazz.isAssignableFrom(NativeSearchQuery.class)) {
             throw new GXBusinessException("请自己构建Query对象");
         }
+        B queryBuilder = buildQueryBuilder(queryParamInnerDto);
         BaseQuery query = ReflectUtil.newInstance(queryClazz, queryBuilder);
         // CriteriaQueryBuilder criteriaQueryBuilder = new CriteriaQueryBuilder(criteria);
         //CriteriaQuery criteriaQuery = new CriteriaQuery(criteriaQueryBuilder);

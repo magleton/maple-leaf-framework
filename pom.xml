@@ -39,8 +39,8 @@
         <maven.compiler.target>11</maven.compiler.target>
         <lombok.version>1.18.30</lombok.version>
         <hutool.version>5.8.26</hutool.version>
-        <aspectjweaver.version>1.9.21.1</aspectjweaver.version>
-        <guava.version>33.0.0-jre</guava.version>
+        <aspectjweaver.version>1.9.21.2</aspectjweaver.version>
+        <guava.version>33.1.0-jre</guava.version>
         <caffeine.version>3.1.8</caffeine.version>
         <fastjson.version>2.0.47</fastjson.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
