@@ -36,7 +36,10 @@ import java.util.stream.Collectors;
 
 /**
  * 基于ES Repository封装的统一基本操作
- * {@link <a href="https://docs.spring.io/spring-data/elasticsearch/reference/index.html">帮助文档</a>}
+ * <p>
+ * {@see <a href="https://docs.spring.io/spring-data/elasticsearch/reference/index.html">帮助文档</a>}
+ * <p>
+ * {@see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.17/query-dsl.html">ES查询语法</a>}
  *
  * @param <T>  实体的类型
  * @param <ID> 实体中的ID序列号
