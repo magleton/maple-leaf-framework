@@ -12,7 +12,7 @@
     <artifactId>leaf-base-rocketmq</artifactId>
 
     <properties>
-        <rocketmq-spring-boot-starter.version>2.2.3</rocketmq-spring-boot-starter.version>
+        <rocketmq-spring-boot-starter.version>2.3.0</rocketmq-spring-boot-starter.version>
     </properties>
 
     <dependencies>
@@ -39,6 +39,10 @@
                 <exclusion>
                     <artifactId>j2objc-annotations</artifactId>
                     <groupId>com.google.j2objc</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.alibaba</groupId>
