@@ -164,11 +164,8 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
             if (ObjectUtil.isNull(queryBuilder)) {
                 throw new UnsupportedOperationException("暂不支持NativeSearchQuery查询!");
             }
-            return queryBuilder.build();
         }
         BaseQuery query = ReflectUtil.newInstance(queryClazz, queryBuilder);
-        // CriteriaQueryBuilder criteriaQueryBuilder = new CriteriaQueryBuilder(criteria);
-        //CriteriaQuery criteriaQuery = new CriteriaQuery(criteriaQueryBuilder);
         return (Q) query;
     }
 
