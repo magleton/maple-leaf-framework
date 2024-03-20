@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
@@ -218,7 +219,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
      */
     default Q buildPageable(Q query, GXBaseQueryParamInnerDto queryParamInnerDto) {
         // 处理分页
-        int page = Optional.ofNullable(queryParamInnerDto.getPage()).orElse(0);
+        int page = NumberUtil.max(Optional.ofNullable(queryParamInnerDto.getPage()).orElse(0) - 1, 0);
         int pageSize = Optional.ofNullable(queryParamInnerDto.getPageSize()).orElse(GXCommonConstant.DEFAULT_MAX_PAGE_SIZE);
         query.setPageable(PageRequest.of(page, pageSize));
         return query;
