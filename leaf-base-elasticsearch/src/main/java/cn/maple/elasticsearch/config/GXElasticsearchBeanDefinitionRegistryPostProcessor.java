@@ -40,7 +40,7 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchClients;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.elasticsearch.support.HttpHeaders;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -209,19 +209,19 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         HttpHeaders compatibilityHeaders = new HttpHeaders();
         compatibilityHeaders.add("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
         //compatibilityHeaders.add(HttpHeaders.CONTENT_TYPE, "application/vnd.elasticsearch+json;compatible-with=7");
-        compatibilityHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+        compatibilityHeaders.add(org.springframework.http.HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        /*configurationBuilder.withDefaultHeaders(compatibilityHeaders).withHeaders(() -> {
+        configurationBuilder.withDefaultHeaders(compatibilityHeaders).withHeaders(() -> {
             HttpHeaders headers = new HttpHeaders();
             headers.add("currentDate", DateUtil.now());
             return headers;
-        }).withClientConfigurer(ElasticsearchClients.ElasticsearchClientConfigurationCallback.from(clientBuilder -> {
+        }).withClientConfigurer(ElasticsearchClients.ElasticsearchHttpClientConfigurationCallback.from(clientBuilder -> {
             clientBuilder.disableAuthCaching();
             //clientBuilder.setDefaultHeaders(List.of(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
             clientBuilder.addInterceptorLast((HttpResponseInterceptor) (response, context) -> response.addHeader("X-Elastic-Product", "Elasticsearch"));
-            return clientBuilder*//*.setDefaultCredentialsProvider(credentialsProvider)*//*;
-        }))*/;
+            return clientBuilder/*.setDefaultCredentialsProvider(credentialsProvider)*/;
+        }));
         Duration connectionTimeout = elasticsearchSourceProperties.getConnectionTimeout();
         Duration socketTimeout = elasticsearchSourceProperties.getSocketTimeout();
         configurationBuilder.withConnectTimeout(connectionTimeout).withSocketTimeout(socketTimeout);

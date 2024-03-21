@@ -102,7 +102,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
      * @return ID
      */
     default <ID extends Serializable> ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
-        T save = null; ;//= save(entity);
+        T save = save(entity);
         Class<ID> retIDClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 3);
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst("id"));
         return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(save, methodName));

@@ -212,7 +212,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      * @return 删除的条数
      */
     public Integer deleteById(ID id) {
-        //baseDao.deleteById(id);
+        baseDao.deleteById(id);
         return 1;
     }
 
