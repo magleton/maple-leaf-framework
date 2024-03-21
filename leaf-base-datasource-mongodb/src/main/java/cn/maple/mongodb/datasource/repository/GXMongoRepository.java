@@ -12,7 +12,7 @@ import cn.maple.mongodb.datasource.dao.GXMongoDao;
 import cn.maple.mongodb.datasource.model.GXMongoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;

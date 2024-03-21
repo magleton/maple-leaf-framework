@@ -6,10 +6,10 @@ import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**

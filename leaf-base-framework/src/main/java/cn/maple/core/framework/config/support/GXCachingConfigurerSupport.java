@@ -10,8 +10,8 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 解决多CacheManager配置

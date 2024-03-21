@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.GenericMessageConverter;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Configuration
 @Slf4j

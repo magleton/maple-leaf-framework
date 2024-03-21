@@ -2,7 +2,7 @@ package cn.maple.sso.utils;
 
 import cn.hutool.crypto.SecureUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <p>

@@ -7,7 +7,7 @@ import cn.maple.extension.test.customer.client.GetOneCustomerQry;
 import cn.maple.core.framework.util.GXResultUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {

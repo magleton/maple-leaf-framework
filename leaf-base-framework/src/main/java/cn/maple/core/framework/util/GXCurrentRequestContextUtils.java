@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
@@ -11,12 +12,12 @@ import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -110,7 +111,7 @@ public class GXCurrentRequestContextUtils {
             LOG.info("本次请求是RPC调用,没有HttpServletRequest对象");
             return null;
         }
-        return ServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
+        return JakartaServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
     }
 
     /**
@@ -214,7 +215,7 @@ public class GXCurrentRequestContextUtils {
     public static String getClientIP(HttpServletRequest httpServletRequest) {
         String ip = "";
         if (null != httpServletRequest) {
-            ip = ServletUtil.getClientIP(httpServletRequest);
+            ip = JakartaServletUtil.getClientIP(httpServletRequest);
         }
         return ip;
     }
@@ -295,7 +296,7 @@ public class GXCurrentRequestContextUtils {
         if (isHTTP()) {
             HttpServletRequest httpServletRequest = getHttpServletRequest();
             assert httpServletRequest != null;
-            String header = ServletUtil.getHeader(httpServletRequest, GXTokenConstant.TOKEN_NAME, StandardCharsets.UTF_8);
+            String header = JakartaServletUtil.getHeader(httpServletRequest, GXTokenConstant.TOKEN_NAME, StandardCharsets.UTF_8);
             return Objects.nonNull(header);
         }
         return false;

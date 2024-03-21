@@ -1,11 +1,13 @@
 package cn.maple.nacos.properties;
 
+import cn.maple.core.framework.factory.GXYamlPropertySourceFactory;
 import com.alibaba.nacos.api.annotation.NacosProperties;
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @SuppressWarnings("all")
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@NacosPropertySource(dataId = "app-environment.yml",
+@NacosConfigurationProperties(dataId = "app-environment.yml",
         groupId = "${spring.cloud.nacos.config.group:${nacos.config.group:}}",
         properties = @NacosProperties(
                 serverAddr = "${spring.cloud.nacos.config.server-addr:${nacos.config.server-addr:}}",

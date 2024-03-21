@@ -1,11 +1,11 @@
 package cn.maple.core.framework.config;
 
 import cn.maple.core.framework.filter.GXXssFilter;
+import jakarta.servlet.DispatcherType;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.DispatcherType;
 
 @Configuration
 public class GXFilterConfig {

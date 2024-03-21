@@ -70,7 +70,7 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                 }
                 //  (如果是jdk异常则直接抛异常) directly throw if it's JDK exception
                 String className = exception.getClass().getName();
-                if (className.startsWith("java.") || className.startsWith("javax.")) {
+                if (className.startsWith("java.") || className.startsWith("jakarta.")) {
                     return;
                 }
 

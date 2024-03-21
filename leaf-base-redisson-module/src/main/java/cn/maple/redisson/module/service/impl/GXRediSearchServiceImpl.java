@@ -15,7 +15,7 @@ import io.github.dengliming.redismodule.redisearch.index.schema.TagField;
 import io.github.dengliming.redismodule.redisearch.index.schema.TextField;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -25,8 +25,8 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.UnexpectedTypeException;
-import javax.validation.ValidationException;
+import jakarta.validation.UnexpectedTypeException;
+import jakarta.validation.ValidationException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLSyntaxErrorException;

@@ -2,13 +2,13 @@ package cn.maple.core.datasource.interceptor;
 
 import cn.maple.core.framework.annotation.GXSensitiveData;
 import cn.maple.core.framework.service.GXSensitiveDataEncryptService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.plugin.*;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.util.Objects;

@@ -6,8 +6,8 @@ import cn.maple.extension.GXExtensionPoint;
 import cn.maple.extension.GXExtensions;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.util.Map;
 
 /**

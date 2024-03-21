@@ -4,7 +4,6 @@ import cn.maple.rabbitmq.properties.GXRabbitMQProperties;
 import com.alibaba.nacos.api.annotation.NacosProperties;
 import com.alibaba.nacos.api.config.ConfigType;
 import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("all")
 @EqualsAndHashCode(callSuper = true)
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@NacosPropertySource(dataId = "rabbit.yml",
+@NacosConfigurationProperties(dataId = "rabbit.yml",
         groupId = "${spring.cloud.nacos.config.group:${nacos.config.group:}}",
         properties = @NacosProperties(
                 serverAddr = "${spring.cloud.nacos.config.server-addr:${nacos.config.server-addr:}}",

@@ -2,7 +2,7 @@ package cn.maple.redisson.properties.nacos;
 
 import cn.maple.redisson.properties.GXRedissonCacheManagerProperties;
 import com.alibaba.nacos.api.annotation.NacosProperties;
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode(callSuper = true)
 @Component
 @ConditionalOnClass(name = {"com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties"})
-@NacosPropertySource(dataId = "redisson-cache-config.yml",
+@NacosConfigurationProperties(dataId = "redisson-cache-config.yml",
         groupId = "${spring.cloud.nacos.config.group:${nacos.config.group:}}",
         properties = @NacosProperties(
                 serverAddr = "${spring.cloud.nacos.config.server-addr:${nacos.config.server-addr:}}",

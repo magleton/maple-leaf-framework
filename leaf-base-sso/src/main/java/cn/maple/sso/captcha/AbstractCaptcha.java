@@ -5,7 +5,7 @@ import cn.maple.sso.utils.GXRandomUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;

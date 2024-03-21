@@ -7,7 +7,7 @@ import cn.maple.extension.test.customer.domain.CustomerEntity;
 import cn.maple.extension.test.customer.infrastructure.CustomerRepository;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Component
 public class CustomerConvertor {

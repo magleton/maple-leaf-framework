@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.annotation.GXConvertRedissonDelayQueueToTopic;
 import cn.maple.redisson.listener.GXRedissonDelayQueueListener;
+import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RedissonClient;
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**

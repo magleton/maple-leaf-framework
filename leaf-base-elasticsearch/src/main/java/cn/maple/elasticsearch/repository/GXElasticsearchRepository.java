@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.query.BaseQuery;
 import org.springframework.data.elasticsearch.core.query.BaseQueryBuilder;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -137,7 +137,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      */
     @Override
     public Dict findOneById(String tableName, ID id, Set<String> columns) {
-        Optional<T> data = baseDao.findById(id);
+        Optional<T> data = null;//baseDao.findById(id);
         return data.map(t -> Convert.convert(Dict.class, t)).orElse(null);
     }
 
@@ -212,7 +212,7 @@ public class GXElasticsearchRepository<T extends GXElasticsearchModel, D extends
      * @return 删除的条数
      */
     public Integer deleteById(ID id) {
-        baseDao.deleteById(id);
+        //baseDao.deleteById(id);
         return 1;
     }
 

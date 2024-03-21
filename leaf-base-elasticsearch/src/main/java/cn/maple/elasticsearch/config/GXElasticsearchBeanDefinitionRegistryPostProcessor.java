@@ -212,7 +212,7 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         compatibilityHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        configurationBuilder.withDefaultHeaders(compatibilityHeaders).withHeaders(() -> {
+        /*configurationBuilder.withDefaultHeaders(compatibilityHeaders).withHeaders(() -> {
             HttpHeaders headers = new HttpHeaders();
             headers.add("currentDate", DateUtil.now());
             return headers;
@@ -220,8 +220,8 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
             clientBuilder.disableAuthCaching();
             //clientBuilder.setDefaultHeaders(List.of(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
             clientBuilder.addInterceptorLast((HttpResponseInterceptor) (response, context) -> response.addHeader("X-Elastic-Product", "Elasticsearch"));
-            return clientBuilder/*.setDefaultCredentialsProvider(credentialsProvider)*/;
-        }));
+            return clientBuilder*//*.setDefaultCredentialsProvider(credentialsProvider)*//*;
+        }))*/;
         Duration connectionTimeout = elasticsearchSourceProperties.getConnectionTimeout();
         Duration socketTimeout = elasticsearchSourceProperties.getSocketTimeout();
         configurationBuilder.withConnectTimeout(connectionTimeout).withSocketTimeout(socketTimeout);

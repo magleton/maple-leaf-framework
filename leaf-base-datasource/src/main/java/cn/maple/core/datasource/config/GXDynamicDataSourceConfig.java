@@ -9,12 +9,12 @@ import cn.maple.core.framework.config.aware.GXApplicationContextAware;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.alibaba.druid.pool.DruidDataSource;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;

@@ -5,14 +5,14 @@
     <parent>
         <artifactId>maple-leaf-framework</artifactId>
         <groupId>cn.maple.framework</groupId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>leaf-base-elasticsearch</artifactId>
 
     <properties>
-        <spring.data.elasticsearch.version>4.4.18</spring.data.elasticsearch.version>
+        <spring.data.elasticsearch.version>5.2.3</spring.data.elasticsearch.version>
         <t-digest.version>3.3</t-digest.version>
         <parsson.version>1.1.5</parsson.version>
     </properties>

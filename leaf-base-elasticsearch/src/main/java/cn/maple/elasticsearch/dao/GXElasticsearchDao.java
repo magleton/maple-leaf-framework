@@ -102,7 +102,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
      * @return ID
      */
     default <ID extends Serializable> ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
-        T save = save(entity);
+        T save = null; ;//= save(entity);
         Class<ID> retIDClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 3);
         String methodName = CharSequenceUtil.format("get{}", CharSequenceUtil.upperFirst("id"));
         return Convert.convert(retIDClazz, GXCommonUtils.reflectCallObjectMethod(save, methodName));
@@ -161,11 +161,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
     default Q buildQuery(GXBaseQueryParamInnerDto queryParamInnerDto) {
         Class<BaseQuery> queryClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 1);
         B queryBuilder = buildQueryBuilder(queryParamInnerDto);
-        if (queryClazz.isAssignableFrom(NativeSearchQuery.class)) {
-            if (ObjectUtil.isNull(queryBuilder)) {
-                throw new UnsupportedOperationException("暂不支持NativeSearchQuery查询!");
-            }
-        }
+
         BaseQuery query = ReflectUtil.newInstance(queryClazz, queryBuilder);
         return (Q) query;
     }
@@ -198,9 +194,7 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
     @SuppressWarnings("all")
     default B buildQueryBuilder(GXBaseQueryParamInnerDto queryParamInnerDto) {
         Class<BaseQueryBuilder<Q, B>> queryBuilderClazz = GXCommonUtils.getGenericClassType((Class<?>) getClass().getGenericInterfaces()[0], 2);
-        if (queryBuilderClazz.isAssignableFrom(NativeSearchQueryBuilder.class)) {
-            throw new UnsupportedOperationException("暂不支持NativeSearchQueryBuilder查询!");
-        }
+
         if (queryBuilderClazz.isAssignableFrom(CriteriaQueryBuilder.class)) {
             Criteria criteria = conditions2Criteria(queryParamInnerDto);
             BaseQueryBuilder<Q, B> queryBuilder = ReflectUtil.newInstance(queryBuilderClazz, criteria);

@@ -9,7 +9,7 @@ import io.github.dengliming.redismodule.redisjson.args.GetArgs;
 import io.github.dengliming.redismodule.redisjson.args.SetArgs;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 @Service

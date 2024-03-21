@@ -4,13 +4,13 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.redisson.services.GXRedissonCacheService;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.cache.Cache;
 import org.redisson.api.RedissonClient;
 import org.springframework.util.DigestUtils;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
