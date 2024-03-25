@@ -35,7 +35,7 @@ public interface GXBaseMapper<T extends GXBaseModel> extends BaseMapper<T> {
     List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftCondition")
-    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData);
+    Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData);
 
     @DeleteProvider(type = GXBaseBuilder.class, method = "deleteCondition")
     Integer deleteCondition(String tableName, List<GXCondition<?>> condition);

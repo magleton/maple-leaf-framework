@@ -270,6 +270,21 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     /**
      * 根据条件软(逻辑)删除
      *
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
+        Assert.notNull(condition, "条件不能为null");
+        return baseDao.deleteSoftCondition(tableName, condition, extraData);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
      * @param tableName 表名
      * @param condition 删除条件
      * @param extraData 额外数据
@@ -278,7 +293,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
         Assert.notNull(condition, "条件不能为null");
-        return baseDao.deleteSoftCondition(tableName, condition, extraData);
+        return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
     /**

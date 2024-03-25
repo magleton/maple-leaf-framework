@@ -204,6 +204,17 @@ public interface GXBaseRepository<T, ID extends Serializable> {
     Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData);
 
     /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData);
+
+    /**
      * 根据条件删除
      *
      * @param tableName 表名

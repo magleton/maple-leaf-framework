@@ -632,6 +632,17 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
         return copyOneData(conditions, replaceData, Dict.create());
     }
 
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
+        if (GXCurrentRequestContextUtils.isHTTP()
+                && GXCurrentRequestContextUtils.tokenExists()
+                && !extraData.containsKey("deletedBy")) {
+            String loginUserName = getLoginUserName();
+            extraData.set("deletedBy", loginUserName);
+        }
+        return repository.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
+    }
+
     /**
      * 根据条件软(逻辑)删除
      *
@@ -642,13 +653,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
-        if (GXCurrentRequestContextUtils.isHTTP()
-                && GXCurrentRequestContextUtils.tokenExists()
-                && !extraData.containsKey("deletedBy")) {
-            String loginUserName = getLoginUserName();
-            extraData.set("deletedBy", loginUserName);
-        }
-        return repository.deleteSoftCondition(tableName, condition, extraData);
+        return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
     /**
