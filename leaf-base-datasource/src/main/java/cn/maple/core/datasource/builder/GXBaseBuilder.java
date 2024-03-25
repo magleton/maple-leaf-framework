@@ -226,12 +226,13 @@ public interface GXBaseBuilder {
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName 表名
-     * @param condition 删除条件
-     * @param extraData 额外数据
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
      * @return SQL语句
      */
-    static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+    static String deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
         String keyProperty = tableInfo.getKeyProperty();
         if (CharSequenceUtil.isEmpty(keyProperty)) {
@@ -241,6 +242,11 @@ public interface GXBaseBuilder {
         LOGGER.info("deleteSoftCondition方法中的{}表的主键名字{}", tableName, keyProperty);
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET(CharSequenceUtil.format("is_deleted = {}", keyProperty), CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
+        if (CollUtil.isNotEmpty(updateFieldList)) {
+            for (GXUpdateField<?> field : updateFieldList) {
+                sql.SET(field.updateString());
+            }
+        }
         if (CharSequenceUtil.isNotBlank(extraData.getStr("deletedBy"))) {
             List<TableFieldInfo> fieldList = tableInfo.getFieldList();
             for (TableFieldInfo fieldInfo : fieldList) {
