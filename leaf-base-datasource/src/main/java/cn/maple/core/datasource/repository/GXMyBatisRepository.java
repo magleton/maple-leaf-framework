@@ -279,7 +279,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
         Assert.notNull(condition, "条件不能为null");
-        return baseDao.deleteSoftCondition(tableName, condition, extraData);
+        return baseDao.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
     }
 
     /**
