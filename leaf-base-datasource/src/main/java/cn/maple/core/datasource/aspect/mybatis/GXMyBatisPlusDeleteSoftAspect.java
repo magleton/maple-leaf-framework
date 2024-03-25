@@ -12,6 +12,7 @@ import cn.maple.core.datasource.enums.GXModelEventNamingEnums;
 import cn.maple.core.datasource.event.GXMyBatisModelDeleteSoftEvent;
 import cn.maple.core.datasource.service.GXMybatisListenerService;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
+import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
@@ -40,7 +41,7 @@ public class GXMyBatisPlusDeleteSoftAspect {
         log.debug("发布软删除事件结束");
         return proceed;
     }
-    
+
     /**
      * 处理切点的参数
      *
@@ -52,13 +53,23 @@ public class GXMyBatisPlusDeleteSoftAspect {
         Class<Mapper> mapper = convertTypeToMapper(type);
         if (ObjectUtil.isNotNull(mapper)) {
             Object[] args = point.getArgs();
-            List<GXCondition<?>> conditionList = Convert.convert(new TypeReference<>() {
+            List<GXUpdateField<?>> updateFieldList = Convert.convert(new TypeReference<>() {
             }, args[1]);
+            List<GXCondition<?>> conditionList = Convert.convert(new TypeReference<>() {
+            }, args[2]);
+            Dict conditionFieldData = Dict.create();
             conditionList.forEach(condition -> {
                 Object fieldValue = condition.getFieldValue();
                 String fieldName = condition.getFieldExpression();
-                retDict.set(CharSequenceUtil.toCamelCase(fieldName), fieldValue);
+                conditionFieldData.set(CharSequenceUtil.toCamelCase(fieldName), fieldValue);
             });
+            Dict updateFieldData = Dict.create();
+            updateFieldList.forEach(updateField -> {
+                Object fieldValue = updateField.getFieldValue();
+                String fieldName = updateField.getFieldName();
+                updateFieldData.set(CharSequenceUtil.toCamelCase(fieldName), fieldValue);
+            });
+            retDict.set("conditionFieldData", conditionFieldData).set("updateFieldData", updateFieldData);
         }
         return retDict;
     }
