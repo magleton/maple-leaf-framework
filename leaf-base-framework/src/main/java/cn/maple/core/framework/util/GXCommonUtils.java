@@ -376,7 +376,7 @@ public class GXCommonUtils {
                 throw (GXBeanValidateException) targetException;
             }
             if (InvocationTargetRuntimeException.class.isAssignableFrom(e.getClass())) {
-                throw new GXBusinessException(targetException.getMessage(), targetException);
+                throw new GXBusinessException(targetException.getMessage(), Optional.ofNullable(targetException.getCause()).orElse(targetException));
             }
             String exceptionMessage = CharSequenceUtil.isEmpty(targetException.getMessage()) ? "系统反射调用失败" : targetException.getMessage();
             LOG.error("系统反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
