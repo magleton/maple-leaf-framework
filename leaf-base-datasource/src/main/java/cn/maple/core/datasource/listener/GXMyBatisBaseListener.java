@@ -93,6 +93,6 @@ interface GXMyBatisBaseListener {
         Class<?> listenerClazz = Convert.convert(new TypeReference<>() {
         }, param.getObj("listenerClazz"));
         Object bean = GXSpringContextUtils.getBean(listenerClazzName, listenerClazz);
-        GXCommonUtils.reflectCallObjectMethod(bean, "listenerSaveBatch", source);
+        GXCommonUtils.reflectCallObjectMethod(bean, "saveBatchListener", source);
     }
 }

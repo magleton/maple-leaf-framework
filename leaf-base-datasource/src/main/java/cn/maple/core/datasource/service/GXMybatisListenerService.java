@@ -51,7 +51,7 @@ public interface GXMybatisListenerService<T> {
      *
      * @param data 新增与修改的数据
      */
-    default void listenerSaveBatch(Dict data) {
+    default void saveBatchListener(Dict data) {
         LOG.info("请自定义实现saveBatchListener监听逻辑");
     }
 }
