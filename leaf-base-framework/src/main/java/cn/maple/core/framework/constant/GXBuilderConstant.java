@@ -149,6 +149,17 @@ public class GXBuilderConstant {
      */
     public static final String OR_OP = " OR ";
 
+    /**
+     * JSON_SEARCH函数中的one_or_all参数
+     */
+    public static final String JSON_SEARCH_FUNC_ONE = "one";
+
+    /**
+     * JSON_SEARCH函数中的one_or_all参数
+     */
+    public static final String JSON_SEARCH_FUNC_ALL = "all";
+
+
     private GXBuilderConstant() {
     }
 }
