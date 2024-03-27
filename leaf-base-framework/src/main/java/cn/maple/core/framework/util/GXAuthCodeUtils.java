@@ -1,11 +1,12 @@
 package cn.maple.core.framework.util;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.Base64Decoder;
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
-import org.springframework.util.Base64Utils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -147,7 +148,8 @@ public class GXAuthCodeUtils {
      */
     public static String authCodeEncode(String source, String key, int expiry) {
         String authCodeStr = authCode(source, key, GXAuthCodeMode.ENCODE, expiry);
-        return Base64Utils.encodeToUrlSafeString(authCodeStr.getBytes(StandardCharsets.UTF_8));
+        //return Base64Utils.encodeToUrlSafeString(authCodeStr.getBytes(StandardCharsets.UTF_8));
+        return Base64Encoder.encodeUrlSafe(authCodeStr.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -169,7 +171,8 @@ public class GXAuthCodeUtils {
      * @return 解密结果
      */
     public static String authCodeDecode(String source, String key) {
-        String base64DecodeStr = new String(Base64Utils.decodeFromUrlSafeString(source));
+        //String base64DecodeStr = new String(Base64Utils.decodeFromUrlSafeString(source));
+        String base64DecodeStr = Base64Decoder.decodeStr(source);
         return authCode(base64DecodeStr, key, GXAuthCodeMode.DECODE, 0);
     }
 
