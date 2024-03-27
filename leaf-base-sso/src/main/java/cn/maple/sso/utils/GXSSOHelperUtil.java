@@ -15,11 +15,11 @@ import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.service.GXAbstractSSOService;
 import cn.maple.sso.service.GXTokenConfigService;
 import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -260,6 +260,10 @@ public class GXSSOHelperUtil {
      * @return 解码之后的token
      */
     public static Dict parser(String token, boolean header) {
+        // 如果是RPC 直接返回
+        if (GXCurrentRequestContextUtils.isRPC()) {
+            return Dict.create();
+        }
         if (CharSequenceUtil.isNotBlank(token) && header) {
             LOGGER.info("token字符串来自于header");
         }

@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
-import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -179,6 +178,10 @@ public class GXCurrentRequestContextUtils {
      * @return Dict
      */
     public static Dict getLoginCredentials(String tokenName, String secretKey) {
+        // 如果是RPC调用 直接返回
+        if (isRPC()) {
+            return Dict.create();
+        }
         // 减少token的二次解密操作 在GXSSOAuthorizationInterceptor拦截器中已经解密过一次并且已经将解密之后的token放入了当前请求对象中
         HttpServletRequest request = getHttpServletRequest();
         assert request != null;

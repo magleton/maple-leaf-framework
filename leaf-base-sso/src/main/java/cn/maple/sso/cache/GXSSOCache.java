@@ -39,6 +39,10 @@ public interface GXSSOCache {
      * @return SSO票据
      */
     default Dict get(int expires, Dict requestToken) {
+        // 如果是RPC调用 直接返回
+        if (GXCurrentRequestContextUtils.isRPC()) {
+            return Dict.create();
+        }
         GXTokenConfigService tokenConfigService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         assert tokenConfigService != null;
         // 调用业务端的逻辑验证用户是否有效
