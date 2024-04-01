@@ -9,7 +9,6 @@ import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
-import cn.maple.core.framework.exception.GXBeanNotExistsException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
@@ -400,7 +399,9 @@ public interface GXBusinessService {
             Class<?> tokenConfigServiceKlass = ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", ClassUtils.getDefaultClassLoader());
             Object tokenConfigService = GXSpringContextUtils.getBean(tokenConfigServiceKlass);
             if (ObjectUtil.isNull(tokenConfigService)) {
-                throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+                LOG.error("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+                return Dict.create();
+                //throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
             }
             String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
             return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
