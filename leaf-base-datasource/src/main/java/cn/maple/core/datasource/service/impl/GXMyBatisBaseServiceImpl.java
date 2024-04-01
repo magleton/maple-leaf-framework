@@ -646,7 +646,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
                 && GXCurrentRequestContextUtils.tokenExists()
                 && !extraData.containsKey("deletedBy")) {
             String loginUserName = getLoginUserName();
-            extraData.set("deletedBy", loginUserName);
+            if (CharSequenceUtil.isNotEmpty(loginUserName)) {
+                extraData.set("deletedBy", loginUserName);
+            }
         }
         return repository.deleteSoftCondition(tableName, condition, extraData);
     }
