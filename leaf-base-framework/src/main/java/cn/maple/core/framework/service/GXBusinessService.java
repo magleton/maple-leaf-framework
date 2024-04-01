@@ -405,7 +405,7 @@ public interface GXBusinessService {
             String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
             return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
         } catch (ClassNotFoundException e) {
-            LOG.error("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+            LOG.error("'cn.maple.sso.service.GXTokenConfigService' class not found!");
             return Dict.create();
             //throw new GXBusinessException(e.getMessage(), e);
         }
