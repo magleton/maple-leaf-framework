@@ -14,6 +14,9 @@ public class GXConditionStrEQ extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
+        if (CharSequenceUtil.startWith(value.toString(), '\'') && CharSequenceUtil.endWith(value.toString(), '\'')) {
+            return value.toString();
+        }
         return CharSequenceUtil.format("'{}'", value);
     }
 }
