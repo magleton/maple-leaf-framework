@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
@@ -16,7 +15,6 @@ import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedFi
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -278,20 +276,6 @@ public interface GXBaseBuilder {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
         return sql.toString();
-    }
-
-    /**
-     * 获取数据库未删除的值
-     *
-     * @return Object
-     */
-    @Deprecated
-    static Object getIsNotDeletedValue() {
-        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
-        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
-            return GXCommonConstant.NOT_STR_DELETED_MARK;
-        }
-        return GXCommonConstant.NOT_INT_DELETED_MARK;
     }
 
     /**
