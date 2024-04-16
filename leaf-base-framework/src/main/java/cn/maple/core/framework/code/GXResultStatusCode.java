@@ -9,18 +9,14 @@ public interface GXResultStatusCode {
      *
      * @return int
      */
-    default int getCode() {
-        return this.getCode();
-    }
+    int getCode();
 
     /**
      * 获取提示信息
      *
      * @return 提示信息
      */
-    default String getMsg() {
-        return this.getMsg();
-    }
+    String getMsg();
 
     /**
      * 获取额外信息
