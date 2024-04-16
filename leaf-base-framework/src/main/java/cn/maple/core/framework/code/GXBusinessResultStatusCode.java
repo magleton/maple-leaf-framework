@@ -3,7 +3,7 @@ package cn.maple.core.framework.code;
 import lombok.Getter;
 
 @Getter
-public enum GXBusinessStatusCode implements GXResultStatusCode {
+public enum GXBusinessResultStatusCode implements GXResultStatusCode {
     NORMAL(0x0, "正常状态", "公用状态"),
     DELETED(0x10, "删除", "公用状态"),
     LOCKED(0x11, "账号锁定", "账号锁定"),
@@ -34,7 +34,7 @@ public enum GXBusinessStatusCode implements GXResultStatusCode {
 
     private final String desc;
 
-    GXBusinessStatusCode(int code, String msg, String desc) {
+    GXBusinessResultStatusCode(int code, String msg, String desc) {
         this.code = code;
         this.msg = msg;
         this.desc = desc;
