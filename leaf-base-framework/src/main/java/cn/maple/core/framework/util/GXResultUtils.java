@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import lombok.Data;
 
@@ -51,11 +51,11 @@ public class GXResultUtils<T> {
      */
     private T data = null;
 
-    public static <T> GXResultUtils<T> ok(GXHttpStatusCode resultCode) {
+    public static <T> GXResultUtils<T> ok(GXDefaultResultStatusCode resultCode) {
         return ok(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtils<T> ok(GXHttpStatusCode resultCode, T data) {
+    public static <T> GXResultUtils<T> ok(GXDefaultResultStatusCode resultCode, T data) {
         callUserDefinedMethod(data);
         return ok(resultCode.getCode(), resultCode.getMsg(), data);
     }
@@ -136,11 +136,11 @@ public class GXResultUtils<T> {
         return error(code, msg, null);
     }
 
-    public static <T> GXResultUtils<T> error(GXHttpStatusCode resultCode) {
+    public static <T> GXResultUtils<T> error(GXDefaultResultStatusCode resultCode) {
         return error(resultCode.getCode(), resultCode.getMsg());
     }
 
-    public static <T> GXResultUtils<T> error(GXHttpStatusCode resultCode, T data) {
+    public static <T> GXResultUtils<T> error(GXDefaultResultStatusCode resultCode, T data) {
         callUserDefinedMethod(data);
         return error(resultCode.getCode(), resultCode.getMsg(), data);
     }

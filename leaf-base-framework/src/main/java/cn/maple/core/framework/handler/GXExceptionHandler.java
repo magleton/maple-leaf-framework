@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
@@ -84,7 +84,7 @@ public class GXExceptionHandler {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        return GXResultUtils.error(GXHttpStatusCode.INTERNAL_SYSTEM_ERROR, errors);
+        return GXResultUtils.error(GXDefaultResultStatusCode.INTERNAL_SYSTEM_ERROR, errors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -99,7 +99,7 @@ public class GXExceptionHandler {
         }
         log.error(e.getMessage(), e);
         Object orDefault = errors.getOrDefault(firstErrorKey, "");
-        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
+        return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -107,7 +107,7 @@ public class GXExceptionHandler {
         log.error(e.getMessage(), e);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("msg", e.getCause().getMessage());
-        return GXResultUtils.error(GXHttpStatusCode.INTERNAL_SYSTEM_ERROR, hashMap);
+        return GXResultUtils.error(GXDefaultResultStatusCode.INTERNAL_SYSTEM_ERROR, hashMap);
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -154,7 +154,7 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
         String parameterName = e.getParameterName();
-        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), CharSequenceUtil.format("缺失{}参数", parameterName), Dict.create().set(parameterName, CharSequenceUtil.format("参数{}必填", parameterName)));
+        return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), CharSequenceUtil.format("缺失{}参数", parameterName), Dict.create().set(parameterName, CharSequenceUtil.format("参数{}必填", parameterName)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -169,7 +169,7 @@ public class GXExceptionHandler {
         } else {
             dict.set("field", message);
         }
-        return GXResultUtils.error(GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXHttpStatusCode.PARAMETER_VALIDATION_ERROR.getMsg(), dict);
+        return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg(), dict);
     }
 
     @ExceptionHandler(Exception.class)

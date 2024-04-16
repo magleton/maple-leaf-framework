@@ -2,7 +2,7 @@ package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 
 public class GXDBConditionException extends RuntimeException {
     private final String msg;
@@ -38,11 +38,11 @@ public class GXDBConditionException extends RuntimeException {
         this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
     }
 
-    public GXDBConditionException(GXHttpStatusCode resultCode) {
+    public GXDBConditionException(GXDefaultResultStatusCode resultCode) {
         this(resultCode, null);
     }
 
-    public GXDBConditionException(GXHttpStatusCode resultCode, Throwable e) {
+    public GXDBConditionException(GXDefaultResultStatusCode resultCode, Throwable e) {
         super(resultCode.getMsg(), e);
         this.msg = resultCode.getMsg();
         this.code = resultCode.getCode();
