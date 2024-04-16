@@ -1,6 +1,7 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXResultStatusCode;
@@ -59,17 +60,29 @@ public class GXBusinessException extends RuntimeException {
     }
 
     public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg) {
-        this(resultCode, msg, null);
+        this(resultCode, msg, Dict.create());
     }
 
     public GXBusinessException(GXResultStatusCode resultCode, Throwable e) {
-        this(resultCode, "", e);
+        this(resultCode, e, Dict.create());
     }
 
-    public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg, Throwable e) {
+    public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg, @NotNull Dict data) {
+        this(resultCode, msg, data, null);
+    }
+
+    public GXBusinessException(GXResultStatusCode resultCode, Throwable e, @NotNull Dict data) {
+        this(resultCode, "", data, e);
+    }
+
+    public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg, @NotNull Dict data, Throwable e) {
         super(CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg()), e);
         this.msg = CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg());
         this.code = resultCode.getCode();
-        this.data = resultCode.getExtraData();
+        if (MapUtil.isEmpty(data)) {
+            data = Dict.create();
+        }
+        data.putAll(resultCode.getExtraData());
+        this.data = data;
     }
 }
