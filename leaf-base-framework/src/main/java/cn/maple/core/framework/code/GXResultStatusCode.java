@@ -2,20 +2,25 @@ package cn.maple.core.framework.code;
 
 import cn.hutool.core.lang.Dict;
 
+@SuppressWarnings("all")
 public interface GXResultStatusCode {
     /**
      * 获取code码
      *
      * @return int
      */
-    int getCode();
+    default int getCode() {
+        return this.getCode();
+    }
 
     /**
      * 获取提示信息
      *
      * @return 提示信息
      */
-    String getMsg();
+    default String getMsg() {
+        return this.getMsg();
+    }
 
     /**
      * 获取额外信息

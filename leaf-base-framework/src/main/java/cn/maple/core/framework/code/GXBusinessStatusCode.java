@@ -1,6 +1,9 @@
 package cn.maple.core.framework.code;
 
-public enum GXBusinessStatusCode {
+import lombok.Getter;
+
+@Getter
+public enum GXBusinessStatusCode implements GXResultStatusCode {
     NORMAL(0x0, "正常状态", "公用状态"),
     DELETED(0x10, "删除", "公用状态"),
     LOCKED(0x11, "账号锁定", "账号锁定"),
@@ -35,17 +38,5 @@ public enum GXBusinessStatusCode {
         this.code = code;
         this.msg = msg;
         this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 }
