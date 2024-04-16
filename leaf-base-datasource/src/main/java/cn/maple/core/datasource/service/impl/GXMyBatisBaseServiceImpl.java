@@ -535,6 +535,19 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @param columns   字段集合
+     * @param extraData 额外参数
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns, Object extraData) {
+        return findOneByCondition(repository.getTableName(), columns, condition, extraData);
+    }
+
+    /**
      * 创建或者更新
      *
      * @param entity 数据实体

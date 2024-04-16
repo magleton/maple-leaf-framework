@@ -1,11 +1,13 @@
 package cn.maple.core.framework.api;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
+import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
@@ -23,13 +25,15 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * RPC基础调用类
  * 封装了常用的一些方法
+ * <pre>
  * {@code
  * public class TestServiceApiImpl extends GXBaseServeApiImpl implements TestServiceApi {
- * public TestServiceApiImpl() {
- * staticBindServeServiceClass(OrdersService.class);
+ *      public TestServiceApiImpl() {
+ *          staticBindServeServiceClass(OrdersService.class);
+ *      }
  * }
  * }
- * }
+ * </pre>
  */
 public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseServeApi {
     /**
@@ -138,6 +142,24 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
     /**
      * 根据条件获取一条数据
      *
+     * @param condition   查询条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param columns     待查询的列
+     * @param targetClazz 数据返回类型
+     * @param extraData   数据转换时 自动填充的数据
+     * @return R
+     */
+    @Override
+    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData) {
+        Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), columns, extraData);
+        if (Objects.nonNull(r)) {
+            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
+        }
+        return null;
+    }
+
+    /**
+     * 根据条件获取一条数据
+     *
      * @param condition   查询条件
      * @param targetClazz 返回的数据类型
      * @param extraData   数据类型转换时 自动填充的数据
@@ -145,11 +167,34 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      */
     @Override
     public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
-        Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), extraData);
-        if (Objects.nonNull(r)) {
-            return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
-        }
-        return null;
+        return findOneByCondition(condition, CollUtil.newHashSet("*"), targetClazz, extraData);
+    }
+
+    /**
+     * 通过ID查询一条数据
+     *
+     * @param id          待查询的ID
+     * @param columns     需要查询的列
+     * @param targetClazz 返回的数据剋新
+     * @return R
+     */
+    @Override
+    public <R extends GXBaseApiResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz) {
+        HashBasedTable<String, String, Object> conditionTable = HashBasedTable.create();
+        conditionTable.put("id", GXBuilderConstant.EQ, id);
+        return findOneByCondition(conditionTable, columns, targetClazz, Dict.create());
+    }
+
+    /**
+     * 通过ID查询一条数据
+     *
+     * @param id          待查询的ID
+     * @param targetClazz 返回的数据剋新
+     * @return R
+     */
+    @Override
+    public <R extends GXBaseApiResDto> R findById(Long id, Class<R> targetClazz) {
+        return findById(id, CollUtil.newHashSet("*"), targetClazz);
     }
 
     /**

@@ -293,6 +293,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns);
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @param columns   字段集合
+     * @return 一条数据
+     */
+    R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns, Object extraData);
+
+    /**
      * 创建或者更新
      *
      * @param entity 数据实体

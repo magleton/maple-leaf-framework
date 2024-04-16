@@ -505,7 +505,7 @@ public class GXCommonUtils {
      * @return 转换后的条件
      */
     public static List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
-        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        List<GXCondition<?>> conditions = new ArrayList<>();
         condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
             Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
             Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
