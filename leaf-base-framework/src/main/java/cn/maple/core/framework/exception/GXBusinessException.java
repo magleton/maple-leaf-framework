@@ -1,8 +1,10 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXResultStatusCode;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -53,12 +55,21 @@ public class GXBusinessException extends RuntimeException {
     }
 
     public GXBusinessException(GXResultStatusCode resultCode) {
-        this(resultCode, null);
+        this(resultCode, "");
+    }
+
+    public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg) {
+        this(resultCode, msg, null);
     }
 
     public GXBusinessException(GXResultStatusCode resultCode, Throwable e) {
-        super(resultCode.getMsg(), e);
-        this.msg = resultCode.getMsg();
+        this(resultCode, "", e);
+    }
+
+    public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg, Throwable e) {
+        super(CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg()), e);
+        this.msg = CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg());
         this.code = resultCode.getCode();
+        this.data = resultCode.getExtraData();
     }
 }

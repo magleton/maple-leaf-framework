@@ -1,6 +1,6 @@
 package cn.maple.core.framework.code;
 
-import cn.hutool.json.JSONObject;
+import cn.hutool.core.lang.Dict;
 
 public interface GXResultStatusCode {
     /**
@@ -22,7 +22,7 @@ public interface GXResultStatusCode {
      *
      * @return 额外信息
      */
-    default JSONObject getExtraData() {
-        return null;
+    default Dict getExtraData() {
+        return Dict.create();
     }
 }
