@@ -26,7 +26,7 @@ public class GXBusinessException extends RuntimeException {
 
     private final int code;
 
-    private Dict data;
+    private final Dict data;
 
     public GXBusinessException(String msg, int code, Dict data, Throwable e) {
         super(msg, e);
