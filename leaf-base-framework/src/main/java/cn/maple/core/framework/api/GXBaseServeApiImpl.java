@@ -262,6 +262,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return 分页对象
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <R> GXPaginationResDto<R> paginate(GXQueryParamReqProtocol reqProtocol, Class<R> targetClazz, CopyOptions copyOptions) {
         GXBaseQueryParamInnerDto baseQueryParamInnerDto = GXCommonUtils.convertSourceToTarget(reqProtocol, GXBaseQueryParamInnerDto.class, null, copyOptions);
         if (CharSequenceUtil.isEmpty(baseQueryParamInnerDto.getTableName())) {
