@@ -5,13 +5,18 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXDefaultResultStatusCode;
+import cn.maple.core.framework.event.GXExceptionNotifyEvent;
+import cn.maple.core.framework.event.dto.GXExceptionNotifyEventDto;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.exception.GXTokenInvalidException;
+import cn.maple.core.framework.util.GXEventPublisherUtils;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import jakarta.validation.UnexpectedTypeException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.validation.BindException;
@@ -25,8 +30,6 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.validation.UnexpectedTypeException;
-import jakarta.validation.ValidationException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLSyntaxErrorException;
@@ -43,18 +46,21 @@ public class GXExceptionHandler {
     @ExceptionHandler(MismatchedInputException.class)
     public GXResultUtils<String> handleMismatchedInputException(MismatchedInputException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "参数错误!");
     }
 
     @ExceptionHandler(GXBeanValidateException.class)
     public GXResultUtils<Dict> handleGXBeanValidateException(GXBeanValidateException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), e.getData());
     }
 
     @ExceptionHandler(ClientAbortException.class)
     public GXResultUtils<String> handleClientAbortException(ClientAbortException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, "IO异常");
     }
 
@@ -68,12 +74,14 @@ public class GXExceptionHandler {
             String fieldName = path.getFieldName();
             msg[0] = CharSequenceUtil.format("{}字段的值{}为{}类型不能转换为{}类型,请提供正确的类型!", fieldName, value, value.getClass().getSimpleName(), targetTypeSimpleName);
         });
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.ok(HttpStatus.HTTP_INTERNAL_ERROR, msg[0]);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public GXResultUtils<String> handlerNoHandlerFoundException(NoHandlerFoundException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(404, "路径不存在，请检查路径是否正确");
     }
 
@@ -84,6 +92,7 @@ public class GXExceptionHandler {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(GXDefaultResultStatusCode.INTERNAL_SYSTEM_ERROR, errors);
     }
 
@@ -99,6 +108,7 @@ public class GXExceptionHandler {
         }
         log.error(e.getMessage(), e);
         Object orDefault = errors.getOrDefault(firstErrorKey, "");
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
     }
 
@@ -107,36 +117,42 @@ public class GXExceptionHandler {
         log.error(e.getMessage(), e);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("msg", e.getCause().getMessage());
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(GXDefaultResultStatusCode.INTERNAL_SYSTEM_ERROR, hashMap);
     }
 
     @ExceptionHandler(MultipartException.class)
     public GXResultUtils<String> handleMultipartException(MultipartException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getCause().getMessage());
     }
 
     @ExceptionHandler(GXTokenInvalidException.class)
     public GXResultUtils<String> handleGXTokenInvalidException(GXTokenInvalidException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_UNAUTHORIZED, e.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
     public GXResultUtils<String> handleSQLException(SQLException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据异常,请联系相关人员!");
     }
 
     @ExceptionHandler(SQLSyntaxErrorException.class)
     public GXResultUtils<String> handleSQLSyntaxErrorException(SQLSyntaxErrorException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据异常,请联系相关人员!");
     }
 
     @ExceptionHandler(GXDBNotExistsException.class)
     public GXResultUtils<String> handleGXDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
     }
 
@@ -147,6 +163,7 @@ public class GXExceptionHandler {
         if (Objects.nonNull(e.getCause())) {
             data = ((GXBusinessException) e.getCause()).getData();
         }
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(e.getCode(), e.getMsg(), data);
     }
 
@@ -154,6 +171,7 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         log.error(e.getMessage(), e);
         String parameterName = e.getParameterName();
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), CharSequenceUtil.format("缺失{}参数", parameterName), Dict.create().set(parameterName, CharSequenceUtil.format("参数{}必填", parameterName)));
     }
 
@@ -169,30 +187,47 @@ public class GXExceptionHandler {
         } else {
             dict.set("field", message);
         }
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg(), dict);
     }
 
     @ExceptionHandler(Exception.class)
     public GXResultUtils<Dict> handleException(Exception e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "系统内部错误");
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public GXResultUtils<Dict> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "数据已经存在");
     }
 
     @ExceptionHandler(UnexpectedTypeException.class)
     public GXResultUtils<Dict> handleUnexpectedTypeException(UnexpectedTypeException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "使用的数据验证器不能验证请求的参数!");
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public GXResultUtils<Dict> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error(e.getMessage(), e);
+        sendExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "不支持HTTP请求方法!");
+    }
+
+    /**
+     * 发布异常通知信息事件
+     *
+     * @param throwable 异常信息
+     */
+    private void sendExceptionNotifyEvent(Throwable throwable) {
+        GXExceptionNotifyEventDto exceptionNotifyEventDto = new GXExceptionNotifyEventDto();
+        exceptionNotifyEventDto.setThrowable(throwable);
+        GXExceptionNotifyEvent exceptionNotifyEvent = new GXExceptionNotifyEvent(exceptionNotifyEventDto);
+        GXEventPublisherUtils.publishEvent(exceptionNotifyEvent);
     }
 }
