@@ -7,6 +7,7 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXTokenInvalidException;
 import cn.maple.core.framework.service.GXBaseCacheService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
@@ -48,7 +49,7 @@ public interface GXSSOCache {
         // 调用业务端的逻辑验证用户是否有效
         boolean b = tokenConfigService.checkLoginStatus();
         if (!b) {
-            throw new GXBusinessException("token已经失效,请重新登录!", HttpStatus.HTTP_UNAUTHORIZED);
+            throw new GXTokenInvalidException("token已经失效,请重新登录!", HttpStatus.HTTP_UNAUTHORIZED);
         }
         return tokenConfigService.getEfficaciousToken(requestToken);
     }
