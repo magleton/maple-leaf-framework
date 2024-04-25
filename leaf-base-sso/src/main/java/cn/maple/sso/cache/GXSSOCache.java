@@ -69,7 +69,7 @@ public interface GXSSOCache {
         assert cacheService != null;
         Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         if (Objects.isNull(id)) {
-            throw new GXBusinessException("token中未包含有效的id标识");
+            throw new GXTokenInvalidException("token中未包含有效的id标识");
         }
         String tokenCacheKey = tokenConfigService.getTokenCacheKey(id, ssoToken);
         String cacheBucketName = tokenConfigService.getCacheBucketName();
@@ -95,7 +95,7 @@ public interface GXSSOCache {
         }
         Long id = Optional.ofNullable(ssoToken.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         if (Objects.isNull(id)) {
-            throw new GXBusinessException("token中未包含有效的id标识");
+            throw new GXTokenInvalidException("token中未包含有效的id标识");
         }
         String tokenCacheKey = tokenConfigService.getTokenCacheKey(id, ssoToken);
         String cacheBucketName = tokenConfigService.getCacheBucketName();
