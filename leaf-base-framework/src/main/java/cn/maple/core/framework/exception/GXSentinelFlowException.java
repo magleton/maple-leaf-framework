@@ -1,52 +1,54 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.http.HttpStatus;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import cn.maple.core.framework.code.GXResultStatusCode;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class GXSentinelFlowException extends Exception {
-    /**
-     * 异常消息
-     */
-    private final String msg;
-
-    /**
-     * 异常码
-     */
-    private final int code;
-
-    /**
-     * 异常数据
-     */
-    private final Dict data;
-
+public class GXSentinelFlowException extends GXBusinessException {
     public GXSentinelFlowException(String msg, int code, Dict data, Throwable e) {
-        super(msg, e);
-        this.msg = msg;
-        this.code = code;
-        this.data = data;
+        super(msg, code, data, e);
     }
 
     public GXSentinelFlowException(String msg, int code, Dict data) {
-        this(msg, code, data, null);
+        super(msg, code, data);
     }
 
     public GXSentinelFlowException(String msg, int code, Throwable e) {
-        this(msg, code, null, e);
+        super(msg, code, e);
     }
 
     public GXSentinelFlowException(String msg, int code) {
-        this(msg, code, null, null);
+        super(msg, code);
     }
 
     public GXSentinelFlowException(String msg) {
-        this(msg, HttpStatus.HTTP_NOT_ACCEPTABLE, null, null);
+        super(msg);
     }
 
-    public GXSentinelFlowException(String msg, Dict data) {
-        this(msg, HttpStatus.HTTP_NOT_ACCEPTABLE, data, null);
+    public GXSentinelFlowException(String msg, Throwable e) {
+        super(msg, e);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode) {
+        super(resultCode);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode, String msg) {
+        super(resultCode, msg);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode, Throwable e) {
+        super(resultCode, e);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode, String msg, Dict data) {
+        super(resultCode, msg, data);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode, Throwable e, Dict data) {
+        super(resultCode, e, data);
+    }
+
+    public GXSentinelFlowException(GXResultStatusCode resultCode, String msg, Dict data, Throwable e) {
+        super(resultCode, msg, data, e);
     }
 }

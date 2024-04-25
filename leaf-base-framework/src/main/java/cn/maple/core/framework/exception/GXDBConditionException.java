@@ -1,50 +1,54 @@
 package cn.maple.core.framework.exception;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.http.HttpStatus;
-import cn.maple.core.framework.code.GXDefaultResultStatusCode;
+import cn.maple.core.framework.code.GXResultStatusCode;
 
-public class GXDBConditionException extends RuntimeException {
-    private final String msg;
-
-    private final int code;
-
-    private Dict data;
-
+public class GXDBConditionException extends GXBusinessException {
     public GXDBConditionException(String msg, int code, Dict data, Throwable e) {
-        super(msg, e);
-        this.msg = msg;
-        this.code = code;
-        this.data = data;
+        super(msg, code, data, e);
     }
 
     public GXDBConditionException(String msg, int code, Dict data) {
-        this(msg, code, data, null);
+        super(msg, code, data);
     }
 
     public GXDBConditionException(String msg, int code, Throwable e) {
-        this(msg, code, Dict.create(), e);
+        super(msg, code, e);
     }
 
     public GXDBConditionException(String msg, int code) {
-        this(msg, code, Dict.create());
+        super(msg, code);
     }
 
     public GXDBConditionException(String msg) {
-        this(msg, HttpStatus.HTTP_INTERNAL_ERROR);
+        super(msg);
     }
 
     public GXDBConditionException(String msg, Throwable e) {
-        this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
+        super(msg, e);
     }
 
-    public GXDBConditionException(GXDefaultResultStatusCode resultCode) {
-        this(resultCode, null);
+    public GXDBConditionException(GXResultStatusCode resultCode) {
+        super(resultCode);
     }
 
-    public GXDBConditionException(GXDefaultResultStatusCode resultCode, Throwable e) {
-        super(resultCode.getMsg(), e);
-        this.msg = resultCode.getMsg();
-        this.code = resultCode.getCode();
+    public GXDBConditionException(GXResultStatusCode resultCode, String msg) {
+        super(resultCode, msg);
+    }
+
+    public GXDBConditionException(GXResultStatusCode resultCode, Throwable e) {
+        super(resultCode, e);
+    }
+
+    public GXDBConditionException(GXResultStatusCode resultCode, String msg, Dict data) {
+        super(resultCode, msg, data);
+    }
+
+    public GXDBConditionException(GXResultStatusCode resultCode, Throwable e, Dict data) {
+        super(resultCode, e, data);
+    }
+
+    public GXDBConditionException(GXResultStatusCode resultCode, String msg, Dict data, Throwable e) {
+        super(resultCode, msg, data, e);
     }
 }

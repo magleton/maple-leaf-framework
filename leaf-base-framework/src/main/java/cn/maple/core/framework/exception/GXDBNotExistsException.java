@@ -3,48 +3,54 @@ package cn.maple.core.framework.exception;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXDefaultResultStatusCode;
+import cn.maple.core.framework.code.GXResultStatusCode;
 
-public class GXDBNotExistsException extends RuntimeException {
-    private final String msg;
-
-    private final int code;
-
-    private Dict data;
-
+public class GXDBNotExistsException extends GXBusinessException {
     public GXDBNotExistsException(String msg, int code, Dict data, Throwable e) {
-        super(msg, e);
-        this.msg = msg;
-        this.code = code;
-        this.data = data;
+        super(msg, code, data, e);
     }
 
     public GXDBNotExistsException(String msg, int code, Dict data) {
-        this(msg, code, data, null);
+        super(msg, code, data);
     }
 
     public GXDBNotExistsException(String msg, int code, Throwable e) {
-        this(msg, code, Dict.create(), e);
+        super(msg, code, e);
     }
 
     public GXDBNotExistsException(String msg, int code) {
-        this(msg, code, Dict.create());
+        super(msg, code);
     }
 
     public GXDBNotExistsException(String msg) {
-        this(msg, HttpStatus.HTTP_INTERNAL_ERROR);
+        super(msg);
     }
 
     public GXDBNotExistsException(String msg, Throwable e) {
-        this(msg, HttpStatus.HTTP_INTERNAL_ERROR, e);
+        super(msg, e);
     }
 
-    public GXDBNotExistsException(GXDefaultResultStatusCode resultCode) {
-        this(resultCode, null);
+    public GXDBNotExistsException(GXResultStatusCode resultCode) {
+        super(resultCode);
     }
 
-    public GXDBNotExistsException(GXDefaultResultStatusCode resultCode, Throwable e) {
-        super(resultCode.getMsg(), e);
-        this.msg = resultCode.getMsg();
-        this.code = resultCode.getCode();
+    public GXDBNotExistsException(GXResultStatusCode resultCode, String msg) {
+        super(resultCode, msg);
+    }
+
+    public GXDBNotExistsException(GXResultStatusCode resultCode, Throwable e) {
+        super(resultCode, e);
+    }
+
+    public GXDBNotExistsException(GXResultStatusCode resultCode, String msg, Dict data) {
+        super(resultCode, msg, data);
+    }
+
+    public GXDBNotExistsException(GXResultStatusCode resultCode, Throwable e, Dict data) {
+        super(resultCode, e, data);
+    }
+
+    public GXDBNotExistsException(GXResultStatusCode resultCode, String msg, Dict data, Throwable e) {
+        super(resultCode, msg, data, e);
     }
 }
