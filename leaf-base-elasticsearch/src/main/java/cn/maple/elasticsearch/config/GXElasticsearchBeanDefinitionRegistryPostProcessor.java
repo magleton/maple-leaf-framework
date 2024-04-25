@@ -219,6 +219,7 @@ public class GXElasticsearchBeanDefinitionRegistryPostProcessor implements BeanD
         }).withClientConfigurer(ElasticsearchClients.ElasticsearchHttpClientConfigurationCallback.from(clientBuilder -> {
             clientBuilder.disableAuthCaching();
             //clientBuilder.setDefaultHeaders(List.of(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
+            clientBuilder.setKeepAliveStrategy((httpResponse, httpContext) -> 1000 * 60);
             clientBuilder.addInterceptorLast((HttpResponseInterceptor) (response, context) -> response.addHeader("X-Elastic-Product", "Elasticsearch"));
             return clientBuilder/*.setDefaultCredentialsProvider(credentialsProvider)*/;
         }));
