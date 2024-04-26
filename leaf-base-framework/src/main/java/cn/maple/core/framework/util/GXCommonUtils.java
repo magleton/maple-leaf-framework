@@ -30,7 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GXCommonUtils {
@@ -547,7 +546,6 @@ public class GXCommonUtils {
      * @return Boolean
      */
     public static boolean isBase64(String base64Str) {
-        String base64Pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
-        return Pattern.matches(base64Pattern, base64Str);
+        return Base64.isBase64(base64Str);
     }
 }
