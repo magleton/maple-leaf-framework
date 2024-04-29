@@ -76,8 +76,8 @@ public class GXBusinessException extends RuntimeException {
     }
 
     public GXBusinessException(GXResultStatusCode resultCode, @NotNull String msg, @NotNull Dict data, Throwable e) {
-        super(CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg()), e);
-        this.msg = CharSequenceUtil.format("{}-{}", msg, resultCode.getMsg());
+        super(CharSequenceUtil.format("{}{}", msg, resultCode.getMsg()), e);
+        this.msg = CharSequenceUtil.format("{}{}", msg, resultCode.getMsg());
         this.code = resultCode.getCode();
         if (MapUtil.isEmpty(data)) {
             data = Dict.create();
