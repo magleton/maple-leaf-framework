@@ -6,6 +6,7 @@ import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import lombok.Data;
 
 import java.lang.reflect.Method;
@@ -122,6 +123,14 @@ public class GXResultUtils<T> {
     public static <T> GXResultUtils<T> error(T data) {
         callUserDefinedMethod(data);
         return error(FAIL_CODE, FAIL_MSG, data);
+    }
+
+    public static <T> GXResultUtils<T> error(int code, Throwable throwable) {
+        return error(code, throwable.getMessage(), null);
+    }
+
+    public static <T> GXResultUtils<T> error(GXBusinessException e) {
+        return error(e.getCode(), e.getMessage(), null);
     }
 
     public static <T> GXResultUtils<T> error(String msg) {
