@@ -7,10 +7,7 @@ import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.event.GXExceptionNotifyEvent;
 import cn.maple.core.framework.event.dto.GXExceptionNotifyEventDto;
-import cn.maple.core.framework.exception.GXBeanValidateException;
-import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.exception.GXDBNotExistsException;
-import cn.maple.core.framework.exception.GXTokenInvalidException;
+import cn.maple.core.framework.exception.*;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -153,7 +150,21 @@ public class GXExceptionHandler {
     public GXResultUtils<String> handleGXDBNotExistsException(GXDBNotExistsException e, RedirectAttributes redirectAttributes) {
         log.error(e.getMessage(), e);
         publishExceptionNotifyEvent(e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, e.getMessage());
+        return GXResultUtils.error(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(GXDBExistsException.class)
+    public GXResultUtils<String> handleGXDBExistsException(GXDBExistsException e, RedirectAttributes redirectAttributes) {
+        log.error(e.getMessage(), e);
+        publishExceptionNotifyEvent(e);
+        return GXResultUtils.error(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(GXDataFormatIncorrectException.class)
+    public GXResultUtils<String> handleGXDataFormatIncorrectException(GXDataFormatIncorrectException e, RedirectAttributes redirectAttributes) {
+        log.error(e.getMessage(), e);
+        publishExceptionNotifyEvent(e);
+        return GXResultUtils.error(e.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(GXBusinessException.class)
