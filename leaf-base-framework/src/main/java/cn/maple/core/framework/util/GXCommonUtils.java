@@ -248,8 +248,8 @@ public class GXCommonUtils {
             reflectCallObjectMethod(target, "verify");
             return target;
         } catch (Exception e) {
-            //Throwable cause = Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause());
-            throw new GXBusinessException(e.getMessage(), e);
+            Throwable throwable = Optional.ofNullable(Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause())).orElse(e);
+            throw Convert.convert(RuntimeException.class, throwable);
         }
     }
 
