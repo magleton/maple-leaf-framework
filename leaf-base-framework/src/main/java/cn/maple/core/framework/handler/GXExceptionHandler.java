@@ -8,6 +8,7 @@ import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.event.GXExceptionNotifyEvent;
 import cn.maple.core.framework.event.dto.GXExceptionNotifyEventDto;
 import cn.maple.core.framework.exception.*;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXEventPublisherUtils;
 import cn.maple.core.framework.util.GXResultUtils;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -238,6 +239,7 @@ public class GXExceptionHandler {
     private void publishExceptionNotifyEvent(Throwable throwable) {
         GXExceptionNotifyEventDto exceptionNotifyEventDto = new GXExceptionNotifyEventDto();
         exceptionNotifyEventDto.setThrowable(throwable);
+        exceptionNotifyEventDto.setHttpServletRequest(GXCurrentRequestContextUtils.getHttpServletRequest());
         GXExceptionNotifyEvent exceptionNotifyEvent = new GXExceptionNotifyEvent(exceptionNotifyEventDto);
         GXEventPublisherUtils.publishEvent(exceptionNotifyEvent);
     }
