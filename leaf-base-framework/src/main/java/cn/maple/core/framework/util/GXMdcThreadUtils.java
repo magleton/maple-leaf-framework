@@ -12,8 +12,8 @@ import java.util.concurrent.Callable;
  * @author gapleaf@163.com
  */
 @SuppressWarnings("unused")
-public class GXMdcThreadUtil {
-    private GXMdcThreadUtil() {
+public class GXMdcThreadUtils {
+    private GXMdcThreadUtils() {
 
     }
 

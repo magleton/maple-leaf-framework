@@ -1,6 +1,6 @@
 package cn.maple.core.framework.wrapper.mdc;
 
-import cn.maple.core.framework.util.GXMdcThreadUtil;
+import cn.maple.core.framework.util.GXMdcThreadUtils;
 import org.slf4j.MDC;
 
 import java.util.concurrent.*;
@@ -44,21 +44,21 @@ public class GXMdcWrapperThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     public void execute(Runnable task) {
-        super.execute(GXMdcThreadUtil.wrap(task, MDC.getCopyOfContextMap()));
+        super.execute(GXMdcThreadUtils.wrap(task, MDC.getCopyOfContextMap()));
     }
 
     @Override
     public <T> Future<T> submit(Runnable task, T result) {
-        return super.submit(GXMdcThreadUtil.wrap(task, MDC.getCopyOfContextMap()), result);
+        return super.submit(GXMdcThreadUtils.wrap(task, MDC.getCopyOfContextMap()), result);
     }
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        return super.submit(GXMdcThreadUtil.wrap(task, MDC.getCopyOfContextMap()));
+        return super.submit(GXMdcThreadUtils.wrap(task, MDC.getCopyOfContextMap()));
     }
 
     @Override
     public Future<?> submit(Runnable task) {
-        return super.submit(GXMdcThreadUtil.wrap(task, MDC.getCopyOfContextMap()));
+        return super.submit(GXMdcThreadUtils.wrap(task, MDC.getCopyOfContextMap()));
     }
 }
