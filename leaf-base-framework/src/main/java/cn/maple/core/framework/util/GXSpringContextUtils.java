@@ -15,8 +15,6 @@ public class GXSpringContextUtils {
 
     private static final ApplicationContext applicationContext = GXApplicationContextSingleton.INSTANCE.getApplicationContext();
 
-    private static final ConfigurableListableBeanFactory beanFactory = GXApplicationContextSingleton.INSTANCE.getBeanFactory();
-
     private GXSpringContextUtils() {
     }
 
@@ -75,9 +73,5 @@ public class GXSpringContextUtils {
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
-    }
-
-    public static ConfigurableListableBeanFactory getBeanFactory() {
-        return beanFactory;
     }
 }
