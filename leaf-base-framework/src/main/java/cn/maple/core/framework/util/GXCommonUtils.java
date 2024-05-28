@@ -65,6 +65,10 @@ public class GXCommonUtils {
             return value;
         }
 
+        if (JSONUtil.isTypeJSONArray(value.toString()) && targetClazz.isAssignableFrom(List.class)) {
+            return JSONUtil.toList(value.toString(), targetClazz.getComponentType());
+        }
+
         if (value instanceof IJSONTypeConverter) {
             return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
         }
