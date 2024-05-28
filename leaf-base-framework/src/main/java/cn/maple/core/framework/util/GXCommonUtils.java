@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,8 +66,17 @@ public class GXCommonUtils {
             return value;
         }
 
+        // 处理List<自定义类型>
         if (JSONUtil.isTypeJSONArray(value.toString()) && targetClazz.isAssignableFrom(List.class)) {
-            return JSONUtil.toList(value.toString(), targetClazz.getComponentType());
+            Class<?> componentType = targetClazz.getComponentType();
+            if (ObjectUtil.isNull(componentType)) {
+                Type actualTypeArgument = TypeUtil.getTypeArgument(type, 0);
+                if (ObjectUtil.isNull(actualTypeArgument)) {
+                    return value;
+                }
+                componentType = (Class<?>) actualTypeArgument;
+            }
+            return JSONUtil.toList(JSONUtil.toJsonStr(value), componentType);
         }
 
         if (value instanceof IJSONTypeConverter) {
