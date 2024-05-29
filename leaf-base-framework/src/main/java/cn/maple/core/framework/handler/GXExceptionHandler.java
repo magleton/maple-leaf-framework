@@ -24,6 +24,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -238,6 +240,8 @@ public class GXExceptionHandler {
      */
     private void publishExceptionNotifyEvent(Throwable throwable) {
         GXExceptionNotifyEventDto exceptionNotifyEventDto = new GXExceptionNotifyEventDto();
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes, true);
         exceptionNotifyEventDto.setThrowable(throwable);
         exceptionNotifyEventDto.setHttpServletRequest(GXCurrentRequestContextUtils.getHttpServletRequest());
         GXExceptionNotifyEvent exceptionNotifyEvent = new GXExceptionNotifyEvent(exceptionNotifyEventDto);
