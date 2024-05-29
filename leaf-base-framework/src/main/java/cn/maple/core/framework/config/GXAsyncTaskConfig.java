@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadFactory;
  */
 @Configuration
 @EnableAsync
-public class AsyncTaskConfiguration implements AsyncConfigurer {
+public class GXAsyncTaskConfig implements AsyncConfigurer {
     @Override
     public Executor getAsyncExecutor() {
         Thread.Builder.OfVirtual ofVirtual = Thread.ofVirtual().name("virtual-async#", 1);
