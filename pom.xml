@@ -38,7 +38,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <lombok.version>1.18.32</lombok.version>
-        <hutool.version>5.8.27</hutool.version>
+        <hutool.version>5.8.28</hutool.version>
         <aspectjweaver.version>1.9.22.1</aspectjweaver.version>
         <guava.version>33.2.0-jre</guava.version>
         <caffeine.version>3.1.8</caffeine.version>
@@ -200,38 +200,6 @@
                 <version>${lombok.version}</version>
                 <optional>true</optional>
             </dependency>
-
-            <!-- Hutool工具包 Start-->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-json</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-http</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-extra</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-crypto</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <!-- Hutool工具包 END-->
 
             <!--Elasticsearch  Start-->
             <dependency>
