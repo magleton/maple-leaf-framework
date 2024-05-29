@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,6 +212,7 @@ public interface GXBaseBuilder {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
+                    SqlInjectionUtils.check(str);
                     lastWheres.add(str);
                 }
             }
