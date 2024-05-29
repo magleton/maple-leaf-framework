@@ -29,7 +29,7 @@ public class GXPenetrateAttachmentSelector implements PenetrateAttachmentSelecto
      * <p>
      * 该方法会在该服务作为客户端时进行调用
      * <p>
-     * 高方法被调用之后会调用{@link GXDubboClientTraceIdFilter#invoke(Invoker<?> invoker, Invocation invocation)}方法
+     * 该方法被调用之后会调用{@link GXDubboClientTraceIdFilter#invoke(Invoker<?> invoker, Invocation invocation)}方法
      * 该方法会将数据写入Invocation对象
      * 相当于调用Invocation.addObjectAttachments方法
      *
