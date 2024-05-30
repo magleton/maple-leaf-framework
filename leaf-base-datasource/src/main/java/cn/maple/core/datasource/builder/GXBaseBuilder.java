@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
@@ -15,6 +16,7 @@ import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedFi
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXDBConditionException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -210,6 +212,9 @@ public interface GXBaseBuilder {
         List<String> lastWheres = new ArrayList<>();
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
+                if (ObjectUtil.isNull(c.getFieldValue())) {
+                    throw new GXDBConditionException(CharSequenceUtil.format("数据查询条件错误【字段{}的值是null】", c.getFieldExpression()));
+                }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
                     SqlInjectionUtils.check(str);

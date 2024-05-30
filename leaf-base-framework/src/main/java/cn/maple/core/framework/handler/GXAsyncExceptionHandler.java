@@ -1,4 +1,4 @@
-package cn.maple.core.framework.exception;
+package cn.maple.core.framework.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
