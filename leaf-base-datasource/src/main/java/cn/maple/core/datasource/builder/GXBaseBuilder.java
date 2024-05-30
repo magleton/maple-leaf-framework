@@ -214,7 +214,7 @@ public interface GXBaseBuilder {
                 if (ObjectUtil.isNull(c.getFieldValue())) {
                     String msg = CharSequenceUtil.format("数据查询条件错误【字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
                     LOGGER.error(msg);
-                    //throw new GXDBConditionException(CharSequenceUtil.format("数据查询条件错误【字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression()));
+                    //throw new GXDBConditionException(msg);
                 }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
