@@ -213,7 +213,7 @@ public interface GXBaseBuilder {
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
                 if (ObjectUtil.isNull(c.getFieldValue())) {
-                    String msg = CharSequenceUtil.format("数据查询条件错误【字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
+                    String msg = CharSequenceUtil.format("数据查询条件错误【查询字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
                     throw new GXDBConditionException(msg);
                 }
                 String str = c.whereString();
