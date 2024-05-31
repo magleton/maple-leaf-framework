@@ -16,6 +16,7 @@ import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedFi
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXDBConditionException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -213,8 +214,7 @@ public interface GXBaseBuilder {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
                 if (ObjectUtil.isNull(c.getFieldValue())) {
                     String msg = CharSequenceUtil.format("数据查询条件错误【字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
-                    LOGGER.error(msg);
-                    //throw new GXDBConditionException(msg);
+                    throw new GXDBConditionException(msg);
                 }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
