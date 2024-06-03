@@ -15,6 +15,11 @@ public class GXConditionLikeFull extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("\"%{}%\"", GXDBStringEscapeUtils.escapeRawString(value.toString()));
+        String str = GXDBStringEscapeUtils.escapeRawString(value.toString());
+        String format = "\"{}%\"";
+        if (CharSequenceUtil.contains(str, "\"")) {
+            format = "'{}%'";
+        }
+        return CharSequenceUtil.format(format, str);
     }
 }

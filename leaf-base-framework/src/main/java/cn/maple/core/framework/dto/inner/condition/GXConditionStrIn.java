@@ -32,7 +32,14 @@ public class GXConditionStrIn extends GXCondition<String> {
         if (CollUtil.size(value) > limitCnt) {
             throw new GXBusinessException(CharSequenceUtil.format("IN查询条件不能超过{}条数据!", limitCnt));
         }
-        String str = ((Set<String>) value).stream().map(v -> CharSequenceUtil.format("\"{}\"", GXDBStringEscapeUtils.escapeRawString(v))).collect(Collectors.joining(","));
+        String str = ((Set<String>) value).stream().map(v -> {
+            String val = GXDBStringEscapeUtils.escapeRawString(v);
+            String format = "\"{}%\"";
+            if (CharSequenceUtil.contains(val, "\"")) {
+                format = "'{}%'";
+            }
+            return CharSequenceUtil.format(format, val);
+        }).collect(Collectors.joining(","));
         return CharSequenceUtil.format("({})", str);
     }
 }
