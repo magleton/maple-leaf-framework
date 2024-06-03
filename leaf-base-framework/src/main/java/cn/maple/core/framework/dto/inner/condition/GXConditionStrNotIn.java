@@ -34,9 +34,9 @@ public class GXConditionStrNotIn extends GXCondition<String> {
         }
         String str = ((Set<String>) value).stream().map(v -> {
             String val = GXDBStringEscapeUtils.escapeRawString(v);
-            String format = "\"{}%\"";
+            String format = "\"{}\"";
             if (CharSequenceUtil.contains(val, "\"")) {
-                format = "'{}%'";
+                format = "'{}'";
             }
             return CharSequenceUtil.format(format, val);
         }).collect(Collectors.joining(","));
