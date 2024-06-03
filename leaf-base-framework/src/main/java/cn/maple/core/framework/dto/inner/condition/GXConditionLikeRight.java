@@ -15,6 +15,6 @@ public class GXConditionLikeRight extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
-        return CharSequenceUtil.format("'{}%'", GXDBStringEscapeUtils.escapeRawString(value.toString()));
+        return CharSequenceUtil.format("\"{}%\"", GXDBStringEscapeUtils.escapeRawString(value.toString()));
     }
 }
