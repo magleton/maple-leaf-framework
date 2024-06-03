@@ -1,6 +1,7 @@
 package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.util.GXDBStringEscapeUtils;
 
 public class GXConditionStrNE extends GXCondition<String> {
     public GXConditionStrNE(String tableNameAlias, String fieldName, String value) {
@@ -14,9 +15,6 @@ public class GXConditionStrNE extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
-        if (CharSequenceUtil.startWith(value.toString(), '\'') && CharSequenceUtil.endWith(value.toString(), '\'')) {
-            return value.toString();
-        }
-        return CharSequenceUtil.format("'{}'", value);
+        return CharSequenceUtil.format("'{}'", GXDBStringEscapeUtils.escapeRawString(value.toString()));
     }
 }

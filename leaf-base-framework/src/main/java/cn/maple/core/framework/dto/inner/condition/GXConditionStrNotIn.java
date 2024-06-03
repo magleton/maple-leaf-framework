@@ -5,6 +5,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXDBStringEscapeUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -31,12 +32,7 @@ public class GXConditionStrNotIn extends GXCondition<String> {
         if (CollUtil.size(value) > limitCnt) {
             throw new GXBusinessException(CharSequenceUtil.format("IN查询条件不能超过{}条数据!", limitCnt));
         }
-        String str = ((Set<String>) value).stream().map(v -> {
-            if (CharSequenceUtil.startWith(value.toString(), '\'') && CharSequenceUtil.endWith(value.toString(), '\'')) {
-                return value.toString();
-            }
-            return CharSequenceUtil.format("'{}'", v);
-        }).collect(Collectors.joining(","));
+        String str = ((Set<String>) value).stream().map(v -> CharSequenceUtil.format("'{}'", GXDBStringEscapeUtils.escapeRawString(v))).collect(Collectors.joining(","));
         return CharSequenceUtil.format("({})", str);
     }
 }
