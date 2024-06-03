@@ -13,6 +13,7 @@ import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
+import cn.maple.core.framework.dto.inner.condition.GXConditionIsNULL;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
@@ -212,7 +213,7 @@ public interface GXBaseBuilder {
         List<String> lastWheres = new ArrayList<>();
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
-                if (ObjectUtil.isNull(c.getFieldValue())) {
+                if (!GXConditionIsNULL.class.isAssignableFrom(c.getClass()) && ObjectUtil.isNull(c.getFieldValue())) {
                     String msg = CharSequenceUtil.format("数据查询条件错误【查询字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
                     throw new GXDBConditionException(msg);
                 }
