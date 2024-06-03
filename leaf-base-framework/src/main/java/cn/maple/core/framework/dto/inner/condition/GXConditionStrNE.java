@@ -17,9 +17,6 @@ public class GXConditionStrNE extends GXCondition<String> {
     public String getFieldValue() {
         String str = GXDBStringEscapeUtils.escapeRawString(value.toString());
         String format = "\"{}\"";
-        if (CharSequenceUtil.contains(str, "\"")) {
-            format = "'{}'";
-        }
         return CharSequenceUtil.format(format, str);
     }
 }
