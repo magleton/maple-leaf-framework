@@ -4,6 +4,11 @@ server:
     context-path: /
   shutdown: graceful # 开启优雅停机
 spring:
+  application:
+    name: maple
+  threads:
+    virtual:
+      enabled: true
   lifecycle:
     timeout-per-shutdown-phase: 60s # 最大等待时间 默认30s
   servlet:
