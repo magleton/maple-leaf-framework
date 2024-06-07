@@ -60,7 +60,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (Objects.nonNull(mapperMethod)) {
             //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
             Object result = mapperMethod.invoke(baseMapper, iPage, dbQueryParamInnerDto);
-            final List<Dict> records = Convert.convert(new TypeReference<List<Dict>>() {
+            final List<Dict> records = Convert.convert(new TypeReference<>() {
             }, result);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
@@ -95,7 +95,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (Objects.nonNull(mapperMethod)) {
             //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
             Object result = mapperMethod.invoke(baseMapper, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
-            final List<Dict> records = Convert.convert(new TypeReference<List<Dict>>() {
+            final List<Dict> records = Convert.convert(new TypeReference<>() {
             }, result);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
