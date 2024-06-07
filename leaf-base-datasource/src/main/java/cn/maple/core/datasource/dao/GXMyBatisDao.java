@@ -3,8 +3,8 @@ package cn.maple.core.datasource.dao;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
 import cn.maple.core.datasource.util.GXDBCommonUtils;
 import cn.maple.core.framework.dao.GXBaseDao;
@@ -24,8 +24,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -44,6 +46,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
      * @param dbQueryParamInnerDto 查询条件
      * @return GXPagination
      */
+    @SneakyThrows
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
@@ -52,10 +55,13 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (CharSequenceUtil.isBlank(dbQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        // TODO 后期改为直接调用
-        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
+        //Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
+        Method mapperMethod = ReflectUtils.findDeclaredMethod(baseMapper.getClass(), mapperMethodName, new Class[]{IPage.class, dbQueryParamInnerDto.getClass()});
         if (Objects.nonNull(mapperMethod)) {
-            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
+            Object result = mapperMethod.invoke(baseMapper, iPage, dbQueryParamInnerDto);
+            final List<Dict> records = Convert.convert(new TypeReference<List<Dict>>() {
+            }, result);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
@@ -75,6 +81,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
      * @param unionTypeEnums             union的类型
      * @return GXPagination
      */
+    @SneakyThrows
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(masterQueryParamInnerDto.getPage(), masterQueryParamInnerDto.getPageSize());
@@ -83,10 +90,13 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (CharSequenceUtil.isBlank(masterQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
             masterQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        // TODO 后期改为直接调用
-        Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass());
+        //Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass());
+        Method mapperMethod = ReflectUtils.findDeclaredMethod(baseMapper.getClass(), mapperMethodName, new Class[]{IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass()});
         if (Objects.nonNull(mapperMethod)) {
-            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+            //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+            Object result = mapperMethod.invoke(baseMapper, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
+            final List<Dict> records = Convert.convert(new TypeReference<List<Dict>>() {
+            }, result);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
