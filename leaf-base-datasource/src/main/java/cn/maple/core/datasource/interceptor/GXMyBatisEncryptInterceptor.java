@@ -8,6 +8,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.plugin.*;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -30,7 +31,8 @@ public class GXMyBatisEncryptInterceptor implements Interceptor {
         // 若指定ResultSetHandler ，这里则能强转为ResultSetHandler
         ParameterHandler parameterHandler = (ParameterHandler) invocation.getTarget();
         // 获取参数对像，即 mapper 中 paramsType 的实例
-        Field parameterField = parameterHandler.getClass().getDeclaredField("parameterObject");
+        //Field parameterField = parameterHandler.getClass().getDeclaredField("parameterObject");
+        Field parameterField = ReflectionUtils.findField(parameterHandler.getClass() ,  "parameterObject");
         parameterField.setAccessible(true);
         // 取出实例
         Object parameterObject = parameterField.get(parameterHandler);
