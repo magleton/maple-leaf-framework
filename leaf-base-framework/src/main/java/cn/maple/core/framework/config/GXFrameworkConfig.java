@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -65,5 +66,10 @@ public class GXFrameworkConfig {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.getValidationPropertyMap().put("hibernate.validator.fail_fast", "true");
         return bean;
+    }
+
+    @Bean
+    public ApplicationConversionService applicationConversionService() {
+        return new ApplicationConversionService();
     }
 }
