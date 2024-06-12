@@ -52,6 +52,7 @@
         <spring-cloud.version>2023.0.2</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <netty.version>4.1.110.Final</netty.version>
+        <cglib.version>3.3.0</cglib.version>
         <elasticsearch.version>8.13.4</elasticsearch.version>
         <mapstruct-plus.version>1.4.0</mapstruct-plus.version>
         <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
@@ -200,6 +201,14 @@
                 <version>${lombok.version}</version>
                 <optional>true</optional>
             </dependency>
+
+            <!--cglib start-->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+            <!--cglib end-->
 
             <!--Elasticsearch  Start-->
             <dependency>
