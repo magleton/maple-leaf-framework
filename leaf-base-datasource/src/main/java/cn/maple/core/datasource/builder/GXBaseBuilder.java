@@ -213,7 +213,7 @@ public interface GXBaseBuilder {
         List<String> lastWheres = new ArrayList<>();
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
-                if (!GXConditionIsNULL.class.isAssignableFrom(c.getClass()) && ObjectUtil.isNull(c.getFieldValue())) {
+                if (ObjectUtil.isNull(c.getFieldValue()) && !GXConditionIsNULL.class.isAssignableFrom(c.getClass())) {
                     String msg = CharSequenceUtil.format("数据查询条件错误【查询字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
                     throw new GXDBConditionException(msg);
                 }
