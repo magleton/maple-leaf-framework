@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
-import cn.maple.core.framework.api.dto.res.GXBaseApiResDto;
+import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
