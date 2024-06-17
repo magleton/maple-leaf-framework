@@ -7,12 +7,12 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
-import cn.maple.core.framework.api.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
@@ -64,7 +64,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
         List<R> rs = findByCondition(condition, targetClazz, Dict.create());
         return GXCommonUtils.convertSourceListToTargetList(rs, targetClazz, null, null);
     }
@@ -85,7 +85,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
+    public <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz) {
         List<GXCondition<?>> conditionList = convertTableConditionToConditionExp(getTableName(), condition);
         Object rLst = callMethod("findByCondition", conditionList, orderField);
         if (Objects.nonNull(rLst)) {
@@ -103,7 +103,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return List
      */
     @Override
-    public <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         Object rLst = callMethod("findByCondition", convertTableConditionToConditionExp(condition), extraData);
         if (Objects.nonNull(rLst)) {
             return GXCommonUtils.convertSourceListToTargetList((Collection<?>) rLst, targetClazz, null, null);
@@ -135,7 +135,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
+    public <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz) {
         return findOneByCondition(condition, targetClazz, Dict.create());
     }
 
@@ -149,7 +149,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData) {
         Object r = callMethod("findOneByCondition", convertTableConditionToConditionExp(condition), columns, extraData);
         if (Objects.nonNull(r)) {
             return GXCommonUtils.convertSourceToTarget(r, targetClazz, null, CopyOptions.create());
@@ -166,7 +166,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
+    public <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData) {
         return findOneByCondition(condition, CollUtil.newHashSet("*"), targetClazz, extraData);
     }
 
@@ -179,7 +179,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz) {
+    public <R extends GXBaseResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz) {
         HashBasedTable<String, String, Object> conditionTable = HashBasedTable.create();
         conditionTable.put("id", GXBuilderConstant.EQ, id);
         return findOneByCondition(conditionTable, columns, targetClazz, Dict.create());
@@ -193,7 +193,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      * @return R
      */
     @Override
-    public <R extends GXBaseApiResDto> R findById(Long id, Class<R> targetClazz) {
+    public <R extends GXBaseResDto> R findById(Long id, Class<R> targetClazz) {
         return findById(id, CollUtil.newHashSet("*"), targetClazz);
     }
 
