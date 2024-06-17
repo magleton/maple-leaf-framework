@@ -486,7 +486,7 @@ public class GXBaseServeApiImpl<S extends GXBusinessService> implements GXBaseSe
      *
      * @return String 表名字
      */
-    private String getTableName() {
+    protected String getTableName() {
         return (String) callMethod("getTableName");
     }
 }
