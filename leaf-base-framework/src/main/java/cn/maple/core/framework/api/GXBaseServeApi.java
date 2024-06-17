@@ -3,10 +3,10 @@ package cn.maple.core.framework.api;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
-import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
+import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.google.common.collect.Table;
 
@@ -26,7 +26,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的数据类型
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 通过条件查询列表信息
@@ -36,7 +36,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回数据类型
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
+    <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Map<String, String> orderField, Class<R> targetClazz);
 
     /**
      * 根据条件获取数据
@@ -46,7 +46,7 @@ public interface GXBaseServeApi {
      * @param extraData   额外的参数 用于数据转换时数据自动填充
      * @return List
      */
-    <R extends GXBaseApiResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseResDto> List<R> findByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 根据条件获取数据
@@ -65,7 +65,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 数据返回类型
      * @return R
      */
-    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
+    <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz);
 
     /**
      * 根据条件获取一条数据
@@ -75,7 +75,7 @@ public interface GXBaseServeApi {
      * @param extraData   数据转换时 自动填充的数据
      * @return R
      */
-    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
 
     /**
      * 根据条件获取一条数据
@@ -86,7 +86,7 @@ public interface GXBaseServeApi {
      * @param extraData   数据转换时 自动填充的数据
      * @return R
      */
-    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData);
+    <R extends GXBaseResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData);
 
     /**
      * 通过ID查询一条数据
@@ -96,7 +96,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的数据剋新
      * @return R
      */
-    <R extends GXBaseApiResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz);
+    <R extends GXBaseResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz);
 
     /**
      * 通过ID查询一条数据
@@ -105,7 +105,7 @@ public interface GXBaseServeApi {
      * @param targetClazz 返回的数据剋新
      * @return R
      */
-    <R extends GXBaseApiResDto> R findById(Long id, Class<R> targetClazz);
+    <R extends GXBaseResDto> R findById(Long id, Class<R> targetClazz);
 
     /**
      * 获取一条记录的指定单字段
