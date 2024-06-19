@@ -124,7 +124,7 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
-     * 跟新缓存有效时长
+     * 更新缓存有效时长
      *
      * @param bucketName       缓存桶名字
      * @param keyName          缓存key
