@@ -3,7 +3,6 @@ package cn.maple.core.datasource.dao;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -57,10 +56,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         }
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.nonNull(mapperMethod)) {
-            //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
-            Object result = mapperMethod.invoke(baseMapper, iPage, dbQueryParamInnerDto);
-            final List<Dict> records = Convert.convert(new TypeReference<>() {
-            }, result);
+            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
@@ -91,10 +87,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         }
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass());
         if (Objects.nonNull(mapperMethod)) {
-            //final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
-            Object result = mapperMethod.invoke(baseMapper, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
-            final List<Dict> records = Convert.convert(new TypeReference<>() {
-            }, result);
+            final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
             iPage.setRecords(records);
             return GXDBCommonUtils.convertPageToPaginationResDto(iPage);
         }
