@@ -1,5 +1,6 @@
 package cn.maple.core.framework.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.IJSONTypeConverter;
 import cn.hutool.core.codec.Base64;
@@ -12,7 +13,6 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
-import cn.hutool.extra.cglib.CglibUtil;
 import cn.hutool.http.HtmlUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -23,7 +23,6 @@ import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import com.google.common.collect.Table;
 import lombok.Getter;
-import net.sf.cglib.core.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -254,14 +253,9 @@ public class GXCommonUtils {
             extraData = Dict.create();
         }
         try {
-            //copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
+            copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
             T target = ReflectUtil.newInstanceIfPossible(tClass);
-            //BeanUtil.copyProperties(source, target, copyOptions);
-            if (source instanceof Map<?, ?> map) {
-                CglibUtil.fillBean(map, target);
-            } else {
-                CglibUtil.copy(source, target);
-            }
+            BeanUtil.copyProperties(source, target, copyOptions);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
                 reflectCallObjectMethod(target, methodName, extraData);
             }
@@ -276,7 +270,7 @@ public class GXCommonUtils {
             } else {
                 throwable = e;
             }
-            throw Convert.convert(RuntimeException.class, throwable);
+            throw new GXBusinessException(throwable.getMessage(), throwable);
         }
     }
 
