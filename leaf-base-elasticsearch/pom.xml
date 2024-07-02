@@ -12,9 +12,9 @@
     <artifactId>leaf-base-elasticsearch</artifactId>
 
     <properties>
-        <spring.data.elasticsearch.version>5.2.4</spring.data.elasticsearch.version>
+        <spring.data.elasticsearch.version>5.3.1</spring.data.elasticsearch.version>
         <t-digest.version>3.3</t-digest.version>
-        <parsson.version>1.1.5</parsson.version>
+        <parsson.version>1.1.4</parsson.version>
     </properties>
 
     <dependencies>
