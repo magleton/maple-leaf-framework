@@ -435,33 +435,50 @@ public class GXCommonUtils {
      * @param <R>             返回的数据类型
      * @return 列表
      */
-    public static <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
-        String methodName = "getParentId";
+    public static <R> List<R> buildTree(List<R> sourceList, Object rootParentValue) {
+        return buildTree(sourceList, rootParentValue, null);
+    }
+
+    /**
+     * 构建菜单树
+     *
+     * @param sourceList          源列表
+     * @param rootParentValue     根父级的值, 一般是 0
+     * @param getParentMethodName 父级字段的get方法名字
+     * @param <R>                 返回的数据类型
+     * @return 列表
+     */
+    public static <R> List<R> buildTree(List<R> sourceList, Object rootParentValue, String getParentMethodName) {
+        String[] methodNames = new String[]{"getParentId"};
+        if (CharSequenceUtil.isNotBlank(getParentMethodName)) {
+            methodNames[0] = getParentMethodName;
+        }
         // JDK8的stream处理, 把根分类区分出来
         List<R> roots = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodNames[0]);
             return Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 把非根分类区分出来
         List<R> subs = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodNames[0]);
             return !Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 递归构建结构化的分类信息
-        roots.forEach(root -> buildSubs(root, subs));
+        roots.forEach(root -> buildSubs(root, subs, methodNames[0]));
         return roots;
     }
 
     /**
      * 构建菜单树的子级
      *
-     * @param parent 父结点
-     * @param subs   子结点
-     * @param <R>    元素类型
+     * @param parent              父结点
+     * @param subs                子结点
+     * @param getParentMethodName 父级字段的get方法名字
+     * @param <R>                 元素类型
      */
-    private static <R> void buildSubs(R parent, List<R> subs) {
+    private static <R> void buildSubs(R parent, List<R> subs, String getParentMethodName) {
         List<R> children = subs.stream().filter(sub -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(sub, "getParentId");
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(sub, getParentMethodName);
             Object id = GXCommonUtils.reflectCallObjectMethod(parent, "getId");
             return Objects.equals(parentId, id);
         }).collect(Collectors.toList());
@@ -469,7 +486,7 @@ public class GXCommonUtils {
             // 有子分类的情况
             GXCommonUtils.reflectCallObjectMethod(parent, "setChildren", children);
             // 再次递归构建
-            children.forEach(child -> buildSubs(child, subs));
+            children.forEach(child -> buildSubs(child, subs, getParentMethodName));
         }
     }
 

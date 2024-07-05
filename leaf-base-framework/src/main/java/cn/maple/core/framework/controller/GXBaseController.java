@@ -206,13 +206,14 @@ public interface GXBaseController {
     /**
      * 构建菜单树
      *
-     * @param sourceList      源列表
-     * @param rootParentValue 根父级的值, 一般是 0
-     * @param <R>             返回的数据类型
+     * @param sourceList          源列表
+     * @param rootParentValue     根父级的值, 一般是 0
+     * @param getParentMethodName 父级字段的get方法名字
+     * @param <R>                 返回的数据类型
      * @return 列表
      */
-    default <R extends GXBaseResProtocol> List<R> buildTree(List<R> sourceList, Object rootParentValue) {
-        return GXCommonUtils.buildDeptTree(sourceList, rootParentValue);
+    default <R extends GXBaseResProtocol> List<R> buildTree(List<R> sourceList, Object rootParentValue, String getParentMethodName) {
+        return GXCommonUtils.buildTree(sourceList, rootParentValue, getParentMethodName);
     }
 
     /**
