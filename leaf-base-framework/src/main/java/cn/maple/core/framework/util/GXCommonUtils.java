@@ -262,7 +262,15 @@ public class GXCommonUtils {
             reflectCallObjectMethod(target, "verify");
             return target;
         } catch (Exception e) {
-            Throwable throwable = Optional.ofNullable(Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause())).orElse(e);
+            //Throwable throwable = Optional.ofNullable(Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause())).orElse(e);
+            Throwable throwable = e.getCause();
+            if (ObjectUtil.isNotNull(throwable)) {
+                if (ObjectUtil.isNotNull(throwable.getCause())) {
+                    throwable = throwable.getCause();
+                }
+            } else {
+                throwable = e;
+            }
             throw Convert.convert(RuntimeException.class, throwable);
         }
     }
