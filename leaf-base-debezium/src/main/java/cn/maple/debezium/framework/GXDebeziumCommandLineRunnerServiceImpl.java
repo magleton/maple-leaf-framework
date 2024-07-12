@@ -1,5 +1,6 @@
 package cn.maple.debezium.framework;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -58,7 +59,7 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
                         log.debug("监听到数据库数据变化 : {}", record);
                         String value = record.value();
                         Dict dbChangeData = JSONUtil.toBean(value, Dict.class);
-                        Dict payload = (Dict) dbChangeData.getObj("payload");
+                        Dict payload = Convert.convert(Dict.class, dbChangeData.getObj("payload"));
                         debeziumService.processCaptureDataChange(payload);
                     }).build()
             ) {
