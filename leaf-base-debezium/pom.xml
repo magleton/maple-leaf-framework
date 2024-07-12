@@ -27,6 +27,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>cn.maple.framework</groupId>
+            <artifactId>leaf-base-redisson</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-api</artifactId>
             <version>${debezium.version}</version>
