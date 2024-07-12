@@ -84,6 +84,6 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
             }
         }
         String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
-        log.info("~~~~ 应用{}退出了 , 再见 ~~~~~", appName);
+        log.info("~~~~ {}应用的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
     }
 }
