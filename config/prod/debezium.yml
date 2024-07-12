@@ -1,0 +1,22 @@
+debezium:
+  config:
+    framework:
+      name: engine
+      snapshot.mode: when_needed
+      connector.class: io.debezium.connector.mysql.MySqlConnector
+      offset.storage: org.apache.kafka.connect.storage.FileOffsetBackingStore
+      offset.storage.file.filename: /data/java/project/data/offsets.dat
+      offset.flush.interval.ms: 60000
+      database.hostname: ${MYSQL_ADDR}
+      database.port: ${MYSQL_PORT}
+      database.user: ${MYSQL_USERNAME}
+      database.password: ${MYSQL_PASSWORD}
+      database.server.id: ${MYSQL_SERVER_ID}
+      topic.prefix: debezium-${DEBEZIUM_TOPIC_PREFIX}
+      transforms.unwrap.drop.tombstones: false
+      schema.history.internal: io.debezium.storage.file.history.FileSchemaHistory
+      schema.history.internal.file.filename: /data/java/project/data/schema/history.dat
+      database.whitelist: orders
+      table.whitelist: orders.mgo_order
+      database.include.list: orders
+      table.include.list: orders.mgo_order
