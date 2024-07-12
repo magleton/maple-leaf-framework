@@ -6,6 +6,11 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.util.GXRedissonUtils;
 
 public interface GXDebeziumService {
+    /**
+     * 自定义业务处理
+     *
+     * @param data 数据库变化的数据
+     */
     void processCaptureDataChange(Dict data);
 
     /**

@@ -58,7 +58,8 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
                         log.debug("监听到数据库数据变化 : {}", record);
                         String value = record.value();
                         Dict dbChangeData = JSONUtil.toBean(value, Dict.class);
-                        debeziumService.processCaptureDataChange(dbChangeData);
+                        Dict payload = (Dict) dbChangeData.getObj("payload");
+                        debeziumService.processCaptureDataChange(payload);
                     }).build()
             ) {
                 debeziumEngineMap.put(key, engine);
