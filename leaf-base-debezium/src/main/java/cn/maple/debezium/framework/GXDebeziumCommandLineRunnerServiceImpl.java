@@ -18,7 +18,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
     private GXDebeziumProperties debeziumProperties;
 
     @Resource
-    private TaskExecutor debeziumExecutor;
+    private ThreadPoolTaskExecutor debeziumExecutor;
 
     @Override
     public void run() {
@@ -84,6 +84,7 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
                 log.error("应用{}关闭{}>>>Debezium引擎失败", appName, entry.getKey(), e);
             }
         }
+        debeziumExecutor.shutdown();
         log.info("~~~~ 应用{}的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
     }
 }

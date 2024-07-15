@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @ConditionalOnClass(name = {"io.debezium.engine.DebeziumEngine"})
 public class GXDebeziumConfig {
     @Bean("debeziumExecutor")
-    public TaskExecutor debeziumExecutor() {
+    public ThreadPoolTaskExecutor debeziumExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         // 设置线程池关闭的时候需要等待所有任务都完成 才能销毁其他的Bean
         threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
