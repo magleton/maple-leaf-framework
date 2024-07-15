@@ -75,15 +75,15 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
 
     @Override
     public void destroy() {
+        String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
         for (Map.Entry<String, DebeziumEngine<ChangeEvent<String, String>>> entry : debeziumEngineMap.entrySet()) {
             try {
                 DebeziumEngine<ChangeEvent<String, String>> engine = entry.getValue();
                 engine.close();
             } catch (IOException e) {
-                log.error("关闭{}>>>Debezium引擎失败", entry.getKey(), e);
+                log.error("应用{}关闭{}>>>Debezium引擎失败", appName, entry.getKey(), e);
             }
         }
-        String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
-        log.info("~~~~ {}应用的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
+        log.info("~~~~ 应用{}的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
     }
 }
