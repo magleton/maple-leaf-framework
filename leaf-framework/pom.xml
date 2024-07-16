@@ -67,5 +67,10 @@
             <artifactId>leaf-base-elasticsearch</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.maple.framework</groupId>
+            <artifactId>leaf-base-debezium</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>
