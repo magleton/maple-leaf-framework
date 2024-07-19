@@ -11,6 +11,7 @@ import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -22,7 +23,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -70,13 +70,13 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         }*/
         if (JSONUtil.isTypeJSONArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
-            List<?> bean = jsonToTargetList(body, actualTypeArgument);
-            bean.forEach(dto -> dealSingleBean(dto, parameter, actualTypeArgument));
+            List<?> bean = toList(body, actualTypeArgument);
+            bean.forEach(dto -> handleBean(dto, parameter, actualTypeArgument));
             return bean;
         }
-        Object bean = jsonToTarget(body, parameterType);
+        Object bean = toBean(body, parameterType);
         if (Objects.nonNull(bean)) {
-            dealSingleBean(bean, parameter, parameterType);
+            handleBean(bean, parameter, parameterType);
         }
         return bean;
     }
@@ -88,7 +88,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param parameter     请求参数对象
      * @param parameterType 请求参数类型
      */
-    private void dealSingleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
+    private void handleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
         GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
         final String value = Objects.requireNonNull(requestBody).value();
 
@@ -158,7 +158,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param beanType 对象中的object类型
      * @return 目标对象
      */
-    private <T> T jsonToTarget(String jsonData, Class<T> beanType) throws JsonProcessingException {
+    private <T> T toBean(String jsonData, Class<T> beanType) throws JsonProcessingException {
         try {
             ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
             assert objectMapper != null;
@@ -176,14 +176,14 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param beanType 目标类型
      * @return 列表
      */
-    public <T> List<T> jsonToTargetList(String jsonData, Class<T> beanType) throws JsonProcessingException {
+    public <T> List<T> toList(String jsonData, Class<T> beanType) throws JsonProcessingException {
         ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
         assert objectMapper != null;
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, beanType);
         try {
             return objectMapper.readValue(jsonData, javaType);
         } catch (Exception e) {
-            LOGGER.error("Servlet请求体参数转换对象失败");
+            LOGGER.error("Servlet请求体参数转换对象列表失败");
             throw e;
         }
     }
