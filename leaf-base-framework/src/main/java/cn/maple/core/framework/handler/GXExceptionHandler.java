@@ -29,6 +29,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -231,6 +232,12 @@ public class GXExceptionHandler {
         log.error(e.getMessage(), e);
         publishExceptionNotifyEvent(e);
         return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "不支持HTTP请求方法!");
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public GXResultUtils<Dict> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.error(e.getMessage(), e);
+        return GXResultUtils.error(HttpStatus.HTTP_NOT_FOUND, "No static resource");
     }
 
     /**
