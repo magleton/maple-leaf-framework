@@ -212,6 +212,40 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     */
+    public void setBucketAllData(String bucketName, Map<Object, Object> data) {
+        setBucketAllData(bucketName, data, 1000);
+    }
+
+    /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     * @param batchSize  允许插入的数据
+     */
+    @Override
+    public void setBucketAllData(String bucketName, Map<Object, Object> data, int batchSize) {
+        Assert.checkBetween(batchSize, 1, 2000, "count必须在{}到{}之间.", 1, 2000);
+        batchSize = NumberUtil.min(batchSize, 2000);
+        redissonClient.getMapCache(bucketName).putAll(data, batchSize);
+    }
+
+    /**
+     * 删除指定Bucket中的数据
+     *
+     * @param bucketName 存储桶的名字
+     */
+    @Override
+    public boolean deleteBucketAllData(String bucketName) {
+        return redissonClient.getMapCache(bucketName).delete();
+    }
+
+    /**
      * 获取RedissonClient客户端实例
      *
      * @return RedissonClient

@@ -39,4 +39,28 @@ public interface GXRedissonCacheService extends GXBaseCacheService {
      * @return 桶中所有的数据
      */
     Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern);
+
+    /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     */
+    void setBucketAllData(String bucketName, Map<Object, Object> data);
+
+    /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     * @param batchSize  允许插入的数量
+     */
+    void setBucketAllData(String bucketName, Map<Object, Object> data, int batchSize);
+
+    /**
+     * 删除指定Bucket中的数据
+     *
+     * @param bucketName 存储桶的名字
+     */
+    boolean deleteBucketAllData(String bucketName);
 }
