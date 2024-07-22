@@ -56,4 +56,11 @@ public interface GXRedissonCacheService extends GXBaseCacheService {
      * @param batchSize  允许插入的数量
      */
     void setBucketAllData(String bucketName, Map<Object, Object> data, int batchSize);
+
+    /**
+     * 删除指定Bucket中的数据
+     *
+     * @param bucketName 存储桶的名字
+     */
+    boolean deleteBucketAllData(String bucketName);
 }

@@ -236,6 +236,16 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
+     * 删除指定Bucket中的数据
+     *
+     * @param bucketName 存储桶的名字
+     */
+    @Override
+    public boolean deleteBucketAllData(String bucketName) {
+        return redissonClient.getMapCache(bucketName).delete();
+    }
+
+    /**
      * 获取RedissonClient客户端实例
      *
      * @return RedissonClient
