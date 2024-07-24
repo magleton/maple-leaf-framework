@@ -2,8 +2,10 @@ package cn.maple.core.framework.config.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.interceptor.CacheErrorHandler;
@@ -20,6 +22,7 @@ import javax.validation.constraints.NotNull;
  * @author britton
  */
 @Component
+@ConditionalOnMissingBean(value = {CachingConfigurer.class})
 public class GXCachingConfigurerSupport extends CachingConfigurerSupport {
     @Resource
     private CaffeineCacheManager caffeineCacheManager;
