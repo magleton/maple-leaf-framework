@@ -168,7 +168,7 @@ public interface GXBuildRawSql {
         }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
-            sql.append(" GROUP_BY ").append(ArrayUtil.join(groupByField.toArray(new String[0]), ","));
+            sql.append(" GROUP BY ").append(ArrayUtil.join(groupByField.toArray(new String[0]), ","));
         }
         // 处理HAVING
         if (CollUtil.isNotEmpty(having)) {
@@ -179,7 +179,7 @@ public interface GXBuildRawSql {
             String[] orderColumns = new String[orderByField.size()];
             Integer[] idx = new Integer[]{0};
             orderByField.forEach((k, v) -> orderColumns[idx[0]++] = CharSequenceUtil.format("{} {}", k, v));
-            sql.append(" ORDER_BY ").append(ArrayUtil.join(orderColumns, ","));
+            sql.append(" ORDER BY ").append(ArrayUtil.join(orderColumns, ","));
         }
         // 处理Limit分页
         handleLimit(sql, dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize(), dbQueryParamInnerDto.getLimit());
