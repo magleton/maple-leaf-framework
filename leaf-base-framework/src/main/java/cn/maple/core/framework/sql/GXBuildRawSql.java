@@ -34,18 +34,32 @@ public interface GXBuildRawSql {
     /**
      * 更新实体字段和虚拟字段
      *
-     * @param tableName 表名
-     * @param fieldList 数据列表
-     * @param condition 条件
+     * @param tableName             表名
+     * @param fieldList             数据列表
+     * @param condition             条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
      * @return String
      */
     static StringBuilder updateFieldByCondition(String tableName, List<GXUpdateField<?>> fieldList, List<GXCondition<?>> condition) {
+        return updateFieldByCondition(tableName, fieldList, condition, true);
+    }
+
+    /**
+     * 更新实体字段和虚拟字段
+     *
+     * @param tableName             表名
+     * @param fieldList             数据列表
+     * @param condition             条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
+     * @return String
+     */
+    static StringBuilder updateFieldByCondition(String tableName, List<GXUpdateField<?>> fieldList, List<GXCondition<?>> condition, boolean columnToUnderlineCase) {
         final StringBuilder sql = new StringBuilder("UPDATE ").append(tableName);
         for (GXUpdateField<?> field : fieldList) {
             sql.append(field.updateString()).append(" ");
         }
         sql.append(CharSequenceUtil.format("updated_at = {}", DateUtil.currentSeconds()));
-        handleSQLCondition(sql, condition);
+        handleSQLCondition(sql, condition, columnToUnderlineCase);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             sql.append(" WHERE ").append(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
@@ -108,7 +122,7 @@ public interface GXBuildRawSql {
     /**
      * 构造查询sql语句
      *
-     * @param dbQueryParamInnerDto  查询条件
+     * @param dbQueryParamInnerDto 查询条件
      * @return 拼接好的SQL语句
      */
     static StringBuilder findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
@@ -147,7 +161,7 @@ public interface GXBuildRawSql {
         }
         // 处理WHERE
         if (CollUtil.isNotEmpty(conditions)) {
-            handleSQLCondition(sql, conditions);
+            handleSQLCondition(sql, conditions, columnToUnderlineCase);
         }
         // 处理JOIN表的Where条件
         if (Objects.nonNull(joins) && !joins.isEmpty()) {
@@ -163,7 +177,7 @@ public interface GXBuildRawSql {
                         joinConditions.add(isDeletedCondition);
                     }
                 }
-                handleSQLCondition(sql, joinConditions);
+                handleSQLCondition(sql, joinConditions, columnToUnderlineCase);
             });
         }
         // 处理分组
@@ -242,10 +256,11 @@ public interface GXBuildRawSql {
     /**
      * 处理SQL语句的Where条件
      *
-     * @param sql       SQL对象
-     * @param condition 条件
+     * @param sql                   SQL对象
+     * @param condition             条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
      */
-    static void handleSQLCondition(StringBuilder sql, List<GXCondition<?>> condition) {
+    static void handleSQLCondition(StringBuilder sql, List<GXCondition<?>> condition, boolean columnToUnderlineCase) {
         if (Objects.isNull(condition) || condition.isEmpty()) {
             return;
         }
@@ -253,6 +268,9 @@ public interface GXBuildRawSql {
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
                 String str = c.whereString();
+                if (!columnToUnderlineCase) {
+                    str = CharSequenceUtil.replace(str, c.getFieldExpression(), CharSequenceUtil.toCamelCase(c.getFieldExpression()));
+                }
                 if (CharSequenceUtil.isNotEmpty(str)) {
                     lastWheres.add(str);
                 }
@@ -282,27 +300,29 @@ public interface GXBuildRawSql {
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName       表名
-     * @param updateFieldList 软删除时需要同时更新的字段
-     * @param condition       删除条件
-     * @param extraData       额外数据
+     * @param tableName             表名
+     * @param updateFieldList       软删除时需要同时更新的字段
+     * @param condition             删除条件
+     * @param extraData             额外数据
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
      * @return SQL语句
      */
-    static StringBuilder deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
-        return deleteSoftCondition(tableName, updateFieldList, condition, "id", extraData);
+    static StringBuilder deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, boolean columnToUnderlineCase, Dict extraData) {
+        return deleteSoftCondition(tableName, updateFieldList, condition, "id", columnToUnderlineCase, extraData);
     }
 
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName       表名
-     * @param updateFieldList 软删除时需要同时更新的字段
-     * @param condition       删除条件
-     * @param keyProperty     数据库主键ID
-     * @param extraData       额外数据
+     * @param tableName             表名
+     * @param updateFieldList       软删除时需要同时更新的字段
+     * @param condition             删除条件
+     * @param keyProperty           数据库主键ID
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
+     * @param extraData             额外数据
      * @return SQL语句
      */
-    static StringBuilder deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, String keyProperty, Dict extraData) {
+    static StringBuilder deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, String keyProperty, boolean columnToUnderlineCase, Dict extraData) {
         if (CharSequenceUtil.isEmpty(keyProperty)) {
             keyProperty = "id";
         }
@@ -324,7 +344,7 @@ public interface GXBuildRawSql {
             // todo
         }
         sql.append(" SET ").append(CollUtil.join(columns, ","));
-        handleSQLCondition(sql, condition);
+        handleSQLCondition(sql, condition, columnToUnderlineCase);
         Set<Object> wheres = CollUtil.newHashSet();
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             wheres.add(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
@@ -336,13 +356,14 @@ public interface GXBuildRawSql {
     /**
      * 根据条件删除
      *
-     * @param tableName 表名
-     * @param condition 删除条件
+     * @param tableName             表名
+     * @param condition             删除条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
      * @return SQL语句
      */
-    static StringBuilder deleteCondition(String tableName, List<GXCondition<?>> condition) {
+    static StringBuilder deleteCondition(String tableName, List<GXCondition<?>> condition, boolean columnToUnderlineCase) {
         StringBuilder sql = new StringBuilder("DELETE FROM ").append(tableName);
-        handleSQLCondition(sql, condition);
+        handleSQLCondition(sql, condition, columnToUnderlineCase);
         Set<String> wheres = CollUtil.newHashSet();
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             wheres.add(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
