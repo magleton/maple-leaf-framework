@@ -86,21 +86,43 @@ public interface GXBuildRawSql {
      * @return 拼接好的SQL语句
      */
     static StringBuilder countByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        return countByCondition(dbQueryParamInnerDto, true);
+    }
+
+    /**
+     * 获取统计的SQL语句
+     *
+     * @param dbQueryParamInnerDto  查询条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
+     * @return 拼接好的SQL语句
+     */
+    static StringBuilder countByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         dbQueryParamInnerDto.setPage(0);
         dbQueryParamInnerDto.setPageSize(1);
         dbQueryParamInnerDto.setColumns(CollUtil.newHashSet(CharSequenceUtil.format("count({}.id)", tableNameAlias)));
-        return findByCondition(dbQueryParamInnerDto);
+        return findByCondition(dbQueryParamInnerDto, columnToUnderlineCase);
     }
 
     /**
      * 构造查询sql语句
      *
-     * @param dbQueryParamInnerDto 查询条件
+     * @param dbQueryParamInnerDto  查询条件
      * @return 拼接好的SQL语句
      */
     static StringBuilder findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
+        return findByCondition(dbQueryParamInnerDto, true);
+    }
+
+    /**
+     * 构造查询sql语句
+     *
+     * @param dbQueryParamInnerDto  查询条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
+     * @return 拼接好的SQL语句
+     */
+    static StringBuilder findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
@@ -111,7 +133,9 @@ public interface GXBuildRawSql {
         List<GXCondition<?>> conditions = dbQueryParamInnerDto.getCondition();
         String selectStr = CharSequenceUtil.format("{}.*", tableNameAlias);
         if (CollUtil.isNotEmpty(columns)) {
-            List<String> columnsCollect = columns.stream().map(CharSequenceUtil::toUnderlineCase).collect(Collectors.toList());
+            List<String> columnsCollect = columns.stream().map(column -> {
+                return columnToUnderlineCase ? CharSequenceUtil.toUnderlineCase(column) : column;
+            }).collect(Collectors.toList());
             selectStr = String.join(",", columnsCollect);
         }
         StringBuilder sql = new StringBuilder();
@@ -144,18 +168,18 @@ public interface GXBuildRawSql {
         }
         // 处理分组
         if (CollUtil.isNotEmpty(groupByField)) {
-            sql.append(" GROUP_BY ").append(groupByField.toArray(new String[0]));
+            sql.append(" GROUP_BY ").append(ArrayUtil.join(groupByField.toArray(new String[0]), ","));
         }
         // 处理HAVING
         if (CollUtil.isNotEmpty(having)) {
-            sql.append(" HAVING ").append(having.toArray(new String[0]));
+            sql.append(" HAVING ").append(ArrayUtil.join(having.toArray(new String[0]), ","));
         }
         // 处理排序
         if (Objects.nonNull(orderByField) && !orderByField.isEmpty()) {
             String[] orderColumns = new String[orderByField.size()];
             Integer[] idx = new Integer[]{0};
             orderByField.forEach((k, v) -> orderColumns[idx[0]++] = CharSequenceUtil.format("{} {}", k, v));
-            sql.append(" ORDER_BY ").append(ArrayUtil.join(orderColumns , ","));
+            sql.append(" ORDER_BY ").append(ArrayUtil.join(orderColumns, ","));
         }
         // 处理Limit分页
         handleLimit(sql, dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize(), dbQueryParamInnerDto.getLimit());
