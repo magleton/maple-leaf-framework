@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
@@ -154,7 +155,7 @@ public interface GXBuildRawSql {
             String[] orderColumns = new String[orderByField.size()];
             Integer[] idx = new Integer[]{0};
             orderByField.forEach((k, v) -> orderColumns[idx[0]++] = CharSequenceUtil.format("{} {}", k, v));
-            sql.append(" ORDER_BY ").append(orderColumns);
+            sql.append(" ORDER_BY ").append(ArrayUtil.join(orderColumns , ","));
         }
         // 处理Limit分页
         handleLimit(sql, dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize(), dbQueryParamInnerDto.getLimit());
