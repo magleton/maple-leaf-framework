@@ -57,6 +57,7 @@
         <antlr4-runtime.version>4.13.1</antlr4-runtime.version>
         <checker-qual.version>3.45.0</checker-qual.version>
         <javassist.version>3.30.2-GA</javassist.version>
+        <rocketmq.version>5.3.0</rocketmq.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +82,26 @@
             </dependency>
 
             <!-- SpringCloud Alibaba 微服务 -->
+            <!-- 覆写SpringCloud Alibaba默认配置 START-->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-common</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-acl</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <!-- 覆写SpringCloud Alibaba默认配置 END-->
+
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
