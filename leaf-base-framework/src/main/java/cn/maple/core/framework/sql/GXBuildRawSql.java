@@ -113,8 +113,6 @@ public interface GXBuildRawSql {
     static StringBuilder countByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
-        dbQueryParamInnerDto.setPage(0);
-        dbQueryParamInnerDto.setPageSize(1);
         dbQueryParamInnerDto.setColumns(CollUtil.newHashSet(CharSequenceUtil.format("count({}.id)", tableNameAlias)));
         return findByCondition(dbQueryParamInnerDto, columnToUnderlineCase);
     }
