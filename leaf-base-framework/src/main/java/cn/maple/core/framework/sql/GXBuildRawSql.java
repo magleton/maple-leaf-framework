@@ -111,8 +111,6 @@ public interface GXBuildRawSql {
      * @return 拼接好的SQL语句
      */
     static StringBuilder countByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
-        String tableName = dbQueryParamInnerDto.getTableName();
-        String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
         StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM (");
         StringBuilder sql = findByCondition(dbQueryParamInnerDto, columnToUnderlineCase, false);
         countSql.append(sql).append(") AS TOTAL LIMIT 0 , 1");
