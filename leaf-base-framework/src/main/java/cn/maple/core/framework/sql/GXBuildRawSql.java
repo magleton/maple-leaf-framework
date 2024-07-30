@@ -113,8 +113,10 @@ public interface GXBuildRawSql {
     static StringBuilder countByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
-        dbQueryParamInnerDto.setColumns(CollUtil.newHashSet(CharSequenceUtil.format("count({}.id)", tableNameAlias)));
-        return findByCondition(dbQueryParamInnerDto, columnToUnderlineCase);
+        StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM (");
+        StringBuilder sql = findByCondition(dbQueryParamInnerDto, columnToUnderlineCase, false);
+        countSql.append(sql).append(") AS TOTAL LIMIT 0 , 1");
+        return countSql;
     }
 
     /**
@@ -135,6 +137,18 @@ public interface GXBuildRawSql {
      * @return 拼接好的SQL语句
      */
     static StringBuilder findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase) {
+        return findByCondition(dbQueryParamInnerDto, columnToUnderlineCase, true);
+    }
+
+    /**
+     * 构造查询sql语句
+     *
+     * @param dbQueryParamInnerDto  查询条件
+     * @param columnToUnderlineCase 是否将查询字段转换成下划线
+     * @param appendLimit           生成的最终sql语句是否添加limit
+     * @return 拼接好的SQL语句
+     */
+    static StringBuilder findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto, boolean columnToUnderlineCase, boolean appendLimit) {
         Set<String> columns = dbQueryParamInnerDto.getColumns();
         String tableName = dbQueryParamInnerDto.getTableName();
         String tableNameAlias = Optional.ofNullable(dbQueryParamInnerDto.getTableNameAlias()).orElse(tableName);
@@ -194,7 +208,9 @@ public interface GXBuildRawSql {
             sql.append(" ORDER BY ").append(ArrayUtil.join(orderColumns, ","));
         }
         // 处理Limit分页
-        handleLimit(sql, dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize(), dbQueryParamInnerDto.getLimit());
+        if (appendLimit) {
+            handleLimit(sql, dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize(), dbQueryParamInnerDto.getLimit());
+        }
         return sql;
     }
 
