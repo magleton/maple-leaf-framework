@@ -13,6 +13,7 @@
 
     <properties>
         <rocketmq-spring-boot-starter.version>2.3.1</rocketmq-spring-boot-starter.version>
+        <protobuf-java.version>4.27.2</protobuf-java.version>
     </properties>
 
     <dependencies>
@@ -36,6 +37,10 @@
             <artifactId>rocketmq-spring-boot-starter</artifactId>
             <version>${rocketmq-spring-boot-starter.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
                 <exclusion>
                     <artifactId>j2objc-annotations</artifactId>
                     <groupId>com.google.j2objc</groupId>
@@ -69,6 +74,11 @@
                     <artifactId>okio-jvm</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf-java.version}</version>
         </dependency>
     </dependencies>
 </project>
