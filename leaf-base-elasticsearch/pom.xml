@@ -14,7 +14,7 @@
     <properties>
         <spring.data.elasticsearch.version>5.3.2</spring.data.elasticsearch.version>
         <t-digest.version>3.3</t-digest.version>
-        <parsson.version>1.1.6</parsson.version>
+        <parsson.version>1.1.7</parsson.version>
     </properties>
 
     <dependencies>
