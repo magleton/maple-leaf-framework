@@ -84,7 +84,12 @@ public interface GXElasticsearchDao<T extends GXElasticsearchModel, Q extends Ba
         Dict queryData = executeQuery(queryParamInnerDto);
         List<Dict> lst = Convert.convert(new TypeReference<>() {
         }, queryData.getObj("records"));
-        List<Dict> records = lst.stream().map(d -> Convert.convert(Dict.class, d.getObj("content"))).collect(Collectors.toList());
+        List<Dict> records = lst.stream().map(d -> {
+            Dict content = Convert.convert(Dict.class, d.getObj("content"));
+            Dict highlightFields = Convert.convert(Dict.class, d.getObj("highlightFields"));
+            content.putAll(highlightFields);
+            return content;
+        }).collect(Collectors.toList());
         long totalCount = queryData.getInt("totalHits");
         long currentPage = queryParamInnerDto.getPage();
         long pageSize = queryParamInnerDto.getPageSize();
