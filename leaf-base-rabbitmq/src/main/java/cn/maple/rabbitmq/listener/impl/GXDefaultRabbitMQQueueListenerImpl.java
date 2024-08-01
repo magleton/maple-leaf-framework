@@ -1,9 +1,9 @@
-package cn.maple.rabbitmq.service.impl;
+package cn.maple.rabbitmq.listener.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.rabbitmq.service.GXRabbitMQQueueService;
+import cn.maple.rabbitmq.listener.GXRabbitMQQueueListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 @Lazy
 @ConditionalOnExpression("'${enable-rabbitmq}'.equals('true')")
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
-public class GXDefaultRabbitMQQueueServiceImpl implements GXRabbitMQQueueService {
+public class GXDefaultRabbitMQQueueListenerImpl implements GXRabbitMQQueueListener {
     @Override
     @RabbitHandler
     @RabbitListener(queues = "#{T(cn.maple.core.framework.util.GXSpELToolUtils).callBeanMethodSpELExpression(Class.forName('cn.maple.rabbitmq.properties.GXRabbitMQProperties'), 'getDefaultQueueName', Class.forName('java.lang.String'), new Class[0])}")

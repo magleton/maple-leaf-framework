@@ -1,7 +1,13 @@
 package cn.maple.rabbitmq.config;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXSpringContextUtils;
+import cn.maple.rabbitmq.callback.GXConfirmCallback;
+import cn.maple.rabbitmq.callback.GXRecoveryCallback;
+import cn.maple.rabbitmq.callback.GXReturnsCallback;
 import cn.maple.rabbitmq.properties.GXRabbitMQProperties;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -17,8 +23,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.GenericMessageConverter;
 
-import jakarta.annotation.Resource;
-
 @Configuration
 @Slf4j
 @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.connection.ConnectionFactory"})
@@ -32,6 +36,25 @@ public class GXRabbitMQConfig {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate();
         rabbitTemplate.setConnectionFactory(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setReturnsCallback(returned -> {
+            GXReturnsCallback returnsCallback = GXSpringContextUtils.getBean(GXReturnsCallback.class);
+            if (ObjectUtil.isNotNull(returnsCallback)) {
+                returnsCallback.returnedMessage(returned);
+            }
+        });
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            GXConfirmCallback confirmCallback = GXSpringContextUtils.getBean(GXConfirmCallback.class);
+            if (ObjectUtil.isNotNull(confirmCallback)) {
+                confirmCallback.confirm(correlationData, ack, cause);
+            }
+        });
+        rabbitTemplate.setRecoveryCallback(retryContext -> {
+            GXRecoveryCallback recoveryCallback = GXSpringContextUtils.getBean(GXRecoveryCallback.class);
+            if (ObjectUtil.isNotNull(recoveryCallback)) {
+                return recoveryCallback.recover(retryContext);
+            }
+            return null;
+        });
         return rabbitTemplate;
     }
 

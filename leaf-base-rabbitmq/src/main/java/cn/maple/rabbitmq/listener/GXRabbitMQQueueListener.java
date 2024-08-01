@@ -1,8 +1,8 @@
-package cn.maple.rabbitmq.service;
+package cn.maple.rabbitmq.listener;
 
 import org.springframework.amqp.core.Message;
 
-public interface GXRabbitMQQueueService {
+public interface GXRabbitMQQueueListener {
     /**
      * 处理常规队列
      *

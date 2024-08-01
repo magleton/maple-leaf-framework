@@ -1,10 +1,12 @@
 rabbit:
   publisherConfirmType: SIMPLE
+  publisherReturns: true
   addresses: 192.168.1.245:5672,192.168.56.101:5672
   username: britton
   password: britton
-  publisherReturns: true
   virtualHost: /
   cacheMode: CHANNEL
   canalQueue: canalQueue
-  default-queue-name: geoxus
+  defaultQueueName: geoxus
+  template:
+    mandatory: true
