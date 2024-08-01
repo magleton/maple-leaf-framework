@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
                 namespace = "${spring.cloud.nacos.config.namespace:${nacos.config.namespace:}}",
                 username = "${spring.cloud.nacos.username:${nacos.config.username:}}",
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
-@ConfigurationProperties(prefix = "rabbit")
+@ConfigurationProperties(prefix = "spring.rabbitmq")
 public class GXNacosRabbitMQProperties extends GXRabbitMQProperties {
     public GXNacosRabbitMQProperties() {
         log.info("RabbitMQ数据源配置使用NACOS配置");

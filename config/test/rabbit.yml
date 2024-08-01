@@ -1,12 +1,18 @@
-rabbit:
-  publisherConfirmType: SIMPLE
-  publisherReturns: true
-  addresses: 192.168.1.245:5672,192.168.56.101:5672
-  username: britton
-  password: britton
-  virtualHost: /
-  cacheMode: CHANNEL
-  canalQueue: canalQueue
-  defaultQueueName: geoxus
-  template:
-    mandatory: true
+spring:
+  rabbitmq:
+    publisherConfirmType: correlated
+    addresses: 192.168.56.102:5672,192.168.56.103:5672
+    username: britton
+    password: britton
+    publisherReturns: true
+    virtualHost: magleton
+    cacheMode: CHANNEL
+    defaultQueueName: magleton
+    connectionLimit: 20
+    channelCacheSize: 10
+    cache:
+      channel:
+        size: 10
+    template:
+      mandatory: true
+      receiveTimeout: 60000

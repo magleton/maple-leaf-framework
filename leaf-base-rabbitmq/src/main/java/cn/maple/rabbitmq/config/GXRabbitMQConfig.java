@@ -1,23 +1,20 @@
 package cn.maple.rabbitmq.config;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.rabbitmq.callback.GXConfirmCallback;
 import cn.maple.rabbitmq.callback.GXRecoveryCallback;
 import cn.maple.rabbitmq.callback.GXReturnsCallback;
-import cn.maple.rabbitmq.properties.GXRabbitMQProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,13 +26,17 @@ import org.springframework.messaging.converter.GenericMessageConverter;
 @EnableRabbit
 public class GXRabbitMQConfig {
     @Resource
-    private GXRabbitMQProperties rabbitMQProperties;
+    private ConnectionFactory connectionFactory;
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate rabbitTemplate() {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate();
         rabbitTemplate.setConnectionFactory(connectionFactory);
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        DefaultClassMapper defaultClassMapper = new DefaultClassMapper();
+        defaultClassMapper.setTrustedPackages("cn.hutool.core");
+        Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
+        jackson2JsonMessageConverter.setClassMapper(defaultClassMapper);
+        rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter);
         rabbitTemplate.setReturnsCallback(returned -> {
             GXReturnsCallback returnsCallback = GXSpringContextUtils.getBean(GXReturnsCallback.class);
             if (ObjectUtil.isNotNull(returnsCallback)) {
@@ -59,23 +60,22 @@ public class GXRabbitMQConfig {
     }
 
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+    public RabbitAdmin rabbitAdmin() {
         return new RabbitAdmin(connectionFactory);
     }
 
     @Bean
-    public AsyncRabbitTemplate asyncRabbitTemplate(@Autowired RabbitTemplate rabbitTemplate) {
+    public AsyncRabbitTemplate asyncRabbitTemplate(RabbitTemplate rabbitTemplate) {
         return new AsyncRabbitTemplate(rabbitTemplate);
     }
 
     /**
      * 初始化 RabbitMessagingTemplate
      *
-     * @param connectionFactory 连接工厂
      * @return RabbitMessagingTemplate
      */
     @Bean
-    public RabbitMessagingTemplate simpleMessageTemplate(ConnectionFactory connectionFactory) {
+    public RabbitMessagingTemplate simpleMessageTemplate() {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         RabbitMessagingTemplate rabbitMessagingTemplate = new RabbitMessagingTemplate();
         rabbitMessagingTemplate.setMessageConverter(new GenericMessageConverter());
@@ -83,7 +83,7 @@ public class GXRabbitMQConfig {
         return rabbitMessagingTemplate;
     }
 
-    @Bean
+    /*@Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
         cachingConnectionFactory.setPublisherConfirmType(rabbitMQProperties.getPublisherConfirmType());
@@ -93,6 +93,10 @@ public class GXRabbitMQConfig {
         cachingConnectionFactory.setPublisherReturns(rabbitMQProperties.getPublisherReturns());
         cachingConnectionFactory.setVirtualHost(GXCommonUtils.decodeConnectStr(rabbitMQProperties.getVirtualHost(), String.class));
         cachingConnectionFactory.setCacheMode(rabbitMQProperties.getCacheMode());
+        cachingConnectionFactory.setChannelCacheSize(rabbitMQProperties.getChannelCacheSize());
+        cachingConnectionFactory.setConnectionLimit(rabbitMQProperties.getConnectionLimit());
+        cachingConnectionFactory.setConnectionTimeout(rabbitMQProperties.getConnectionTimeout());
+        cachingConnectionFactory.setChannelCheckoutTimeout(rabbitMQProperties.getChannelCheckoutTimeout());
         return cachingConnectionFactory;
-    }
+    }*/
 }
