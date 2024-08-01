@@ -5,6 +5,7 @@ import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 
 @Data
@@ -24,10 +25,15 @@ public class GXRabbitMQMessageReqDto extends GXBaseReqDto {
     /**
      * 消息数据
      */
-    private Dict message;
+    private Dict data;
 
     /**
      * 发送事务消息需要
      */
-    private CorrelationData correlationData = new CorrelationData();
+    private transient CorrelationData correlationData = new CorrelationData();
+
+    /**
+     * 消息属性
+     */
+    private MessageProperties messageProperties = new MessageProperties();
 }
