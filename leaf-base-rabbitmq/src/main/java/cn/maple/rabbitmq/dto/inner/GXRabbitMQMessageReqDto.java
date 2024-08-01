@@ -28,6 +28,11 @@ public class GXRabbitMQMessageReqDto extends GXBaseReqDto {
     private Dict data;
 
     /**
+     * 消费tag
+     */
+    private String tag;
+
+    /**
      * 发送事务消息需要
      */
     private transient CorrelationData correlationData = new CorrelationData();
