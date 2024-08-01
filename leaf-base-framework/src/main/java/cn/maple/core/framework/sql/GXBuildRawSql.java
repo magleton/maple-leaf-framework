@@ -353,7 +353,8 @@ public interface GXBuildRawSql {
             }
         }
         if (CharSequenceUtil.isNotBlank(extraData.getStr("deletedBy"))) {
-            // todo
+            columns.add(CharSequenceUtil.format("deleted_by = '{}'", extraData.getStr("deletedBy")));
+            columns.add(CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
         }
         sql.append(" SET ").append(CollUtil.join(columns, ","));
         handleSQLCondition(sql, condition, columnToUnderlineCase);
