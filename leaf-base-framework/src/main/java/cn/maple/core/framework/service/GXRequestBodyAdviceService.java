@@ -8,6 +8,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 public interface GXRequestBodyAdviceService {
@@ -53,12 +54,40 @@ public interface GXRequestBodyAdviceService {
     default Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         // 对请求数据进行验证之前的修复处理
         GXCommonUtils.reflectCallObjectMethod(body, BEFORE_REPAIR_METHOD);
-
         // 调用目标bean对象的验证方法对数据进行验证(自定义验证)
         GXCommonUtils.reflectCallObjectMethod(body, VERIFY_METHOD);
-
         // 调用目标bean对象的修复方法对数据进行最后的修复
         GXCommonUtils.reflectCallObjectMethod(body, AFTER_REPAIR_METHOD);
+        return body;
+    }
+
+    /**
+     * Invoked second before the request body is read and converted.
+     *
+     * @param inputMessage  the request
+     * @param parameter     the target method parameter
+     * @param targetType    the target type, not necessarily the same as the method
+     *                      parameter type, e.g. for {@code HttpEntity<String>}.
+     * @param converterType the converter used to deserialize the body
+     * @return the input request or a new instance (never {@code null})
+     */
+    default HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
+        return inputMessage;
+    }
+
+    /**
+     * Invoked second (and last) if the body is empty.
+     *
+     * @param body          usually set to {@code null} before the first advice is called
+     * @param inputMessage  the request
+     * @param parameter     the method parameter
+     * @param targetType    the target type, not necessarily the same as the method
+     *                      parameter type, e.g. for {@code HttpEntity<String>}.
+     * @param converterType the selected converter type
+     * @return the value to use, or {@code null} which may then raise an
+     * {@code HttpMessageNotReadableException} if the argument is required
+     */
+    default Object handleEmptyBody(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         return body;
     }
 }
