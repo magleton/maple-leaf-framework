@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class GXRequestHandlerMethodArgumentResolver implements GXCustomerHandlerMethodArgumentResolver {
     /**
      * 请求中的参数名字
      */

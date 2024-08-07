@@ -53,14 +53,14 @@ public @interface GXValidateDBExists {
      *
      * @return String
      */
-    String fieldName() default "id";
+    String fieldName();
 
     /**
      * 表名
      *
      * @return String
      */
-    String tableName() default "";
+    String tableName();
 
     /**
      * 附加的查询条件
