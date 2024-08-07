@@ -10,6 +10,7 @@ import cn.maple.core.framework.web.support.GXCustomerHandlerMethodArgumentResolv
 import cn.maple.sso.annotation.GXLoginUserAnnotation;
 import cn.maple.sso.dto.GXUserInfoDto;
 import cn.maple.sso.service.GXUUserService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -23,13 +24,13 @@ import java.util.Objects;
  * 有@GXLoginUserAnnotation注解的方法参数，注入当前登录用户
  */
 @Component
+@ConditionalOnBean(value = {GXUUserService.class})
 public class GXLoginUserHandlerMethodArgumentResolver implements GXCustomerHandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         /*return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUUserEntity.class)
                 && parameter.hasParameterAnnotation(GXLoginUserAnnotation.class);*/
-        return parameter.getParameterType().getSuperclass().isAssignableFrom(GXUserInfoDto.class)
-                && parameter.hasParameterAnnotation(GXLoginUserAnnotation.class);
+        return parameter.hasParameterAnnotation(GXLoginUserAnnotation.class) && parameter.getParameterType().getSuperclass().isAssignableFrom(GXUserInfoDto.class);
     }
 
     @Override
