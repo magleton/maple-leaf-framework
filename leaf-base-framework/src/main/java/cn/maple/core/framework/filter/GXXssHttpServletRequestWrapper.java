@@ -2,7 +2,6 @@ package cn.maple.core.framework.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.google.common.io.ByteStreams;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,13 +35,13 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 用于将流保存下来
      */
-    private final byte[] requestBody;
+    private final byte[] cacheRequestBody;
 
     @SneakyThrows
     public GXXssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         orgRequest = request;
-        requestBody = ByteStreams.toByteArray(request.getInputStream());
+        cacheRequestBody = IoUtil.readBytes(request.getInputStream());//StreamUtils.copyToByteArray(request.getInputStream());//ByteStreams.toByteArray(request.getInputStream());
     }
 
     /**
@@ -57,7 +56,7 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(requestBody)));
+        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(cacheRequestBody)));
     }
 
     @Override
@@ -69,7 +68,7 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         // 为空，直接返回
         //String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
-        String json = IoUtil.read(new ByteArrayInputStream(requestBody), StandardCharsets.UTF_8);
+        String json = IoUtil.read(new ByteArrayInputStream(cacheRequestBody), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
