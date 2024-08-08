@@ -52,7 +52,10 @@ public class GXRequestBodyAdvice extends RequestBodyAdviceAdapter {
     @Override
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         GXRequestBodyAdviceService requestBodyAdviceService = GXSpringContextUtils.getBean(GXRequestBodyAdviceService.class);
-        Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).setAttribute("JSON_REQUEST_BODY", JSONUtil.toJsonStr(body));
+        Object jsonRequestBody = Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).getAttribute("JSON_REQUEST_BODY");
+        if (ObjectUtil.isEmpty(jsonRequestBody)) {
+            Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).setAttribute("JSON_REQUEST_BODY", JSONUtil.toJsonStr(body));
+        }
         if (ObjectUtil.isNull(requestBodyAdviceService)) {
             return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
         }

@@ -2,18 +2,22 @@ package cn.maple.core.framework.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * XSS过滤处理
@@ -52,13 +56,18 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
 
         // 为空，直接返回
-        String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
+        //String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
+        String json = StrUtil.str(IoUtil.readBytes(super.getInputStream(), false), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
 
         // xss过滤
         json = xssEncode(json);
+        Object jsonRequestBody = Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).getAttribute("JSON_REQUEST_BODY");
+        if (ObjectUtil.isEmpty(jsonRequestBody)) {
+            Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).setAttribute("JSON_REQUEST_BODY", json);
+        }
         final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
