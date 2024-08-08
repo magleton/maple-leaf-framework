@@ -78,4 +78,11 @@ public @interface GXValidateDBExists {
      * @return String
      */
     String spEL() default "";
+
+    /**
+     * 需要依赖的字段名字
+     *
+     * @return String[]
+     */
+    String[] dependOnFields() default {};
 }

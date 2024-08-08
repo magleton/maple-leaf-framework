@@ -3,11 +3,13 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -53,8 +55,12 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
      * 附加条件 SpEL表达式
      * 用于计算结果是否满足预期
      */
-
     private String spEL;
+
+    /**
+     * 当前字段需要依赖的字段
+     */
+    private String[] dependOnFields;
 
     @Override
     public void initialize(GXValidateDBExists annotation) {
@@ -65,6 +71,7 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         tableName = annotation.tableName();
         condition = annotation.condition();
         spEL = annotation.spEL();
+        dependOnFields = annotation.dependOnFields();
     }
 
     @Override
@@ -78,11 +85,18 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
         }
 
         Dict conditionData = GXCommonUtils.convertStrToTarget("{" + condition + "}", Dict.class);
+        assert conditionData != null;
 
         if (Dict.class.isAssignableFrom(o.getClass())) {
             Dict data = Convert.convert(Dict.class, o);
-            assert conditionData != null;
             conditionData.putAll(data);
+        }
+
+        for (String dependOnField : dependOnFields) {
+            Object value = GXCurrentRequestContextUtils.getHttpParam(dependOnField, Object.class);
+            if (ObjectUtil.isNotEmpty(value)) {
+                conditionData.put(dependOnField, value);
+            }
         }
 
         GXValidateExistsDto validateExistsDto = GXValidateExistsDto.builder()
