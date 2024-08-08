@@ -334,7 +334,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
         String tableName = CharSequenceUtil.isNotEmpty(validateExistsDto.getTableName()) ? validateExistsDto.getTableName() : getTableName();
         String fieldName = validateExistsDto.getFieldName();
         Object value = validateExistsDto.getValue();
-        String originCondition = validateExistsDto.getCondition();
+        Dict originCondition = validateExistsDto.getCondition();
 
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定表名 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
@@ -349,8 +349,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
 
         List<GXCondition<?>> conditionLst = new ArrayList<>();
         conditionLst.add(condition);
-        if (CharSequenceUtil.isNotEmpty(originCondition)) {
-            GXConditionRaw conditionOrigin = new GXConditionRaw(originCondition);
+        if (!originCondition.isEmpty()) {
+            GXConditionRaw conditionOrigin = new GXConditionRaw(CharSequenceUtil.removeAll(originCondition.toString(), '{', '}'));
             conditionLst.add(conditionOrigin);
         }
 

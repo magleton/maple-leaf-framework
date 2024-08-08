@@ -1,10 +1,13 @@
 package cn.maple.core.datasource.service.impl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.datasource.annotation.GXValidateDBExists;
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -42,7 +45,7 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
     /**
      * 附加的查询条件
      * eg:
-     * type=news,phone=13800138000
+     * type='news',phone='13800138000',age=34
      */
     private String condition;
 
@@ -50,6 +53,7 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
      * 附加条件 SpEL表达式
      * 用于计算结果是否满足预期
      */
+
     private String spEL;
 
     @Override
@@ -73,12 +77,21 @@ public class GXValidateDBExistsValidator implements ConstraintValidator<GXValida
             throw new GXBusinessException(CharSequenceUtil.format("字段<{}>的值<{}>需要指定相应的Service进行验证...", fieldName, o));
         }
 
+        Dict conditionData = GXCommonUtils.convertStrToTarget("{" + condition + "}", Dict.class);
+
+        if (Dict.class.isAssignableFrom(o.getClass())) {
+            Dict data = Convert.convert(Dict.class, o);
+            assert conditionData != null;
+            conditionData.putAll(data);
+        }
+
         GXValidateExistsDto validateExistsDto = GXValidateExistsDto.builder()
                 .tableName(tableName)
                 .fieldName(fieldName)
                 .value(o)
-                .condition(condition)
+                .condition(conditionData)
                 .spEL(spEL)
+                .groups(groups)
                 .build();
 
         return service.validateExists(validateExistsDto, constraintValidatorContext);

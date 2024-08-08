@@ -1,10 +1,11 @@
 package cn.maple.core.framework.web.advice;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.service.GXRequestBodyAdviceService;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -13,8 +14,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAd
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
-@ConditionalOnBean(value = {GXRequestBodyAdviceService.class})
+//@ConditionalOnBean(value = {GXRequestBodyAdviceService.class})
 @RestControllerAdvice
 public class GXRequestBodyAdvice extends RequestBodyAdviceAdapter {
     /**
@@ -50,6 +52,7 @@ public class GXRequestBodyAdvice extends RequestBodyAdviceAdapter {
     @Override
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         GXRequestBodyAdviceService requestBodyAdviceService = GXSpringContextUtils.getBean(GXRequestBodyAdviceService.class);
+        Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).setAttribute("JSON_REQUEST_BODY", JSONUtil.toJsonStr(body));
         if (ObjectUtil.isNull(requestBodyAdviceService)) {
             return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
         }

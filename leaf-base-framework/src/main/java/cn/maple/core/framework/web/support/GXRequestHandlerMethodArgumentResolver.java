@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -29,7 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-@Component
+//@Component
+@Deprecated(forRemoval = true, since = "4.0.5")
 public class GXRequestHandlerMethodArgumentResolver implements GXCustomerHandlerMethodArgumentResolver {
     /**
      * 请求中的参数名字
