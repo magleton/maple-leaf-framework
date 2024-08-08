@@ -2,18 +2,15 @@ package cn.maple.core.framework.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
-import lombok.SneakyThrows;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,18 +27,11 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)
      */
-    private final HttpServletRequest orgRequest;
+    HttpServletRequest orgRequest;
 
-    /**
-     * 用于将流保存下来
-     */
-    private final byte[] cacheRequestBody;
-
-    @SneakyThrows
     public GXXssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         orgRequest = request;
-        cacheRequestBody = IoUtil.readBytes(request.getInputStream());//StreamUtils.copyToByteArray(request.getInputStream());//ByteStreams.toByteArray(request.getInputStream());
     }
 
     /**
@@ -55,11 +45,6 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(cacheRequestBody)));
-    }
-
-    @Override
     public ServletInputStream getInputStream() throws IOException {
         // 非json类型，直接返回
         if (!MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(super.getHeader(HttpHeaders.CONTENT_TYPE))) {
@@ -67,8 +52,7 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
 
         // 为空，直接返回
-        //String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
-        String json = IoUtil.read(new ByteArrayInputStream(cacheRequestBody), StandardCharsets.UTF_8);
+        String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
@@ -79,7 +63,7 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
-                return bis.available() == 0;
+                return true;
             }
 
             @Override
