@@ -2,22 +2,21 @@ package cn.maple.core.framework.filter;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * XSS过滤处理
@@ -31,11 +30,18 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 没被包装过的HttpServletRequest(特殊场景, 需要自己过滤)
      */
-    HttpServletRequest orgRequest;
+    private final HttpServletRequest orgRequest;
 
+    /**
+     * 用于将流保存下来
+     */
+    private final byte[] cacheRequestBody;
+
+    @SneakyThrows
     public GXXssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         orgRequest = request;
+        cacheRequestBody = IoUtil.readBytes(request.getInputStream());//StreamUtils.copyToByteArray(request.getInputStream());//ByteStreams.toByteArray(request.getInputStream());
     }
 
     /**
@@ -49,30 +55,40 @@ public class GXXssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(cacheRequestBody)));
+    }
+
+    @Override
     public ServletInputStream getInputStream() throws IOException {
         // 非json类型，直接返回
-        if (!MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(super.getHeader(HttpHeaders.CONTENT_TYPE))) {
+        String contentType = super.getHeader(HttpHeaders.CONTENT_TYPE);
+        if (!CharSequenceUtil.containsIgnoreCase(contentType, MediaType.APPLICATION_JSON_VALUE)) {
             return super.getInputStream();
         }
 
         // 为空，直接返回
         //String json = IoUtil.read(super.getInputStream(), StandardCharsets.UTF_8);
-        String json = StrUtil.str(IoUtil.readBytes(super.getInputStream(), false), StandardCharsets.UTF_8);
+        String json = IoUtil.read(new ByteArrayInputStream(cacheRequestBody), StandardCharsets.UTF_8);
         if (CharSequenceUtil.isBlank(json)) {
             return super.getInputStream();
         }
 
         // xss过滤
         json = xssEncode(json);
-        Object jsonRequestBody = Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).getAttribute("JSON_REQUEST_BODY");
-        if (ObjectUtil.isEmpty(jsonRequestBody)) {
+
+        // TODO 这里有待优化 START
+        /*Object requestBodyData = Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).getAttribute("JSON_REQUEST_BODY");
+        if (ObjectUtil.isEmpty(requestBodyData)) {
             Objects.requireNonNull(GXCurrentRequestContextUtils.getHttpServletRequest()).setAttribute("JSON_REQUEST_BODY", json);
-        }
+        }*/
+        // TODO 这里有待优化 END
+
         final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
-                return true;
+                return bis.available() == 0;
             }
 
             @Override
