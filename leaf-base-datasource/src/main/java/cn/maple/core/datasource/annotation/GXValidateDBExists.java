@@ -25,7 +25,7 @@ public @interface GXValidateDBExists {
      *
      * @return String
      */
-    String message() default "{fieldName}对应的数据不存在或是参数不存在";
+    String message() default "{fieldName}对应的数据已经存在或是参数已经存在存在";
 
     /**
      * 分组验证

@@ -101,16 +101,18 @@ public class GXExceptionHandler {
     public GXResultUtils<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
         String firstErrorKey = null;
+        Dict data = Dict.create();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
             if (CharSequenceUtil.isEmpty(firstErrorKey)) {
                 firstErrorKey = error.getField();
+                data.set(firstErrorKey, error.getDefaultMessage());
             }
         }
         log.error(e.getMessage(), e);
-        Object orDefault = errors.getOrDefault(firstErrorKey, "");
+        Object orDefault = errors.getOrDefault(firstErrorKey, GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg());
         publishExceptionNotifyEvent(e);
-        return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getMsg() + ":" + firstErrorKey + "->" + orDefault);
+        return GXResultUtils.error(GXDefaultResultStatusCode.PARAMETER_VALIDATION_ERROR.getCode(), orDefault.toString(), data);
     }
 
     @ExceptionHandler(ValidationException.class)
