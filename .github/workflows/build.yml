@@ -2,4 +2,4 @@ on:
   push:
     branches:
       - main    # The default branch
-      - 4.*     # The other branches to be analyzed
+      - dev.*     # The other branches to be analyzed
