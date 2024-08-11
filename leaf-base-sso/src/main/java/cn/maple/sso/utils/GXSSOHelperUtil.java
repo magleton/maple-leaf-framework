@@ -15,11 +15,11 @@ import cn.maple.sso.properties.GXSSOProperties;
 import cn.maple.sso.service.GXAbstractSSOService;
 import cn.maple.sso.service.GXTokenConfigService;
 import cn.maple.sso.service.impl.GXConfigurableAbstractSSOServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -217,7 +217,7 @@ public class GXSSOHelperUtil {
         String platform = Optional.ofNullable(request.getHeader(GXTokenConstant.PLATFORM)).orElse("");
         Dict data = Dict.create().set(GXTokenConstant.PLATFORM, platform);
         Dict loginCredentials = GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenConfigService.getTokenSecret());
-        Long userId = Optional.ofNullable(loginCredentials.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(loginCredentials.getLong(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME));
+        Long userId = Optional.ofNullable(loginCredentials.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME)).orElse(0L);
         return tokenConfigService.getTokenCacheKey(userId, data);
     }
 
@@ -260,6 +260,10 @@ public class GXSSOHelperUtil {
      * @return 解码之后的token
      */
     public static Dict parser(String token, boolean header) {
+        // 如果是RPC 直接返回
+        if (GXCurrentRequestContextUtils.isRPC()) {
+            return Dict.create();
+        }
         if (CharSequenceUtil.isNotBlank(token) && header) {
             LOGGER.info("token字符串来自于header");
         }

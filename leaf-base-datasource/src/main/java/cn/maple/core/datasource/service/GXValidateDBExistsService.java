@@ -1,8 +1,8 @@
 package cn.maple.core.datasource.service;
 
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * 验证数据是否存在

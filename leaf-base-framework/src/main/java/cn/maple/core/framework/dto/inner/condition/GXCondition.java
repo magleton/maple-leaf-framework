@@ -2,12 +2,12 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 public abstract class GXCondition<T> implements Serializable {
-    protected final String tableNameAlias;
-
     /**
      * 可以是一个具体的字段名字  goods_name
      * <p>
@@ -15,7 +15,12 @@ public abstract class GXCondition<T> implements Serializable {
      */
     protected final String fieldExpression;
 
+    @Setter
+    @Getter
+    protected String tableNameAlias;
+
     @SuppressWarnings("all")
+    @Getter
     protected Object value;
 
     protected GXCondition(String fieldExpression, Object value) {
@@ -38,15 +43,11 @@ public abstract class GXCondition<T> implements Serializable {
         if (CharSequenceUtil.isEmpty(tableNameAlias)) {
             return CharSequenceUtil.format("{} {} {}", getFieldExpression(), opStr, getFieldValue());
         }
-        return CharSequenceUtil.format("`{}`.{} {} {}", tableNameAlias, getFieldExpression(), opStr, getFieldValue());
+        return CharSequenceUtil.format("{}.{} {} {}", tableNameAlias, getFieldExpression(), opStr, getFieldValue());
     }
 
     public String getFieldExpression() {
         return CharSequenceUtil.toUnderlineCase(fieldExpression);
-    }
-
-    public String getTableNameAlias() {
-        return tableNameAlias;
     }
 
     public abstract T getFieldValue();

@@ -26,12 +26,11 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import jakarta.validation.ConstraintValidatorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         Assert.notNull(condition, "条件不能为null");
         GXValidatorUtils.validateEntity(entity);
@@ -74,7 +72,6 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, CollUtil.newArrayList());
     }
@@ -273,14 +270,30 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName 表名
-     * @param condition 删除条件
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+    public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
         Assert.notNull(condition, "条件不能为null");
-        return baseDao.deleteSoftCondition(tableName, condition);
+        return baseDao.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+        Assert.notNull(condition, "条件不能为null");
+        return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
     /**
@@ -321,7 +334,7 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
         String tableName = CharSequenceUtil.isNotEmpty(validateExistsDto.getTableName()) ? validateExistsDto.getTableName() : getTableName();
         String fieldName = validateExistsDto.getFieldName();
         Object value = validateExistsDto.getValue();
-        String originCondition = validateExistsDto.getCondition();
+        Dict originCondition = validateExistsDto.getCondition();
 
         if (CharSequenceUtil.isBlank(tableName)) {
             throw new GXBusinessException(CharSequenceUtil.format("请指定表名 , 验证的字段 {} , 验证的值 : {}", fieldName, value));
@@ -336,8 +349,8 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
 
         List<GXCondition<?>> conditionLst = new ArrayList<>();
         conditionLst.add(condition);
-        if (CharSequenceUtil.isNotEmpty(originCondition)) {
-            GXConditionRaw conditionOrigin = new GXConditionRaw(originCondition);
+        if (!originCondition.isEmpty()) {
+            GXConditionRaw conditionOrigin = new GXConditionRaw(CharSequenceUtil.removeAll(originCondition.toString(), '{', '}'));
             conditionLst.add(conditionOrigin);
         }
 

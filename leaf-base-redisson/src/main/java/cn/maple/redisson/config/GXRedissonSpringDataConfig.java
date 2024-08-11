@@ -5,6 +5,7 @@ import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.properties.GXRedissonCacheManagerProperties;
 import cn.maple.redisson.properties.GXRedissonMQProperties;
 import cn.maple.redisson.properties.GXRedissonProperties;
+import jakarta.annotation.Resource;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.Codec;
@@ -16,7 +17,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 @Configuration

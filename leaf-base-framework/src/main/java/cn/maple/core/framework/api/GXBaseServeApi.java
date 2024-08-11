@@ -3,10 +3,10 @@ package cn.maple.core.framework.api;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.api.dto.req.GXBaseApiReqDto;
+import cn.maple.core.framework.api.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.protocol.req.GXQueryParamReqProtocol;
-import cn.maple.core.framework.dto.res.GXBaseApiResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
 import com.google.common.collect.Table;
 
@@ -76,6 +76,36 @@ public interface GXBaseServeApi {
      * @return R
      */
     <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Class<R> targetClazz, Object extraData);
+
+    /**
+     * 根据条件获取一条数据
+     *
+     * @param condition   查询条件  中间表达式请使用 GXBuilderConstant常量中提供的表达式
+     * @param columns     待查询的列
+     * @param targetClazz 数据返回类型
+     * @param extraData   数据转换时 自动填充的数据
+     * @return R
+     */
+    <R extends GXBaseApiResDto> R findOneByCondition(Table<String, String, Object> condition, Set<String> columns, Class<R> targetClazz, Object extraData);
+
+    /**
+     * 通过ID查询一条数据
+     *
+     * @param id          待查询的ID
+     * @param columns     需要查询的列
+     * @param targetClazz 返回的数据剋新
+     * @return R
+     */
+    <R extends GXBaseApiResDto> R findById(Long id, Set<String> columns, Class<R> targetClazz);
+
+    /**
+     * 通过ID查询一条数据
+     *
+     * @param id          待查询的ID
+     * @param targetClazz 返回的数据剋新
+     * @return R
+     */
+    <R extends GXBaseApiResDto> R findById(Long id, Class<R> targetClazz);
 
     /**
      * 获取一条记录的指定单字段
@@ -165,6 +195,14 @@ public interface GXBaseServeApi {
      * @return int
      */
     boolean checkRecordIsExists(Table<String, String, Object> condition);
+
+    /**
+     * 统计给定条件的记录条数
+     *
+     * @param condition 条件
+     * @return int
+     */
+    Long count(Table<String, String, Object> condition);
 
     /**
      * 转指定的对象到指定的目标类型对象

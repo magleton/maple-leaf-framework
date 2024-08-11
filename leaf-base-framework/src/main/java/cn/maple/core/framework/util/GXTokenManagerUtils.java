@@ -7,13 +7,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXTokenInvalidException;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
-@Slf4j
 public class GXTokenManagerUtils {
     /**
      * 日志对象
@@ -24,22 +23,25 @@ public class GXTokenManagerUtils {
     }
 
     /**
-     * 生成ADMIN后台登录的token
+     * 生成管理端登录的token
      *
      * <pre>
      *     {@code
-     *     generateUserToken(1 , Dict.create().set("phone" , "13800138000"),"df5386b5e634" , 120)
+     *     generateManagerToken(1 , Dict.create().set("phone" , "13800138000"),"df5386b5e634" , 120)
      *     }
      * </pre>
      *
-     * @param adminId   管理员ID
+     * @param userId    管理员ID
      * @param param     附加信息
      * @param secretKey 加解密key
      * @param expires   过期时间
      * @return String
      */
-    public static String generateAdminToken(Object adminId, Dict param, String secretKey, int expires) {
-        param.putIfAbsent(GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, adminId);
+    public static String generateManagerToken(Object userId, Dict param, String secretKey, int expires) {
+        if (CharSequenceUtil.isEmpty(param.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME))) {
+            throw new GXBusinessException("请在param参数中设置userName!!!");
+        }
+        param.putIfAbsent(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, userId);
         param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD_NAME, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);
         return GXAuthCodeUtils.authCodeEncode(JSONUtil.toJsonStr(param), secretKey, expires);
@@ -53,7 +55,7 @@ public class GXTokenManagerUtils {
      * @param secretKey 加解密KEY
      * @return Dict
      */
-    public static Dict decodeAdminToken(String source, String secretKey) {
+    public static Dict decodeManagerToken(String source, String secretKey) {
         try {
             String s = GXAuthCodeUtils.authCodeDecode(source, secretKey);
             if (CharSequenceUtil.equalsIgnoreCase("{}", s)) {
@@ -61,7 +63,7 @@ public class GXTokenManagerUtils {
             }
             return JSONUtil.toBean(s, Dict.class);
         } catch (JSONException exception) {
-            log.error(exception.getMessage());
+            LOG.error(exception.getMessage());
         }
         return Dict.create();
     }
@@ -82,6 +84,9 @@ public class GXTokenManagerUtils {
      * @return String
      */
     public static String generateUserToken(Object userId, Dict param, String secretKey, int expires) {
+        if (CharSequenceUtil.isEmpty(param.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME))) {
+            throw new GXBusinessException("请在param参数中设置userName!!!");
+        }
         param.putIfAbsent(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, userId);
         param.putIfAbsent(GXTokenConstant.LOGIN_AT_FIELD_NAME, DateUtil.currentSeconds());
         param.putIfAbsent("platform", GXTokenConstant.PLATFORM);

@@ -3,8 +3,10 @@ package cn.maple.core.datasource.service.impl;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.maple.core.datasource.dao.GXMyBatisDao;
 import cn.maple.core.datasource.mapper.GXBaseMapper;
@@ -16,6 +18,8 @@ import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.GXValidateExistsDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateNumberField;
+import cn.maple.core.framework.dto.inner.field.GXUpdateStrField;
 import cn.maple.core.framework.dto.req.GXBaseReqDto;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
@@ -24,15 +28,16 @@ import cn.maple.core.framework.exception.GXDBNotExistsException;
 import cn.maple.core.framework.model.GXBaseModel;
 import cn.maple.core.framework.service.impl.GXBusinessServiceImpl;
 import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -103,13 +108,33 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
-            //throw new GXBusinessException("待更新的数据不存在!");
             log.error("待更新的数据不存在!");
             return GXCommonConstant.DB_RECORD_NOT_FOUND;
+        }
+        // 判断是HTTP请求还是RPC请求
+        if (GXCurrentRequestContextUtils.isHTTP() && GXCurrentRequestContextUtils.tokenExists()) {
+            String loginUserName = getLoginUserName();
+            if (CharSequenceUtil.isNotEmpty(loginUserName)) {
+                List<String> updateFieldNameLst = new ArrayList<>();
+                updateFields.forEach(field -> {
+                    String fieldName = field.getFieldName();
+                    updateFieldNameLst.add(fieldName);
+                });
+                // updateFields字段有可能是一个不可变List 所以需要将其变成一个可变的List
+                ArrayList<GXUpdateField<?>> newUpdateFields = CollUtil.newArrayList(updateFields);
+                if (!CollUtil.contains(updateFieldNameLst, "updated_by")) {
+                    GXUpdateStrField updateCreatedByField = new GXUpdateStrField(tableName, "updated_by", loginUserName);
+                    newUpdateFields.add(updateCreatedByField);
+                }
+                if (!CollUtil.contains(updateFieldNameLst, "updated_at")) {
+                    GXUpdateNumberField updateUpdatedAtField = new GXUpdateNumberField(tableName, "updated_at", Math.toIntExact(DateUtil.currentSeconds()));
+                    newUpdateFields.add(updateUpdatedAtField);
+                }
+                return repository.updateFieldByCondition(tableName, newUpdateFields, condition);
+            }
         }
         return repository.updateFieldByCondition(tableName, updateFields, condition);
     }
@@ -122,7 +147,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return Integer
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer updateFieldByCondition(List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
         return updateFieldByCondition(repository.getTableName(), updateFields, condition);
     }
@@ -381,7 +405,7 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @param masterQueryParamInnerDto   外层的主查询条件
      * @param unionQueryParamInnerDtoLst union查询条件
      * @param unionTypeEnums             union的类型
-     * @return
+     * @return 匹配条件的数据
      */
     @Override
     public R findOneByCondition(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
@@ -511,13 +535,25 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
     }
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @param columns   字段集合
+     * @param extraData 额外参数
+     * @return 一条数据
+     */
+    @Override
+    public R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns, Object extraData) {
+        return findOneByCondition(repository.getTableName(), columns, condition, extraData);
+    }
+
+    /**
      * 创建或者更新
      *
      * @param entity 数据实体
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity) {
         return updateOrCreate(entity, Collections.emptyList());
     }
@@ -530,7 +566,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID updateOrCreate(T entity, List<GXCondition<?>> condition) {
         return repository.updateOrCreate(entity, condition);
     }
@@ -544,7 +579,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, List<GXCondition<?>> condition, CopyOptions copyOptions) {
         Class<T> targetClazz = GXCommonUtils.getGenericClassType(getClass(), 2);
         T entity = convertSourceToTarget(req, targetClazz, GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME, copyOptions);
@@ -559,7 +593,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req, CopyOptions copyOptions) {
         return updateOrCreate(req, Collections.emptyList(), copyOptions);
     }
@@ -571,7 +604,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public <Q extends GXBaseReqDto> ID updateOrCreate(Q req) {
         return updateOrCreate(req, CopyOptions.create());
     }
@@ -585,7 +617,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 新数据ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData, Dict extraData) {
         R oneData = findOneByCondition(repository.getTableName(), conditions);
         if (Objects.isNull(oneData)) {
@@ -612,9 +643,46 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 新数据ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ID copyOneData(List<GXCondition<?>> conditions, Dict replaceData) {
         return copyOneData(conditions, replaceData, Dict.create());
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, @NotNull Dict extraData) {
+        if (ObjectUtil.isNull(extraData)) {
+            extraData = Dict.create();
+        }
+        if (GXCurrentRequestContextUtils.isHTTP()
+                && GXCurrentRequestContextUtils.tokenExists()
+                && !extraData.containsKey("deletedBy")) {
+            String loginUserName = getLoginUserName();
+            if (CharSequenceUtil.isNotEmpty(loginUserName)) {
+                extraData.set("deletedBy", loginUserName);
+            }
+        }
+        return repository.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+        return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
     /**
@@ -625,9 +693,8 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
-        return repository.deleteSoftCondition(tableName, condition);
+        return deleteSoftCondition(tableName, condition, Dict.create());
     }
 
     /**
@@ -637,7 +704,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSoftCondition(List<GXCondition<?>> condition) {
         return deleteSoftCondition(repository.getTableName(), condition);
     }
@@ -650,7 +716,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
         return repository.deleteCondition(tableName, condition);
     }
@@ -662,7 +727,6 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 影响行数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteCondition(List<GXCondition<?>> condition) {
         return deleteCondition(repository.getTableName(), condition);
     }

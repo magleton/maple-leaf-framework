@@ -1,5 +1,6 @@
 package cn.maple.extension;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,19 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author britton
  */
+@Getter
 @Component
 public class GXExtensionRepository {
     /**
      * 扩展点缓存对象
-     */
-    private final Map<GXExtensionCoordinate, GXExtensionPoint> extensionRepo = new ConcurrentHashMap<>();
-
-    /**
+     * -- GETTER --
      * 获取扩展点缓存对象
      *
      * @return Map
      */
-    public Map<GXExtensionCoordinate, GXExtensionPoint> getExtensionRepo() {
-        return extensionRepo;
-    }
+    private final Map<GXExtensionCoordinate, GXExtensionPoint> extensionRepo = new ConcurrentHashMap<>();
 }

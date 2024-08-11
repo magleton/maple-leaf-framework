@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,6 +64,19 @@ public class GXCommonUtils {
 
         if (JSONUtil.isTypeJSON(value.toString()) && targetClazz.isAssignableFrom(String.class)) {
             return value;
+        }
+
+        // 处理List<自定义类型>
+        if (JSONUtil.isTypeJSONArray(value.toString()) && targetClazz.isAssignableFrom(List.class)) {
+            Class<?> componentType = targetClazz.getComponentType();
+            if (ObjectUtil.isNull(componentType)) {
+                Type actualTypeArgument = TypeUtil.getTypeArgument(type, 0);
+                if (ObjectUtil.isNull(actualTypeArgument)) {
+                    return value;
+                }
+                componentType = (Class<?>) actualTypeArgument;
+            }
+            return JSONUtil.toList(JSONUtil.toJsonStr(value), componentType);
         }
 
         if (value instanceof IJSONTypeConverter) {
@@ -248,8 +262,16 @@ public class GXCommonUtils {
             reflectCallObjectMethod(target, "verify");
             return target;
         } catch (Exception e) {
-            Throwable cause = Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause());
-            throw new GXBusinessException(cause.getMessage(), cause);
+            //Throwable throwable = Optional.ofNullable(Optional.ofNullable(e.getCause().getCause()).orElse(e.getCause())).orElse(e);
+            Throwable throwable = e.getCause();
+            if (ObjectUtil.isNotNull(throwable)) {
+                if (ObjectUtil.isNotNull(throwable.getCause())) {
+                    throwable = throwable.getCause();
+                }
+            } else {
+                throwable = e;
+            }
+            throw Convert.convert(RuntimeException.class, throwable);
         }
     }
 
@@ -375,7 +397,7 @@ public class GXCommonUtils {
                 throw (GXBeanValidateException) targetException;
             }
             if (InvocationTargetRuntimeException.class.isAssignableFrom(e.getClass())) {
-                throw new GXBusinessException(targetException.getMessage(), targetException);
+                throw new GXBusinessException(targetException.getMessage(), Optional.ofNullable(targetException.getCause()).orElse(targetException));
             }
             String exceptionMessage = CharSequenceUtil.isEmpty(targetException.getMessage()) ? "系统反射调用失败" : targetException.getMessage();
             LOG.error("系统反射调用{}.{}({})失败 , [错误消息 : {}] [错误原因 : {}]", object.getClass().getSimpleName(), methodName, params, e.getMessage(), cause);
@@ -414,33 +436,50 @@ public class GXCommonUtils {
      * @param <R>             返回的数据类型
      * @return 列表
      */
-    public static <R> List<R> buildDeptTree(List<R> sourceList, Object rootParentValue) {
-        String methodName = "getParentId";
+    public static <R> List<R> buildTree(List<R> sourceList, Object rootParentValue) {
+        return buildTree(sourceList, rootParentValue, null);
+    }
+
+    /**
+     * 构建菜单树
+     *
+     * @param sourceList          源列表
+     * @param rootParentValue     根父级的值, 一般是 0
+     * @param getParentMethodName 父级字段的get方法名字
+     * @param <R>                 返回的数据类型
+     * @return 列表
+     */
+    public static <R> List<R> buildTree(List<R> sourceList, Object rootParentValue, String getParentMethodName) {
+        String[] methodNames = new String[]{"getParentId"};
+        if (CharSequenceUtil.isNotBlank(getParentMethodName)) {
+            methodNames[0] = getParentMethodName;
+        }
         // JDK8的stream处理, 把根分类区分出来
         List<R> roots = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodNames[0]);
             return Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 把非根分类区分出来
         List<R> subs = sourceList.stream().filter(obj -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodName);
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(obj, methodNames[0]);
             return !Objects.equals(parentId, rootParentValue);
         }).collect(Collectors.toList());
         // 递归构建结构化的分类信息
-        roots.forEach(root -> buildSubs(root, subs));
+        roots.forEach(root -> buildSubs(root, subs, methodNames[0]));
         return roots;
     }
 
     /**
      * 构建菜单树的子级
      *
-     * @param parent 父结点
-     * @param subs   子结点
-     * @param <R>    元素类型
+     * @param parent              父结点
+     * @param subs                子结点
+     * @param getParentMethodName 父级字段的get方法名字
+     * @param <R>                 元素类型
      */
-    private static <R> void buildSubs(R parent, List<R> subs) {
+    private static <R> void buildSubs(R parent, List<R> subs, String getParentMethodName) {
         List<R> children = subs.stream().filter(sub -> {
-            Object parentId = GXCommonUtils.reflectCallObjectMethod(sub, "getParentId");
+            Object parentId = GXCommonUtils.reflectCallObjectMethod(sub, getParentMethodName);
             Object id = GXCommonUtils.reflectCallObjectMethod(parent, "getId");
             return Objects.equals(parentId, id);
         }).collect(Collectors.toList());
@@ -448,7 +487,7 @@ public class GXCommonUtils {
             // 有子分类的情况
             GXCommonUtils.reflectCallObjectMethod(parent, "setChildren", children);
             // 再次递归构建
-            children.forEach(child -> buildSubs(child, subs));
+            children.forEach(child -> buildSubs(child, subs, getParentMethodName));
         }
     }
 
@@ -504,7 +543,7 @@ public class GXCommonUtils {
      * @return 转换后的条件
      */
     public static List<GXCondition<?>> convertTableConditionToConditionExp(String tableNameAlias, Table<String, String, Object> condition) {
-        ArrayList<GXCondition<?>> conditions = new ArrayList<>();
+        List<GXCondition<?>> conditions = new ArrayList<>();
         condition.rowMap().forEach((column, datum) -> datum.forEach((op, value) -> {
             Dict data = Dict.create().set("tableNameAlias", tableNameAlias).set("fieldName", column).set("value", value);
             Function<Dict, GXCondition<?>> function = GXDataSourceConstant.getFunction(op);
@@ -537,5 +576,34 @@ public class GXCommonUtils {
             LOG.error("数据转换失败!错误信息 : {}", ex.getMessage());
             return null;
         }
+    }
+
+    /**
+     * 判断是否是正确的Base64字符串
+     *
+     * @param base64Str base64字符串
+     * @return Boolean
+     */
+    public static boolean isBase64(String base64Str) {
+        return Base64.isBase64(base64Str);
+    }
+
+    /**
+     * 检测给定Class<?>中是否包含指定的方法
+     *
+     * @param targetClazz 目标类
+     * @param methodName  方法名字
+     * @param params      方法参数
+     * @return true 存在 false 不存在
+     */
+    public static boolean checkMethodExists(Class<?> targetClazz, String methodName, Object... params) {
+        Class<?>[] classes = new Class<?>[params.length];
+        for (int i = 0; i < params.length; i++) {
+            if (Objects.nonNull(params[i])) {
+                classes[i] = params[i].getClass();
+            }
+        }
+        Method method = ReflectUtil.getMethod(targetClazz, methodName, classes);
+        return ObjectUtil.isNotNull(method);
     }
 }

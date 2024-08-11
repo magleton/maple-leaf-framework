@@ -18,6 +18,7 @@ import cn.maple.core.framework.model.GXBaseModel;
 import cn.maple.core.framework.service.GXBusinessService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -292,6 +293,15 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
     R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns);
 
     /**
+     * 通过条件获取一条数据
+     *
+     * @param condition 搜索条件
+     * @param columns   字段集合
+     * @return 一条数据
+     */
+    R findOneByCondition(List<GXCondition<?>> condition, Set<String> columns, Object extraData);
+
+    /**
      * 创建或者更新
      *
      * @param entity 数据实体
@@ -353,6 +363,27 @@ public interface GXMyBatisBaseService<P extends GXMyBatisRepository<M, T, D, ID>
      * @return 新数据ID
      */
     ID copyOneData(List<GXCondition<?>> copyCondition, Dict replaceData);
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, @NotNull Dict extraData);
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData);
 
     /**
      * 根据条件软(逻辑)删除

@@ -2,7 +2,7 @@ package cn.maple.core.framework.service;
 
 import cn.hutool.core.lang.Dict;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 调用指定服务进行验证

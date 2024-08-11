@@ -39,7 +39,7 @@ public class GXTokenConstant {
     /**
      * 用户token的名字
      */
-    public static final String USER_TOKEN_NAME = "user-token";
+    public static final String USER_TOKEN_NAME = "token";
 
     /**
      * 用户登录用的token标签
@@ -47,22 +47,17 @@ public class GXTokenConstant {
     public static final String TOKEN_USER_ID_FIELD_NAME = "userId";
 
     /**
-     * Admin登录用的token标签
+     * 用户登录用的token标签
      */
-    public static final String TOKEN_ADMIN_ID_FIELD_NAME = "adminId";
+    public static final String TOKEN_USER_NAME_FIELD_NAME = "userName";
 
     /**
-     * 管理员token的名字
+     * 管理端缓存桶的名字(redisson)
      */
-    public static final String ADMIN_TOKEN_NAME = "admin-token";
+    public static final String MANAGER_CACHE_BUCKET_NAME = "admin-cache-bucket";
 
     /**
-     * ADMIN端缓存桶的名字(redisson)
-     */
-    public static final String ADMIN_CACHE_BUCKET_NAME = "admin-cache-bucket";
-
-    /**
-     * C端客户TOKEN加密的KEY
+     * C端(用户端)客户TOKEN加密的KEY
      */
     public static final String USER_TOKEN_SECRET_KEY = "6A3EDD4768E3669B5";
 
@@ -99,6 +94,12 @@ public class GXTokenConstant {
      * 平台
      */
     public static final String PLATFORM = "platform";
+
+    /**
+     * 来源平台 比如 从订单服务到商品服务
+     * 主要用于token在不同平台生成时 解密token的密钥不统一的场景
+     */
+    public static final String FROM_PLATFORM = "from_platform";
 
     private GXTokenConstant() {
     }

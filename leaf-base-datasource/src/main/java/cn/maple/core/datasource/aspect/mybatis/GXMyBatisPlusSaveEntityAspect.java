@@ -31,10 +31,10 @@ import java.lang.reflect.Type;
 public class GXMyBatisPlusSaveEntityAspect {
     @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* insert(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布创建数据库事件开始");
+        log.debug("发布创建数据库事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布创建数据库事件结束");
+        log.debug("发布创建数据库事件结束");
         return proceed;
     }
 

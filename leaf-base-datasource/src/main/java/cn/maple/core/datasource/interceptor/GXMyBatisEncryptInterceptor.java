@@ -2,13 +2,14 @@ package cn.maple.core.datasource.interceptor;
 
 import cn.maple.core.framework.annotation.GXSensitiveData;
 import cn.maple.core.framework.service.GXSensitiveDataEncryptService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.plugin.*;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.util.Objects;
@@ -30,7 +31,8 @@ public class GXMyBatisEncryptInterceptor implements Interceptor {
         // 若指定ResultSetHandler ，这里则能强转为ResultSetHandler
         ParameterHandler parameterHandler = (ParameterHandler) invocation.getTarget();
         // 获取参数对像，即 mapper 中 paramsType 的实例
-        Field parameterField = parameterHandler.getClass().getDeclaredField("parameterObject");
+        //Field parameterField = parameterHandler.getClass().getDeclaredField("parameterObject");
+        Field parameterField = ReflectionUtils.findField(parameterHandler.getClass() ,  "parameterObject");
         parameterField.setAccessible(true);
         // 取出实例
         Object parameterObject = parameterField.get(parameterHandler);

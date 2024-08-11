@@ -20,22 +20,22 @@ public interface GXBaseMapper<T extends GXBaseModel> extends BaseMapper<T> {
     Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> fieldList, List<GXCondition<?>> condition);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "checkRecordIsExists")
-    Integer checkRecordIsExists(GXBaseQueryParamInnerDto queryParamInnerDto);
+    Integer checkRecordIsExists(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findOneByCondition")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
+    Dict findOneByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "findByCondition")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryInnerDto);
+    List<Dict> findByCondition(GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     @SelectProvider(type = GXBaseBuilder.class, method = "paginate")
     @Results(@Result(property = "ext", column = "ext", typeHandler = JacksonTypeHandler.class))
-    List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto dbQueryInnerDto);
+    List<Dict> paginate(IPage<Dict> page, GXBaseQueryParamInnerDto dbQueryParamInnerDto);
 
     @UpdateProvider(type = GXBaseBuilder.class, method = "deleteSoftCondition")
-    Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition);
+    Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData);
 
     @DeleteProvider(type = GXBaseBuilder.class, method = "deleteCondition")
     Integer deleteCondition(String tableName, List<GXCondition<?>> condition);

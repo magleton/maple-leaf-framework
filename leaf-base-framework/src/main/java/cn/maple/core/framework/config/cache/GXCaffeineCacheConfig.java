@@ -7,7 +7,8 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -40,10 +41,13 @@ public class GXCaffeineCacheConfig {
         });
 
         // 新增默认的缓存
-        CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "BIZ-CACHE").forEach(name -> {
+        List<String> defaultCacheNames = CollUtil.newArrayList("FRAMEWORK-CACHE", "__DEFAULT__", "UNIVERSAL-CACHE", "BIZ-BACKEND-APP-CACHE", "BIZ-FRONTEND-APP-CACHE");
+        defaultCacheNames.forEach(name -> {
             Caffeine<Object, Object> caffeine = Caffeine.newBuilder().initialCapacity(50).expireAfterAccess(86400, TimeUnit.SECONDS).maximumSize(10000).softValues().recordStats();
             caffeineCacheManager.registerCustomCache(name, caffeine.build());
         });
+        // 设置caffeineCacheManager.dynamic=false 设置为false即不能自动创建cache
+        caffeineCacheManager.setCacheNames(CollUtil.newArrayList("__IGNORE-CACHE__"));
         return caffeineCacheManager;
     }
 }

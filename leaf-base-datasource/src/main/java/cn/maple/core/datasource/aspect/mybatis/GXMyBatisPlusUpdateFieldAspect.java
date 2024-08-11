@@ -35,10 +35,10 @@ import java.util.List;
 public class GXMyBatisPlusUpdateFieldAspect {
     @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* updateFieldByCondition(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布更新数据库指定字段事件开始");
+        log.debug("发布更新数据库指定字段事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布更新数据库指定字段事件结束");
+        log.debug("发布更新数据库指定字段事件结束");
         return proceed;
     }
 

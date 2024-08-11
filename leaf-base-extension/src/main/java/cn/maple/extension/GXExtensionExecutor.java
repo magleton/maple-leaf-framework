@@ -1,11 +1,12 @@
 package cn.maple.extension;
 
+import cn.hutool.http.HttpStatus;
+import cn.maple.extension.exception.GXExtensionException;
 import cn.maple.extension.register.GXAbstractComponentExecutor;
-import cn.maple.core.framework.exception.GXBusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * ExtensionExecutor 扩展执行器
@@ -43,25 +44,26 @@ public class GXExtensionExecutor extends GXAbstractComponentExecutor {
 
         log.debug("BizScenario in locateExtension is : " + bizScenario.getUniqueIdentity());
 
-        // 1、 try with full namespace
+        // 1、 first try with full namespace
         extension = firstTry(targetClz, bizScenario);
         if (extension != null) {
             return extension;
         }
 
-        // 2、 try with default scenario
+        // 2、 second try with default scenario
         extension = secondTry(targetClz, bizScenario);
         if (extension != null) {
             return extension;
         }
 
-        // 3、 try with default use case + default scenario
+        // 3、 third try with default use case + default scenario
         extension = defaultUseCaseTry(targetClz, bizScenario);
         if (extension != null) {
             return extension;
         }
 
-        throw new GXBusinessException("Can not find extension with ExtensionPoint: " + targetClz + " BizScenario:" + bizScenario.getUniqueIdentity());
+        String errMessage = "Can not find extension with ExtensionPoint: " + targetClz + " BizScenario:" + bizScenario.getUniqueIdentity();
+        throw new GXExtensionException(errMessage, HttpStatus.HTTP_NOT_FOUND);
     }
 
     /**

@@ -3,8 +3,8 @@ package cn.maple.core.framework.web.interceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 登录用户验证拦截器

@@ -4,17 +4,21 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.extra.servlet.JakartaServletUtil;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXTokenConstant;
+import cn.maple.core.framework.exception.GXBusinessException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -106,7 +110,7 @@ public class GXCurrentRequestContextUtils {
             LOG.info("本次请求是RPC调用,没有HttpServletRequest对象");
             return null;
         }
-        return ServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
+        return JakartaServletUtil.getHeader(request, headerName, CharsetUtil.UTF_8);
     }
 
     /**
@@ -174,6 +178,10 @@ public class GXCurrentRequestContextUtils {
      * @return Dict
      */
     public static Dict getLoginCredentials(String tokenName, String secretKey) {
+        // 如果是RPC调用 直接返回
+        if (isRPC()) {
+            return Dict.create();
+        }
         // 减少token的二次解密操作 在GXSSOAuthorizationInterceptor拦截器中已经解密过一次并且已经将解密之后的token放入了当前请求对象中
         HttpServletRequest request = getHttpServletRequest();
         assert request != null;
@@ -188,6 +196,11 @@ public class GXCurrentRequestContextUtils {
         String token = getHeader(tokenName);
         if (CharSequenceUtil.isBlank(token)) {
             LOG.error("{}不存在", tokenName);
+            return Dict.create();
+        }
+        // 判断token是否是一个正确的base64字符串
+        if (!GXCommonUtils.isBase64(token)) {
+            LOG.error("token不是一个有效的base64字符串!");
             return Dict.create();
         }
         String s = GXAuthCodeUtils.authCodeDecode(token, secretKey);
@@ -205,7 +218,7 @@ public class GXCurrentRequestContextUtils {
     public static String getClientIP(HttpServletRequest httpServletRequest) {
         String ip = "";
         if (null != httpServletRequest) {
-            ip = ServletUtil.getClientIP(httpServletRequest);
+            ip = JakartaServletUtil.getClientIP(httpServletRequest);
         }
         return ip;
     }
@@ -273,5 +286,59 @@ public class GXCurrentRequestContextUtils {
     public static boolean isHTTP() {
         HttpServletRequest request = getHttpServletRequest();
         return Objects.nonNull(request);
+    }
+
+    /**
+     * 判断token是否存在
+     * 在有些场景下 不需要登录
+     * 所以token是不存在
+     *
+     * @return true 存在 false 不存在
+     */
+    public static boolean tokenExists() {
+        if (isHTTP()) {
+            HttpServletRequest httpServletRequest = getHttpServletRequest();
+            assert httpServletRequest != null;
+            String header = JakartaServletUtil.getHeader(httpServletRequest, GXTokenConstant.TOKEN_NAME, StandardCharsets.UTF_8);
+            return Objects.nonNull(header);
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否是IP　V4内网IP
+     *
+     * @param ip IP地址
+     * @return 是否IPV4内网IP
+     */
+    public static boolean isInternalIP(byte[] ip) {
+        if (ip.length != 4) {
+            throw new GXBusinessException("illegal ipv4 bytes", HttpStatus.HTTP_INTERNAL_ERROR);
+        }
+        //10.0.0.0~10.255.255.255
+        //172.16.0.0~172.31.255.255
+        //192.168.0.0~192.168.255.255
+        if (ip[0] == (byte) 10) {
+            return true;
+        } else if (ip[0] == (byte) 172) {
+            return ip[1] >= (byte) 16 && ip[1] <= (byte) 31;
+        } else if (ip[0] == (byte) 192) {
+            return ip[1] == (byte) 168;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否是IP　V6内网IP
+     *
+     * @param inetAddr 网络地址
+     * @return 是否IP　V6内网IP
+     */
+    public static boolean isInternalV6IP(InetAddress inetAddr) {
+        // Site local ipv6 address: fec0:xx:xx...
+        return inetAddr.isAnyLocalAddress() // Wild card ipv6
+                || inetAddr.isLinkLocalAddress() // Single broadcast ipv6 address: fe80:xx:xx...
+                || inetAddr.isLoopbackAddress() //Loopback ipv6 address
+                || inetAddr.isSiteLocalAddress();
     }
 }

@@ -2,9 +2,10 @@ package cn.maple.core.datasource.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.maple.core.framework.constant.GXBuilderConstant;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.dto.inner.GXBaseQueryParamInnerDto;
 import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.GXJoinTypeEnums;
@@ -12,13 +13,16 @@ import cn.maple.core.framework.dto.inner.GXUnionTypeEnums;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.dto.inner.condition.GXConditionEQ;
 import cn.maple.core.framework.dto.inner.condition.GXConditionExclusionDeletedField;
+import cn.maple.core.framework.dto.inner.condition.GXConditionIsNULL;
 import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
-import cn.maple.core.framework.util.GXCommonUtils;
+import cn.maple.core.framework.exception.GXDBConditionException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -209,8 +213,13 @@ public interface GXBaseBuilder {
         List<String> lastWheres = new ArrayList<>();
         condition.forEach(c -> {
             if (!GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())) {
+                if (ObjectUtil.isNull(c.getFieldValue()) && !GXConditionIsNULL.class.isAssignableFrom(c.getClass())) {
+                    String msg = CharSequenceUtil.format("数据查询条件错误【查询字段{}.{}的值是null】", c.getTableNameAlias(), c.getFieldExpression());
+                    throw new GXDBConditionException(msg);
+                }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
+                    SqlInjectionUtils.check(str);
                     lastWheres.add(str);
                 }
             }
@@ -224,11 +233,13 @@ public interface GXBaseBuilder {
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName 表名
-     * @param condition 删除条件
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
      * @return SQL语句
      */
-    static String deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
+    static String deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
         String keyProperty = tableInfo.getKeyProperty();
         if (CharSequenceUtil.isEmpty(keyProperty)) {
@@ -238,6 +249,21 @@ public interface GXBaseBuilder {
         LOGGER.info("deleteSoftCondition方法中的{}表的主键名字{}", tableName, keyProperty);
         SQL sql = new SQL().UPDATE(tableName);
         sql.SET(CharSequenceUtil.format("is_deleted = {}", keyProperty), CharSequenceUtil.format("deleted_at = {}", DateUtil.currentSeconds()));
+        if (CollUtil.isNotEmpty(updateFieldList)) {
+            for (GXUpdateField<?> field : updateFieldList) {
+                sql.SET(field.updateString());
+            }
+        }
+        if (CharSequenceUtil.isNotBlank(extraData.getStr("deletedBy"))) {
+            List<TableFieldInfo> fieldList = tableInfo.getFieldList();
+            for (TableFieldInfo fieldInfo : fieldList) {
+                String column = fieldInfo.getColumn();
+                if (CharSequenceUtil.equalsIgnoreCase("deleted_by", column)) {
+                    sql.SET(CharSequenceUtil.format("deleted_by = '{}'", extraData.getStr("deletedBy")));
+                    break;
+                }
+            }
+        }
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
@@ -259,20 +285,6 @@ public interface GXBaseBuilder {
             sql.WHERE(CharSequenceUtil.format("{}.is_deleted = {}", tableName, 0));
         }
         return sql.toString();
-    }
-
-    /**
-     * 获取数据库未删除的值
-     *
-     * @return Object
-     */
-    @Deprecated
-    static Object getIsNotDeletedValue() {
-        String notDeletedValueType = GXCommonUtils.getEnvironmentValue("notDeletedValueType", String.class, "");
-        if (CharSequenceUtil.equalsIgnoreCase("string", notDeletedValueType)) {
-            return GXCommonConstant.NOT_STR_DELETED_MARK;
-        }
-        return GXCommonConstant.NOT_INT_DELETED_MARK;
     }
 
     /**
@@ -301,6 +313,13 @@ public interface GXBaseBuilder {
         String unionSql = String.join("\n " + unionTypeEnums.getUnionType() + " \n", unionSqlLst);
         masterQueryParamInnerDto.setTableName("(" + unionSql + ")");
         masterQueryParamInnerDto.setTableNameAlias("tmp");
+        if (CollUtil.isNotEmpty(masterQueryParamInnerDto.getCondition())) {
+            masterQueryParamInnerDto.getCondition().forEach(condition -> {
+                if (!condition.getTableNameAlias().equalsIgnoreCase("tmp")) {
+                    condition.setTableNameAlias("tmp");
+                }
+            });
+        }
         return GXBaseBuilder.findByCondition(masterQueryParamInnerDto);
     }
 

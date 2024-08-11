@@ -45,10 +45,10 @@ import java.util.Map;
 public class GXMyBatisPlusUpdateEntityAspect {
     @Around("target(cn.maple.core.datasource.mapper.GXBaseMapper) && execution(* update(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("发布更新前的事件开始");
+        log.debug("发布更新前的事件开始");
         Object proceed = point.proceed();
         publishEvent(point);
-        log.info("发布更新后的事件结束");
+        log.debug("发布更新后的事件结束");
         return proceed;
     }
 

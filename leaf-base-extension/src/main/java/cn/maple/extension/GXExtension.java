@@ -5,6 +5,7 @@ import java.lang.annotation.*;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
+@Repeatable(GXExtensions.class)
 public @interface GXExtension {
     /**
      * 业务ID

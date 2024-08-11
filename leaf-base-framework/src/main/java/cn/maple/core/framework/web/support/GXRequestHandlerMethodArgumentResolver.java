@@ -4,25 +4,23 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.annotation.GXRequestBody;
-import cn.maple.core.framework.code.GXHttpStatusCode;
+import cn.maple.core.framework.code.GXDefaultResultStatusCode;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.core.framework.util.GXValidatorUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -30,17 +28,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-@Component
-public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+//@Component
+@Deprecated(forRemoval = true, since = "4.0.5")
+public class GXRequestHandlerMethodArgumentResolver implements GXCustomerHandlerMethodArgumentResolver {
     /**
      * 请求中的参数名字
      */
     public static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
-
-    /**
-     * JACKSON数据转换对象
-     */
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 进行参数验证之前对数据进行修复的方法名字
@@ -61,13 +55,6 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GXRequestHandlerMethodArgumentResolver.class);
 
-    /**
-     * 给OBJECT_MAPPER设置属性
-     */
-    static {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(GXRequestBody.class);
@@ -82,13 +69,13 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
         }*/
         if (JSONUtil.isTypeJSONArray(body)) {
             Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) parameter.getGenericParameterType()).getActualTypeArguments()[0];
-            List<?> bean = jsonToTargetList(body, actualTypeArgument);
-            bean.forEach(dto -> dealSingleBean(dto, parameter, actualTypeArgument));
+            List<?> bean = toList(body, actualTypeArgument);
+            bean.forEach(dto -> handleBean(dto, parameter, actualTypeArgument));
             return bean;
         }
-        Object bean = jsonToTarget(body, parameterType);
+        Object bean = toBean(body, parameterType);
         if (Objects.nonNull(bean)) {
-            dealSingleBean(bean, parameter, parameterType);
+            handleBean(bean, parameter, parameterType);
         }
         return bean;
     }
@@ -100,7 +87,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param parameter     请求参数对象
      * @param parameterType 请求参数类型
      */
-    private void dealSingleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
+    private void handleBean(Object bean, MethodParameter parameter, Class<?> parameterType) {
         GXRequestBody requestBody = parameter.getParameterAnnotation(GXRequestBody.class);
         final String value = Objects.requireNonNull(requestBody).value();
 
@@ -158,7 +145,7 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
             }
         }
         if (!JSONUtil.isTypeJSON(jsonBody)) {
-            throw new GXBusinessException(GXHttpStatusCode.REQUEST_JSON_NOT_BODY);
+            throw new GXBusinessException(GXDefaultResultStatusCode.REQUEST_JSON_NOT_BODY);
         }
         return jsonBody;
     }
@@ -170,9 +157,11 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param beanType 对象中的object类型
      * @return 目标对象
      */
-    private <T> T jsonToTarget(String jsonData, Class<T> beanType) throws JsonProcessingException {
+    private <T> T toBean(String jsonData, Class<T> beanType) throws JsonProcessingException {
         try {
-            return OBJECT_MAPPER.readValue(jsonData, beanType);
+            ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
+            assert objectMapper != null;
+            return objectMapper.readValue(jsonData, beanType);
         } catch (Exception e) {
             LOGGER.error("Servlet请求体参数转换对象失败");
             throw e;
@@ -186,12 +175,14 @@ public class GXRequestHandlerMethodArgumentResolver implements HandlerMethodArgu
      * @param beanType 目标类型
      * @return 列表
      */
-    public <T> List<T> jsonToTargetList(String jsonData, Class<T> beanType) throws JsonProcessingException {
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
+    public <T> List<T> toList(String jsonData, Class<T> beanType) throws JsonProcessingException {
+        ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
+        assert objectMapper != null;
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, beanType);
         try {
-            return OBJECT_MAPPER.readValue(jsonData, javaType);
+            return objectMapper.readValue(jsonData, javaType);
         } catch (Exception e) {
-            LOGGER.error("Servlet请求体参数转换对象失败");
+            LOGGER.error("Servlet请求体参数转换对象列表失败");
             throw e;
         }
     }

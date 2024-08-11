@@ -143,8 +143,8 @@
     <Loggers>
         <!-- 根日志设置 -->
         <Root level="all"> <!-- 必须设置为比 Logger中配置的级别低 -->
-            <AppenderRef ref="allFileAppender" level="all"/>
-            <AppenderRef ref="consoleAppender" level="debug"/>
+            <AppenderRef ref="allFileAppender" level="info"/>
+            <AppenderRef ref="consoleAppender" level="trace"/>
             <AppenderRef ref="debugFileAppender" level="debug"/>
             <AppenderRef ref="infoFileAppender" level="info"/>
             <AppenderRef ref="warnFileAppender" level="warn"/>
@@ -152,13 +152,23 @@
             <AppenderRef ref="errorJsonAppender" level="error"/>
         </Root>
 
+        <!--ES 日志信息-->
+        <Logger name="org.elasticsearch.client.RequestLogger" level="trace"/>
+        <Logger name="org.elasticsearch" level="info"/>
         <!--spring日志-->
-        <Logger name="org.springframework" level="info"/>
+        <Logger name="org.springframework" level="debug"/>
+        <!--alibaba日志-->
+        <Logger name="com.alibaba" level="info"/>
+        <!--apache日志-->
+        <Logger name="org.apache" level="info"/>
+        <!--redisson日志-->
+        <Logger name="org.redisson" level="info"/>
+        <!--netty-->
+        <Logger name="io.netty" level="info"/>
         <!--druid数据源日志-->
         <Logger name="druid.sql" level="info"/>
         <!-- mybatis日志 -->
         <Logger name="com.p6spy" level="info"/>
-        <Logger name="org.apache.ibatis" level="info"/>
         <Logger name="com.baomidou" level="info"/>
         <Logger name="org.hibernate" level="warn"/>
         <!-- maple框架 -->

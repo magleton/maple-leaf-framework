@@ -23,7 +23,7 @@ public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         String createdBy = (String) metaObject.getValue("createdBy");
-        if (CharSequenceUtil.isBlank(createdBy)) {
+        if (CharSequenceUtil.isEmpty(createdBy)) {
             createdBy = "unknown";
             GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
             if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {
@@ -41,7 +41,7 @@ public class GXAutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         String updatedBy = (String) metaObject.getValue("updatedBy");
-        if (CharSequenceUtil.isBlank(updatedBy)) {
+        if (CharSequenceUtil.isEmpty(updatedBy)) {
             updatedBy = "unknown";
             GXMyBatisAutoFillMetaObjectService myBatisAutoFillMetaObjectService = GXSpringContextUtils.getBean(GXMyBatisAutoFillMetaObjectService.class);
             if (Objects.nonNull(myBatisAutoFillMetaObjectService)) {

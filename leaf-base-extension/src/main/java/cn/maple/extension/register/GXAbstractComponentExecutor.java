@@ -35,8 +35,8 @@ public abstract class GXAbstractComponentExecutor {
      * @param exeFunction         执行函数
      * @param <T>                 函数参数类型
      */
-    public <T, R> void execute(GXExtensionCoordinate extensionCoordinate, Function<T, R> exeFunction) {
-        execute(extensionCoordinate.getExtensionPointClass(), extensionCoordinate.getBizScenario(), exeFunction);
+    public <T, R> R execute(GXExtensionCoordinate extensionCoordinate, Function<T, R> exeFunction) {
+        return execute(extensionCoordinate.getExtensionPointClass(), extensionCoordinate.getBizScenario(), exeFunction);
     }
 
     /**

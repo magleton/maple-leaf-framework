@@ -6,12 +6,12 @@ import cn.hutool.core.util.TypeUtil;
 import cn.maple.core.framework.annotation.GXSensitiveData;
 import cn.maple.core.framework.service.GXSensitiveDataDecryptService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import javax.annotation.Resource;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;

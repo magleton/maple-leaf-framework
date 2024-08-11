@@ -4,8 +4,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.util.GXTraceIdContextUtils;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 
 public class GXBaseRequestLoggingFilter extends AbstractRequestLoggingFilter {

@@ -9,7 +9,7 @@ import cn.maple.extension.test.customer.domain.CustomerEntity;
 import cn.maple.extension.test.customer.domain.SourceType;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @GXExtension(bizId = GXConstants.BIZ_1)
 @Component

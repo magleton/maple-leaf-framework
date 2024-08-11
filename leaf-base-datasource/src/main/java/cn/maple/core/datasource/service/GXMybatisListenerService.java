@@ -30,8 +30,8 @@ public interface GXMybatisListenerService<T> {
     /**
      * 更新字段的监听器
      *
-     * @param updateFieldData 更新的字段信息
-     * @param conditionFieldData  更新条件
+     * @param updateFieldData    更新的字段信息
+     * @param conditionFieldData 更新条件
      */
     default void updateFieldListener(Dict updateFieldData, Dict conditionFieldData) {
         LOG.info("请自定义实现updateFieldListener监听逻辑");
@@ -44,5 +44,14 @@ public interface GXMybatisListenerService<T> {
      */
     default void deleteSoftListener(Dict data) {
         LOG.info("请自定义实现deleteSoftListener监听逻辑");
+    }
+
+    /**
+     * 批量新增与修改监听器
+     *
+     * @param data 新增与修改的数据
+     */
+    default void saveBatchListener(Dict data) {
+        LOG.info("请自定义实现saveBatchListener监听逻辑");
     }
 }

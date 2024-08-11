@@ -27,16 +27,6 @@ public class GXCommonConstant {
     public static final String COMMON_ENCRYPT_KEY = "B78D32BTR1CHEN15AC1F19C46A9B533986";
 
     /**
-     * 未删除的标识值,整形类型
-     */
-    public static final Integer NOT_INT_DELETED_MARK = 0;
-
-    /**
-     * 未删除的标识值,字符串类型
-     */
-    public static final String NOT_STR_DELETED_MARK = "'0'";
-
-    /**
      * 日志格式
      */
     public static final String SHORT_LOGGER_FORMAT = "线程 : {} --> 描述信息 : {}";
@@ -45,7 +35,7 @@ public class GXCommonConstant {
      * 服务运行的环境
      * 个人开发环境
      */
-    public static final String RUN_ENV_LOCAL = "dev";
+    public static final String RUN_ENV_LOCAL = "local";
 
     /**
      * 服务运行的环境
@@ -99,13 +89,13 @@ public class GXCommonConstant {
      * 部署环境的环境变量标识头名字
      * 该字段头主要是为了限制部署环境的一致性
      */
-    public static final String DEPLOY_ENV_HEADER_NAME = "DEPLOY-ENV";
+    public static final String DEPLOY_ENV_HEADER_NAME = "DEPLOY_ENV";
 
     /**
-     * 部署环境的代理标识头名字 ，eg : NGINX  proxy_set_header  DEPLOY-REQUEST-ENV  "prod";
+     * 部署环境的代理标识头名字 ，eg : NGINX  proxy_set_header  DEPLOY_REQUEST_ENV  "prod";
      * 该字段头主要是为了限制部署环境的一致性
      */
-    public static final String DEPLOY_REQUEST_ENV_HEADER_NAME = "DEPLOY-REQUEST-ENV";
+    public static final String DEPLOY_REQUEST_ENV_HEADER_NAME = "DEPLOY_REQUEST_ENV";
 
     /**
      * 拦截器判断后设置 Token至当前请求<br>

@@ -2,8 +2,15 @@ server:
   port: 59999
   servlet:
     context-path: /
-  shutdown: graceful
+  shutdown: graceful # 开启优雅停机
 spring:
+  application:
+    name: maple
+  threads:
+    virtual:
+      enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 60s # 最大等待时间 默认30s
   servlet:
     multipart:
       max-request-size: 10MB
@@ -73,10 +80,14 @@ mybatis-plus:
       logic-delete-value: id
       logic-not-delete-value: 0
       column-format: "%s"
+    sequence: # 解决MyBatis-Plus内置雪花算法主键重复问题
+      worker-id: ${random.int(1,31)}
+      datacenter-id: ${random.int(1,31)}
   # 原生配置
   configuration:
     map-underscore-to-camel-case: true
-    cache-enabled: false
+    cache-enabled: true # 开启二级缓存
+    local-cache-scope: statement
     call-setters-on-nulls: true
     aggressive-lazy-loading: false
     lazy-loading-enabled: false
@@ -85,6 +96,7 @@ mybatis-plus:
 # 是否开启MyBatis-Plus的默认插件
 maple:
   framework:
+    version: @leaf.framework.version@ # 读取pom.xml文件中的properties节中的配置信息
     enable:
       file-upload: true #  启用文件删除服务
       sql-illegal: true  # 开启sql性能规范插件

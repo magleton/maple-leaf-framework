@@ -1,10 +1,7 @@
 package cn.maple.core.datasource.listener;
 
 import cn.hutool.core.lang.Dict;
-import cn.maple.core.datasource.event.GXMyBatisModelDeleteSoftEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelSaveEntityEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelUpdateEntityEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelUpdateFieldEvent;
+import cn.maple.core.datasource.event.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -53,5 +50,15 @@ public class GXMyBatisAsyncListener implements GXMyBatisBaseListener {
     @EventListener(condition = "#root.event.eventType.equals(T(cn.maple.core.datasource.enums.GXModelEventNamingEnums).ASYNC_DELETE_SOFT.eventType)")
     public void listenerDeleteSoft(GXMyBatisModelDeleteSoftEvent<Dict> deleteSoftEvent) {
         GXMyBatisBaseListener.super.listenerDeleteSoft(deleteSoftEvent);
+    }
+
+    /**
+     * 监听批量新增与更新事件
+     *
+     * @param saveBatchEntityEvent 事件对象
+     */
+    @EventListener(condition = "#root.event.eventType.equals(T(cn.maple.core.datasource.enums.GXModelEventNamingEnums).ASYNC_SAVE_BATCH_ENTITY.eventType)")
+    public void listenerSaveBatch(GXMyBatisModelSaveBatchEntityEvent<Dict> saveBatchEntityEvent) {
+        GXMyBatisBaseListener.super.listenerSaveBatch(saveBatchEntityEvent);
     }
 }

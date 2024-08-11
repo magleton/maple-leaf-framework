@@ -15,6 +15,9 @@ public enum GXApplicationContextSingleton {
      */
     private static final Logger LOG = LoggerFactory.getLogger(GXApplicationContextSingleton.class);
 
+    /**
+     * Spring应用上下文环境
+     */
     ApplicationContext applicationContext;
 
     GXApplicationContextSingleton() {

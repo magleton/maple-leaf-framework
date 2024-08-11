@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
      * @param dbQueryParamInnerDto 查询条件
      * @return GXPagination
      */
+    @SneakyThrows
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto dbQueryParamInnerDto) {
         IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(dbQueryParamInnerDto.getPage(), dbQueryParamInnerDto.getPageSize());
@@ -52,7 +54,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (CharSequenceUtil.isBlank(dbQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
             dbQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        // TODO 后期改为直接调用
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, dbQueryParamInnerDto.getClass());
         if (Objects.nonNull(mapperMethod)) {
             final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, dbQueryParamInnerDto);
@@ -75,6 +76,7 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
      * @param unionTypeEnums             union的类型
      * @return GXPagination
      */
+    @SneakyThrows
     @Override
     public GXPaginationResDto<Dict> paginate(GXBaseQueryParamInnerDto masterQueryParamInnerDto, List<GXBaseQueryParamInnerDto> unionQueryParamInnerDtoLst, GXUnionTypeEnums unionTypeEnums) {
         IPage<Dict> iPage = GXDBCommonUtils.constructPageObject(masterQueryParamInnerDto.getPage(), masterQueryParamInnerDto.getPageSize());
@@ -83,7 +85,6 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
         if (CharSequenceUtil.isBlank(masterQueryParamInnerDto.getRawSQL()) && Objects.isNull(fieldSet)) {
             masterQueryParamInnerDto.setColumns(CollUtil.newHashSet("*"));
         }
-        // TODO 后期改为直接调用
         Method mapperMethod = ReflectUtil.getMethod(baseMapper.getClass(), mapperMethodName, IPage.class, masterQueryParamInnerDto.getClass(), unionQueryParamInnerDtoLst.getClass(), unionTypeEnums.getClass());
         if (Objects.nonNull(mapperMethod)) {
             final List<Dict> records = ReflectUtil.invoke(baseMapper, mapperMethod, iPage, masterQueryParamInnerDto, unionQueryParamInnerDtoLst, unionTypeEnums);
@@ -215,13 +216,28 @@ public class GXMyBatisDao<M extends GXBaseMapper<T>, T extends GXBaseModel, ID e
     /**
      * 根据条件软(逻辑)删除
      *
-     * @param tableName 表名
-     * @param condition 删除条件
+     * @param tableName       表名
+     * @param updateFieldList 软删除时需要同时更新的字段
+     * @param condition       删除条件
+     * @param extraData       额外数据
      * @return 影响行数
      */
     @Override
-    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition) {
-        return baseMapper.deleteSoftCondition(tableName, condition);
+    public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
+        return baseMapper.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
+    }
+
+    /**
+     * 根据条件软(逻辑)删除
+     *
+     * @param tableName 表名
+     * @param condition 删除条件
+     * @param extraData 额外数据
+     * @return 影响行数
+     */
+    @Override
+    public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
+        return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
     /**

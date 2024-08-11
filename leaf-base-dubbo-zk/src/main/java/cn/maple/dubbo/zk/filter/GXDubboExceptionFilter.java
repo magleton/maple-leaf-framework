@@ -31,6 +31,11 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                     return;
                 }
 
+                // 如果是MyBatisSystemException异常 直接返回
+                if (exception.getClass().getCanonicalName().equalsIgnoreCase("org.mybatis.spring.MyBatisSystemException")) {
+                    return;
+                }
+
                 // (如果触发了Sentinel的限制规则,则直接抛异常)deal GXSentinelBlockException RuntimeException
                 if (exception.getMessage().equals("SentinelBlockException: FlowException")) {
                     Dict data = Dict.create().set("methodName", invocation.getMethodName())
@@ -70,7 +75,7 @@ public class GXDubboExceptionFilter extends ExceptionFilter {
                 }
                 //  (如果是jdk异常则直接抛异常) directly throw if it's JDK exception
                 String className = exception.getClass().getName();
-                if (className.startsWith("java.") || className.startsWith("javax.")) {
+                if (className.startsWith("java.") || className.startsWith("jakarta.")) {
                     return;
                 }
 

@@ -3,7 +3,7 @@ package cn.maple.core.framework.controller;
 import cn.hutool.core.codec.Base64;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.*;
 
 @SuppressWarnings("unused")

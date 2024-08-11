@@ -23,6 +23,7 @@
  */
 package cn.maple.core.datasource.handler.type.mybatis;
 
+import cn.maple.core.framework.util.GXSpringContextUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
@@ -34,18 +35,18 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 
 final class GXReaderWriter {
-
     private static final ObjectReader READER;
 
     private static final ObjectWriter WRITER;
 
     static {
-        ObjectMapper mapper = new ObjectMapper();
-        WRITER = mapper.writer();
-        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        mapper.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
-        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        READER = mapper.reader();
+        ObjectMapper objectMapper = GXSpringContextUtils.getBean(ObjectMapper.class);
+        assert objectMapper != null;
+        WRITER = objectMapper.writer();
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        READER = objectMapper.reader();
     }
 
     private GXReaderWriter() {

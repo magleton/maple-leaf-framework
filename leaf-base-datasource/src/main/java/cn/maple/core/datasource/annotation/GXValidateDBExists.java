@@ -2,9 +2,9 @@ package cn.maple.core.datasource.annotation;
 
 import cn.maple.core.datasource.service.GXValidateDBExistsService;
 import cn.maple.core.datasource.service.impl.GXValidateDBExistsValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +25,7 @@ public @interface GXValidateDBExists {
      *
      * @return String
      */
-    String message() default "{fieldName}对应的数据不存在或是参数不存在";
+    String message() default "{fieldName}对应的数据已经存在或是参数已经存在存在";
 
     /**
      * 分组验证
@@ -53,14 +53,14 @@ public @interface GXValidateDBExists {
      *
      * @return String
      */
-    String fieldName() default "id";
+    String fieldName();
 
     /**
      * 表名
      *
      * @return String
      */
-    String tableName() default "";
+    String tableName();
 
     /**
      * 附加的查询条件
@@ -78,4 +78,11 @@ public @interface GXValidateDBExists {
      * @return String
      */
     String spEL() default "";
+
+    /**
+     * 需要依赖的字段名字
+     *
+     * @return String[]
+     */
+    String[] dependOnFields() default {};
 }

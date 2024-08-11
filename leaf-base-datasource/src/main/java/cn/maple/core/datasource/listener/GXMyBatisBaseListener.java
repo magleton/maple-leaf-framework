@@ -5,10 +5,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.TypeUtil;
-import cn.maple.core.datasource.event.GXMyBatisModelDeleteSoftEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelSaveEntityEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelUpdateEntityEvent;
-import cn.maple.core.datasource.event.GXMyBatisModelUpdateFieldEvent;
+import cn.maple.core.datasource.event.*;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 
@@ -82,5 +79,20 @@ interface GXMyBatisBaseListener {
         }, param.getObj("listenerClazz"));
         Object bean = GXSpringContextUtils.getBean(listenerClazzName, listenerClazz);
         GXCommonUtils.reflectCallObjectMethod(bean, "deleteSoftListener", source);
+    }
+
+    /**
+     * 监听批量新增与更新事件
+     *
+     * @param saveBatchEntityEvent 事件对象
+     */
+    default void listenerSaveBatch(GXMyBatisModelSaveBatchEntityEvent<Dict> saveBatchEntityEvent) {
+        Dict source = saveBatchEntityEvent.getSource();
+        Dict param = saveBatchEntityEvent.getParam();
+        String listenerClazzName = CharSequenceUtil.lowerFirst(param.getStr("listenerClazzName"));
+        Class<?> listenerClazz = Convert.convert(new TypeReference<>() {
+        }, param.getObj("listenerClazz"));
+        Object bean = GXSpringContextUtils.getBean(listenerClazzName, listenerClazz);
+        GXCommonUtils.reflectCallObjectMethod(bean, "saveBatchListener", source);
     }
 }

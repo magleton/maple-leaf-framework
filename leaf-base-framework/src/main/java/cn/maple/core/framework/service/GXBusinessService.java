@@ -3,17 +3,20 @@ package cn.maple.core.framework.service;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.maple.core.framework.constant.GXTokenConstant;
 import cn.maple.core.framework.dto.res.GXBaseDBResDto;
 import cn.maple.core.framework.dto.res.GXBaseResDto;
 import cn.maple.core.framework.dto.res.GXPaginationResDto;
+import cn.maple.core.framework.exception.GXBeanNotExistsException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ClassUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -269,11 +272,11 @@ public interface GXBusinessService {
      * @param targetClass    返回的数据类型
      * @return R
      */
-    default <R> R getBackEndUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
+    default <R> R getManagerUserId(String tokenName, String tokenSecretKey, Class<R> targetClass) {
         if (Objects.isNull(tokenSecretKey)) {
             throw new GXBusinessException("请传递token密钥!");
         }
-        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_ADMIN_ID_FIELD_NAME, targetClass, tokenSecretKey);
+        return getLoginFieldFromToken(tokenName, GXTokenConstant.TOKEN_USER_ID_FIELD_NAME, targetClass, tokenSecretKey);
     }
 
     /**
@@ -283,8 +286,8 @@ public interface GXBusinessService {
      * @param targetClass    返回的数据类型
      * @return R
      */
-    default <R> R getBackEndUserId(String tokenSecretKey, Class<R> targetClass) {
-        return getBackEndUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
+    default <R> R getManagerUserId(String tokenSecretKey, Class<R> targetClass) {
+        return getManagerUserId(GXTokenConstant.TOKEN_NAME, tokenSecretKey, targetClass);
     }
 
     /**
@@ -385,5 +388,50 @@ public interface GXBusinessService {
     @SuppressWarnings("all")
     default Lock getCacheLock(String lockName) {
         return Objects.requireNonNull(GXSpringContextUtils.getBean(GXBaseCacheLockService.class)).getLock(lockName);
+    }
+
+    /**
+     * 获取登录用户的信息
+     *
+     * @return 登录用户的token
+     */
+    default Dict getLoginCredentials() {
+        try {
+            Class<?> tokenConfigServiceKlass = ClassUtils.forName("cn.maple.sso.service.GXTokenConfigService", ClassUtils.getDefaultClassLoader());
+            Object tokenConfigService = GXSpringContextUtils.getBean(tokenConfigServiceKlass);
+            if (ObjectUtil.isNull(tokenConfigService)) {
+                throw new GXBeanNotExistsException("'cn.maple.sso.service.GXTokenConfigService' Bean is not defined!");
+            }
+            String tokenSecret = (String) GXCommonUtils.reflectCallObjectMethod(tokenConfigService, "getTokenSecret");
+            return GXCurrentRequestContextUtils.getLoginCredentials(GXTokenConstant.TOKEN_NAME, tokenSecret);
+        } catch (ClassNotFoundException e) {
+            LOG.error("'cn.maple.sso.service.GXTokenConfigService' class not found! please import 'leaf-base-sso' module!");
+            return Dict.create();
+            //throw new GXBusinessException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 获取登录用户的ID
+     *
+     * @return 登录的用户ID
+     */
+    default Long getLoginUserId() {
+        Dict dict = getLoginCredentials();
+        return dict.getLong(GXTokenConstant.TOKEN_USER_ID_FIELD_NAME);
+    }
+
+    /**
+     * 获取用户登录的用户名名
+     *
+     * @return 登录的用户名
+     */
+    default String getLoginUserName() {
+        if (GXCurrentRequestContextUtils.isHTTP() && GXCurrentRequestContextUtils.tokenExists()) {
+            Dict dict = getLoginCredentials();
+            return dict.getStr(GXTokenConstant.TOKEN_USER_NAME_FIELD_NAME);
+        }
+        LOG.info("不是HTTP请求,不能获取登录的用户名!");
+        return "RPC_USER";
     }
 }

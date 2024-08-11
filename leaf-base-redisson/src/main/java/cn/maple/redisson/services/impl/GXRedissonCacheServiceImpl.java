@@ -1,12 +1,17 @@
 package cn.maple.redisson.services.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.maple.redisson.services.GXRedissonCacheService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -27,6 +32,12 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Object setCache(String bucketName, String key, Object value, int expired, TimeUnit timeUnit) {
+        if (CharSequenceUtil.length(bucketName) > 64) {
+            log.error("Redis的BucketName:{}太长,建议长度不超过64,请修改!", bucketName);
+        }
+        if (CharSequenceUtil.length(key) > 64) {
+            log.error("Redis的key:{}太长,建议长度不超过64,请修改!", key);
+        }
         return redissonClient.getMapCache(bucketName).put(key, value, expired, timeUnit);
     }
 
@@ -92,7 +103,12 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
      */
     @Override
     public Object deleteCache(String bucketName, String key) {
-        return redissonClient.getMapCache(bucketName).remove(key);
+        RMapCache<Object, Object> mapCache = redissonClient.getMapCache(bucketName);
+        if (Objects.nonNull(mapCache.get(key))) {
+            return mapCache.remove(key);
+        }
+        log.info("缓存key【{}】不存在", key);
+        return null;
     }
 
     /**
@@ -108,7 +124,7 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     }
 
     /**
-     * 跟新缓存有效时长
+     * 更新缓存有效时长
      *
      * @param bucketName       缓存桶名字
      * @param keyName          缓存key
@@ -164,5 +180,101 @@ public class GXRedissonCacheServiceImpl implements GXRedissonCacheService {
     @Override
     public boolean exists(String bucketName, String key) {
         return Objects.nonNull(redissonClient.getMapCache(bucketName).get(key));
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @param count      获取数量
+     * @param pattern    redis key pattern
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName, int count, String pattern) {
+        Assert.checkBetween(count, 1, 1000, "count必须在{}到{}之间.", 1, 1000);
+        count = NumberUtil.min(count, 1000);
+        RMapCache<Object, Object> rMapCache = redissonClient.getMapCache(bucketName);
+        Set<Object> keys;
+        if (CharSequenceUtil.isNotEmpty(pattern)) {
+            keys = rMapCache.keySet(pattern, count);
+        } else {
+            keys = rMapCache.keySet(count);
+        }
+        if (CollUtil.isEmpty(keys)) {
+            return Collections.emptyMap();
+        }
+        if (keys.size() > count) {
+            List<Object> sub = CollUtil.sub(keys, 0, count);
+            keys = CollUtil.newHashSet(sub);
+        }
+        return rMapCache.getAll(keys);
+    }
+
+    /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     */
+    public void setBucketAllData(String bucketName, Map<Object, Object> data) {
+        setBucketAllData(bucketName, data, 1000);
+    }
+
+    /**
+     * 批量设置缓存数据
+     *
+     * @param bucketName 存储桶的名字
+     * @param data       存储的数据
+     * @param batchSize  允许插入的数据
+     */
+    @Override
+    public void setBucketAllData(String bucketName, Map<Object, Object> data, int batchSize) {
+        Assert.checkBetween(batchSize, 1, 2000, "count必须在{}到{}之间.", 1, 2000);
+        batchSize = NumberUtil.min(batchSize, 2000);
+        redissonClient.getMapCache(bucketName).putAll(data, batchSize);
+    }
+
+    /**
+     * 删除指定Bucket中的数据
+     *
+     * @param bucketName 存储桶的名字
+     */
+    @Override
+    public boolean deleteBucketAllData(String bucketName) {
+        return redissonClient.getMapCache(bucketName).delete();
+    }
+
+    /**
+     * 获取RedissonClient客户端实例
+     *
+     * @return RedissonClient
+     */
+    @Override
+    public RedissonClient getRedissonClient() {
+        return redissonClient;
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName) {
+        return getBucketAllData(bucketName, 1000);
+    }
+
+    /**
+     * 获取指定桶中的所有数据
+     *
+     * @param bucketName 桶名字
+     * @param count      获取数量
+     * @return 桶中所有的数据
+     */
+    @Override
+    public Map<Object, Object> getBucketAllData(String bucketName, int count) {
+        return getBucketAllData(bucketName, count, null);
     }
 }

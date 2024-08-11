@@ -16,6 +16,6 @@ public class GXLoggingRedisCache extends LoggingCache {
      * @param id 构造函数
      */
     public GXLoggingRedisCache(String id) {
-        super(new GXMybatisRedissonCache(id));
+        super(new GXMybatisPlusRedissonCache(id));
     }
 }

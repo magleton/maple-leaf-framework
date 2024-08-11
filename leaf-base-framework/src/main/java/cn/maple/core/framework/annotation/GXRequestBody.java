@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated(since = "4.0.5", forRemoval = true)
 public @interface GXRequestBody {
     String value() default "";
 

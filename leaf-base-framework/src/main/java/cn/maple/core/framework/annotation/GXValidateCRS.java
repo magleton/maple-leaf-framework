@@ -2,8 +2,8 @@ package cn.maple.core.framework.annotation;
 
 import cn.maple.core.framework.service.GXCallRemoteValidateService;
 import cn.maple.core.framework.validator.GXValidateCallRemoteServiceValidator;
+import jakarta.validation.Constraint;
 
-import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
