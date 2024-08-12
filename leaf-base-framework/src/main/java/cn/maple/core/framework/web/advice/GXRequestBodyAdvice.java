@@ -32,7 +32,7 @@ public class GXRequestBodyAdvice extends RequestBodyAdviceAdapter {
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         GXRequestBodyAdviceService requestBodyAdviceService = GXSpringContextUtils.getBean(GXRequestBodyAdviceService.class);
         if (ObjectUtil.isNull(requestBodyAdviceService)) {
-            return false;
+            return true;
         }
         return requestBodyAdviceService.supports(methodParameter, targetType, converterType);
     }
