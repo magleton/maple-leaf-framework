@@ -20,8 +20,8 @@ spring:
       - __DEFAULT__
       - common
 
-# 日志文件的存放路径
+# Log4j2日志文件配置
 logging:
-  path: /tmp/log
+  config: classpath:log4j2-${spring.profiles.active}.xml
 
 debug: false
