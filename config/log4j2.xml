@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration name="MapleFramework"  status="INFO" monitorInterval="5">
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://logging.apache.org/xml/ns"
+               xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd"
+               name="maple" status="INFO" monitorInterval="5">
     <!--<Configuration status="WARN" monitorInterval="30">-->
     <properties>
         <property name="LOG_HOME" value="${LOG_PATH:-./logs/}"/>
