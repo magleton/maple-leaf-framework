@@ -2,7 +2,7 @@
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xmlns="https://logging.apache.org/xml/ns"
                xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd"
-               name="maple" status="INFO" monitorInterval="5">
+               name="maple" status="INFO" monitorInterval="30">
     <!--<Configuration status="WARN" monitorInterval="30">-->
     <properties>
         <property name="LOG_HOME" value="${LOG_PATH:-./logs/}"/>
@@ -40,15 +40,15 @@
                 <TimeBasedTriggeringPolicy/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
@@ -74,15 +74,15 @@
                 <TimeBasedTriggeringPolicy/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
@@ -108,15 +108,15 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
@@ -139,18 +139,18 @@
                 <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
                 <SizeBasedTriggeringPolicy size="100 MB"/>
                 <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
-                <TimeBasedTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
@@ -173,18 +173,18 @@
                 <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
                 <SizeBasedTriggeringPolicy size="100 MB"/>
                 <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
-                <TimeBasedTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
@@ -205,15 +205,15 @@
                 <SizeBasedTriggeringPolicy size="100 MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <DefaultRolloverStrategy max="10">
+            <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="*/*.log.gz"/>
-                    <IfLastModified age="1d"/>
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
                 </Delete>
-                <Delete basePath="${LOG_HOME}" maxDepth="1">
-                    <IfFileName glob="*.log.gz"/>
+                <!--<Delete basePath="${LOG_HOME}" maxDepth="1">
+                    <IfFileName glob="*/*.log*"/>
                     <IfLastModified age="7d"/>
-                </Delete>
+                </Delete>-->
                 <!--<Delete basePath="logs/app/history" maxDepth="1">
                     <IfFileName glob="*.vsdx"/>
                 </Delete>-->
