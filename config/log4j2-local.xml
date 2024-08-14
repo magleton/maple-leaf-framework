@@ -13,7 +13,7 @@
         <!--*********************控制台日志***********************-->
         <Console name="consoleAppender" target="SYSTEM_OUT">
             <Filters>
-                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式及颜色-->
             <PatternLayout
@@ -27,12 +27,10 @@
                      fileName="${LOG_HOME}/all.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/all-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
-                <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="ALL" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout>
-                <pattern>%d %p %C{} [%t] %m%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -63,12 +61,10 @@
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
                 <!--过滤掉debug及更高级别日志-->
-                <ThresholdFilter level="debug" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout>
-                <pattern>%d %p %C{} [%t] %m%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -99,12 +95,10 @@
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
                 <!--过滤掉info及更高级别日志-->
-                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout>
-                <pattern>%d %p %C{} [%t] %m%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -135,12 +129,10 @@
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
                 <!--过滤掉warn及更高级别日志-->
-                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout>
-                <pattern>%d %p %C{} [%t] %m%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -170,13 +162,11 @@
                      fileName="${LOG_HOME}/error.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
-                <!--过滤掉warn及更高级别日志-->
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!--过滤掉error及更高级别日志-->
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout>
-                <pattern>%d %p %C{} [%t] %m%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -206,11 +196,11 @@
                      fileName="${LOG_HOME}/error-json.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-json-%d{yyyy-MM-dd}-%i.log.gz">
             <Filters>
-                <!--过滤掉warn及更高级别日志-->
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!--过滤掉error及更高级别日志-->
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <JSONLayout compact="true" eventEol="true" locationInfo="true"/>
+            <JsonLayout compact="true" eventEol="true" locationInfo="true"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="100 MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -233,9 +223,9 @@
 
     <Loggers>
         <!-- 根日志设置 -->
-        <Root level="all"> <!-- 必须设置为比 Logger中配置的级别低 -->
-            <AppenderRef ref="consoleAppender" level="trace"/>
-            <AppenderRef ref="infoFileAppender" level="info"/>
+        <Root level="ALL" additivity="true"> <!-- 必须设置为比 Logger中配置的级别低 -->
+            <AppenderRef ref="consoleAppender" level="TRACE"/>
+            <AppenderRef ref="infoFileAppender" level="INFO"/>
             <!--AppenderRef ref="allFileAppender" level="info"/-->
             <!--AppenderRef ref="debugFileAppender" level="debug"/-->
             <!--AppenderRef ref="warnFileAppender" level="warn"/-->
@@ -244,52 +234,52 @@
         </Root>
 
         <!--ES 日志信息-->
-        <Logger name="org.elasticsearch.client.RequestLogger" level="info" additivity="false">
+        <Logger name="org.elasticsearch.client.RequestLogger" level="INFO">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
-        <Logger name="org.elasticsearch" level="info" additivity="false">
+        <Logger name="org.elasticsearch" level="INFO">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--spring日志-->
-        <Logger name="org.springframework" level="error" additivity="false">
+        <Logger name="org.springframework" level="ERROR">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--alibaba日志-->
-        <Logger name="com.alibaba" level="warn" additivity="false">
+        <Logger name="com.alibaba" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--apache日志-->
-        <Logger name="org.apache" level="warn" additivity="false">
+        <Logger name="org.apache" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--redisson日志-->
-        <Logger name="org.redisson" level="warn" additivity="false">
+        <Logger name="org.redisson" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--netty-->
-        <Logger name="io.netty" level="warn" additivity="false">
+        <Logger name="io.netty" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!--druid数据源日志-->
-        <Logger name="druid.sql" level="warn" additivity="false">
+        <Logger name="druid.sql" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!-- mybatis日志 -->
-        <Logger name="com.p6spy" level="warn" additivity="false">
+        <Logger name="com.p6spy" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
-        <Logger name="com.baomidou" level="warn" additivity="false">
+        <Logger name="com.baomidou" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
-        <Logger name="org.hibernate" level="warn" additivity="false">
+        <Logger name="org.hibernate" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
         <!-- maple框架 -->
-        <Logger name="cn.maple" level="info" additivity="true">
+        <Logger name="cn.maple" level="INFO">
             <AppenderRef ref="infoFileAppender"/>
         </Logger>
         <!-- 业务项目 -->
-        <Logger name="cn.gaple" level="info" additivity="true">
+        <Logger name="cn.gaple" level="INFO">
             <AppenderRef ref="infoFileAppender"/>
         </Logger>
     </Loggers>
