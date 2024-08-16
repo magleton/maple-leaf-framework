@@ -1,22 +1,14 @@
 package cn.maple.core.framework.util;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.hutool.http.HttpStatus;
 import cn.maple.core.framework.code.GXDefaultResultStatusCode;
-import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
 import lombok.Data;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
+import java.io.Serializable;
 
 @Data
-public class GXResultUtils<T> {
-    private static final long serialVersionUID = 1L;
-
+public class GXResultUtils<T> implements Serializable {
     /**
      * 失败的提示消息
      */
@@ -57,7 +49,6 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> ok(GXDefaultResultStatusCode resultCode, T data) {
-        callUserDefinedMethod(data);
         return ok(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
@@ -74,42 +65,19 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> ok(T data) {
-        callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, SUCCESS_MSG, data);
     }
 
     public static <T> GXResultUtils<T> ok(String msg, T data) {
-        callUserDefinedMethod(data);
         return ok(SUCCESS_CODE, msg, data);
     }
 
     public static <T> GXResultUtils<T> ok(int code, String msg, T data) {
-        callUserDefinedMethod(data);
         GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
         r.setData(data);
         return r;
-    }
-
-    private static <T> void callUserDefinedMethod(T data) {
-        if (Objects.isNull(data)) {
-            return;
-        }
-        if (!(data instanceof List)) {
-            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(data.getClass()), GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
-            if (Objects.nonNull(method)) {
-                ReflectUtil.invoke(data, method);
-            }
-            return;
-        }
-        List<?> objects = Convert.toList(data);
-        objects.forEach(d -> {
-            Method method = ReflectUtil.getMethodByName(TypeUtil.getClass(d.getClass()), GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME);
-            if (Objects.nonNull(method)) {
-                ReflectUtil.invoke(d, method);
-            }
-        });
     }
 
     public static <T> GXResultUtils<T> ok() {
@@ -121,7 +89,6 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> error(T data) {
-        callUserDefinedMethod(data);
         return error(FAIL_CODE, FAIL_MSG, data);
     }
 
@@ -150,12 +117,10 @@ public class GXResultUtils<T> {
     }
 
     public static <T> GXResultUtils<T> error(GXDefaultResultStatusCode resultCode, T data) {
-        callUserDefinedMethod(data);
         return error(resultCode.getCode(), resultCode.getMsg(), data);
     }
 
     public static <T> GXResultUtils<T> error(int code, String msg, T data) {
-        callUserDefinedMethod(data);
         GXResultUtils<T> r = new GXResultUtils<>();
         r.setCode(code);
         r.setMsg(msg);
