@@ -28,6 +28,10 @@ public class GXSqlInjectionException extends RuntimeException implements Seriali
         this.data = data;
     }
 
+    public GXSqlInjectionException() {
+        this("SQL注入异常");
+    }
+
     public GXSqlInjectionException(String msg, int code, Dict data) {
         this(msg, code, data, null);
     }
