@@ -2,6 +2,7 @@ package cn.maple.core.framework.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 
 /**
@@ -15,16 +16,7 @@ public class GXXssFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         GXXssHttpServletRequestWrapper xssRequest = new GXXssHttpServletRequestWrapper((HttpServletRequest) request);
-        final String uri = xssRequest.getRequestURI();
-        if (uri.contains("contents")
-                || uri.contains("/activiti/editor/model")
-                || uri.contains("save-model.html")
-                || uri.contains("/cftf-loan-products/backend/create")
-                || uri.contains("/content/backend/create")) {
-            chain.doFilter(request, response);
-        } else {
-            chain.doFilter(xssRequest, response);
-        }
+        chain.doFilter(xssRequest, response);
     }
 
     @Override
