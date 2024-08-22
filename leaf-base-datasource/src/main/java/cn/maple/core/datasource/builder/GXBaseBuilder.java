@@ -218,10 +218,6 @@ public interface GXBaseBuilder {
                 }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
-                    /*boolean check = SqlInjectionUtils.check(str);
-                    if (check) {
-                        throw new GXSqlInjectionException("SQL注入异常");
-                    }*/
                     lastWheres.add(str);
                 }
             }
