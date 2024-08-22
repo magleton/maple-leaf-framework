@@ -1,6 +1,7 @@
 package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.maple.core.framework.exception.GXSqlInjectionException;
 import cn.maple.core.framework.util.GXDBStringEscapeUtils;
 
 public class GXConditionLikeLeft extends GXCondition<String> {
@@ -15,6 +16,9 @@ public class GXConditionLikeLeft extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
+        if (GXDBStringEscapeUtils.check(value.toString())) {
+            throw new GXSqlInjectionException("SQL注入异常");
+        }
         String str = GXDBStringEscapeUtils.escapeRawString(value.toString());
         String format = "'%{}'";
         if (CharSequenceUtil.contains(str, "\\'")) {

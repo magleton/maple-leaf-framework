@@ -2,6 +2,8 @@ package cn.maple.core.framework.dto.inner.condition;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.maple.core.framework.exception.GXSqlInjectionException;
+import cn.maple.core.framework.util.GXDBStringEscapeUtils;
 
 public class GXConditionJsonEQ extends GXCondition<String> {
     private final String jsonPath;
@@ -18,6 +20,9 @@ public class GXConditionJsonEQ extends GXCondition<String> {
 
     @Override
     public String getFieldValue() {
+        if (GXDBStringEscapeUtils.check(value.toString())) {
+            throw new GXSqlInjectionException("SQL注入异常");
+        }
         if (NumberUtil.isNumber(value.toString())) {
             return CharSequenceUtil.format("{}", value);
         }

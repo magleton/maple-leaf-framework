@@ -18,12 +18,10 @@ import cn.maple.core.framework.dto.inner.field.GXUpdateField;
 import cn.maple.core.framework.dto.inner.op.GXDbJoinOp;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXDBConditionException;
-import cn.maple.core.framework.exception.GXSqlInjectionException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,10 +218,10 @@ public interface GXBaseBuilder {
                 }
                 String str = c.whereString();
                 if (CharSequenceUtil.isNotEmpty(str)) {
-                    boolean check = SqlInjectionUtils.check(str);
+                    /*boolean check = SqlInjectionUtils.check(str);
                     if (check) {
                         throw new GXSqlInjectionException("SQL注入异常");
-                    }
+                    }*/
                     lastWheres.add(str);
                 }
             }

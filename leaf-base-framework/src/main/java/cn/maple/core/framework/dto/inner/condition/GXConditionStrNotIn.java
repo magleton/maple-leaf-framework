@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXSqlInjectionException;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXDBStringEscapeUtils;
 
@@ -33,6 +34,9 @@ public class GXConditionStrNotIn extends GXCondition<String> {
             throw new GXBusinessException(CharSequenceUtil.format("IN查询条件不能超过{}条数据!", limitCnt));
         }
         String str = ((Set<String>) value).stream().map(v -> {
+            if (GXDBStringEscapeUtils.check(value.toString())) {
+                throw new GXSqlInjectionException("SQL注入异常");
+            }
             String val = GXDBStringEscapeUtils.escapeRawString(v);
             String format = "'{}'";
             if (CharSequenceUtil.contains(val, "\\'")) {
