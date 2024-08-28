@@ -42,6 +42,11 @@ public class GXQueryParamReqProtocol extends GXBaseReqProtocol {
     private Map<String, String> orderByField;
 
     /**
+     * 需要查询的数据列
+     */
+    private Set<String> columns;
+
+    /**
      * 分组字段
      */
     private Set<String> groupByField;
