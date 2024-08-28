@@ -12,7 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.List;
 
 /**
- * 机器人通知引用异常信息
+ * 机器人通知应用异常信息
  */
 public interface GXBotNotificationExceptionService {
     @SuppressWarnings("unchecked")
