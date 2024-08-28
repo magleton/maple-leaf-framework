@@ -3,3 +3,9 @@ customer:
     name: jack
   property2:
     age: 18
+
+bot:
+  notification:
+    exception:
+      cn.maple.core.framework.exception.GXDataFormatIncorrectException, # 注意逗号
+      cn.maple.core.framework.exception.GXBusinessException
