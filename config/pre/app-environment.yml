@@ -6,6 +6,6 @@ customer:
 
 bot:
   notification:
-    exception:
+    exception: > # > 防止语法错误提示
       cn.maple.core.framework.exception.GXDataFormatIncorrectException, # 注意逗号
       cn.maple.core.framework.exception.GXBusinessException
