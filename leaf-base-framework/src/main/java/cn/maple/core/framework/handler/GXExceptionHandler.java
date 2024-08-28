@@ -235,6 +235,7 @@ public class GXExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public GXResultUtils<Dict> handleNoResourceFoundException(NoResourceFoundException e) {
         log.error(e.getMessage(), e);
+        exceptionNotify(e);
         return GXResultUtils.error(HttpStatus.HTTP_NOT_FOUND, "No static resource");
     }
 
