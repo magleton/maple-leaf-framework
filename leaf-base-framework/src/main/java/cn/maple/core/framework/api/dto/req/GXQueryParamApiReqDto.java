@@ -1,10 +1,13 @@
 package cn.maple.core.framework.api.dto.req;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.maple.core.framework.constant.GXCommonConstant;
+import cn.maple.core.framework.dto.inner.GXJoinDto;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,8 +15,16 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("all")
-public class GXQueryParamApiReqDto extends GXBaseApiReqDto {
-    private static final long serialVersionUID = -1375221810158532151L;
+public class GXQueryParamApiReqDto extends GXBaseApiReqDto implements Serializable {
+    /**
+     * 需要查询的主表名字(在有join查询时,需要有主表、次表的区分)
+     */
+    private String tableName;
+
+    /**
+     * 需要查询的主表名字的别名(在有join查询时,需要有主表、次表的区分)
+     */
+    private String tableNameAlias;
 
     /**
      * 当前页
@@ -21,14 +32,19 @@ public class GXQueryParamApiReqDto extends GXBaseApiReqDto {
     private Integer page = GXCommonConstant.DEFAULT_CURRENT_PAGE;
 
     /**
-     * 每页大小
+     * 每页数据条数
      */
     private Integer pageSize = GXCommonConstant.DEFAULT_PAGE_SIZE;
 
     /**
-     * DB查询条件
+     * 搜索条件
      */
     private List<GXCondition<?>> condition;
+
+    /**
+     * 需要查询的数据列
+     */
+    private Set<String> columns;
 
     /**
      * 排序字段
@@ -47,7 +63,46 @@ public class GXQueryParamApiReqDto extends GXBaseApiReqDto {
     private Set<String> groupByField;
 
     /**
-     * 额外参数(用于回调)
+     * GXBaseData及其子类中的方法名字
+     * 通常用于在需要额外处理一些逻辑时自动调用
+     */
+    private String methodName;
+
+    /**
+     * SQL中的having条件
+     * <pre>
+     * {@code
+     * Set<String> having = CollUtil.newHashSet("SUM(area)>1000000" , "SUM(price) >= 1000");
+     * }
+     * </pre>
+     */
+    private Set<String> having;
+
+    /**
+     * 对象复制时的一些额外配置
+     */
+    private CopyOptions copyOptions;
+
+    /**
+     * 限制条数
+     */
+    private Integer limit;
+
+    /**
+     * JOIN链接信息
+     */
+    private List<GXJoinDto> joins;
+
+    /**
+     * 额外参数
+     * <p>
+     * 配合methodName一起使用
      */
     private Object extraData;
+
+    /**
+     * 忽略数据权限
+     * 设置为TRUE的话 就忽略掉数据权限处理
+     */
+    private boolean ignoreDataFilter = Boolean.FALSE;
 }
