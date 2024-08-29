@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 自定义异常
@@ -18,10 +18,7 @@ import java.io.Serial;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GXBusinessException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class GXBusinessException extends RuntimeException implements Serializable {
     private final String msg;
 
     private final int code;

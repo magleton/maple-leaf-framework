@@ -21,6 +21,7 @@ import cn.maple.core.framework.constant.GXDataSourceConstant;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
+import cn.maple.core.framework.exception.GXConvertException;
 import com.google.common.collect.Table;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -271,7 +272,8 @@ public class GXCommonUtils {
             } else {
                 throwable = e;
             }
-            throw Convert.convert(RuntimeException.class, throwable);
+            throw new GXConvertException(throwable);
+            //throw Convert.convert(RuntimeException.class, throwable);
         }
     }
 
