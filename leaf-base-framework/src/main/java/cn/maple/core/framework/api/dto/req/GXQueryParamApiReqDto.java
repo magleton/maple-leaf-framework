@@ -101,6 +101,13 @@ public class GXQueryParamApiReqDto extends GXBaseApiReqDto implements Serializab
     private Object extraData;
 
     /**
+     * 应用端自己提供的SQL
+     * 如果提供了该字段
+     * 则框架不会在自动处理其他的SQL处理拼接
+     */
+    private String rawSQL;
+
+    /**
      * 忽略数据权限
      * 设置为TRUE的话 就忽略掉数据权限处理
      */
