@@ -50,7 +50,7 @@ public class GXQueryParamApiReqDto extends GXBaseApiReqDto implements Serializab
      * 排序字段
      * eg:
      * <code>
-     * Map&lt;String ,String&gt; orderByField = new HashMap<>();
+     * Map<String ,String> orderByField = new HashMap<>();
      * orderByField.put("created_at" , "desc");
      * orderByField.put("username" , "asc");
      * </code>
