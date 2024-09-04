@@ -1,8 +1,10 @@
 package cn.maple.core.framework.service;
 
+import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.util.GXResultUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -35,5 +37,23 @@ public interface GXResponseBodyAdviceService {
      */
     default Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         return body;
+    }
+
+    /**
+     * 需要存储的Cookie数据
+     *
+     * @return Cookie数据
+     */
+    default Dict cookieUserData() {
+        return Dict.create().set("author", "britton");
+    }
+
+    /**
+     * 构建响应Cookie
+     *
+     * @return Cookie对象
+     */
+    default String buildCookie(ResponseCookie cookie) {
+        return cookie.toString();
     }
 }

@@ -7,7 +7,7 @@ import cn.maple.core.framework.util.GXCurrentRequestContextUtils;
 import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.enums.GXTokenFlag;
 import cn.maple.sso.plugins.GXSSOPlugin;
-import cn.maple.sso.utils.GXCookieHelperUtil;
+import cn.maple.core.framework.util.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXHttpUtil;
 import cn.maple.sso.utils.GXRandomUtil;
 import lombok.extern.slf4j.Slf4j;

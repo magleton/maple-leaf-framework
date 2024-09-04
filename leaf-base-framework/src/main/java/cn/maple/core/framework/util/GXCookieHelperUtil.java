@@ -1,12 +1,10 @@
-package cn.maple.sso.utils;
+package cn.maple.core.framework.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.StrUtil;
-import lombok.extern.slf4j.Slf4j;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Cookie工具类
@@ -40,7 +38,7 @@ public class GXCookieHelperUtil {
      */
     public static void authJSESSIONID(HttpServletRequest request, String value) {
         request.getSession().invalidate();
-        request.getSession().setAttribute("SSO-" + value, true);
+        request.getSession().setAttribute("MAPLE-" + value, true);
     }
 
     /**

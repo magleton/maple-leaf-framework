@@ -5,7 +5,7 @@ import cn.maple.sso.cache.GXSSOCache;
 import cn.maple.sso.constant.GXSSOConstant;
 import cn.maple.sso.oauth.GXSSOAuthorization;
 import cn.maple.sso.plugins.GXSSOPlugin;
-import cn.maple.sso.utils.GXCookieHelperUtil;
+import cn.maple.core.framework.util.GXCookieHelperUtil;
 import cn.maple.sso.utils.GXSSOHelperUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
