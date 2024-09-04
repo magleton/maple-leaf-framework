@@ -55,7 +55,10 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* imple
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         log.debug("响应拦截成功!");
-        response.getHeaders().add(HttpHeaders.SET_COOKIE, buildCookie());
+        boolean allowCredentials = GXCommonUtils.getEnvironmentValue("cors.allow.credentials", boolean.class, false);
+        if (allowCredentials) {
+            response.getHeaders().add(HttpHeaders.SET_COOKIE, buildCookie());
+        }
         GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
         if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
             return responseBodyAdviceService.beforeBodyWrite(body, returnType, selectedContentType, selectedConverterType, request, response);
