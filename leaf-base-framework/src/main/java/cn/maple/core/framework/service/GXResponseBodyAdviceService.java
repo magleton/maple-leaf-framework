@@ -1,6 +1,5 @@
 package cn.maple.core.framework.service;
 
-import cn.hutool.core.lang.Dict;
 import cn.maple.core.framework.util.GXResultUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -44,8 +43,8 @@ public interface GXResponseBodyAdviceService {
      *
      * @return Cookie数据
      */
-    default Dict cookieUserData() {
-        return Dict.create().set("author", "britton");
+    default String cookieUserData() {
+        return null;
     }
 
     /**

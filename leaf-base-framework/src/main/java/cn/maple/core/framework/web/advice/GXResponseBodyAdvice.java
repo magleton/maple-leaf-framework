@@ -1,8 +1,8 @@
 package cn.maple.core.framework.web.advice;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.exception.GXCookieValueException;
 import cn.maple.core.framework.service.GXResponseBodyAdviceService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXResultUtils;
@@ -71,12 +71,12 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* imple
      *
      * @return Cookie数据
      */
-    private Dict cookieUserData() {
+    private String cookieUserData() {
         GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
         if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
             return responseBodyAdviceService.cookieUserData();
         }
-        return Dict.create().set("author", "britton");
+        return null;
     }
 
     /**
@@ -87,15 +87,21 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* imple
     private String buildCookie() {
         GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
         Boolean isSecure = GXCommonUtils.getEnvironmentValue("cors.cookie.secure", boolean.class, false);
-        ResponseCookie cookie = ResponseCookie.from("UserData")
+        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("UserData")
                 .maxAge(-1)// 浏览器关闭，则删除 Cookie
                 .secure(isSecure)       // 可以在HTTP或者HTTPS协议中传输
                 .httpOnly(true)         // javascript不能读写
                 //.domain(null)		    // 提交cookie的域
                 //.path(null)		    // 提交cookie的path
-                .sameSite(Cookie.SameSite.LAX.attributeValue())// 设置 SameSite 为 LAX
-                .value(JSONUtil.toJsonStr(cookieUserData()))
-                .build();
+                .sameSite(Cookie.SameSite.LAX.attributeValue());// 设置 SameSite 为 LAX
+        String userData = cookieUserData();
+        if (CharSequenceUtil.isNotBlank(userData)) {
+            if (CharSequenceUtil.hasBlank(userData)) {
+                throw new GXCookieValueException("Cookie的中不能包含空白字符!如果确实需要空白字符,请使用Base64编码!");
+            }
+            cookieBuilder.value(userData);
+        }
+        ResponseCookie cookie = cookieBuilder.build();
         if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
             return responseBodyAdviceService.buildCookie(cookie);
         }
