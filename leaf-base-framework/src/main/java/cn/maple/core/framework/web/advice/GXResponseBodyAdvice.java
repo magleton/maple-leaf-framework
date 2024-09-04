@@ -1,9 +1,10 @@
 package cn.maple.core.framework.web.advice;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.maple.core.framework.exception.GXCookieValueException;
 import cn.maple.core.framework.service.GXResponseBodyAdviceService;
+import cn.maple.core.framework.util.GXAuthCodeUtils;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXResultUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
@@ -18,6 +19,8 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.List;
 
 @Log4j2
 @RestControllerAdvice
@@ -57,7 +60,8 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* imple
         log.debug("响应拦截成功!");
         boolean allowCredentials = GXCommonUtils.getEnvironmentValue("cors.allow.credentials", boolean.class, false);
         if (allowCredentials) {
-            response.getHeaders().add(HttpHeaders.SET_COOKIE, buildCookie());
+            List<String> cookies = buildCookies();
+            cookies.forEach(cookie -> response.getHeaders().add(HttpHeaders.SET_COOKIE, cookie));
         }
         GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
         if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
@@ -67,44 +71,40 @@ public class GXResponseBodyAdvice implements ResponseBodyAdvice<Object> /* imple
     }
 
     /**
-     * 需要存储的Cookie数据
-     *
-     * @return Cookie数据
-     */
-    private String cookieUserData() {
-        GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
-        if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
-            return responseBodyAdviceService.cookieUserData();
-        }
-        return null;
-    }
-
-    /**
      * 构建响应Cookie
      *
      * @return Cookie对象
      */
-    private String buildCookie() {
+    private List<String> buildCookies() {
         GXResponseBodyAdviceService responseBodyAdviceService = GXSpringContextUtils.getBean(GXResponseBodyAdviceService.class);
-        Boolean isSecure = GXCommonUtils.getEnvironmentValue("cors.cookie.secure", boolean.class, false);
-        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("UserData")
-                .maxAge(-1)// 浏览器关闭，则删除 Cookie
-                .secure(isSecure)       // 可以在HTTP或者HTTPS协议中传输
-                .httpOnly(true)         // javascript不能读写
-                //.domain(null)		    // 提交cookie的域
-                //.path(null)		    // 提交cookie的path
-                .sameSite(Cookie.SameSite.LAX.attributeValue());// 设置 SameSite 为 LAX
-        String userData = cookieUserData();
-        if (CharSequenceUtil.isNotBlank(userData)) {
-            if (CharSequenceUtil.hasBlank(userData)) {
-                throw new GXCookieValueException("Cookie的中不能包含空白字符!如果确实需要空白字符,请使用Base64编码!");
-            }
-            cookieBuilder.value(userData);
-        }
-        ResponseCookie cookie = cookieBuilder.build();
         if (ObjectUtil.isNotNull(responseBodyAdviceService)) {
-            return responseBodyAdviceService.buildCookie(cookie);
+            return responseBodyAdviceService.buildCookies();
         }
-        return cookie.toString();
+        return defaultBuildCookies();
+    }
+
+    /**
+     * 默认的Cookie构建方法
+     *
+     * @return Cookies
+     */
+    private List<String> defaultBuildCookies() {
+        boolean isSecure = GXCommonUtils.getEnvironmentValue("cors.cookie.secure", boolean.class, false);
+        String cookieSecret = GXCommonUtils.getEnvironmentValue("cors.cookie.secret", String.class, "CF3417E3CF6B0F28");
+        Integer effectiveDuration = GXCommonUtils.getEnvironmentValue("cors.cookie.duration", Integer.class, 300);
+        String cookieVirusID = GXCommonUtils.getEnvironmentValue("cors.cookie.virusId", String.class);
+        if (CharSequenceUtil.isNotBlank(cookieVirusID)) {
+            String authCode = GXAuthCodeUtils.authCodeEncode(cookieVirusID, cookieSecret, effectiveDuration);
+            ResponseCookie cookie = ResponseCookie.from("UserData", authCode)
+                    .maxAge(-1)// 浏览器关闭，则删除 Cookie
+                    .secure(isSecure)       // 可以在HTTP或者HTTPS协议中传输
+                    .httpOnly(true)         // javascript不能读写
+                    //.domain(null)		    // 提交cookie的域
+                    //.path(null)		    // 提交cookie的path
+                    .sameSite(Cookie.SameSite.LAX.attributeValue())// 设置 SameSite 为 LAX
+                    .build();
+            return CollUtil.newArrayList(cookie.toString());
+        }
+        return CollUtil.newArrayList();
     }
 }
