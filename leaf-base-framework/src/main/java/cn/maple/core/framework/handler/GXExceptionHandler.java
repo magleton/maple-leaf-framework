@@ -229,7 +229,7 @@ public class GXExceptionHandler {
     public GXResultUtils<Dict> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error(e.getMessage(), e);
         exceptionNotify(e);
-        return GXResultUtils.error(HttpStatus.HTTP_INTERNAL_ERROR, "不支持HTTP请求方法!");
+        return GXResultUtils.error(HttpStatus.HTTP_BAD_METHOD, "不支持的HTTP请求方法!");
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
