@@ -113,7 +113,7 @@ mybatis-plus:
 # 是否开启MyBatis-Plus的默认插件
 maple:
   framework:
-    version: @leaf.framework.version@ # 读取pom.xml文件中的properties节中的配置信息
+    version: @leaf.framework.version@ # 读取pom.xml文件中的properties节中的配置信息 或者是 <profiles><profile></profile></profiles>中的properties节中的配置信息
     enable:
       file-upload: true #  启用文件删除服务
       sql-illegal: true  # 开启sql性能规范插件
