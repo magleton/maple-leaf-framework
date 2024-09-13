@@ -219,6 +219,34 @@
                 </Delete>-->
             </DefaultRolloverStrategy>
         </RollingFile>
+
+
+        <!--druid的日志记录追加器-->
+        <RollingFile name="druidSqlRollingFile" fileName="${LOG_HOME}/druid-sql.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/druid-sql-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>-->
+            <Filters>
+                <!--过滤掉DEBUG及更高级别日志-->
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <!--设置日志格式-->
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <!--<OnStartupTriggeringPolicy/>-->
+                <!--设置日志基础文件大小，超过该大小就触发日志文件滚动更新-->
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <!--设置日志文件滚动更新的时间，依赖于文件命名filePattern的设置-->
+                <TimeBasedTriggeringPolicy interval="2" modulate="true"/>
+            </Policies>
+            <!--设置日志的文件个数上限，不设置默认为7个，超过大小后会被覆盖；依赖于filePattern中的%i-->
+            <DefaultRolloverStrategy max="20">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="**/*.log*"/>
+                    <IfLastModified age="90d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
@@ -226,6 +254,7 @@
         <Root level="ALL" additivity="true"> <!-- 必须设置为比 Logger中配置的级别低 -->
             <AppenderRef ref="consoleAppender" level="TRACE"/>
             <AppenderRef ref="infoFileAppender" level="INFO"/>
+            <AppenderRef ref="druidSqlRollingFile" level="DEBUG"/>
             <!--AppenderRef ref="allFileAppender" level="info"/-->
             <!--AppenderRef ref="debugFileAppender" level="debug"/-->
             <!--AppenderRef ref="warnFileAppender" level="warn"/-->
@@ -244,6 +273,10 @@
         <Logger name="org.springframework" level="ERROR">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
+        <!--记录druid-sql的记录-->
+        <logger name="druid.sql.Statement" level="debug" additivity="false">
+            <AppenderRef ref="druidSqlRollingFile"/>
+        </logger>
         <!--alibaba日志-->
         <Logger name="com.alibaba" level="WARN">
             <AppenderRef ref="consoleAppender"/>

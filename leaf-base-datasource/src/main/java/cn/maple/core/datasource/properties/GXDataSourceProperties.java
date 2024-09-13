@@ -10,7 +10,7 @@ public class GXDataSourceProperties {
     /**
      * 默认的数据库驱动
      */
-    private String driverClassName = "com.p6spy.engine.spy.P6SpyDriver";
+    private String driverClassName = "com.mysql.cj.jdbc.Driver"; //"com.p6spy.engine.spy.P6SpyDriver";
 
     /**
      * 连接的URL
@@ -59,7 +59,7 @@ public class GXDataSourceProperties {
 
     private boolean sharePreparedStatements = false;
 
-    private String filters = "stat,wall";
+    private String filters = "stat,wall,slf4j";
 
     private String dbType = "mysql";
 }
