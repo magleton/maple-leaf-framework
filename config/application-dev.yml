@@ -21,6 +21,9 @@ spring:
 
 # 日志文件的存放路径
 logging:
-  path: /tmp/log
+  config: classpath:log4j2-dev.xml
+  level:
+    root: info
+    druid.sql.Statement: debug
 
 debug: false
