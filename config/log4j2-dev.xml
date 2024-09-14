@@ -9,6 +9,9 @@
         <Property name="LOG_PATTERN">[%style{%d{ISO8601}}{bright,green}] [traceId=%style{%X{X-B3-TraceId}}{red}] [%t]
             %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}
         </Property>
+        <Property name="LOG_PATTERN_WITHOUT_TRACE_ID">[%style{%d{ISO8601}}{bright,green}] [%t]
+            %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}
+        </Property>
     </properties>
     <Appenders>
         <!--*********************控制台日志***********************-->
@@ -235,7 +238,7 @@
                 <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <PatternLayout pattern="${LOG_PATTERN_WITHOUT_TRACE_ID}"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
