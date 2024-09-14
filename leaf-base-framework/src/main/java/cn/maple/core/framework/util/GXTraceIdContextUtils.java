@@ -43,7 +43,7 @@ public class GXTraceIdContextUtils {
      * @param traceId 需要设置的TraceId
      */
     public static void setTraceId(String traceId) {
-        if (CharSequenceUtil.isNotEmpty(traceId)) {
+        if (CharSequenceUtil.isNotEmpty(traceId) && CharSequenceUtil.isEmpty(MDC.get(TRACE_ID_KEY))) {
             MDC.put(TRACE_ID_KEY, traceId);
         }
     }
