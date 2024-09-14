@@ -2,7 +2,7 @@
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xmlns="https://logging.apache.org/xml/ns"
                xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd"
-               name="maple" status="ALL" monitorInterval="30">
+               name="maple" status="TRACE" monitorInterval="30">
     <!--<Configuration status="WARN" monitorInterval="30">-->
     <properties>
         <property name="LOG_HOME" value="${LOG_PATH:-./logs/}"/>
@@ -59,9 +59,10 @@
         <RollingFile name="debugFileAppender"
                      fileName="${LOG_HOME}/debug.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--只接受DEBUG级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉debug及更高级别日志-->
-                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="DEBUG"/>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
@@ -93,9 +94,10 @@
         <RollingFile name="infoFileAppender"
                      fileName="${LOG_HOME}/info.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--只接受INFO级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉info及更高级别日志-->
-                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="INFO"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
@@ -127,9 +129,10 @@
         <RollingFile name="warnFileAppender"
                      fileName="${LOG_HOME}/warn.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--只接受WARN级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉warn及更高级别日志-->
-                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
@@ -161,9 +164,10 @@
         <RollingFile name="errorFileAppender"
                      fileName="${LOG_HOME}/error.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--只接受ERROR级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉error及更高级别日志-->
-                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="ERROR"/>
+                <!--<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>--> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
@@ -195,9 +199,10 @@
         <RollingFile name="errorJsonAppender"
                      fileName="${LOG_HOME}/error-json.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-json-%d{yyyy-MM-dd}-%i.log.gz">
+            <!--只接受WARN级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉error及更高级别日志-->
-                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="ERROR"/>
+                <!--<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>--> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <JsonLayout compact="true" eventEol="true" locationInfo="true"/>
@@ -220,14 +225,14 @@
             </DefaultRolloverStrategy>
         </RollingFile>
 
-
         <!--druid的日志记录追加器-->
         <RollingFile name="druidSqlRollingFile" fileName="${LOG_HOME}/druid-sql.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/druid-sql-%d{yyyy-MM-dd}-%i.log.gz">
             <!--<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>-->
+            <!--只接受WARN级别的日志，其余的全部拒绝处理-->
             <Filters>
-                <!--过滤掉DEBUG及更高级别日志-->
-                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="DEBUG"/>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
@@ -251,7 +256,7 @@
 
     <Loggers>
         <!-- 根日志设置 -->
-        <Root level="ALL" additivity="true"> <!-- 必须设置为比 Logger中配置的级别低 -->
+        <Root level="TRACE" additivity="true"> <!-- 必须设置为比 Logger中配置的级别低 -->
             <AppenderRef ref="consoleAppender" level="TRACE"/>
             <AppenderRef ref="infoFileAppender" level="INFO"/>
             <AppenderRef ref="druidSqlRollingFile" level="DEBUG"/>
