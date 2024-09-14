@@ -6,12 +6,10 @@
     <!--<Configuration status="WARN" monitorInterval="30">-->
     <properties>
         <property name="LOG_HOME" value="${LOG_PATH:-./logs/}"/>
-        <Property name="LOG_PATTERN">[%style{%d{ISO8601}}{bright,green}] [traceId=%style{%X{X-B3-TraceId}}{red}] [%t]
-            %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}
-        </Property>
-        <Property name="LOG_PATTERN_WITHOUT_TRACE_ID">[%style{%d{ISO8601}}{bright,green}] [%t]
-            %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}
-        </Property>
+        <Property name="LOG_PATTERN"
+                  value="[%style{%d{ISO8601}}{bright,green}] [traceId=%style{%X{X-B3-TraceId}}{red}] [%t] %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}"/>
+        <Property name="LOG_PATTERN_WITHOUT_TRACE_ID"
+                  value="[%style{%d{ISO8601}}{bright,green}] [%t] %style{%p}{bright,green} %style{%C{}.%M}{bright,yellow}:%L - %msg%n%style{%xEx}{bright,red}"/>
     </properties>
     <Appenders>
         <!--*********************控制台日志***********************-->
