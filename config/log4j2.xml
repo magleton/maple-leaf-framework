@@ -6,7 +6,7 @@
     <!--<Configuration status="WARN" monitorInterval="30">-->
     <properties>
         <property name="LOG_HOME" value="${LOG_PATH:-./logs/}"/>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %class{64}.%M %L - %msg%xEx%n</Property>
         <Property name="APP_LOG_ROOT">${LOG_PATH}</Property>
     </properties>
     <Appenders>
@@ -30,7 +30,7 @@
                 <ThresholdFilter level="ALL" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
+            <PatternLayout pattern="%d %p %C{} [%t] %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -65,7 +65,7 @@
                 <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
+            <PatternLayout pattern="%d %p %C{} [%t] %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -100,7 +100,7 @@
                 <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
+            <PatternLayout pattern="%d %p %C{} [%t] %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -135,7 +135,7 @@
                 <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
+            <PatternLayout pattern="%d %p %C{} [%t] %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -170,7 +170,7 @@
                 <!--<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>--> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="%d %p %C{} [%t] %m%n"/>
+            <PatternLayout pattern="%d %p %C{} [%t] %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
@@ -228,14 +228,14 @@
         <!--druid的日志记录追加器-->
         <RollingFile name="druidSqlRollingFile" fileName="${LOG_HOME}/druid-sql.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/druid-sql-%d{yyyy-MM-dd}-%i.log.gz">
-            <!--<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>-->
+            <!--<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %class{64}.%M %L - %msg%xEx%n"/>-->
             <!--只接受WARN级别的日志，其余的全部拒绝处理-->
             <Filters>
                 <ThresholdFilter level="DEBUG"/>
                 <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> <!--拒绝的日志级别及该日志级别之上的-->
             </Filters>
             <!--设置日志格式-->
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %class{64}.%M %L - %msg%xEx%n"/>
             <Policies>
                 <!-- 设置日志文件切分参数 -->
                 <!--<OnStartupTriggeringPolicy/>-->
