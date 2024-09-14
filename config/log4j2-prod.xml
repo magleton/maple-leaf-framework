@@ -299,10 +299,8 @@
         <Logger name="io.netty" level="WARN">
             <AppenderRef ref="consoleAppender"/>
         </Logger>
-        <!--druid数据源日志-->
-        <Logger name="druid.sql" level="WARN">
-            <AppenderRef ref="consoleAppender"/>
-        </Logger>
+        <!--net.sf-->
+        <Logger name="net.sf" level="fatal"/>
         <!-- mybatis日志 -->
         <Logger name="com.p6spy" level="WARN">
             <AppenderRef ref="consoleAppender"/>
