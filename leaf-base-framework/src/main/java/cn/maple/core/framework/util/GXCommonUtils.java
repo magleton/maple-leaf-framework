@@ -18,11 +18,13 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.constant.GXCommonConstant;
 import cn.maple.core.framework.constant.GXDataSourceConstant;
+import cn.maple.core.framework.dto.GXBaseData;
 import cn.maple.core.framework.dto.inner.condition.GXCondition;
 import cn.maple.core.framework.exception.GXBeanValidateException;
 import cn.maple.core.framework.exception.GXBusinessException;
 import cn.maple.core.framework.exception.GXConvertException;
 import com.google.common.collect.Table;
+import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +67,14 @@ public class GXCommonUtils {
 
         if (JSONUtil.isTypeJSON(value.toString()) && targetClazz.isAssignableFrom(String.class)) {
             return value;
+        }
+
+        if (JSONUtil.isTypeJSON(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
+            JSONUtil.toBean(value.toString(), targetClazz);
+        }
+
+        if (JSONUtil.isTypeJSONArray(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
+            JSONUtil.toList(value.toString(), targetClazz);
         }
 
         // 处理List<自定义类型>
