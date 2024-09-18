@@ -258,7 +258,7 @@ public class GXCommonUtils {
             return (T) source;
         }
         Object tmpSource = source;
-        if (TypeToken.of(source.getClass()).isSubtypeOf(CharSequence.class) && JSONUtil.isTypeJSON(source.toString())) {
+        if (TypeToken.of(source.getClass()).isSubtypeOf(CharSequence.class)) {
             if (JSONUtil.isTypeJSONObject(source.toString())) {
                 tmpSource = JSONUtil.toBean(source.toString(), Dict.class);
             } else if (JSONUtil.isTypeJSONArray(source.toString())) {
