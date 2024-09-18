@@ -70,11 +70,7 @@ public class GXCommonUtils {
         }
 
         if (JSONUtil.isTypeJSON(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
-            JSONUtil.toBean(value.toString(), targetClazz);
-        }
-
-        if (JSONUtil.isTypeJSONArray(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
-            JSONUtil.toList(value.toString(), targetClazz);
+            return JSONUtil.toBean(value.toString(), targetClazz);
         }
 
         // 处理List<自定义类型>
@@ -88,6 +84,10 @@ public class GXCommonUtils {
                 componentType = (Class<?>) actualTypeArgument;
             }
             return JSONUtil.toList(JSONUtil.toJsonStr(value), componentType);
+        }
+
+        if (JSONUtil.isTypeJSONArray(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
+            return JSONUtil.toList(value.toString(), targetClazz);
         }
 
         if (value instanceof IJSONTypeConverter) {
