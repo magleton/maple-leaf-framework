@@ -72,7 +72,10 @@ public class GXMyBatisPlusConfig {
         paginationInnerInterceptor.setOptimizeJoin(false);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);
         // 开启防止全表更新与删除插件
-        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
+        Boolean blockAttack = GXCommonUtils.getEnvironmentValue("maple.framework.enable.block-attack", Boolean.class, Boolean.TRUE);
+        if (Boolean.TRUE.equals(blockAttack)) {
+            interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
+        }
         // 开启乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // 正式环境暂时不开启,开启sql性能规范插件,其他环境都开启sql性能规范插件

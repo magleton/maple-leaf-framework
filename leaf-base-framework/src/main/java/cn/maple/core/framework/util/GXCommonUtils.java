@@ -69,7 +69,7 @@ public class GXCommonUtils {
             return value;
         }
 
-        if (JSONUtil.isTypeJSON(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
+        if (JSONUtil.isTypeJSONObject(value.toString()) && TypeToken.of(targetClazz).isSubtypeOf(GXBaseData.class)) {
             return JSONUtil.toBean(value.toString(), targetClazz);
         }
 
@@ -257,6 +257,14 @@ public class GXCommonUtils {
         if (ClassUtil.isSimpleTypeOrArray(tClass)) {
             return (T) source;
         }
+        Object tmpSource = source;
+        if (TypeToken.of(source.getClass()).isSubtypeOf(CharSequence.class) && JSONUtil.isTypeJSON(source.toString())) {
+            if (JSONUtil.isTypeJSONObject(source.toString())) {
+                tmpSource = JSONUtil.toBean(source.toString(), Dict.class);
+            } else if (JSONUtil.isTypeJSONArray(source.toString())) {
+                tmpSource = JSONUtil.toList(source.toString(), Dict.class);
+            }
+        }
         if (CharSequenceUtil.isBlank(methodName)) {
             methodName = GXCommonConstant.DEFAULT_CUSTOMER_PROCESS_METHOD_NAME;
         }
@@ -266,7 +274,7 @@ public class GXCommonUtils {
         try {
             copyOptions = ObjectUtil.defaultIfNull(copyOptions, GXCommonUtils::getDefaultCopyOptions);
             T target = ReflectUtil.newInstanceIfPossible(tClass);
-            BeanUtil.copyProperties(source, target, copyOptions);
+            BeanUtil.copyProperties(tmpSource, target, copyOptions);
             if (CharSequenceUtil.isNotEmpty(methodName)) {
                 reflectCallObjectMethod(target, methodName, extraData);
             }
