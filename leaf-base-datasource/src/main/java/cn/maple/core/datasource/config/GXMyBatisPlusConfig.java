@@ -72,10 +72,7 @@ public class GXMyBatisPlusConfig {
         paginationInnerInterceptor.setOptimizeJoin(false);
         interceptor.addInnerInterceptor(paginationInnerInterceptor);
         // 开启防止全表更新与删除插件
-        Boolean blockAttack = GXCommonUtils.getEnvironmentValue("maple.framework.enable.block-attack", Boolean.class, Boolean.TRUE);
-        if (Boolean.TRUE.equals(blockAttack)) {
-            interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
-        }
+        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // 开启乐观锁插件
         Boolean optimisticLocker = GXCommonUtils.getEnvironmentValue("maple.framework.enable.optimistic-locker", Boolean.class, Boolean.TRUE);
         if (optimisticLocker) {
@@ -98,10 +95,7 @@ public class GXMyBatisPlusConfig {
             interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataPermissionHandler));
         }
         // 多租户插件(请在相应的表中新增tenant_id字段)
-        Boolean tenant = GXCommonUtils.getEnvironmentValue("maple.framework.enable.tenant-line", Boolean.class, Boolean.TRUE);
-        if (tenant) {
-            interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
-        }
+        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new GXTenantLineHandler()));
         // 动态表名插件
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
         dynamicTableNameInnerInterceptor.setTableNameHandler((sql, tableName) -> tableName);
