@@ -42,6 +42,9 @@ public interface GXBaseBuilder {
      * @return String
      */
     static String updateFieldByCondition(String tableName, List<GXUpdateField<?>> fieldList, List<GXCondition<?>> condition) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         final SQL sql = new SQL().UPDATE(tableName);
         for (GXUpdateField<?> field : fieldList) {
             sql.SET(field.updateString());
@@ -238,6 +241,9 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
         String keyProperty = tableInfo.getKeyProperty();
         if (CharSequenceUtil.isEmpty(keyProperty)) {
@@ -277,6 +283,9 @@ public interface GXBaseBuilder {
      * @return SQL语句
      */
     static String deleteCondition(String tableName, List<GXCondition<?>> condition) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         SQL sql = new SQL().DELETE_FROM(tableName);
         handleSQLCondition(sql, condition);
         if (!CollUtil.contains(condition, (c -> GXConditionExclusionDeletedField.class.isAssignableFrom(c.getClass())))) {

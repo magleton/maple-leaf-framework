@@ -85,6 +85,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return repository.checkRecordIsExists(tableName, condition);
     }
 
@@ -109,6 +112,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public Integer updateFieldByCondition(String tableName, List<GXUpdateField<?>> updateFields, List<GXCondition<?>> condition) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         boolean b = checkRecordIsExists(tableName, condition);
         if (!b) {
             log.error("待更新的数据不存在!");
@@ -658,6 +664,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, @NotNull Dict extraData) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         if (ObjectUtil.isNull(extraData)) {
             extraData = Dict.create();
         }
@@ -717,6 +726,9 @@ public class GXMyBatisBaseServiceImpl<P extends GXMyBatisRepository<M, T, D, ID>
      */
     @Override
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return repository.deleteCondition(tableName, condition);
     }
 

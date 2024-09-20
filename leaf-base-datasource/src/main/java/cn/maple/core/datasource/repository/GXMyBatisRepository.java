@@ -278,7 +278,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXUpdateField<?>> updateFieldList, List<GXCondition<?>> condition, Dict extraData) {
-        Assert.notNull(condition, "条件不能为null");
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return baseDao.deleteSoftCondition(tableName, updateFieldList, condition, extraData);
     }
 
@@ -292,7 +294,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public Integer deleteSoftCondition(String tableName, List<GXCondition<?>> condition, Dict extraData) {
-        Assert.notNull(condition, "条件不能为null");
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return deleteSoftCondition(tableName, CollUtil.newArrayList(), condition, extraData);
     }
 
@@ -305,7 +309,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public Integer deleteCondition(String tableName, List<GXCondition<?>> condition) {
-        Assert.notNull(condition, "条件不能为null");
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return baseDao.deleteCondition(tableName, condition);
     }
 
@@ -318,7 +324,9 @@ public abstract class GXMyBatisRepository<M extends GXBaseMapper<T>, T extends G
      */
     @Override
     public boolean checkRecordIsExists(String tableName, List<GXCondition<?>> condition) {
-        Assert.notEmpty(condition, "条件不能为null");
+        if (CollUtil.isEmpty(condition)) {
+            throw new GXBusinessException("条件不能为空!");
+        }
         return baseDao.checkRecordIsExists(tableName, condition);
     }
 
