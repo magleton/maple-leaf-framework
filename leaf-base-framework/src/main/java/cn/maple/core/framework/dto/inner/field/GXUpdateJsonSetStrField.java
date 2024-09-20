@@ -2,7 +2,6 @@ package cn.maple.core.framework.dto.inner.field;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.exception.GXUpdateFieldFormatException;
 
 public class GXUpdateJsonSetStrField extends GXUpdateField<String> {
     private final String path;
@@ -15,12 +14,11 @@ public class GXUpdateJsonSetStrField extends GXUpdateField<String> {
     @Override
     public String getFieldValue() {
         String strValue = value.toString();
-        if (JSONUtil.isTypeJSON(strValue)) {
-            throw new GXUpdateFieldFormatException("不能使用JSON格式的字符串");
+        if (CharSequenceUtil.contains(strValue, "'") && JSONUtil.isTypeJSON(strValue)) {
+            strValue = CharSequenceUtil.format("CAST('{}' as JSON)", CharSequenceUtil.replace(strValue, "'", "''"));
+            return CharSequenceUtil.format("JSON_SET({}.{} , '$.{}' , {})", tableNameAlias, fieldName, path, strValue);
         }
-        if (CharSequenceUtil.contains(strValue, "'")) {
-            return CharSequenceUtil.format("JSON_SET({}.{} , '$.{}' , \"{}\")", tableNameAlias, fieldName, path, strValue);
-        }
+        strValue = CharSequenceUtil.replace(strValue, "'", "\\'");
         return CharSequenceUtil.format("JSON_SET({}.{} , '$.{}' , '{}')", tableNameAlias, fieldName, path, strValue);
     }
 }
