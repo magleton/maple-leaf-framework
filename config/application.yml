@@ -110,7 +110,8 @@ mybatis-plus:
     lazy-loading-enabled: false
     # 如果不配置此项 p6spy不会打印sql语句
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
-# 是否开启MyBatis-Plus的默认插件
+
+# 是否开启框架内置的默认功能与插件
 maple:
   framework:
     version: @leaf.framework.version@ # 读取pom.xml文件中的properties节中的配置信息 或者是 <profiles><profile></profile></profiles>中的properties节中的配置信息
@@ -119,4 +120,5 @@ maple:
       sql-illegal: true  # 开启sql性能规范插件
       data-change-recorder: true  # 数据变更记录插件
       data-permission: true  # 开启数据权限处理 需要实现DataPermissionHandler接口
-debug: false
+      block-attack: true # 启防止全表更新与删除插件
+      tenant-line: true # 开启多租户插件(请在相应的表中新增tenant_id字段)

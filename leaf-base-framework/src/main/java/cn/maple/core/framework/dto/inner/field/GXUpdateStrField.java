@@ -15,7 +15,8 @@ public class GXUpdateStrField extends GXUpdateField<String> {
         String strValue = value.toString();
         if (JSONUtil.isTypeJSON(strValue)) {
             Boolean tenantLine = GXCommonUtils.getEnvironmentValue("maple.framework.enable.tenant-line", Boolean.class, Boolean.FALSE);
-            if (tenantLine && CharSequenceUtil.contains(strValue, "'")) {
+            Boolean blockAttack = GXCommonUtils.getEnvironmentValue("maple.framework.enable.block-attack", Boolean.class, Boolean.FALSE);
+            if (tenantLine && blockAttack && CharSequenceUtil.contains(strValue, "'")) {
                 throw new GXUpdateFieldFormatException("JSON字符串中包含【'】,请将其转换为Html实体表示！！！");
             }
         }
