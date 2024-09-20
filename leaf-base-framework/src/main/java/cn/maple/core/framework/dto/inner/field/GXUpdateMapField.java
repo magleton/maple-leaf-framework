@@ -2,6 +2,8 @@ package cn.maple.core.framework.dto.inner.field;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.exception.GXUpdateFieldFormatException;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 import java.util.Map;
 
@@ -12,9 +14,15 @@ public class GXUpdateMapField<T extends Map<String, Object>> extends GXUpdateFie
 
     @Override
     public String getFieldValue() {
-        String jsonStr = JSONUtil.toJsonStr(value);
-        String quoteStr = JSONUtil.quote(jsonStr, false);
-        quoteStr = CharSequenceUtil.replace(quoteStr, "'", "\\'");
-        return CharSequenceUtil.format("'{}'", quoteStr);
+        String strValue = JSONUtil.toJsonStr(value);
+        Boolean tenantLine = GXCommonUtils.getEnvironmentValue("maple.framework.enable.tenant-line", Boolean.class, Boolean.FALSE);
+        if (tenantLine && CharSequenceUtil.contains(strValue, "'")) {
+            throw new GXUpdateFieldFormatException("JSON字符串中包含【'】,请将其转换为Html实体表示！！！");
+        }
+        if (CharSequenceUtil.contains(strValue, "'")) {
+            strValue = CharSequenceUtil.replace(strValue, "'", "\\'");
+            return CharSequenceUtil.format("'{}'", strValue);
+        }
+        return CharSequenceUtil.format("'{}'", strValue);
     }
 }

@@ -2,6 +2,8 @@ package cn.maple.core.framework.dto.inner.field;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import cn.maple.core.framework.exception.GXUpdateFieldFormatException;
+import cn.maple.core.framework.util.GXCommonUtils;
 
 import java.util.Map;
 
@@ -15,14 +17,21 @@ public class GXUpdateJsonSetMapField<T extends Map<String, Object>> extends GXUp
 
     @Override
     public String getFieldValue() {
-        String value = JSONUtil.toJsonStr(this.value);
-        value = CharSequenceUtil.replace(value, "'", "\\'");
-        value = CharSequenceUtil.format("CAST('{}' as JSON)", value);
+        String strValue = JSONUtil.toJsonStr(this.value);
+        Boolean tenantLine = GXCommonUtils.getEnvironmentValue("maple.framework.enable.tenant-line", Boolean.class, Boolean.FALSE);
+        if (tenantLine && CharSequenceUtil.contains(strValue, "'")) {
+            throw new GXUpdateFieldFormatException("JSON字符串中包含【'】,请将其转换为Html实体表示！！！");
+        }
         if (CharSequenceUtil.isEmpty(path)) {
             path = "$";
         } else {
             path = CharSequenceUtil.format("$.{}", path);
         }
-        return CharSequenceUtil.format("JSON_SET({} , '{}' , {})", fieldName, path, value);
+        if (CharSequenceUtil.contains(strValue, "'")) {
+            strValue = CharSequenceUtil.format("CAST('{}' as JSON)", CharSequenceUtil.replace(strValue, "'", "\\'"));
+            return CharSequenceUtil.format("JSON_SET({} , '{}' , {})", fieldName, path, strValue);
+        }
+        strValue = CharSequenceUtil.format("CAST('{}' as JSON)", strValue);
+        return CharSequenceUtil.format("JSON_SET({} , '{}' , {})", fieldName, path, strValue);
     }
 }
