@@ -7,15 +7,16 @@ debezium:
       offset.storage: org.apache.kafka.connect.storage.FileOffsetBackingStore
       offset.storage.file.filename: /data/java/project/data/offsets.dat
       offset.flush.interval.ms: 60000
-      database.hostname: ${MYSQL_ADDR}
-      database.port: ${MYSQL_PORT}
-      database.user: ${MYSQL_USERNAME}
-      database.password: ${MYSQL_PASSWORD}
-      database.server.id: ${MYSQL_SERVER_ID}
+      database.hostname: ${DEBEZIUM_MYSQL_ADDR}
+      database.port: ${DEBEZIUM_MYSQL_PORT}
+      database.user: ${DEBEZIUM_MYSQL_USERNAME}
+      database.password: ${DEBEZIUM_MYSQL_PASSWORD}
+      database.server.id: ${DEBEZIUM_MYSQL_SERVER_ID}
       topic.prefix: debezium-${DEBEZIUM_TOPIC_PREFIX}
       transforms.unwrap.drop.tombstones: false
       schema.history.internal.store.only.captured.tables.ddl: true # true 只读取指定的数据结构  false读取全部
       schema.history.internal: io.debezium.storage.file.history.FileSchemaHistory
       schema.history.internal.file.filename: /data/java/project/data/schema/history.dat
+      include.schema.changes: false
       database.include.list: orders
       table.include.list: orders.mgo_order
