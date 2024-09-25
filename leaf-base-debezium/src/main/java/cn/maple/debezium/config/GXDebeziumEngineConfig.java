@@ -2,12 +2,10 @@ package cn.maple.debezium.config;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
-import cn.maple.debezium.exception.GXDebeziumInitialException;
 import cn.maple.debezium.properties.GXDebeziumProperties;
 import cn.maple.debezium.services.GXDebeziumService;
 import io.debezium.engine.ChangeEvent;
@@ -19,18 +17,26 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Log4j2
 public class GXDebeziumEngineConfig implements DisposableBean {
-    private final Map<String, DebeziumEngine<ChangeEvent<String, String>>> debeziumEngineMap = new ConcurrentHashMap<>();
+    private static final ExecutorService EXECUTOR_SERVICE;
 
-    private final Map<String, ExecutorService> debeziumEngineExecutorMap = new ConcurrentHashMap<>();
+    static {
+        Thread.Builder.OfVirtual ofVirtual = Thread.ofVirtual().name("debezium-virtual-thread#", 1);
+        ThreadFactory factory = ofVirtual.factory();
+        EXECUTOR_SERVICE = Executors.newThreadPerTaskExecutor(factory);
+    }
+
+    private DebeziumEngine<ChangeEvent<String, String>> debeziumEngine = null;
 
     @Resource
     private GXDebeziumProperties debeziumProperties;
@@ -42,14 +48,16 @@ public class GXDebeziumEngineConfig implements DisposableBean {
             log.error("请实现GXDebeziumService接口");
             return;
         }
-        debeziumProperties.getConfig().forEach((key, map) -> {
-            debeziumService.initialEngineLock(key);
+        String initialLocKey = "debezium.initialLock";
+        debeziumService.initialEngineLock(initialLocKey);
+        try {
+            Map<String, String> config = debeziumProperties.getConfig();
             Properties properties = new Properties();
-            Set<Map.Entry<String, String>> entries = map.entrySet();
+            Set<Map.Entry<String, String>> entries = config.entrySet();
             for (Map.Entry<String, String> entry : entries) {
                 properties.setProperty(entry.getKey(), entry.getValue());
             }
-            try (DebeziumEngine<ChangeEvent<String, String>> engine = DebeziumEngine.create(Json.class)
+            debeziumEngine = DebeziumEngine.create(Json.class)
                     .using(properties)
                     .notifying(record -> {
                         log.debug("监听到数据库数据变化 : {}", record);
@@ -57,20 +65,11 @@ public class GXDebeziumEngineConfig implements DisposableBean {
                         Dict dbChangeData = JSONUtil.toBean(value, Dict.class);
                         Dict payload = Convert.convert(Dict.class, dbChangeData.getObj("payload"));
                         debeziumService.processCaptureDataChange(payload);
-                    }).build()
-            ) {
-                Thread.Builder.OfVirtual ofVirtual = Thread.ofVirtual().name("debezium-virtual-thread#", 1);
-                ThreadFactory factory = ofVirtual.factory();
-                ExecutorService executorService = Executors.newThreadPerTaskExecutor(factory);
-                executorService.execute(engine);
-                debeziumEngineMap.put(key, engine);
-                debeziumEngineExecutorMap.put(key, executorService);
-            } catch (IOException e) {
-                throw new GXDebeziumInitialException(CharSequenceUtil.format("初始化Debezium内嵌引擎{}失败", key), e);
-            } finally {
-                debeziumService.initialEngineUnLock(key);
-            }
-        });
+                    }).build();
+            EXECUTOR_SERVICE.execute(debeziumEngine);
+        } finally {
+            debeziumService.initialEngineUnLock(initialLocKey);
+        }
     }
 
     /**
@@ -82,15 +81,10 @@ public class GXDebeziumEngineConfig implements DisposableBean {
     @Override
     public void destroy() throws Exception {
         String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
-        for (Map.Entry<String, DebeziumEngine<ChangeEvent<String, String>>> entry : debeziumEngineMap.entrySet()) {
-            String key = entry.getKey();
-            DebeziumEngine<ChangeEvent<String, String>> engine = entry.getValue();
-            engine.close();
-            ExecutorService executorService = debeziumEngineExecutorMap.remove(key);
-            executorService.shutdown();
-            while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                log.info("Waiting another 60 seconds for the embedded engine to shut down");
-            }
+        debeziumEngine.close();
+        EXECUTOR_SERVICE.shutdown();
+        while (!EXECUTOR_SERVICE.awaitTermination(60, TimeUnit.SECONDS)) {
+            log.info("Waiting another 60 seconds for the embedded engine to shut down");
         }
         log.info("~~~~ 应用{}的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
     }

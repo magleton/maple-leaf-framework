@@ -5,7 +5,7 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public abstract class GXDebeziumProperties {
-    public Map<String, HashMap<String, String>> getConfig() {
+    public Map<String, String> getConfig() {
         return new HashMap<>();
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,14 +22,14 @@ import java.util.Map;
 @PropertySource(value = {"classpath:/${spring.profiles.active}/debezium.yml"}, factory = GXYamlPropertySourceFactory.class, encoding = "utf-8", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "debezium")
 public class GXLocalDebeziumProperties extends GXDebeziumProperties {
-    private Map<String, HashMap<String, String>> config = new LinkedHashMap<>();
+    private Map<String, String> config = new LinkedHashMap<>();
 
     public GXLocalDebeziumProperties() {
         log.info("Debezium配置使用的是本地配置");
     }
 
     @Override
-    public Map<String, HashMap<String, String>> getConfig() {
+    public Map<String, String> getConfig() {
         return config;
     }
 }

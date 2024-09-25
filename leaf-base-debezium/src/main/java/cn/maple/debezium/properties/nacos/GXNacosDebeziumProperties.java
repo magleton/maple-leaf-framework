@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,14 +28,14 @@ import java.util.Map;
                 password = "${spring.cloud.nacos.password:${nacos.config.password:}}"))
 @ConfigurationProperties(prefix = "debezium")
 public class GXNacosDebeziumProperties extends GXDebeziumProperties {
-    private Map<String, HashMap<String, String>> config = new LinkedHashMap<>();
+    private Map<String, String> config = new LinkedHashMap<>();
 
     public GXNacosDebeziumProperties() {
         log.info("Debezium配置使用的是NACOS配置");
     }
 
     @Override
-    public Map<String, HashMap<String, String>> getConfig() {
+    public Map<String, String> getConfig() {
         return config;
     }
 }
