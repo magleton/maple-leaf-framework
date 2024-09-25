@@ -23,10 +23,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Configuration
 @Log4j2
@@ -62,7 +59,9 @@ public class GXDebeziumEngineConfig implements DisposableBean {
                         debeziumService.processCaptureDataChange(payload);
                     }).build()
             ) {
-                ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+                Thread.Builder.OfVirtual ofVirtual = Thread.ofVirtual().name("debezium-virtual-thread#", 1);
+                ThreadFactory factory = ofVirtual.factory();
+                ExecutorService executorService = Executors.newThreadPerTaskExecutor(factory);
                 executorService.execute(engine);
                 debeziumEngineMap.put(key, engine);
                 debeziumEngineExecutorMap.put(key, executorService);
