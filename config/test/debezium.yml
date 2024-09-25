@@ -14,6 +14,7 @@ debezium:
       database.server.id: ${MYSQL_SERVER_ID}
       topic.prefix: debezium-${DEBEZIUM_TOPIC_PREFIX}
       transforms.unwrap.drop.tombstones: false
+      schema.history.internal.store.only.captured.tables.ddl: true # true 只读取指定的数据结构  false读取全部
       schema.history.internal: io.debezium.storage.file.history.FileSchemaHistory
       schema.history.internal.file.filename: /data/java/project/data/schema/history.dat
       database.include.list: orders
