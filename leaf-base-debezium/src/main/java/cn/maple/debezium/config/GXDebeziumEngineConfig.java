@@ -1,11 +1,10 @@
-package cn.maple.debezium.framework;
+package cn.maple.debezium.config;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import cn.maple.core.framework.service.GXCommandLineRunnerService;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.core.framework.util.GXSpringContextUtils;
 import cn.maple.debezium.exception.GXDebeziumInitialException;
@@ -14,33 +13,33 @@ import cn.maple.debezium.services.GXDebeziumService;
 import io.debezium.engine.ChangeEvent;
 import io.debezium.engine.DebeziumEngine;
 import io.debezium.engine.format.Json;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.core.annotation.Order;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-@Service
-@Order
-@Slf4j
-public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunnerService, DisposableBean {
+@Configuration
+@Log4j2
+public class GXDebeziumEngineConfig implements DisposableBean {
     private final Map<String, DebeziumEngine<ChangeEvent<String, String>>> debeziumEngineMap = new ConcurrentHashMap<>();
+
+    private final Map<String, ExecutorService> debeziumEngineExecutorMap = new ConcurrentHashMap<>();
 
     @Resource
     private GXDebeziumProperties debeziumProperties;
 
-    @Resource
-    private ThreadPoolTaskExecutor debeziumExecutor;
-
-    @Override
-    public void run() {
+    @PostConstruct
+    public void initDebeziumEngine() {
         GXDebeziumService debeziumService = GXSpringContextUtils.getBean(GXDebeziumService.class);
         if (ObjectUtil.isNull(debeziumService)) {
             log.error("请实现GXDebeziumService接口");
@@ -63,8 +62,10 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
                         debeziumService.processCaptureDataChange(payload);
                     }).build()
             ) {
+                ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+                executorService.execute(engine);
                 debeziumEngineMap.put(key, engine);
-                debeziumExecutor.execute(engine);
+                debeziumEngineExecutorMap.put(key, executorService);
             } catch (IOException e) {
                 throw new GXDebeziumInitialException(CharSequenceUtil.format("初始化Debezium内嵌引擎{}失败", key), e);
             } finally {
@@ -73,18 +74,25 @@ public class GXDebeziumCommandLineRunnerServiceImpl implements GXCommandLineRunn
         });
     }
 
+    /**
+     * Invoked by the containing {@code BeanFactory} on destruction of a bean.
+     *
+     * @throws Exception in case of shutdown errors. Exceptions will get logged
+     *                   but not rethrown to allow other beans to release their resources as well.
+     */
     @Override
-    public void destroy() {
+    public void destroy() throws Exception {
         String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
         for (Map.Entry<String, DebeziumEngine<ChangeEvent<String, String>>> entry : debeziumEngineMap.entrySet()) {
-            try {
-                DebeziumEngine<ChangeEvent<String, String>> engine = entry.getValue();
-                engine.close();
-            } catch (IOException e) {
-                log.error("应用{}关闭{}>>>Debezium引擎失败", appName, entry.getKey(), e);
+            String key = entry.getKey();
+            DebeziumEngine<ChangeEvent<String, String>> engine = entry.getValue();
+            engine.close();
+            ExecutorService executorService = debeziumEngineExecutorMap.remove(key);
+            executorService.shutdown();
+            while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                log.info("Waiting another 60 seconds for the embedded engine to shut down");
             }
         }
-        debeziumExecutor.shutdown();
         log.info("~~~~ 应用{}的Debezium引擎关闭完成 , 再见 ~~~~~", appName);
     }
 }

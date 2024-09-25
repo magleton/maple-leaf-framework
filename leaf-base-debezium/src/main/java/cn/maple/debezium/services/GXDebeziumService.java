@@ -5,6 +5,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.maple.core.framework.util.GXCommonUtils;
 import cn.maple.redisson.util.GXRedissonUtils;
 
+import java.util.concurrent.TimeUnit;
+
 public interface GXDebeziumService {
     /**
      * 自定义业务处理
@@ -25,7 +27,7 @@ public interface GXDebeziumService {
     default void initialEngineLock(String key) {
         String appName = GXCommonUtils.getEnvironmentValue("spring.application.name", String.class);
         String lockName = CharSequenceUtil.format("debezium-initial-engine:{}:{}", appName, key);
-        GXRedissonUtils.getLock(lockName).lock();
+        GXRedissonUtils.getLock(lockName).lock(10, TimeUnit.SECONDS);
     }
 
     /**

@@ -2,7 +2,7 @@ debezium:
   config:
     framework:
       name: ${spring.application.name}-engine
-      snapshot.mode: when_needed
+      snapshot.mode: initial
       connector.class: io.debezium.connector.mysql.MySqlConnector
       offset.storage: org.apache.kafka.connect.storage.FileOffsetBackingStore
       offset.storage.file.filename: /data/java/project/data/offsets.dat
