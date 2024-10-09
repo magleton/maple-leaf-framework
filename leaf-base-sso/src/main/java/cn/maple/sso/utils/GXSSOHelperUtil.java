@@ -269,7 +269,7 @@ public class GXSSOHelperUtil {
         }
         GXTokenConfigService tokenSecretService = GXSpringContextUtils.getBean(GXTokenConfigService.class);
         if (Objects.isNull(tokenSecretService)) {
-            throw new GXBusinessException("请实现GXTokenSecretService类,并将其加入到spring容器中");
+            throw new GXBusinessException("请实现GXTokenConfigService类,并将其加入到spring容器中");
         }
         String s = GXAuthCodeUtils.authCodeDecode(token, tokenSecretService.getTokenSecret());
         Dict requestToken = JSONUtil.toBean(s, Dict.class);
