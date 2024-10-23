@@ -33,11 +33,6 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
     private static final Map<String, SseEmitter> SSE_CLIENT_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * SSE连接超时时间 单位: 秒
-     */
-    private long sseConnectTimeOut = 60;
-
-    /**
      * 根据客户端id获取SseEmitter对象
      *
      * @param clientId 客户端ID
@@ -51,11 +46,13 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      * 创建连接
      *
      * @param clientId 客户端ID 前端在请求改接口时可以指定 如果没有指定 则方法自己生成
+     * @param timeout  超时时间
      */
     @Override
-    public SseEmitter createSseConnect(String clientId) {
+    public SseEmitter createSseConnect(String clientId, long timeout) {
         // 设置超时时间，0表示不过期。默认30秒，超过时间未完成会抛出异常：AsyncRequestTimeoutException
-        SseEmitter sseEmitter = new SseEmitter(sseConnectTimeOut * 1000);
+        timeout = Math.max(timeout, 60);
+        SseEmitter sseEmitter = new SseEmitter(timeout * 1000);
         // 是否需要给客户端推送ID
         if (CharSequenceUtil.isBlank(clientId)) {
             clientId = IdUtil.fastSimpleUUID();
@@ -91,7 +88,10 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
         // 判断发送的消息是否为空
         for (Map.Entry<String, SseEmitter> entry : SSE_CLIENT_CACHE.entrySet()) {
             // TODO 如果消息过长 可以将消息拆分成小段分别发送给前端
-            GXSseMessageInnerReqDto messageDto = GXSseMessageInnerReqDto.builder().clientId(entry.getKey()).data(Dict.create().set("message", msg)).build();
+            GXSseMessageInnerReqDto messageDto = GXSseMessageInnerReqDto.builder()
+                    .clientId(entry.getKey())
+                    .data(Dict.create().set("message", msg))
+                    .build();
             sendMsgToClientByClientId(entry.getKey(), messageDto, entry.getValue());
         }
     }
@@ -101,13 +101,19 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
      *
      * @param clientId 客户端ID
      * @param msg      消息内容
+     * @param splitMsg 是否需要拆分消息
      */
     @Override
-    public void sendMessageToOneClient(String clientId, String msg) {
+    public void sendMessageToOneClient(String clientId, String msg, boolean splitMsg) {
         // TODO 如果消息过长 可以将消息拆分成小段分别发送给前端
-        List<String> msgLst = splitMessage(msg, RandomUtil.randomInt(1, 8));
+        List<String> msgLst = splitMsg ? splitMessage(msg, RandomUtil.randomInt(1, 8)) : CollUtil.newArrayList(msg);
         for (String message : msgLst) {
-            GXSseMessageInnerReqDto messageVo = GXSseMessageInnerReqDto.builder().clientId(clientId).data(Dict.create().set("message", message)).build();
+            GXSseMessageInnerReqDto messageVo = GXSseMessageInnerReqDto.builder().
+                    clientId(clientId)
+                    .msgId(IdUtil.fastUUID())
+                    .eventName("Push Msg")
+                    .data(Dict.create().set("message", message))
+                    .build();
             sendMsgToClientByClientId(clientId, messageVo, SSE_CLIENT_CACHE.get(clientId));
         }
     }
@@ -138,7 +144,12 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
             log.error("推送消息失败：客户端{}未创建长链接,失败消息:{}", clientId, messageDto.toString());
             return;
         }
-        SseEmitter.SseEventBuilder sendData = SseEmitter.event().data(messageDto.getData(), MediaType.APPLICATION_JSON).id(messageDto.getMsgId()).comment(messageDto.getComment() + ":" + clientId).reconnectTime(messageDto.getReconnectTimeMillis()).name(messageDto.getEventName());
+        SseEmitter.SseEventBuilder sendData = SseEmitter.event()
+                .data(messageDto.getData(), MediaType.APPLICATION_JSON)
+                .id(messageDto.getMsgId())
+                .comment(messageDto.getComment() + ":" + clientId)
+                .reconnectTime(messageDto.getReconnectTimeMillis())
+                .name(messageDto.getEventName());
         send(clientId, sseEmitter, sendData);
     }
 
@@ -210,15 +221,6 @@ public class GXSseEmitterServiceImpl extends GXBusinessServiceImpl implements GX
             // TODO 可以将发送失败的客户端放入MQ中  等待下一次发送 也可以直接将其移除
             log.error("链接异常,向SSE客户端发送消息失败，客户端ID:{},异常信息:{}", clientId, e.getMessage());
         }
-    }
-
-    /**
-     * 设置连接超时时间
-     *
-     * @param sseConnectTimeOut 具体超时时间
-     */
-    public void setSseConnectTimeOut(long sseConnectTimeOut) {
-        this.sseConnectTimeOut = sseConnectTimeOut;
     }
 
     /**

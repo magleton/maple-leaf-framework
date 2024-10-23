@@ -13,8 +13,9 @@ public interface GXSseEmitterService extends GXBusinessService {
      * 创建连接
      *
      * @param clientId 客户端ID
+     * @param timeout  超时时间
      */
-    SseEmitter createSseConnect(String clientId);
+    SseEmitter createSseConnect(String clientId, long timeout);
 
     /**
      * 根据客户端id获取SseEmitter对象
@@ -35,8 +36,9 @@ public interface GXSseEmitterService extends GXBusinessService {
      *
      * @param clientId 客户端ID
      * @param msg      消息内容
+     * @param splitMsg 是否需要拆分消息
      */
-    void sendMessageToOneClient(String clientId, String msg);
+    void sendMessageToOneClient(String clientId, String msg, boolean splitMsg);
 
     /**
      * 关闭连接
